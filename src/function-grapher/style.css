@@ -77,3 +77,58 @@ body {
   .wrap { grid-template-columns: 1fr; }
   #plot { min-height: 340px; }
 }
+
+:root {
+  --page-ink: #173154;
+  --page-muted: #506b93;
+  --page-bg: #eef6ff;
+  --glow-a: rgba(76, 201, 240, 0.24);
+  --glow-b: rgba(255, 209, 102, 0.2);
+  --pill-bg: rgba(255, 255, 255, 0.82);
+  --pill-border: #90b4db;
+  --panel-bg: rgba(248, 251, 255, 0.94);
+  --panel-border: #8db2d9;
+  --panel-shadow: rgba(30, 72, 110, 0.18);
+  --control-bg: #e6f0fb;
+  --control-border: #a9c4de;
+  --plot-bg: #f8fbff;
+  --grid-minor: #e4edf5;
+  --grid-major: #c9dbea;
+  --grid-axis: #6688a8;
+  --curve: #d58c00;
+  --point-label: #a92f5e;
+}
+[data-theme="dark"] {
+  --page-ink: #eaf3ff;
+  --page-muted: #9db4dd;
+  --page-bg: #101a30;
+  --glow-a: rgba(76, 201, 240, 0.14);
+  --glow-b: rgba(255, 209, 102, 0.1);
+  --pill-bg: rgba(255, 255, 255, 0.07);
+  --pill-border: rgba(150, 190, 255, 0.4);
+  --panel-bg: rgba(17, 28, 52, 0.9);
+  --panel-border: #29406e;
+  --panel-shadow: rgba(2, 6, 18, 0.5);
+  --control-bg: #16233f;
+  --control-border: #29406e;
+  --plot-bg: #0b1327;
+  --grid-minor: #152544;
+  --grid-major: #1e3155;
+  --grid-axis: #7ea4d9;
+  --curve: #ffd166;
+  --point-label: #ffb3c9;
+}
+body {
+  color: var(--page-ink);
+  background: radial-gradient(600px 400px at 90% -10%, var(--glow-a), transparent 65%),
+    radial-gradient(500px 400px at -10% 110%, var(--glow-b), transparent 60%), var(--page-bg);
+  transition: color 0.25s, background 0.25s;
+}
+.bar__actions { display: flex; gap: 8px; }
+.pill { color: var(--page-ink); background: var(--pill-bg); border-color: var(--pill-border); }
+.pill--icon { width: 44px; height: 44px; padding: 0; justify-content: center; }
+.panel { background: var(--panel-bg); border-color: var(--panel-border); box-shadow: 0 18px 44px var(--panel-shadow); }
+.tabs button, .info p { color: var(--page-muted); background: var(--control-bg); border-color: var(--control-border); }
+.tabs button:hover { color: var(--page-ink); }
+.eq { background: var(--plot-bg); border-color: var(--panel-border); }
+.sl label { color: var(--page-muted); }

@@ -1,11 +1,12 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="light">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>欢迎来到KidsLab · 从一盏灯到宇宙</title>
   <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg" />
   <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
 </head>
 <body>
   <canvas id="scene" aria-hidden="true"></canvas>
@@ -16,6 +17,7 @@
     <a class="pill pill--ghost" id="backLink" href="../../index.html">← <span data-t="back">返回平台</span></a>
     <div class="hud__group">
       <button class="pill" id="musicBtn" type="button" aria-pressed="false" aria-label="背景音乐开关">♪ <span id="musicState">关</span></button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
       <button class="pill" id="langBtn" type="button" aria-label="切换语言">EN</button>
     </div>
   </header>

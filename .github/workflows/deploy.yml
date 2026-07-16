@@ -28,10 +28,19 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build courseware
+      - name: Build courseware for tests
+        run: npm run build
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Run smoke tests
+        run: npm run test:e2e
+
+      - name: Build deploy courseware
         run: npm run build
         env:
-          # 仓库变量优先于 package.json 的 kidslab.analyticsEndpoint；均未设置则不注入埋点
+          # 发布产物可选注入 analytics；测试始终使用无网络依赖的构建
           KIDSLAB_ANALYTICS_ENDPOINT: ${{ vars.KIDSLAB_ANALYTICS_ENDPOINT }}
 
       - name: Stage site

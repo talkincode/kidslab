@@ -22,55 +22,16 @@
     },
   };
 
-  const LS = { lang: 'kidslab.lang', theme: 'kidslab.theme' };
-  const store = {
-    get: (k) => { try { return localStorage.getItem(k); } catch { return null; } },
-    set: (k, v) => { try { localStorage.setItem(k, v); } catch { /* 忽略 */ } },
-  };
-
-  let lang = store.get(LS.lang) || (navigator.language?.startsWith('zh') ? 'zh' : 'en');
-  if (!I18N[lang]) lang = 'zh';
-  let theme = store.get(LS.theme)
-    || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-  if (theme !== 'light' && theme !== 'dark') theme = 'light';
-
   /** 取当前语言文案；函数型 key 直接返回函数供调用方传参 */
-  const t = (key) => I18N[lang][key] ?? I18N.zh[key] ?? key;
+  let t = (key) => key;
   /** 读取 CSS 主题变量（Canvas/three.js 取色必须走这里，勿硬编码） */
   const cssVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
   const langBtn = document.getElementById('langBtn');
   const themeBtn = document.getElementById('themeBtn');
 
-  function applyLang() {
-    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
-    document.title = t('doc');
-    document.querySelectorAll('[data-t]').forEach((n) => {
-      const v = I18N[lang][n.dataset.t];
-      if (typeof v === 'string') n.textContent = v;
-    });
-    if (langBtn) langBtn.textContent = lang === 'zh' ? 'EN' : '中';
-    render(); // 语言切换后重绘动态文案
-  }
-
-  function applyTheme() {
-    document.documentElement.dataset.theme = theme;
-    if (themeBtn) themeBtn.textContent = theme === 'light' ? '🌙' : '☀️';
-    /* Canvas / three.js 课件监听该事件重取 cssVar 配色 */
-    dispatchEvent(new CustomEvent('themechange', { detail: { theme } }));
-    render();
-  }
-
-  langBtn?.addEventListener('click', () => {
-    lang = lang === 'zh' ? 'en' : 'zh';
-    store.set(LS.lang, lang);
-    applyLang();
-  });
-  themeBtn?.addEventListener('click', () => {
-    theme = theme === 'light' ? 'dark' : 'light';
-    store.set(LS.theme, theme);
-    applyTheme();
-  });
+  langBtn?.addEventListener('click', () => window.cool.preferences.toggleLang());
+  themeBtn?.addEventListener('click', () => window.cool.preferences.toggleTheme());
 
   /* ======================= ✏️ 游戏区 · Game ======================= */
   // ✏️ 状态、Canvas 初始化、玩法逻辑写在这里。
@@ -84,6 +45,13 @@
   }
 
   /* ============================ 启动 ============================ */
-  applyTheme();
-  applyLang();
+  window.cool.bindI18n(I18N, {
+    onChange({ t: translate, lang, theme }) {
+      t = translate;
+      document.title = t('doc');
+      if (langBtn) langBtn.textContent = lang === 'zh' ? 'EN' : '中';
+      if (themeBtn) themeBtn.textContent = theme === 'light' ? '🌙' : '☀️';
+      render();
+    },
+  });
 })();

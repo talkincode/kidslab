@@ -93,3 +93,57 @@ body {
   .wrap { grid-template-columns: 1fr; }
   #stage { min-height: 380px; }
 }
+
+:root {
+  --page-ink: #4b3b22;
+  --page-bg: #f8f0df;
+  --glow-a: rgba(212, 160, 60, 0.2);
+  --glow-b: rgba(120, 90, 40, 0.1);
+  --pill-bg: rgba(255, 252, 242, 0.9);
+  --pill-border: #b9954e;
+  --panel-bg: rgba(255, 250, 240, 0.94);
+  --panel-border: #b99a5f;
+  --panel-shadow: rgba(91, 65, 28, 0.2);
+  --muted: #775e35;
+  --control-bg: #f4e7ca;
+  --readout-bg: #fff7e6;
+  --canvas-guide: rgba(143, 101, 30, 0.28);
+  --canvas-text: rgba(91, 67, 30, 0.7);
+  --canvas-frame: #8f713f;
+  --canvas-line: #6f572f;
+  --canvas-ball-edge: #6e4e1f;
+}
+[data-theme="dark"] {
+  --page-ink: #f3ead8;
+  --page-bg: #1c1913;
+  --glow-a: rgba(212, 160, 60, 0.12);
+  --glow-b: rgba(120, 90, 40, 0.14);
+  --pill-bg: rgba(255, 230, 180, 0.06);
+  --pill-border: rgba(212, 160, 60, 0.45);
+  --panel-bg: rgba(36, 31, 22, 0.92);
+  --panel-border: #4c4028;
+  --panel-shadow: rgba(0, 0, 0, 0.45);
+  --muted: #d9c9a3;
+  --control-bg: #2c2618;
+  --readout-bg: #14110b;
+  --canvas-guide: rgba(212, 160, 60, 0.22);
+  --canvas-text: rgba(217, 201, 163, 0.6);
+  --canvas-frame: #4c4028;
+  --canvas-line: #d9c9a3;
+  --canvas-ball-edge: #2c2618;
+}
+body {
+  color: var(--page-ink);
+  background: radial-gradient(560px 400px at 100% 0%, var(--glow-a), transparent 60%),
+    radial-gradient(480px 360px at 0% 100%, var(--glow-b), transparent 60%), var(--page-bg);
+  transition: color 0.25s, background 0.25s;
+}
+.bar__actions { display: flex; gap: 8px; }
+.pill { color: var(--page-ink); background: var(--pill-bg); border-color: var(--pill-border); }
+.pill--icon { width: 44px; height: 44px; padding: 0; justify-content: center; }
+.panel { background: var(--panel-bg); border-color: var(--panel-border); box-shadow: 0 18px 44px var(--panel-shadow); }
+.planets button { color: var(--muted); background: var(--control-bg); border-color: var(--panel-border); }
+.sl > span, .ro__val, .btn--ghost { color: var(--muted); }
+.ro { background: var(--readout-bg); border-color: var(--panel-border); }
+.drag-hint { color: var(--muted); background: color-mix(in srgb, var(--page-bg) 88%, transparent); }
+.btn--ghost { border-color: var(--panel-border); }

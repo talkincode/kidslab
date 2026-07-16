@@ -65,6 +65,12 @@ async function* walk(dir) {
   }
 }
 
+async function loadSdk() {
+  const src = await readFile(path.join(ROOT, 'scripts', 'sdk', 'core.js'), 'utf8');
+  const { code } = await transform(src, { loader: 'js', minify: true, charset: 'utf8' });
+  return code;
+}
+
 async function loadTracker() {
   const endpoint = process.env.KIDSLAB_ANALYTICS_ENDPOINT ||
     JSON.parse(await readFile(path.join(ROOT, 'package.json'), 'utf8')).kidslab?.analyticsEndpoint || '';
@@ -76,6 +82,7 @@ async function loadTracker() {
 
 /* 注入到每个课件页 <head>：favicon + 「返回星图」悬浮按钮（仅从星图进入时显示） */
 const FAVICON_TAG = '<link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">';
+const SDK_SOURCE_TAG_RE = /<script\b(?=[^>]*\bdata-kidslab-sdk\b)[^>]*><\/script>\s*/gi;
 const STARMAP_BACK_TAG = `<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\\u8fd4\\u56de\\u661f\\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>`;
 
 function injectHead(html, tags) {
@@ -85,7 +92,7 @@ function injectHead(html, tags) {
   return html + block;
 }
 
-async function buildCourse(id, tracker) {
+async function buildCourse(id, sdk, tracker) {
   const srcDir = path.join(SRC, id);
   const outDir = path.join(OUT, id);
   let saved = 0, total = 0;
@@ -97,9 +104,11 @@ async function buildCourse(id, tracker) {
     const ext = path.extname(file);
     const minifiable = (ext === '.js' || ext === '.mjs' || ext === '.css') && !file.endsWith('.min.js') && !file.endsWith('.min.css');
     if (rel === 'index.html') {
-      const html = await readFile(file, 'utf8');
+      const html = (await readFile(file, 'utf8')).replace(SDK_SOURCE_TAG_RE, '');
+      if (html.includes('data-kidslab-sdk')) throw new Error(`src/${id}: SDK 源码标签未能内联替换`);
       const tags = [];
       if (!/<link[^>]+rel=["'][^"']*icon/i.test(html)) tags.push(FAVICON_TAG);
+      tags.push(`<script>${sdk}</script>`);
       tags.push(STARMAP_BACK_TAG);
       if (tracker) tags.push(`<script>${tracker.replaceAll('__COURSE_ID__', () => id)}</script>`);
       const out = injectHead(html, tags);
@@ -157,13 +166,14 @@ async function main() {
   await rm(OUT, { recursive: true, force: true });
   await mkdir(OUT, { recursive: true });
 
-  const tracker = await loadTracker();
+  const [sdk, tracker] = await Promise.all([loadSdk(), loadTracker()]);
+  ok(`platform SDK 已启用（${(sdk.length / 1024).toFixed(1)} KB 内联注入）`);
   console.log(tracker
     ? `\x1b[32m✓\x1b[0m analytics 埋点已启用（${(tracker.length / 1024).toFixed(1)} KB 内联注入）`
     : '\x1b[33m∅ analytics 未配置 endpoint，跳过埋点注入\x1b[0m');
 
   for (const c of courses) {
-    const { total, saved } = await buildCourse(c.id, tracker);
+    const { total, saved } = await buildCourse(c.id, sdk, tracker);
     ok(`courseware/${c.id}  ${(total / 1024).toFixed(1)} KB（压缩节省 ${(saved / 1024).toFixed(1)} KB）`);
   }
 

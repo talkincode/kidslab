@@ -18,8 +18,7 @@
       planets: { earth: 'Earth', moon: 'Moon', mars: 'Mars', jupiter: 'Jupiter' },
     },
   };
-  let lang = localStorage.getItem('kidslab.lang') || 'zh';
-  if (!I18N[lang]) lang = 'zh';
+  let lang = window.cool.preferences.lang;
 
   const PLANETS = [
     { id: 'earth', icon: '🌍', g: 9.81 },
@@ -44,6 +43,7 @@
   };
 
   const $ = (s) => document.querySelector(s);
+  const cssVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
   const canvas = $('#stage');
   const ctx = canvas.getContext('2d');
 
@@ -86,14 +86,14 @@
     /* 背景刻度弧（量角器）*/
     ctx.save();
     ctx.translate(m.px.x, m.px.y);
-    ctx.strokeStyle = 'rgba(212,160,60,0.22)';
+    ctx.strokeStyle = cssVar('--canvas-guide');
     ctx.lineWidth = 1.5;
     ctx.setLineDash([4, 7]);
     ctx.beginPath();
     ctx.arc(0, 0, m.len, Math.PI / 2 - 1.35, Math.PI / 2 + 1.35);
     ctx.stroke();
     ctx.setLineDash([]);
-    ctx.fillStyle = 'rgba(217,201,163,0.6)';
+    ctx.fillStyle = cssVar('--canvas-text');
     ctx.font = `600 ${Math.max(10, w / 70)}px ui-rounded, sans-serif`;
     ctx.textAlign = 'center';
     for (const deg of [-60, -30, 0, 30, 60]) {
@@ -104,7 +104,7 @@
     ctx.restore();
 
     /* 顶部支架 */
-    ctx.fillStyle = '#4c4028';
+    ctx.fillStyle = cssVar('--canvas-frame');
     ctx.fillRect(m.px.x - 70, m.px.y - 14, 140, 10);
     ctx.fillStyle = '#d4a03c';
     ctx.beginPath(); ctx.arc(m.px.x, m.px.y, 7, 0, 7); ctx.fill();
@@ -121,7 +121,7 @@
     ctx.stroke();
 
     /* 摆线 */
-    ctx.strokeStyle = '#d9c9a3';
+    ctx.strokeStyle = cssVar('--canvas-line');
     ctx.lineWidth = 2.5;
     ctx.beginPath(); ctx.moveTo(m.px.x, m.px.y); ctx.lineTo(b.x, b.y); ctx.stroke();
 
@@ -132,7 +132,7 @@
     grad.addColorStop(0.55, '#d4a03c');
     grad.addColorStop(1, '#8a6420');
     ctx.fillStyle = grad;
-    ctx.strokeStyle = '#2c2618';
+    ctx.strokeStyle = cssVar('--canvas-ball-edge');
     ctx.lineWidth = 3;
     ctx.beginPath(); ctx.arc(b.x, b.y, R, 0, 7); ctx.fill(); ctx.stroke();
     /* 高光 */
@@ -238,19 +238,18 @@
     syncPlayBtn();
   });
 
-  function applyLang() {
-    const t = I18N[lang];
-    document.querySelectorAll('[data-t]').forEach((n) => { n.textContent = t[n.dataset.t]; });
-    $('#langBtn').textContent = t.langBtn;
-    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
-    document.title = t.doc;
-    renderPlanets();
-    syncPlayBtn();
-  }
-  $('#langBtn').addEventListener('click', () => {
-    lang = lang === 'zh' ? 'en' : 'zh';
-    localStorage.setItem('kidslab.lang', lang);
-    applyLang();
+  $('#langBtn').addEventListener('click', () => window.cool.preferences.toggleLang());
+  $('#themeBtn').addEventListener('click', () => window.cool.preferences.toggleTheme());
+  window.cool.bindI18n(I18N, {
+    onChange({ kind, lang: nextLang, theme, t }) {
+      $('#themeBtn').textContent = theme === 'light' ? '🌙' : '☀️';
+      if (kind === 'theme') return;
+      lang = nextLang;
+      $('#langBtn').textContent = t('langBtn');
+      document.title = t('doc');
+      renderPlanets();
+      syncPlayBtn();
+    },
   });
 
   function resize() {
@@ -261,7 +260,6 @@
   }
   addEventListener('resize', resize);
 
-  applyLang();
   resize();
   requestAnimationFrame(loop);
 })();

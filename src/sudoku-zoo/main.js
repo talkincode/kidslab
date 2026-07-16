@@ -92,8 +92,7 @@
     },
   };
 
-  let lang = localStorage.getItem('kidslab.lang') || 'zh';
-  if (!I18N[lang]) lang = 'zh';
+  let lang = window.cool.preferences.lang;
   const t = () => I18N[lang];
   const $ = (s) => document.querySelector(s);
   const pick = (arr) => arr[(Math.random() * arr.length) | 0];
@@ -605,9 +604,12 @@
   });
 
   /* ================= 事件绑定 ================= */
-  $('#langBtn').addEventListener('click', () => {
-    lang = lang === 'zh' ? 'en' : 'zh';
-    localStorage.setItem('kidslab.lang', lang);
+  $('#langBtn').addEventListener('click', () => window.cool.preferences.toggleLang());
+  $('#themeBtn').addEventListener('click', () => window.cool.preferences.toggleTheme());
+  window.cool.preferences.subscribe(({ kind }) => {
+    $('#themeBtn').textContent = window.cool.preferences.theme === 'light' ? '🌙' : '☀️';
+    if (kind !== 'lang') return;
+    lang = window.cool.preferences.lang;
     applyLang();
   });
   $('#soundBtn').addEventListener('click', () => {
@@ -644,6 +646,7 @@
 
   /* ================= 启动 ================= */
   $('#soundBtn').textContent = soundOn ? '🔊' : '🔇';
+  $('#themeBtn').textContent = window.cool.preferences.theme === 'light' ? '🌙' : '☀️';
   applyLang();
   setMenuBubble(t().menuHi);
   // 深链接: #l1 ~ #l5 直接打开已解锁的关卡

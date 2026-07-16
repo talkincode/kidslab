@@ -6,6 +6,8 @@
       doc: '🏥 虫虫医院 · KidsLab',
       back: '返回平台',
       title: '虫虫医院',
+      soundOn: '声音开启',
+      soundOff: '声音关闭',
       caseLabel: '病床',
       chart: '电子病历 · 程序',
       monitor: '变量监护仪',
@@ -35,6 +37,17 @@
       tipBug: '停！这一行让结果不对。现在只改这一行。',
       tipWrongPatch: '这个方案还会让病人不舒服，再比较一下预期结果。',
       tipHealed: '修复成功！你用证据找到了 bug，而不是靠乱猜。',
+      firstAction: '👆 第一步：点一行，猜猜 bug 藏在哪里',
+      onboardingTag: '新手值班卡',
+      onboardingTitle: '值班医生上岗',
+      onboardingLead: '别急着改代码。像医生一样，按这 3 步抓住 bug：',
+      guidePredict: '① 先猜病灶',
+      guidePredictDesc: '点一行你觉得有问题的代码。',
+      guideTrace: '② 单步听诊',
+      guideTraceDesc: '每点一次执行一行，同时看变量变化。',
+      guideRepair: '③ 只改一行',
+      guideRepairDesc: '虫虫现身后，选一针让程序康复。',
+      guideStart: '开始问诊',
       predicted: '预测',
       bugMark: '病灶',
       surgeryTitle: '哪一针能让程序恢复正常？',
@@ -63,6 +76,8 @@
       doc: '🏥 Bug Hospital · KidsLab',
       back: 'Back',
       title: 'Bug Hospital',
+      soundOn: 'Sound on',
+      soundOff: 'Sound off',
       caseLabel: 'BED',
       chart: 'Digital chart · Program',
       monitor: 'Variable monitor',
@@ -92,6 +107,17 @@
       tipBug: 'Stop! This line caused the wrong result. Change only this line.',
       tipWrongPatch: 'That treatment still feels wrong. Compare it with the expected result.',
       tipHealed: 'Repair complete! You found the bug with evidence, not random guesses.',
+      firstAction: '👆 Step 1: tap a line where the bug may be hiding',
+      onboardingTag: 'NEW DOCTOR CARD',
+      onboardingTitle: 'Your shift starts now',
+      onboardingLead: 'Do not edit at random. Catch the bug in 3 doctor-like steps:',
+      guidePredict: '① Predict',
+      guidePredictDesc: 'Tap the line you think is making the program sick.',
+      guideTrace: '② Listen',
+      guideTraceDesc: 'Run one line at a time and watch the variables change.',
+      guideRepair: '③ Repair one line',
+      guideRepairDesc: 'When the bug appears, choose the treatment that heals it.',
+      guideStart: 'Start diagnosis',
       predicted: 'guess',
       bugMark: 'bug',
       surgeryTitle: 'Which one-line treatment will heal the program?',
@@ -212,7 +238,12 @@
     },
   ];
 
-  const LS = { lang: 'kidslab.lang', theme: 'kidslab.theme' };
+  const LS = {
+    lang: 'kidslab.lang',
+    theme: 'kidslab.theme',
+    onboarded: 'kidslab.bug-hospital.onboarded',
+    sound: 'kidslab.bug-hospital.sound',
+  };
   const store = {
     get: (key) => { try { return localStorage.getItem(key); } catch { return null; } },
     set: (key, value) => { try { localStorage.setItem(key, value); } catch { /* Ignore storage errors. */ } },
@@ -230,22 +261,29 @@
   let solved = new Set();
   let predictionHits = new Set();
   let wrongPatch = null;
+  let onboarded = store.get(LS.onboarded) === '1';
+  let soundOn = store.get(LS.sound) !== 'off';
+  let audioContext = null;
 
   const $ = (id) => document.getElementById(id);
   const els = {
     langBtn: $('langBtn'),
     themeBtn: $('themeBtn'),
+    soundBtn: $('soundBtn'),
     caseNumber: $('caseNumber'),
     caseName: $('caseName'),
     caseGoal: $('caseGoal'),
     progress: $('progress'),
     tip: $('tip'),
+    hospital: document.querySelector('.hospital'),
     statusDot: $('statusDot'),
     statusText: $('statusText'),
     patient: $('patient'),
     symptom: $('symptom'),
     programName: $('programName'),
     phaseBadge: $('phaseBadge'),
+    debugPanel: document.querySelector('.debug-panel'),
+    actionNudge: $('actionNudge'),
     codeList: $('codeList'),
     monitor: document.querySelector('.monitor'),
     watchList: $('watchList'),
@@ -259,6 +297,8 @@
     win: $('win'),
     report: $('report'),
     replayBtn: $('replayBtn'),
+    onboarding: $('onboarding'),
+    guideStartBtn: $('guideStartBtn'),
   };
 
   const t = (key, ...args) => {
@@ -270,6 +310,77 @@
     return CASES[caseIndex];
   }
 
+  function syncSoundUi() {
+    els.soundBtn.textContent = soundOn ? '🔊' : '🔇';
+    els.soundBtn.setAttribute('aria-pressed', String(soundOn));
+    els.soundBtn.setAttribute('aria-label', t(soundOn ? 'soundOn' : 'soundOff'));
+  }
+
+  function ensureAudio() {
+    if (!soundOn) return null;
+    if (!audioContext) {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return null;
+      try {
+        audioContext = new AudioContext();
+      } catch (error) {
+        console.warn('Bug Hospital audio is unavailable.', error);
+        return null;
+      }
+    }
+    if (audioContext.state === 'suspended') {
+      audioContext.resume().catch((error) => console.warn('Bug Hospital audio could not resume.', error));
+    }
+    return audioContext;
+  }
+
+  function tone(frequency, duration = 0.1, {
+    type = 'sine',
+    gain = 0.08,
+    delay = 0,
+  } = {}) {
+    const context = ensureAudio();
+    if (!context) return;
+    const start = context.currentTime + delay;
+    const oscillator = context.createOscillator();
+    const volume = context.createGain();
+    oscillator.type = type;
+    oscillator.frequency.setValueAtTime(frequency, start);
+    volume.gain.setValueAtTime(gain, start);
+    volume.gain.exponentialRampToValueAtTime(0.001, start + duration);
+    oscillator.connect(volume).connect(context.destination);
+    oscillator.start(start);
+    oscillator.stop(start + duration + 0.02);
+  }
+
+  const sfx = {
+    pick() {
+      tone(520, 0.07, { type: 'triangle', gain: 0.06 });
+      tone(690, 0.08, { type: 'triangle', gain: 0.045, delay: 0.045 });
+    },
+    confirm() {
+      tone(440, 0.08, { type: 'sine', gain: 0.055 });
+      tone(660, 0.1, { type: 'sine', gain: 0.05, delay: 0.06 });
+    },
+    step() {
+      tone(150, 0.075, { type: 'sine', gain: 0.055 });
+      tone(230, 0.06, { type: 'triangle', gain: 0.035, delay: 0.075 });
+    },
+    alarm() {
+      tone(260, 0.12, { type: 'square', gain: 0.045 });
+      tone(190, 0.16, { type: 'square', gain: 0.04, delay: 0.13 });
+    },
+    wrong() {
+      tone(250, 0.12, { type: 'sawtooth', gain: 0.04 });
+      tone(165, 0.18, { type: 'sawtooth', gain: 0.035, delay: 0.1 });
+    },
+    healed() {
+      [523, 659, 784, 1047].forEach((frequency, index) => {
+        tone(frequency, 0.18, { type: 'triangle', gain: 0.055, delay: index * 0.07 });
+      });
+    },
+  };
+
   function applyLang() {
     document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
     document.title = t('doc');
@@ -278,6 +389,7 @@
       if (typeof value === 'string') node.textContent = value;
     });
     els.langBtn.textContent = lang === 'zh' ? 'EN' : '中';
+    syncSoundUi();
     render();
   }
 
@@ -332,6 +444,12 @@
     }).join('');
   }
 
+  function renderGuidance() {
+    const needsPrediction = onboarded && phase === 'predict' && prediction === null;
+    els.actionNudge.hidden = !needsPrediction;
+    els.debugPanel.classList.toggle('needs-prediction', needsPrediction);
+  }
+
   function renderMonitor() {
     const item = currentCase();
     const trace = traceIndex >= 0 ? item.trace[traceIndex] : null;
@@ -348,7 +466,9 @@
 
   function renderPatches() {
     const item = currentCase();
-    els.surgery.hidden = phase !== 'operate';
+    const operating = phase === 'operate';
+    els.surgery.hidden = !operating;
+    els.hospital.classList.toggle('is-operating', operating);
     els.surgeryTitle.textContent = t('surgeryTitle');
     els.patches.innerHTML = item.patches[lang].map((patch, index) => `
       <button class="patch ${wrongPatch === index ? 'is-wrong' : ''}" type="button" data-patch="${index}">${patch}</button>
@@ -388,6 +508,7 @@
     els.phaseBadge.textContent = t(phaseKey());
     els.tip.textContent = t(tipKey());
     renderProgress();
+    renderGuidance();
     renderCode();
     renderMonitor();
     renderPatches();
@@ -407,6 +528,7 @@
   function pickLine(index) {
     if (phase !== 'predict') return;
     prediction = index;
+    sfx.pick();
     render();
     window.cool?.track('predict-bug-line', { case: caseIndex + 1, line: index + 1 });
   }
@@ -416,6 +538,7 @@
     if (prediction === currentCase().bugLine) predictionHits.add(caseIndex);
     phase = 'trace';
     traceIndex = -1;
+    sfx.confirm();
     render();
     window.cool?.track('start-step-through', { case: caseIndex + 1 });
   }
@@ -429,7 +552,10 @@
     els.patient.classList.add('is-checking');
     if (item.trace[traceIndex].bug) {
       phase = 'operate';
+      sfx.alarm();
       window.cool?.track('observe-bug', { case: caseIndex + 1, line: item.bugLine + 1 });
+    } else {
+      sfx.step();
     }
     render();
   }
@@ -439,6 +565,7 @@
     if (phase !== 'operate') return;
     if (index !== item.correctPatch) {
       wrongPatch = index;
+      sfx.wrong();
       render();
       window.cool?.track('try-wrong-fix', { case: caseIndex + 1 });
       return;
@@ -446,6 +573,7 @@
     phase = 'healthy';
     wrongPatch = null;
     solved.add(caseIndex);
+    sfx.healed();
     render();
     window.cool?.track('heal-program', { case: caseIndex + 1 });
   }
@@ -482,6 +610,12 @@
     store.set(LS.theme, theme);
     applyTheme();
   });
+  els.soundBtn.addEventListener('click', () => {
+    soundOn = !soundOn;
+    store.set(LS.sound, soundOn ? 'on' : 'off');
+    syncSoundUi();
+    if (soundOn) sfx.confirm();
+  });
   els.codeList.addEventListener('click', (event) => {
     const button = event.target.closest('[data-line]');
     if (button) pickLine(Number(button.dataset.line));
@@ -497,8 +631,18 @@
   els.resetBtn.addEventListener('click', resetCase);
   els.nextBtn.addEventListener('click', nextCase);
   els.replayBtn.addEventListener('click', replay);
+  els.guideStartBtn.addEventListener('click', () => {
+    onboarded = true;
+    store.set(LS.onboarded, '1');
+    els.onboarding.hidden = true;
+    sfx.confirm();
+    render();
+    els.codeList.querySelector('.code-line')?.focus();
+    window.cool?.track('start-onboarding');
+  });
 
   applyTheme();
   applyLang();
   resetCase();
+  els.onboarding.hidden = onboarded;
 })();

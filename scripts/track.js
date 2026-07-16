@@ -24,14 +24,21 @@
   const ENDPOINT = '__ANALYTICS_ENDPOINT__';
   const COURSE = '__COURSE_ID__';
   const w = window;
-  const noop = { track() {}, stage() {} };
+  const cool = w.cool || {};
 
   let optOut = false;
   try {
     optOut = navigator.doNotTrack === '1' || !!navigator.globalPrivacyControl ||
       localStorage.getItem('kidslab.track') === 'off';
   } catch { /* 忽略 */ }
-  if (w.cool || !ENDPOINT || ENDPOINT.charAt(0) === '_' || optOut) { w.cool = w.cool || noop; return; }
+  if (!ENDPOINT || ENDPOINT.charAt(0) === '_' || optOut) {
+    if (typeof cool.track !== 'function') cool.track = () => {};
+    if (typeof cool.stage !== 'function') cool.stage = () => {};
+    w.cool = cool;
+    return;
+  }
+  if (cool.__analyticsReady) return;
+  cool.__analyticsReady = true;
 
   const now = () => Date.now();
   const rid = () => {
@@ -121,7 +128,7 @@
   addEventListener('pagehide', onHide);
 
   // ---- 课件可选 API ----
-  w.cool = {
+  Object.assign(cool, {
     track(name, opts) {
       if (typeof name !== 'string' || !name || acts >= 500) return;
       name = name.slice(0, 48);
@@ -147,5 +154,6 @@
       streakName = ''; streak = 0;
       push('stage', stage, {});
     },
-  };
+  });
+  w.cool = cool;
 })();

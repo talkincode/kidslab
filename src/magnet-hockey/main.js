@@ -88,7 +88,8 @@
   function forceFrom(mx, my, mpole, strength = 980000) {
     let dx = puck.x - mx, dy = puck.y - my, d2 = dx * dx + dy * dy; const d = Math.sqrt(d2) || 1; d2 = Math.max(2100, d2); dx /= d; dy /= d;
     let shield = 1; level().obs.filter((o) => o.type === 'iron').map(rectPx).forEach((r) => { if (lineIntersectsRect(mx, my, puck.x, puck.y, r)) shield = 0; });
-    const sign = mpole === puck.pole ? 1 : -1; const f = Math.max(-650, Math.min(650, sign * strength / d2)) * shield;
+    // `pole` is the magnet's right-facing end, so two facing ends match when these values differ.
+    const sign = mpole === puck.pole ? -1 : 1; const f = Math.max(-650, Math.min(650, sign * strength / d2)) * shield;
     return { ax: dx * f, ay: dy * f, shield };
   }
   function physics(dt) {

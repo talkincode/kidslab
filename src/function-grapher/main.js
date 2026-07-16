@@ -17,8 +17,7 @@
       params: { a: 'Knob a', b: 'Knob b', c: 'Knob c', k: 'Knob k' },
     },
   };
-  let lang = localStorage.getItem('kidslab.lang') || 'zh';
-  if (!I18N[lang]) lang = 'zh';
+  let lang = window.cool.preferences.lang;
 
   const PRESETS = {
     linear: {
@@ -90,6 +89,7 @@
   }
 
   const $ = (s) => document.querySelector(s);
+  const cssVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
   const canvas = $('#plot');
   const ctx = canvas.getContext('2d');
   const VIEW = { x: 10.5, y: 10.5 }; /* 视野半径 */
@@ -150,28 +150,28 @@
     ctx.clearRect(0, 0, w, h);
 
     /* 绘图纸底 */
-    ctx.fillStyle = '#0b1327';
+    ctx.fillStyle = cssVar('--plot-bg');
     ctx.fillRect(0, 0, w, h);
 
     /* 网格 */
     ctx.lineWidth = 1;
     for (let gx = -10; gx <= 10; gx++) {
       const [px] = toPx(gx, 0, w, h);
-      ctx.strokeStyle = gx === 0 ? '#41628f' : gx % 5 === 0 ? '#1e3155' : '#152544';
+      ctx.strokeStyle = gx === 0 ? cssVar('--grid-axis') : gx % 5 === 0 ? cssVar('--grid-major') : cssVar('--grid-minor');
       ctx.beginPath(); ctx.moveTo(px, 0); ctx.lineTo(px, h); ctx.stroke();
     }
     for (let gy = -10; gy <= 10; gy++) {
       const [, py] = toPx(0, gy, w, h);
-      ctx.strokeStyle = gy === 0 ? '#41628f' : gy % 5 === 0 ? '#1e3155' : '#152544';
+      ctx.strokeStyle = gy === 0 ? cssVar('--grid-axis') : gy % 5 === 0 ? cssVar('--grid-major') : cssVar('--grid-minor');
       ctx.beginPath(); ctx.moveTo(0, py); ctx.lineTo(w, py); ctx.stroke();
     }
 
     /* 坐标轴 */
-    ctx.strokeStyle = '#7ea4d9';
+    ctx.strokeStyle = cssVar('--grid-axis');
     ctx.lineWidth = Math.max(2, w / 500);
     const [ox, oy] = toPx(0, 0, w, h);
     ctx.beginPath(); ctx.moveTo(0, oy); ctx.lineTo(w, oy); ctx.moveTo(ox, 0); ctx.lineTo(ox, h); ctx.stroke();
-    ctx.fillStyle = '#7ea4d9';
+    ctx.fillStyle = cssVar('--grid-axis');
     ctx.font = `${Math.max(11, w / 70)}px ui-rounded, sans-serif`;
     for (let gx = -10; gx <= 10; gx += 5) {
       if (!gx) continue;
@@ -185,9 +185,9 @@
     }
 
     /* 曲线（发光双描）*/
-    for (const [width, color, alpha] of [[9, '#ffd166', 0.16], [3.2, '#ffd166', 1]]) {
+    for (const [width, alpha] of [[9, 0.16], [3.2, 1]]) {
       ctx.lineWidth = (width * w) / 900;
-      ctx.strokeStyle = color;
+      ctx.strokeStyle = cssVar('--curve');
       ctx.globalAlpha = alpha;
       ctx.lineJoin = 'round';
       ctx.beginPath();
@@ -211,10 +211,10 @@
       if (!isFinite(mx) || !isFinite(my) || Math.abs(mx) > VIEW.x || Math.abs(my) > VIEW.y) continue;
       const [px, py] = toPx(mx, my, w, h);
       ctx.fillStyle = '#ff5d8f';
-      ctx.strokeStyle = '#0b1327';
+      ctx.strokeStyle = cssVar('--plot-bg');
       ctx.lineWidth = 3;
       ctx.beginPath(); ctx.arc(px, py, Math.max(5, w / 160), 0, 7); ctx.fill(); ctx.stroke();
-      ctx.fillStyle = '#ffb3c9';
+      ctx.fillStyle = cssVar('--point-label');
       ctx.fillText(`(${fmt(mx)}, ${fmt(my)})`, px + 10, py - 10);
     }
 
@@ -222,26 +222,21 @@
     $('#info').innerHTML = preset.info(p).map((s) => `<p>${s}</p>`).join('');
   }
 
-  function applyLang() {
-    const t = I18N[lang];
-    document.querySelectorAll('[data-t]').forEach((n) => { n.textContent = t[n.dataset.t]; });
-    $('#langBtn').textContent = t.langBtn;
-    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
-    document.title = t.doc;
-  }
-
-  $('#langBtn').addEventListener('click', () => {
-    lang = lang === 'zh' ? 'en' : 'zh';
-    localStorage.setItem('kidslab.lang', lang);
-    applyLang();
-    renderTabs();
-    renderSliders();
-    draw();
+  $('#langBtn').addEventListener('click', () => window.cool.preferences.toggleLang());
+  $('#themeBtn').addEventListener('click', () => window.cool.preferences.toggleTheme());
+  window.cool.bindI18n(I18N, {
+    onChange({ kind, lang: nextLang, theme, t }) {
+      $('#themeBtn').textContent = theme === 'light' ? '🌙' : '☀️';
+      if (kind === 'theme') { draw(); return; }
+      lang = nextLang;
+      $('#langBtn').textContent = t('langBtn');
+      document.title = t('doc');
+      renderTabs();
+      renderSliders();
+      draw();
+    },
   });
   addEventListener('resize', resize);
 
-  applyLang();
-  renderTabs();
-  renderSliders();
   resize();
 })();

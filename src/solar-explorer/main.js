@@ -18,8 +18,7 @@
       sunDist: 'It IS the center!',
     },
   };
-  let lang = localStorage.getItem('kidslab.lang') || 'zh';
-  if (!I18N[lang]) lang = 'zh';
+  let lang = window.cool.preferences.lang;
 
   /* orbit: 相对轨道半径 / size: 相对大小 / period: 地球年 */
   const BODIES = [
@@ -53,6 +52,7 @@
   ];
 
   const $ = (s) => document.querySelector(s);
+  const cssVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
   const canvas = $('#space');
   const ctx = canvas.getContext('2d');
 
@@ -96,13 +96,13 @@
     /* 星星 */
     for (const s of stars) {
       ctx.globalAlpha = 0.4 + Math.sin(tm / 900 + s.tw) * 0.3;
-      ctx.fillStyle = '#cfd8ff';
+      ctx.fillStyle = cssVar('--star');
       ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, 7); ctx.fill();
     }
     ctx.globalAlpha = 1;
 
     /* 轨道 */
-    ctx.strokeStyle = 'rgba(140, 155, 255, 0.16)';
+    ctx.strokeStyle = cssVar('--orbit');
     ctx.lineWidth = 1.2;
     for (const b of BODIES) {
       if (!b.orbit) continue;
@@ -147,7 +147,7 @@
         ctx.setLineDash([]);
       }
 
-      ctx.fillStyle = 'rgba(220, 228, 255, 0.85)';
+      ctx.fillStyle = cssVar('--space-label');
       ctx.font = `700 ${Math.max(10, 11 * m.pr)}px ui-rounded, sans-serif`;
       ctx.textAlign = 'center';
       ctx.fillText(b.name[lang], p.x, p.y + R + 15 * m.pr);
@@ -217,14 +217,18 @@
     document.title = t.doc;
     if (selected) renderInfo(BODIES.find((b) => b.id === selected));
   }
-  $('#langBtn').addEventListener('click', () => {
-    lang = lang === 'zh' ? 'en' : 'zh';
-    localStorage.setItem('kidslab.lang', lang);
+  $('#langBtn').addEventListener('click', () => window.cool.preferences.toggleLang());
+  $('#themeBtn').addEventListener('click', () => window.cool.preferences.toggleTheme());
+  window.cool.preferences.subscribe(({ kind }) => {
+    $('#themeBtn').textContent = window.cool.preferences.theme === 'light' ? '🌙' : '☀️';
+    if (kind !== 'lang') return;
+    lang = window.cool.preferences.lang;
     applyLang();
   });
 
   addEventListener('resize', resize);
   applyLang();
+  $('#themeBtn').textContent = window.cool.preferences.theme === 'light' ? '🌙' : '☀️';
   syncSpeedLabel();
   resize();
   requestAnimationFrame(loop);
