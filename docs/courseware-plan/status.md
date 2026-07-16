@@ -1,6 +1,6 @@
 # KidsLab 计划状态清单
 
-最后核验：2026-07-16
+最后核验：2026-07-17
 
 事实来源：`src/*/course.json`、`docs/courseware-plan/*.md`、`README.md`、`AGENT.md`。本文件负责回答“哪些已完成、哪些未实现、后续 Agent 完成计划后要更新哪里”。
 
@@ -31,7 +31,7 @@ KidsLab 应该是一组孩子打开就想玩的交互课件，而不是题库或
 
 - 主站课程浏览：`index.html`、`assets/js/app.js` 支持学段、年级、分类、搜索、双语、主题、强调色与置顶课件。
 - 静态构建发布：`scripts/build.mjs` 校验 `course.json`、压缩资源、生成 `courseware/index.json`；GitHub Pages workflow 在 `main` 推送后构建发布。
-- 课件源码库：当前 `src/` 下有 40 个课件目录，其中小学规划内按 ID 直接完成 34 个。
+- 课件源码库：当前 `src/` 下有 41 个课件目录，其中小学规划内按 ID 直接完成 35 个。
 - 小学课件规划：`docs/courseware-plan/` 覆盖数学、编程、逻辑、科学 84 个小学目标课件。
 - 课件模板：`docs/courseware-template/` 提供双语、主题、静态独立课件起点。
 - 行为分析：`docs/analytics.md`、`scripts/track.js`、`cloudflare/analytics/` 提供可选埋点链路。
@@ -66,11 +66,11 @@ Agent 每次完成计划项后必须同步更新：
 
 | 学科 | 目标数 | 已完成（按规划 ID） | 未实现 | 备注 |
 | --- | ---: | ---: | ---: | --- |
-| 数学 | 32 | 12 | 20 | P0 已完成 |
+| 数学 | 32 | 13 | 19 | P0 已完成 |
 | 编程 | 15 | 6 | 9 | P0 已完成 |
 | 逻辑 | 15 | 6 | 9 | P0 已完成；`magic-cube` 为规划外补充 |
 | 科学 | 22 | 10 | 12 | `plant-lab` 可能对应 `plant-xray`，但 ID/标题未对齐 |
-| 合计 | 84 | 34 | 50 | 另有 6 个规划外已上线课件 |
+| 合计 | 84 | 35 | 49 | 另有 6 个规划外已上线课件 |
 
 ## 已完成（规划内）
 
@@ -80,6 +80,7 @@ Agent 每次完成计划项后必须同步更新：
 - [x] 数字萤火虫 `number-fireflies`
 - [x] 百数地铁 `hundred-metro`
 - [x] 时钟小镇 `clock-town`
+- [x] 进位工厂 `carry-factory`
 - [x] 立体影子剧场 `shadow-theater`
 - [x] 果园订单 `orchard-orders`
 - [x] 方块摄影棚 `voxel-studio`
@@ -124,7 +125,6 @@ Agent 每次完成计划项后必须同步更新：
 
 ### 数学
 
-- [ ] 进位工厂 `carry-factory`
 - [ ] 搭配衣橱 `combo-closet`
 - [ ] 找零售货机 `change-vending`
 - [ ] 格子大厦 `grid-tower`

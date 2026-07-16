@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>⚙️ 进位工厂 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="bar">
+    <a class="pill back-link" href="../../index.html" aria-label="Back">
+      <span aria-hidden="true">←</span><span class="back-copy" data-t="back">返回平台</span>
+    </a>
+    <h1 class="bar__title"><span aria-hidden="true">⚙️</span> <span data-t="title">进位工厂</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="sound">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill lang-btn" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="app">
+    <section class="order-card panel">
+      <div class="foreman" aria-hidden="true">
+        <span class="foreman__face" id="foremanFace">👩‍🏭</span>
+        <span class="foreman__bubble">!</span>
+      </div>
+      <div class="order-copy">
+        <span class="eyebrow" data-t="orderLabel">今日订单</span>
+        <strong id="orderText">47 + 38</strong>
+        <span id="orderStory">把两批零件合在一起</span>
+      </div>
+      <div class="progress">
+        <span><b data-t="roundLabel">订单</b> <strong id="roundText">1/6</strong></span>
+        <span class="bolts" id="bolts" aria-label="quality bolts">🔩🔩🔩</span>
+      </div>
+    </section>
+
+    <section class="factory panel" id="factory" data-mode="add">
+      <div class="factory__roof" aria-hidden="true">
+        <i></i><i></i><i></i><i></i><i></i>
+      </div>
+      <div class="factory__head">
+        <div class="formula" aria-live="polite">
+          <span id="formulaLeft">47 + 38</span>
+          <span class="formula__equal">=</span>
+          <strong id="formulaResult">?</strong>
+        </div>
+        <div class="steam-gauge">
+          <span data-t="machineStatus">机器状态</span>
+          <b id="machineStatus">待投料</b>
+          <i id="gaugeNeedle"></i>
+        </div>
+      </div>
+
+      <div class="place-lines" id="placeLines">
+        <article class="place-line" data-index="3">
+          <div class="pipe pipe--left" aria-hidden="true"></div>
+          <h2 data-place-label>千位</h2>
+          <div class="hopper">
+            <span class="demand" data-demand hidden></span>
+            <div class="parts" data-parts aria-hidden="true"></div>
+            <strong class="part-count" data-count>0</strong>
+          </div>
+          <button class="machine-lever" type="button" data-lever aria-disabled="true">
+            <span aria-hidden="true">↔</span><b data-lever-label>待机</b>
+          </button>
+        </article>
+        <article class="place-line" data-index="2">
+          <div class="pipe" aria-hidden="true"></div>
+          <h2 data-place-label>百位</h2>
+          <div class="hopper">
+            <span class="demand" data-demand hidden></span>
+            <div class="parts" data-parts aria-hidden="true"></div>
+            <strong class="part-count" data-count>0</strong>
+          </div>
+          <button class="machine-lever" type="button" data-lever aria-disabled="true">
+            <span aria-hidden="true">↔</span><b data-lever-label>待机</b>
+          </button>
+        </article>
+        <article class="place-line" data-index="1">
+          <div class="pipe" aria-hidden="true"></div>
+          <h2 data-place-label>十位</h2>
+          <div class="hopper">
+            <span class="demand" data-demand hidden></span>
+            <div class="parts" data-parts aria-hidden="true"></div>
+            <strong class="part-count" data-count>0</strong>
+          </div>
+          <button class="machine-lever" type="button" data-lever aria-disabled="true">
+            <span aria-hidden="true">↔</span><b data-lever-label>待机</b>
+          </button>
+        </article>
+        <article class="place-line" data-index="0">
+          <div class="pipe" aria-hidden="true"></div>
+          <h2 data-place-label>个位</h2>
+          <div class="hopper">
+            <span class="demand" data-demand hidden></span>
+            <div class="parts" data-parts aria-hidden="true"></div>
+            <strong class="part-count" data-count>0</strong>
+          </div>
+          <button class="machine-lever" type="button" data-lever aria-disabled="true">
+            <span aria-hidden="true">↔</span><b data-lever-label>待机</b>
+          </button>
+        </article>
+      </div>
+
+      <div class="conveyor" aria-hidden="true">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      </div>
+      <div class="sparks" id="sparks" aria-hidden="true"></div>
+    </section>
+
+    <section class="control panel">
+      <p class="feedback" id="feedback" aria-live="polite">先把第二批零件倒进流水线。</p>
+      <div class="control__buttons">
+        <button class="tool-btn" id="hintBtn" type="button"><span>💡</span><b data-t="hint">提示</b></button>
+        <button class="main-btn" id="actionBtn" type="button"><span id="actionIcon">⬇</span><b id="actionText">投放 +38</b></button>
+        <button class="tool-btn" id="resetBtn" type="button"><span>↺</span><b data-t="reset">重开</b></button>
+      </div>
+    </section>
+  </main>
+
+  <div class="result" id="result" hidden>
+    <section class="result__card" role="dialog" aria-modal="true" aria-labelledby="resultTitle">
+      <div class="result__gears" aria-hidden="true">⚙️ ✨ ⚙️</div>
+      <span class="result__stamp" id="resultStamp">85</span>
+      <h2 id="resultTitle">验收合格！</h2>
+      <p id="resultText">15 个一压成 1 个十，还剩 5 个一。</p>
+      <button class="main-btn result__next" id="nextBtn" type="button">
+        <span>→</span><b id="nextText">下一张订单</b>
+      </button>
+    </section>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

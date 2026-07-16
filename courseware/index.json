@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-16T15:13:44.717Z",
+  "generatedAt": "2026-07-16T18:13:47.853Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -868,6 +868,58 @@
         "作息"
       ],
       "path": "courseware/clock-town/index.html"
+    },
+    {
+      "id": "carry-factory",
+      "title": {
+        "zh": "进位工厂",
+        "en": "Carry-Over Factory"
+      },
+      "description": {
+        "zh": "开动四条数位流水线，把 10 颗珠子压成 1 个高位零件，也把 1 个高位零件拆成 10 个低位零件，亲手完成进位与退位。",
+        "en": "Run four place-value lines: press 10 parts into 1 higher-place part or split 1 into 10 lower-place parts to master carrying and borrowing."
+      },
+      "category": "math",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g2",
+        "g3"
+      ],
+      "tags": [
+        "加减法",
+        "数位",
+        "运算",
+        "益智游戏"
+      ],
+      "icon": "⚙️",
+      "order": 24,
+      "badge": "new",
+      "keywords": [
+        "Addition & Subtraction",
+        "addition",
+        "subtraction",
+        "凑十法",
+        "make ten",
+        "数的分解",
+        "number bonds",
+        "Place Value",
+        "place value",
+        "十进制",
+        "大数",
+        "powers of ten",
+        "Arithmetic",
+        "arithmetic",
+        "operations",
+        "四则运算",
+        "Puzzle Game",
+        "puzzle",
+        "game",
+        "益智",
+        "游戏"
+      ],
+      "path": "courseware/carry-factory/index.html"
     },
     {
       "id": "plant-lab",
