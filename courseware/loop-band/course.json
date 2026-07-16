@@ -1,0 +1,26 @@
+{
+  "id": "loop-band",
+  "title": {
+    "zh": "循环乐队",
+    "en": "Loop Band"
+  },
+  "description": {
+    "zh": "组建动物乐队，乐谱只能用循环块写：重复 4 次[咚 哒]！把循环套进循环做出整首歌，用越少的块写出同样的音乐，乐队评分越高。",
+    "en": "Form an animal band whose sheet music is made of loop blocks: repeat 4 × [boom clap]! Nest loops to build whole songs — fewer blocks for the same music means a higher score."
+  },
+  "category": "programming",
+  "levels": [
+    "primary"
+  ],
+  "grades": [
+    "g2",
+    "g3"
+  ],
+  "tags": [
+    "循环",
+    "编程启蒙",
+    "音乐"
+  ],
+  "icon": "🥁",
+  "order": 52
+}

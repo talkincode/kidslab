@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>🍳 机器人早餐 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    /* 防闪烁：进 body 前先定好主题与语言（与主站同一套 localStorage 键） */
+    (() => {
+      try {
+        const t = localStorage.getItem('kidslab.theme')
+          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = t;
+        const l = localStorage.getItem('kidslab.lang')
+          || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+      } catch { /* 隐私模式下静默降级 */ }
+    })();
+  </script>
+<link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🍳 <span data-t="title">机器人早餐</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero card">
+      <div class="kid-card">
+        <div class="kid" id="kid">🧒</div>
+        <div class="bubble">
+          <p class="mini" data-t="wish">今日订单</p>
+          <div id="wishIcons" class="wish-icons" aria-live="polite"></div>
+        </div>
+      </div>
+      <div class="hud">
+        <button class="level-chip" id="prevBtn" type="button">‹</button>
+        <div>
+          <p class="mini" data-t="level">关卡</p>
+          <h2 id="levelName">—</h2>
+          <p id="levelGoal" class="goal">—</p>
+        </div>
+        <button class="level-chip" id="nextBtn" type="button">›</button>
+      </div>
+      <div class="stars" id="stars">☆☆☆</div>
+    </section>
+
+    <p class="tip" id="tip" data-t="tip0">点卡片，再点空槽；也可以拖进去。机器人会一张张照做！</p>
+
+    <section class="game-grid">
+      <aside class="card panel">
+        <div class="panel-title"><span data-t="pool">指令卡池</span><b>👇</b></div>
+        <div id="cardPool" class="card-pool"></div>
+      </aside>
+
+      <section class="stage card" aria-live="polite">
+        <div class="kitchen">
+          <div class="shelf">🍯 🧁 🍌</div>
+          <div class="robot" id="robot"><span class="face">🤖</span><span class="arm">—</span></div>
+          <div class="oven" id="oven"><span>🔥</span><i id="smoke">💨</i></div>
+          <div class="counter">
+            <span id="toastLayer" class="toast-item">⬜</span>
+            <span id="spreadLayer" class="spread-layer"></span>
+            <span id="drinkLayer" class="drink-item">🥛</span>
+          </div>
+          <div class="table" id="table"><span>🍽️</span></div>
+          <div class="splatter" id="splatter"></div>
+        </div>
+        <div class="runline" id="runline">▶︎</div>
+      </section>
+
+      <aside class="card panel program-panel">
+        <div class="panel-title"><span data-t="program">程序轨道</span><b id="limitBadge"></b></div>
+        <div id="slots" class="slots"></div>
+        <div class="controls">
+          <button id="demoBtn" class="btn btn--ghost" type="button" data-t="demo">看前两步</button>
+          <button id="clearBtn" class="btn btn--ghost" type="button" data-t="clear">重排</button>
+          <button id="runBtn" class="btn" type="button" data-t="run">▶️ 运行</button>
+        </div>
+      </aside>
+    </section>
+
+    <section class="win" id="win" hidden>
+      <div class="win__card">
+        <p class="win__emoji" id="winEmoji">💖</p>
+        <h2 id="winTitle">早餐上桌！</h2>
+        <p id="winText">—</p>
+        <button class="btn" id="againBtn" type="button" data-t="next">下一关 →</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>

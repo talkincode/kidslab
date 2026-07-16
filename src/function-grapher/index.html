@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>函数变形记 · KidsLab</title>
+  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">📈 <span data-t="title">函数变形记</span></h1>
+    <button class="pill" id="langBtn" type="button">EN</button>
+  </header>
+
+  <main class="wrap">
+    <aside class="panel side">
+      <div class="tabs" id="tabs" role="tablist"></div>
+      <p class="eq" id="eq" aria-live="polite"></p>
+      <div class="sliders" id="sliders"></div>
+      <div class="info" id="info"></div>
+    </aside>
+
+    <section class="panel plot-wrap">
+      <canvas id="plot"></canvas>
+    </section>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>

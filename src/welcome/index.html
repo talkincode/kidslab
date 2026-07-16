@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>欢迎来到KidsLab · 从一盏灯到宇宙</title>
+  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <canvas id="scene" aria-hidden="true"></canvas>
+  <div class="vignette" aria-hidden="true"></div>
+  <div class="blink" id="blink" aria-hidden="true"></div>
+
+  <header class="hud hud--top">
+    <a class="pill pill--ghost" id="backLink" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <div class="hud__group">
+      <button class="pill" id="musicBtn" type="button" aria-pressed="false" aria-label="背景音乐开关">♪ <span id="musicState">关</span></button>
+      <button class="pill" id="langBtn" type="button" aria-label="切换语言">EN</button>
+    </div>
+  </header>
+
+  <main class="stage">
+    <p class="kicker" data-t="kicker">K12 · 互动课件学习乐园</p>
+    <h1 class="title" id="title">KidsLab</h1>
+    <div class="poem" id="poem" aria-label="欢迎诗">
+      <p class="poem__line" data-line="0">从一盏灯出发，路过整座城市的光</p>
+      <p class="poem__line" data-line="1">地球转过身，把黎明借给我们</p>
+      <p class="poem__line" data-line="2">太阳，是银河沙滩上的一粒沙</p>
+      <p class="poem__line" data-line="3">而你的好奇心，比宇宙更辽阔</p>
+    </div>
+    <div class="cta-row">
+      <a class="cta" href="../../index.html" data-t="cta">进入课程乐园 →</a>
+    </div>
+  </main>
+
+  <footer class="hud hud--bottom">
+    <p class="hint"><span class="hint__dot"></span><span id="hintText">点一下屏幕，让音乐响起</span></p>
+    <div class="journey" id="journey" role="group" aria-label="宇宙旅程">
+      <p class="journey__caption" id="journeyCaption">💡 眼前 · 一盏灯</p>
+      <div class="journey__dots" id="journeyDots"></div>
+    </div>
+    <p class="credit" data-t="credit">为 6–18 岁的好奇心而造</p>
+  </footer>
+
+  <div class="nogl" id="nogl" hidden>
+    <p data-t="nogl">你的浏览器暂不支持 WebGL，但学习的星辰依然为你闪耀 ✨</p>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

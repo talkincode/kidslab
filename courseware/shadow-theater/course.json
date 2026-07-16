@@ -1,0 +1,27 @@
+{
+  "id": "shadow-theater",
+  "title": {
+    "zh": "立体影子剧场",
+    "en": "Shadow Shape Theater"
+  },
+  "description": {
+    "zh": "皮影戏舞台后藏着 3D 积木：固定光源从幕布正前方投影，圆柱正着看是圆、侧着看是长方形！挑选并转动积木，观察不同立体图形的影子剪影。",
+    "en": "Behind the shadow-play stage hide 3D blocks: a fixed front light projects each solid onto the curtain, so a cylinder can appear as a circle head-on or a rectangle from the side. Pick and rotate blocks to explore each silhouette."
+  },
+  "category": "math",
+  "levels": [
+    "primary"
+  ],
+  "grades": [
+    "g1",
+    "g2"
+  ],
+  "tags": [
+    "立体图形",
+    "平面图形",
+    "投影",
+    "空间想象"
+  ],
+  "icon": "🔦",
+  "order": 16
+}

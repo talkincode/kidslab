@@ -1,0 +1,2016 @@
+{
+  "generatedAt": "2026-07-16T15:13:44.717Z",
+  "tags": {
+    "3D": {
+      "en": "3D",
+      "kind": "form"
+    },
+    "三视图": {
+      "en": "Three Views",
+      "kind": "knowledge"
+    },
+    "乘法": {
+      "en": "Multiplication",
+      "kind": "knowledge"
+    },
+    "人体": {
+      "en": "Human Body",
+      "kind": "knowledge"
+    },
+    "估算": {
+      "en": "Estimation",
+      "kind": "knowledge"
+    },
+    "体积": {
+      "en": "Volume",
+      "kind": "knowledge"
+    },
+    "光合作用": {
+      "en": "Photosynthesis",
+      "kind": "knowledge"
+    },
+    "函数": {
+      "en": "Functions",
+      "kind": "knowledge"
+    },
+    "分子运动": {
+      "en": "Particle Model",
+      "kind": "knowledge"
+    },
+    "分数": {
+      "en": "Fractions",
+      "kind": "knowledge"
+    },
+    "分类": {
+      "en": "Classification",
+      "kind": "knowledge"
+    },
+    "加减法": {
+      "en": "Addition & Subtraction",
+      "kind": "knowledge"
+    },
+    "单摆": {
+      "en": "Pendulum",
+      "kind": "knowledge"
+    },
+    "周长": {
+      "en": "Perimeter",
+      "kind": "knowledge"
+    },
+    "圆": {
+      "en": "Circles",
+      "kind": "knowledge"
+    },
+    "地球运动": {
+      "en": "Earth's Motion",
+      "kind": "knowledge"
+    },
+    "天文": {
+      "en": "Astronomy",
+      "kind": "knowledge"
+    },
+    "天气": {
+      "en": "Weather",
+      "kind": "knowledge"
+    },
+    "太阳系": {
+      "en": "Solar System",
+      "kind": "knowledge"
+    },
+    "宇宙": {
+      "en": "Space & Cosmos",
+      "kind": "knowledge"
+    },
+    "实验": {
+      "en": "Experiment",
+      "kind": "form"
+    },
+    "小数": {
+      "en": "Decimals",
+      "kind": "knowledge"
+    },
+    "平面图形": {
+      "en": "2D Shapes",
+      "kind": "knowledge"
+    },
+    "循环": {
+      "en": "Loops",
+      "kind": "knowledge"
+    },
+    "找规律": {
+      "en": "Patterns",
+      "kind": "knowledge"
+    },
+    "投影": {
+      "en": "Projection",
+      "kind": "knowledge"
+    },
+    "排序算法": {
+      "en": "Sorting",
+      "kind": "knowledge"
+    },
+    "推理": {
+      "en": "Reasoning",
+      "kind": "knowledge"
+    },
+    "数位": {
+      "en": "Place Value",
+      "kind": "knowledge"
+    },
+    "数独": {
+      "en": "Sudoku",
+      "kind": "knowledge"
+    },
+    "数的认识": {
+      "en": "Numbers & Counting",
+      "kind": "knowledge"
+    },
+    "时间": {
+      "en": "Time & Clocks",
+      "kind": "knowledge"
+    },
+    "星座": {
+      "en": "Constellations",
+      "kind": "knowledge"
+    },
+    "月球": {
+      "en": "The Moon",
+      "kind": "knowledge"
+    },
+    "月相": {
+      "en": "Moon Phases",
+      "kind": "knowledge"
+    },
+    "条件判断": {
+      "en": "Conditionals",
+      "kind": "knowledge"
+    },
+    "植物": {
+      "en": "Plants",
+      "kind": "knowledge"
+    },
+    "水循环": {
+      "en": "Water Cycle",
+      "kind": "knowledge"
+    },
+    "海龟绘图": {
+      "en": "Turtle Graphics",
+      "kind": "knowledge"
+    },
+    "消化系统": {
+      "en": "Digestive System",
+      "kind": "knowledge"
+    },
+    "溶液": {
+      "en": "Solutions",
+      "kind": "knowledge"
+    },
+    "物质三态": {
+      "en": "States of Matter",
+      "kind": "knowledge"
+    },
+    "生态": {
+      "en": "Ecology",
+      "kind": "knowledge"
+    },
+    "电路": {
+      "en": "Circuits",
+      "kind": "knowledge"
+    },
+    "益智游戏": {
+      "en": "Puzzle Game",
+      "kind": "form"
+    },
+    "磁铁": {
+      "en": "Magnets",
+      "kind": "knowledge"
+    },
+    "空间想象": {
+      "en": "Spatial Reasoning",
+      "kind": "knowledge"
+    },
+    "立体图形": {
+      "en": "3D Shapes",
+      "kind": "knowledge"
+    },
+    "策略": {
+      "en": "Strategy",
+      "kind": "knowledge"
+    },
+    "算法": {
+      "en": "Algorithms",
+      "kind": "knowledge"
+    },
+    "编程启蒙": {
+      "en": "Coding Basics",
+      "kind": "knowledge"
+    },
+    "营养": {
+      "en": "Nutrition",
+      "kind": "knowledge"
+    },
+    "观察": {
+      "en": "Observation",
+      "kind": "knowledge"
+    },
+    "计量单位": {
+      "en": "Units & Measurement",
+      "kind": "knowledge"
+    },
+    "调试": {
+      "en": "Debugging",
+      "kind": "knowledge"
+    },
+    "运算": {
+      "en": "Arithmetic",
+      "kind": "knowledge"
+    },
+    "递归": {
+      "en": "Recursion",
+      "kind": "knowledge"
+    },
+    "酸碱": {
+      "en": "Acids & Bases",
+      "kind": "knowledge"
+    },
+    "重力": {
+      "en": "Gravity",
+      "kind": "knowledge"
+    },
+    "集合": {
+      "en": "Sets",
+      "kind": "knowledge"
+    },
+    "面积": {
+      "en": "Area",
+      "kind": "knowledge"
+    },
+    "音乐": {
+      "en": "Music",
+      "kind": "form"
+    },
+    "顺序执行": {
+      "en": "Sequencing",
+      "kind": "knowledge"
+    },
+    "魔方": {
+      "en": "Rubik's Cube",
+      "kind": "knowledge"
+    }
+  },
+  "courses": [
+    {
+      "id": "welcome",
+      "title": {
+        "zh": "欢迎来到KidsLab · 从一盏灯到宇宙",
+        "en": "Welcome to KidsLab · From a Lamp to the Cosmos"
+      },
+      "description": {
+        "zh": "一场 Three.js 宇宙拉远之旅：从书桌上的一盏灯，穿过城市与地球，抵达银河与宇宙深处。四行诗与轻史诗配乐随尺度生长，点击底部圆点可在六个尺度间穿梭。",
+        "en": "A Three.js cosmic zoom-out: from a desk lamp, past the city and the Earth, to the galaxy and the deep universe. A four-line poem and a light-epic score grow with the scale — tap the dots to jump between six worlds."
+      },
+      "category": "featured",
+      "levels": [
+        "primary",
+        "junior",
+        "senior"
+      ],
+      "grades": [],
+      "tags": [
+        "宇宙",
+        "天文",
+        "3D",
+        "音乐"
+      ],
+      "icon": "🚀",
+      "pinned": true,
+      "order": 0,
+      "keywords": [
+        "Space & Cosmos",
+        "space",
+        "cosmos",
+        "星空",
+        "光年",
+        "light year",
+        "宇宙尺度",
+        "Astronomy",
+        "astronomy",
+        "3D",
+        "3d",
+        "三维",
+        "three.js",
+        "Music",
+        "music",
+        "节奏",
+        "rhythm",
+        "music coding"
+      ],
+      "path": "courseware/welcome/index.html"
+    },
+    {
+      "id": "fraction-lab",
+      "title": {
+        "zh": "分数披萨店",
+        "en": "Fraction Pizzeria"
+      },
+      "description": {
+        "zh": "切一块披萨，认识分数！调整分子分母，看看小数、百分数和等值分数怎么变。",
+        "en": "Slice a pizza to meet fractions! Tweak the numerator and denominator to see decimals, percentages and equivalent fractions change."
+      },
+      "category": "math",
+      "levels": [
+        "primary"
+      ],
+      "grades": [],
+      "tags": [
+        "分数",
+        "小数"
+      ],
+      "icon": "🍕",
+      "order": 10,
+      "keywords": [
+        "Fractions",
+        "fraction",
+        "fractions",
+        "等值分数",
+        "equivalent fractions",
+        "百分数",
+        "percent",
+        "percentage",
+        "Decimals",
+        "decimal",
+        "decimals"
+      ],
+      "path": "courseware/fraction-lab/index.html"
+    },
+    {
+      "id": "number-fireflies",
+      "title": {
+        "zh": "数字萤火虫",
+        "en": "Number Fireflies"
+      },
+      "description": {
+        "zh": "夜晚森林里圈住数字萤火虫，让它们相加正好等于灯笼上的目标数。凑出 10 会触发最亮的光爆——凑十法是最划算的抓法！",
+        "en": "Lasso glowing number fireflies so they add up to the lantern's target. Making ten sets off the brightest burst — the make-ten trick pays!"
+      },
+      "category": "math",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g1"
+      ],
+      "tags": [
+        "加减法",
+        "运算",
+        "数的认识"
+      ],
+      "icon": "✨",
+      "order": 11,
+      "keywords": [
+        "Addition & Subtraction",
+        "addition",
+        "subtraction",
+        "凑十法",
+        "make ten",
+        "数的分解",
+        "number bonds",
+        "Arithmetic",
+        "arithmetic",
+        "operations",
+        "四则运算",
+        "Numbers & Counting",
+        "百数表",
+        "hundred chart",
+        "数序",
+        "number order",
+        "100以内的数",
+        "counting"
+      ],
+      "path": "courseware/number-fireflies/index.html"
+    },
+    {
+      "id": "orchard-orders",
+      "title": {
+        "zh": "果园订单",
+        "en": "Orchard Orders"
+      },
+      "description": {
+        "zh": "客人订 24 个苹果？拖出 4 行 × 6 列播种，浇水长成果林正好交货！同一订单多种种法，转个方向就是交换律——乘法是种出来的。",
+        "en": "An order for 24 apples? Plant 4 rows × 6 columns, water them, and harvest exactly right! Many layouts per order — rotate the field and discover commutativity."
+      },
+      "category": "math",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g2"
+      ],
+      "tags": [
+        "乘法",
+        "运算"
+      ],
+      "icon": "🍎",
+      "order": 12,
+      "keywords": [
+        "Multiplication",
+        "multiplication",
+        "times tables",
+        "乘法口诀",
+        "arrays",
+        "交换律",
+        "commutative",
+        "Arithmetic",
+        "arithmetic",
+        "operations",
+        "四则运算"
+      ],
+      "path": "courseware/orchard-orders/index.html"
+    },
+    {
+      "id": "hamster-fence",
+      "title": {
+        "zh": "仓鼠围栏",
+        "en": "Hamster Fence"
+      },
+      "description": {
+        "zh": "用固定长度的栅栏给仓鼠围草地：同样的周长，围法不同面积天差地别！靠墙围、L 形围，当一名让仓鼠开心打滚的围栏设计师。",
+        "en": "Fence a lawn for hamsters with a fixed length of fence: same perimeter, wildly different areas! Use walls and L-shapes to make every hamster roll with joy."
+      },
+      "category": "math",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g3"
+      ],
+      "tags": [
+        "周长",
+        "面积",
+        "平面图形"
+      ],
+      "icon": "🐹",
+      "order": 13,
+      "keywords": [
+        "Perimeter",
+        "perimeter",
+        "圆的周长",
+        "circumference",
+        "Area",
+        "area",
+        "圆的面积",
+        "2D Shapes",
+        "2d shapes",
+        "长方形",
+        "rectangle"
+      ],
+      "path": "courseware/hamster-fence/index.html"
+    },
+    {
+      "id": "zoom-ten",
+      "title": {
+        "zh": "数字宇宙",
+        "en": "The Number Universe"
+      },
+      "description": {
+        "zh": "一场十倍缩放之旅：从 1 米的小朋友出发，滚一格放大 10 倍——树、城市、地球、银河；再反向钻进瓢虫、蚂蚁的眼睛。数位不是练习册上的表格，是宇宙的楼层。",
+        "en": "A powers-of-ten journey: start at a 1-meter kid, scroll to zoom ×10 — trees, cities, Earth, the galaxy; then dive down into ladybugs and ants' eyes. Place value isn't a worksheet — it's the floors of the universe."
+      },
+      "category": "math",
+      "levels": [
+        "primary",
+        "junior"
+      ],
+      "grades": [
+        "g4",
+        "g5"
+      ],
+      "tags": [
+        "数位",
+        "小数",
+        "计量单位",
+        "估算"
+      ],
+      "icon": "🔭",
+      "order": 14,
+      "keywords": [
+        "Place Value",
+        "place value",
+        "十进制",
+        "大数",
+        "powers of ten",
+        "Decimals",
+        "decimal",
+        "decimals",
+        "Units & Measurement",
+        "units",
+        "measurement",
+        "单位换算",
+        "unit conversion",
+        "cubic units",
+        "Estimation",
+        "estimation",
+        "estimate"
+      ],
+      "path": "courseware/zoom-ten/index.html"
+    },
+    {
+      "id": "rolling-park",
+      "title": {
+        "zh": "滚轮乐园",
+        "en": "Rolling Wheel Park"
+      },
+      "description": {
+        "zh": "拖着蘸了颜料的车轮滚一圈：画出的线总是直径的 3.14 倍——这个倍数就是 π！再把圆切成小片、拼成长方形，圆面积公式 πr² 一看就明白。",
+        "en": "Roll a paint-dipped wheel one full turn: the line is always about 3.14 diameters long — that's π! Then slice a circle into pieces and rebuild it as a rectangle to see why area = πr²."
+      },
+      "category": "math",
+      "levels": [
+        "primary",
+        "junior"
+      ],
+      "grades": [
+        "g6"
+      ],
+      "tags": [
+        "圆",
+        "周长",
+        "面积"
+      ],
+      "icon": "🎡",
+      "order": 15,
+      "keywords": [
+        "Circles",
+        "circle",
+        "圆周率",
+        "pi",
+        "Perimeter",
+        "perimeter",
+        "圆的周长",
+        "circumference",
+        "Area",
+        "area",
+        "圆的面积"
+      ],
+      "path": "courseware/rolling-park/index.html"
+    },
+    {
+      "id": "shadow-theater",
+      "title": {
+        "zh": "立体影子剧场",
+        "en": "Shadow Shape Theater"
+      },
+      "description": {
+        "zh": "皮影戏舞台后藏着 3D 积木：固定光源从幕布正前方投影，圆柱正着看是圆、侧着看是长方形！挑选并转动积木，观察不同立体图形的影子剪影。",
+        "en": "Behind the shadow-play stage hide 3D blocks: a fixed front light projects each solid onto the curtain, so a cylinder can appear as a circle head-on or a rectangle from the side. Pick and rotate blocks to explore each silhouette."
+      },
+      "category": "math",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g1",
+        "g2"
+      ],
+      "tags": [
+        "立体图形",
+        "平面图形",
+        "投影",
+        "空间想象"
+      ],
+      "icon": "🔦",
+      "order": 16,
+      "keywords": [
+        "3D Shapes",
+        "3d shapes",
+        "长方体",
+        "圆柱",
+        "cylinder",
+        "圆锥",
+        "cone",
+        "旋转体",
+        "solids of revolution",
+        "voxels",
+        "2D Shapes",
+        "2d shapes",
+        "长方形",
+        "rectangle",
+        "Projection",
+        "projection",
+        "Spatial Reasoning",
+        "spatial reasoning",
+        "spatial",
+        "空间思维"
+      ],
+      "path": "courseware/shadow-theater/index.html"
+    },
+    {
+      "id": "voxel-studio",
+      "title": {
+        "zh": "方块摄影棚",
+        "en": "Voxel Photo Studio"
+      },
+      "description": {
+        "zh": "机器人摄影师从正面、上面、侧面拍方块雕塑，你来预测照片；反过来只给三张照片，亲手一块块搭出看不见的雕塑——三视图是拼出来的空间想象。",
+        "en": "A robot photographer shoots voxel sculptures from the front, top and side — you predict each photo. Then flip it: given just three photos, build the hidden sculpture block by block."
+      },
+      "category": "math",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g2",
+        "g3",
+        "g4"
+      ],
+      "tags": [
+        "三视图",
+        "空间想象",
+        "立体图形",
+        "3D"
+      ],
+      "icon": "📷",
+      "order": 17,
+      "keywords": [
+        "Three Views",
+        "three views",
+        "观察物体",
+        "Spatial Reasoning",
+        "spatial reasoning",
+        "spatial",
+        "空间思维",
+        "3D Shapes",
+        "3d shapes",
+        "长方体",
+        "圆柱",
+        "cylinder",
+        "圆锥",
+        "cone",
+        "旋转体",
+        "solids of revolution",
+        "voxels",
+        "3D",
+        "3d",
+        "三维",
+        "three.js"
+      ],
+      "path": "courseware/voxel-studio/index.html"
+    },
+    {
+      "id": "volume-aquarium",
+      "title": {
+        "zh": "体积水族馆",
+        "en": "Volume Aquarium"
+      },
+      "description": {
+        "zh": "用单位小方块搭鱼缸、数方块算体积，给每条鱼配够水量；再把丑石头丢进满水缸，溢出的水正好流进量杯——不规则物体的体积被你量出来了！",
+        "en": "Build tanks from unit cubes, count blocks to find volume, and give every fish enough water. Then drop a lumpy rock into a full tank — the overflow fills a measuring cup, and you've measured the unmeasurable!"
+      },
+      "category": "math",
+      "levels": [
+        "primary",
+        "junior"
+      ],
+      "grades": [
+        "g5"
+      ],
+      "tags": [
+        "体积",
+        "立体图形",
+        "计量单位"
+      ],
+      "icon": "🐠",
+      "order": 18,
+      "keywords": [
+        "Volume",
+        "volume",
+        "容积",
+        "capacity",
+        "排水法",
+        "displacement",
+        "3D Shapes",
+        "3d shapes",
+        "长方体",
+        "圆柱",
+        "cylinder",
+        "圆锥",
+        "cone",
+        "旋转体",
+        "solids of revolution",
+        "voxels",
+        "Units & Measurement",
+        "units",
+        "measurement",
+        "单位换算",
+        "unit conversion",
+        "cubic units"
+      ],
+      "path": "courseware/volume-aquarium/index.html"
+    },
+    {
+      "id": "icecream-geometry",
+      "title": {
+        "zh": "冰淇淋几何",
+        "en": "Ice Cream Geometry"
+      },
+      "description": {
+        "zh": "长方形纸片一转成圆柱、三角形一转成圆锥——旋转体亲眼看见！再用圆锥杯舀冰淇淋倒进等底等高的圆柱杯：一杯、两杯、三杯刚好满，×1/3 的秘密有了画面。",
+        "en": "Spin a rectangle into a cylinder and a triangle into a cone — solids of revolution before your eyes! Then scoop with a cone cup into a cylinder of equal base and height: one, two, three scoops fill it exactly. The 1/3 finally makes sense."
+      },
+      "category": "math",
+      "levels": [
+        "primary",
+        "junior"
+      ],
+      "grades": [
+        "g6"
+      ],
+      "tags": [
+        "立体图形",
+        "体积",
+        "圆"
+      ],
+      "icon": "🍦",
+      "order": 19,
+      "keywords": [
+        "3D Shapes",
+        "3d shapes",
+        "长方体",
+        "圆柱",
+        "cylinder",
+        "圆锥",
+        "cone",
+        "旋转体",
+        "solids of revolution",
+        "voxels",
+        "Volume",
+        "volume",
+        "容积",
+        "capacity",
+        "排水法",
+        "displacement",
+        "Circles",
+        "circle",
+        "圆周率",
+        "pi"
+      ],
+      "path": "courseware/icecream-geometry/index.html"
+    },
+    {
+      "id": "function-grapher",
+      "title": {
+        "zh": "函数变形记",
+        "en": "Function Shapeshifter"
+      },
+      "description": {
+        "zh": "拖动 a、b、c 三个旋钮，亲眼看见一次函数、二次函数、反比例和正弦曲线如何变形。",
+        "en": "Drag the a, b, c knobs and watch linear, quadratic, inverse and sine curves morph in real time."
+      },
+      "category": "math",
+      "levels": [
+        "junior",
+        "senior"
+      ],
+      "grades": [],
+      "tags": [
+        "函数"
+      ],
+      "icon": "📈",
+      "order": 20,
+      "keywords": [
+        "Functions",
+        "function",
+        "二次函数",
+        "quadratic",
+        "抛物线",
+        "parabola",
+        "正弦",
+        "sine",
+        "图像",
+        "graph"
+      ],
+      "path": "courseware/function-grapher/index.html"
+    },
+    {
+      "id": "hundred-metro",
+      "title": {
+        "zh": "百数地铁",
+        "en": "Hundred-Chart Metro"
+      },
+      "description": {
+        "zh": "把百数表变成地铁图：乘坐 ±10 快车和 ±1 慢车，用最少步数把乘客送到目标站，发现十位与个位的路线秘密。",
+        "en": "Turn the hundred chart into a metro map. Ride the ±10 express and ±1 local to reach each stop in the fewest moves and uncover the tens-and-ones route secret."
+      },
+      "category": "math",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g1",
+        "g2"
+      ],
+      "tags": [
+        "数的认识",
+        "数位"
+      ],
+      "icon": "🚇",
+      "order": 20,
+      "badge": "new",
+      "keywords": [
+        "Numbers & Counting",
+        "百数表",
+        "hundred chart",
+        "数序",
+        "number order",
+        "100以内的数",
+        "counting",
+        "Place Value",
+        "place value",
+        "十进制",
+        "大数",
+        "powers of ten"
+      ],
+      "path": "courseware/hundred-metro/index.html"
+    },
+    {
+      "id": "clock-town",
+      "title": {
+        "zh": "时钟小镇",
+        "en": "Clock Town"
+      },
+      "description": {
+        "zh": "当小镇钟楼管理员，拨动联动的时针和分针，按时叫醒面包房、校车、钓鱼客和晚安灯，认识整时、半时与几时几分。",
+        "en": "Run the town clock tower. Move its linked hands to wake the bakery, school bus, fishing crew, and bedtime lights while learning hours, half-hours, and minutes."
+      },
+      "category": "math",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g1",
+        "g2"
+      ],
+      "tags": [
+        "时间"
+      ],
+      "icon": "🕰️",
+      "order": 21,
+      "badge": "new",
+      "keywords": [
+        "Time & Clocks",
+        "telling time",
+        "clock",
+        "认识钟表",
+        "整时",
+        "半时",
+        "hours",
+        "minutes",
+        "作息"
+      ],
+      "path": "courseware/clock-town/index.html"
+    },
+    {
+      "id": "plant-lab",
+      "title": {
+        "zh": "植物生长实验室",
+        "en": "Plant Growth Lab"
+      },
+      "description": {
+        "zh": "选择豌豆、向日葵或番茄，调节光照、湿度、温度和养分，浇水施肥并快进时间，观察植物从种子到开花结果的变化。",
+        "en": "Choose a pea, sunflower, or tomato plant, tune light, humidity, temperature, and nutrients, then water, fertilize, and fast-forward time to watch realistic growth."
+      },
+      "category": "science",
+      "levels": [
+        "primary",
+        "junior"
+      ],
+      "grades": [],
+      "tags": [
+        "植物",
+        "光合作用",
+        "生态",
+        "实验"
+      ],
+      "icon": "🌻",
+      "order": 29,
+      "keywords": [
+        "Plants",
+        "plants",
+        "生长",
+        "growth",
+        "Photosynthesis",
+        "photosynthesis",
+        "Ecology",
+        "ecology",
+        "biology",
+        "生物",
+        "Experiment",
+        "experiment",
+        "simulation",
+        "lab",
+        "模拟"
+      ],
+      "path": "courseware/plant-lab/index.html"
+    },
+    {
+      "id": "pendulum-lab",
+      "title": {
+        "zh": "单摆实验室",
+        "en": "Pendulum Lab"
+      },
+      "description": {
+        "zh": "拖动摆球放手，测量真实周期，再和公式 T=2π√(L/g) 对比。去月球和木星上荡一荡试试？",
+        "en": "Drag the bob, let go, measure the real period, then compare with T=2π√(L/g). Fancy a swing on the Moon or Jupiter?"
+      },
+      "category": "physics",
+      "levels": [
+        "junior",
+        "senior"
+      ],
+      "grades": [],
+      "tags": [
+        "单摆",
+        "重力",
+        "月球",
+        "实验"
+      ],
+      "icon": "🪀",
+      "order": 30,
+      "keywords": [
+        "Pendulum",
+        "pendulum",
+        "周期",
+        "period",
+        "振动",
+        "oscillation",
+        "Gravity",
+        "gravity",
+        "The Moon",
+        "moon",
+        "lunar",
+        "Experiment",
+        "experiment",
+        "simulation",
+        "lab",
+        "模拟"
+      ],
+      "path": "courseware/pendulum-lab/index.html"
+    },
+    {
+      "id": "ph-lab",
+      "title": {
+        "zh": "酸碱魔法水",
+        "en": "Acid-Base Magic Water"
+      },
+      "description": {
+        "zh": "往烧杯里倒入柠檬汁、肥皂水……换一种指示剂，看看溶液变出什么颜色？理解 pH 的秘密。",
+        "en": "Pour lemon juice or soapy water into the beaker, switch indicators, and watch the colours change. Discover the secret of pH."
+      },
+      "category": "chemistry",
+      "levels": [
+        "junior",
+        "senior"
+      ],
+      "grades": [],
+      "tags": [
+        "酸碱",
+        "溶液",
+        "实验"
+      ],
+      "icon": "🧪",
+      "order": 40,
+      "keywords": [
+        "Acids & Bases",
+        "acid",
+        "base",
+        "ph",
+        "指示剂",
+        "indicator",
+        "石蕊",
+        "litmus",
+        "酚酞",
+        "Solutions",
+        "solution",
+        "solutions",
+        "Experiment",
+        "experiment",
+        "simulation",
+        "lab",
+        "模拟"
+      ],
+      "path": "courseware/ph-lab/index.html"
+    },
+    {
+      "id": "turtle-studio",
+      "title": {
+        "zh": "海龟画室",
+        "en": "Turtle Studio"
+      },
+      "description": {
+        "zh": "用「前进、右转、重复」指挥小海龟画出正方形、五角星和彩虹螺旋 —— 你的第一门编程语言！",
+        "en": "Command a turtle with “forward, right, repeat” to draw squares, stars and rainbow spirals — your first programming language!"
+      },
+      "category": "programming",
+      "levels": [
+        "primary",
+        "junior"
+      ],
+      "grades": [],
+      "tags": [
+        "循环",
+        "海龟绘图",
+        "编程启蒙"
+      ],
+      "icon": "🐢",
+      "order": 50,
+      "keywords": [
+        "Loops",
+        "loop",
+        "loops",
+        "嵌套循环",
+        "nested loops",
+        "Turtle Graphics",
+        "turtle",
+        "logo",
+        "turtle graphics",
+        "海龟",
+        "Coding Basics",
+        "coding basics",
+        "coding",
+        "编程"
+      ],
+      "path": "courseware/turtle-studio/index.html"
+    },
+    {
+      "id": "robot-breakfast",
+      "title": {
+        "zh": "机器人早餐",
+        "en": "Robot Breakfast"
+      },
+      "description": {
+        "zh": "机器人管家完全按字面执行命令：顺序排错不报错，而是忠实演出一场厨房灾难——先涂黄油再进烤箱？糊啦！排对指令卡，让挑剔的小主人吃上完整早餐。",
+        "en": "The robot butler does exactly what you say: wrong order means no error message — just a faithful kitchen disaster. Butter before toasting? Charcoal! Arrange the cards so breakfast survives."
+      },
+      "category": "programming",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g1",
+        "g2"
+      ],
+      "tags": [
+        "顺序执行",
+        "编程启蒙"
+      ],
+      "icon": "🍳",
+      "order": 51,
+      "keywords": [
+        "Sequencing",
+        "sequencing",
+        "指令",
+        "instructions",
+        "Coding Basics",
+        "coding basics",
+        "coding",
+        "编程"
+      ],
+      "path": "courseware/robot-breakfast/index.html"
+    },
+    {
+      "id": "loop-band",
+      "title": {
+        "zh": "循环乐队",
+        "en": "Loop Band"
+      },
+      "description": {
+        "zh": "组建动物乐队，乐谱只能用循环块写：重复 4 次[咚 哒]！把循环套进循环做出整首歌，用越少的块写出同样的音乐，乐队评分越高。",
+        "en": "Form an animal band whose sheet music is made of loop blocks: repeat 4 × [boom clap]! Nest loops to build whole songs — fewer blocks for the same music means a higher score."
+      },
+      "category": "programming",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g2",
+        "g3"
+      ],
+      "tags": [
+        "循环",
+        "编程启蒙",
+        "音乐"
+      ],
+      "icon": "🥁",
+      "order": 52,
+      "keywords": [
+        "Loops",
+        "loop",
+        "loops",
+        "嵌套循环",
+        "nested loops",
+        "Coding Basics",
+        "coding basics",
+        "coding",
+        "编程",
+        "Music",
+        "music",
+        "节奏",
+        "rhythm",
+        "music coding"
+      ],
+      "path": "courseware/loop-band/index.html"
+    },
+    {
+      "id": "iffy-zoo",
+      "title": {
+        "zh": "如果动物园",
+        "en": "The If-Zoo"
+      },
+      "description": {
+        "zh": "给动物园的自动喂食机编规则：如果是食草动物就投青草，否则投肉——直到熊猫出现！加特例、调顺序、组合与和或，看你的规则机一只不错地喂饱 30 只动物。",
+        "en": "Program the zoo's auto-feeder: IF herbivore THEN grass ELSE meat — until the panda shows up! Add special cases, reorder rules, combine AND/OR, and feed 30 animals without a single mix-up."
+      },
+      "category": "programming",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g3",
+        "g4"
+      ],
+      "tags": [
+        "条件判断",
+        "编程启蒙"
+      ],
+      "icon": "🦁",
+      "order": 53,
+      "keywords": [
+        "Conditionals",
+        "conditionals",
+        "if-else",
+        "if else",
+        "逻辑运算",
+        "boolean logic",
+        "Coding Basics",
+        "coding basics",
+        "coding",
+        "编程"
+      ],
+      "path": "courseware/iffy-zoo/index.html"
+    },
+    {
+      "id": "bug-hospital",
+      "title": {
+        "zh": "虫虫医院",
+        "en": "Bug Hospital"
+      },
+      "description": {
+        "zh": "给生病的小程序做听诊：先预测病灶，再逐行执行、观察变量，只改一行让计数器、机器人和循环恢复健康。",
+        "en": "Diagnose sick programs: predict the faulty line, step through the code, watch variables change, then fix one line to heal counters, robots, and loops."
+      },
+      "category": "programming",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g3",
+        "g4",
+        "g5"
+      ],
+      "tags": [
+        "调试"
+      ],
+      "icon": "🏥",
+      "order": 54,
+      "badge": "new",
+      "keywords": [
+        "Debugging",
+        "debugging",
+        "单步执行",
+        "step through",
+        "程序阅读",
+        "read code",
+        "预测输出"
+      ],
+      "path": "courseware/bug-hospital/index.html"
+    },
+    {
+      "id": "sort-olympics",
+      "title": {
+        "zh": "排序运动会",
+        "en": "Sorting Olympics"
+      },
+      "description": {
+        "zh": "企鹅按个头排队只能两两比较、相邻交换。先徒手排，再雇冒泡、选择、插入三位算法教练同场赛跑——比较次数实时对决，亲眼看出算法的性格！",
+        "en": "Penguins line up by height, but you can only compare two at a time. Sort by hand, then hire Bubble, Selection and Insertion coaches for a three-lane algorithm race — comparison counters dueling live!"
+      },
+      "category": "programming",
+      "levels": [
+        "primary",
+        "junior"
+      ],
+      "grades": [
+        "g5",
+        "g6"
+      ],
+      "tags": [
+        "排序算法",
+        "算法"
+      ],
+      "icon": "🐧",
+      "order": 54,
+      "keywords": [
+        "Sorting",
+        "sorting",
+        "冒泡排序",
+        "bubble sort",
+        "选择排序",
+        "selection sort",
+        "插入排序",
+        "insertion sort",
+        "Algorithms",
+        "algorithms",
+        "algorithm"
+      ],
+      "path": "courseware/sort-olympics/index.html"
+    },
+    {
+      "id": "mystery-box",
+      "title": {
+        "zh": "神秘盒子",
+        "en": "Mystery Box"
+      },
+      "description": {
+        "zh": "化身五感小侦探：听声音、摸触感、闻气味、照剪影，让不符合证据的候选一个个退场，用最少线索猜中盒中宝物。",
+        "en": "Become a senses detective: listen, touch, smell, and reveal a silhouette. Eliminate suspects with evidence and identify the hidden object using as few clues as possible."
+      },
+      "category": "science",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g1",
+        "g2"
+      ],
+      "tags": [
+        "观察",
+        "推理"
+      ],
+      "icon": "📦",
+      "order": 59,
+      "badge": "new",
+      "keywords": [
+        "Observation",
+        "observation",
+        "五感",
+        "five senses",
+        "特征",
+        "Reasoning",
+        "reasoning",
+        "演绎推理",
+        "deduction",
+        "排除法",
+        "elimination",
+        "逻辑网格",
+        "logic grid",
+        "逆向推理",
+        "backward reasoning",
+        "证据",
+        "evidence",
+        "inference"
+      ],
+      "path": "courseware/mystery-box/index.html"
+    },
+    {
+      "id": "solar-explorer",
+      "title": {
+        "zh": "太阳系漫游",
+        "en": "Solar System Cruise"
+      },
+      "description": {
+        "zh": "让八大行星在你眼前转起来！点一颗行星，看看它的一年有多长、藏着什么小秘密。",
+        "en": "Set the eight planets spinning! Tap any planet to see how long its year is and the secrets it keeps."
+      },
+      "category": "science",
+      "levels": [
+        "primary",
+        "junior"
+      ],
+      "grades": [],
+      "tags": [
+        "太阳系",
+        "天文",
+        "宇宙"
+      ],
+      "icon": "🪐",
+      "order": 60,
+      "keywords": [
+        "Solar System",
+        "solar system",
+        "行星",
+        "planets",
+        "轨道",
+        "orbit",
+        "Astronomy",
+        "astronomy",
+        "Space & Cosmos",
+        "space",
+        "cosmos",
+        "星空",
+        "光年",
+        "light year",
+        "宇宙尺度"
+      ],
+      "path": "courseware/solar-explorer/index.html"
+    },
+    {
+      "id": "cloud-factory",
+      "title": {
+        "zh": "云朵工厂",
+        "en": "Cloud Factory"
+      },
+      "description": {
+        "zh": "接管天空运营公司：调大太阳让湖水蒸发、送水汽上高空凝成云、攒够重量按下降水！雨、雪、雾、雹全是同一套水循环机器的不同参数。",
+        "en": "Run the sky company: crank up the sun to evaporate the lake, lift vapor to condense into clouds, then press the rain button! Rain, snow, fog and hail are just different settings of one water-cycle machine."
+      },
+      "category": "science",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g3",
+        "g4"
+      ],
+      "tags": [
+        "水循环",
+        "天气",
+        "实验"
+      ],
+      "icon": "☁️",
+      "order": 61,
+      "keywords": [
+        "Water Cycle",
+        "water cycle",
+        "蒸发",
+        "evaporation",
+        "凝结",
+        "condensation",
+        "降水",
+        "Weather",
+        "weather",
+        "Experiment",
+        "experiment",
+        "simulation",
+        "lab",
+        "模拟"
+      ],
+      "path": "courseware/cloud-factory/index.html"
+    },
+    {
+      "id": "molecule-disco",
+      "title": {
+        "zh": "分子迪斯科",
+        "en": "Molecule Disco"
+      },
+      "description": {
+        "zh": "物质是一间迪斯科舞厅，分子是舞客，你是掌管温度的 DJ：慢歌固态方阵摇摆，快歌液态滑动，拉满全场乱飞变气态！微观舞池与宏观视图左右分屏、永远同步。",
+        "en": "Matter is a disco, molecules are dancers, and you're the DJ of temperature: slow songs for a solid lattice, faster for liquid flow, max it out and dancers fly off as gas! Micro dance floor and macro view stay in sync, side by side."
+      },
+      "category": "science",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g3",
+        "g4",
+        "g5"
+      ],
+      "tags": [
+        "物质三态",
+        "分子运动",
+        "实验"
+      ],
+      "icon": "🪩",
+      "order": 62,
+      "keywords": [
+        "States of Matter",
+        "states of matter",
+        "熔化",
+        "melting",
+        "沸腾",
+        "boiling",
+        "凝固",
+        "temperature",
+        "Particle Model",
+        "particles",
+        "粒子模型",
+        "molecular motion",
+        "Experiment",
+        "experiment",
+        "simulation",
+        "lab",
+        "模拟"
+      ],
+      "path": "courseware/molecule-disco/index.html"
+    },
+    {
+      "id": "electric-mouse",
+      "title": {
+        "zh": "电工鼠小镇",
+        "en": "Electric Mouse Town"
+      },
+      "description": {
+        "zh": "老鼠小镇大停电！接电池、开关、灯泡组成回路，看电流粒子在导线里奔跑。串联一户烧全街黑，改成并联各亮各的；勺子能当导线吗？橡皮鸭呢？全靠你试！",
+        "en": "Blackout in Mouse Town! Wire batteries, switches and bulbs into circuits and watch current particles race through the wires. Series makes the whole street go dark together — rewire in parallel! Can a spoon be a wire? A rubber duck? Try it!"
+      },
+      "category": "science",
+      "levels": [
+        "primary",
+        "junior"
+      ],
+      "grades": [
+        "g4",
+        "g5",
+        "g6"
+      ],
+      "tags": [
+        "电路",
+        "实验"
+      ],
+      "icon": "🐭",
+      "order": 63,
+      "keywords": [
+        "Circuits",
+        "circuits",
+        "串联",
+        "series",
+        "并联",
+        "parallel",
+        "短路",
+        "导体",
+        "conductors",
+        "绝缘体",
+        "insulators",
+        "Experiment",
+        "experiment",
+        "simulation",
+        "lab",
+        "模拟"
+      ],
+      "path": "courseware/electric-mouse/index.html"
+    },
+    {
+      "id": "earth-dj",
+      "title": {
+        "zh": "地球调度员",
+        "en": "Earth Dispatcher"
+      },
+      "description": {
+        "zh": "入职地球运行调度中心：拨自转让北京日出，推公转让悉尼入夏，再亲手把 23.5° 的地轴掰直——全球四季瞬间消失！春夏秋冬全挂在这根斜斜的轴上。",
+        "en": "Join Earth Operations: spin the globe to give Beijing a sunrise, push it along its orbit to bring summer to Sydney, then straighten the 23.5° axial tilt with your own hands — and watch the seasons vanish worldwide!"
+      },
+      "category": "science",
+      "levels": [
+        "primary",
+        "junior"
+      ],
+      "grades": [
+        "g4",
+        "g5",
+        "g6"
+      ],
+      "tags": [
+        "地球运动",
+        "天文"
+      ],
+      "icon": "🌍",
+      "order": 64,
+      "keywords": [
+        "Earth's Motion",
+        "自转",
+        "rotation",
+        "公转",
+        "revolution",
+        "昼夜交替",
+        "day and night",
+        "四季",
+        "seasons",
+        "地轴倾斜",
+        "axial tilt",
+        "极昼极夜",
+        "时差",
+        "earth",
+        "Astronomy",
+        "astronomy"
+      ],
+      "path": "courseware/earth-dj/index.html"
+    },
+    {
+      "id": "wolf-calendar",
+      "title": {
+        "zh": "月相狼历",
+        "en": "Werewolf Moon Calendar"
+      },
+      "description": {
+        "zh": "友善的狼人请你当生活规划师：满月夜开嚎叫音乐会，新月夜隐身买薯片。亲手拖动月球公转，从地球视角看月亮圆缺——月相原来是位置魔术！",
+        "en": "A friendly werewolf needs a life planner: howling concerts on full moons, invisible chip runs on new moons. Drag the Moon around its orbit and watch its phase from Earth — it's all a game of positions!"
+      },
+      "category": "science",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g3",
+        "g4",
+        "g5",
+        "g6"
+      ],
+      "tags": [
+        "月相",
+        "月球",
+        "地球运动",
+        "天文"
+      ],
+      "icon": "🌕",
+      "order": 65,
+      "keywords": [
+        "Moon Phases",
+        "moon phases",
+        "lunar cycle",
+        "农历",
+        "The Moon",
+        "moon",
+        "lunar",
+        "Earth's Motion",
+        "自转",
+        "rotation",
+        "公转",
+        "revolution",
+        "昼夜交替",
+        "day and night",
+        "四季",
+        "seasons",
+        "地轴倾斜",
+        "axial tilt",
+        "极昼极夜",
+        "时差",
+        "earth",
+        "Astronomy",
+        "astronomy"
+      ],
+      "path": "courseware/wolf-calendar/index.html"
+    },
+    {
+      "id": "star-sailor",
+      "title": {
+        "zh": "星海水手",
+        "en": "Star Sailor"
+      },
+      "description": {
+        "zh": "无罗盘的古代大海上，你是领航员：连星成图认出大熊座，从北斗勺口延伸五倍找到北极星——全天唯一不动的星。开启星轨快进，满天星辰绕它画出同心圆弧！",
+        "en": "On an ancient compass-less sea, you are the navigator: connect stars into the Great Bear, extend the Dipper's edge five times to find Polaris — the one star that never moves. Fast-forward the night and watch every star arc around it!"
+      },
+      "category": "science",
+      "levels": [
+        "primary",
+        "junior"
+      ],
+      "grades": [
+        "g5",
+        "g6"
+      ],
+      "tags": [
+        "星座",
+        "天文",
+        "宇宙"
+      ],
+      "icon": "⭐",
+      "order": 66,
+      "keywords": [
+        "Constellations",
+        "constellations",
+        "北极星",
+        "polaris",
+        "导航",
+        "navigation",
+        "星空运动",
+        "stars",
+        "Astronomy",
+        "astronomy",
+        "Space & Cosmos",
+        "space",
+        "cosmos",
+        "星空",
+        "光年",
+        "light year",
+        "宇宙尺度"
+      ],
+      "path": "courseware/star-sailor/index.html"
+    },
+    {
+      "id": "body-rafting",
+      "title": {
+        "zh": "消化道漂流记",
+        "en": "Digestive Rafting"
+      },
+      "description": {
+        "zh": "把自己缩小，坐上皮划艇随一口饭菜漂流人体：口腔急流、食道蠕动滑道、胃酸漩涡、小肠绒毛森林、大肠脱水隧道……最后你懂的出口。课本上的名词成了一条河。",
+        "en": "Shrink down and raft through the body with a bite of food: mouth rapids, esophagus peristalsis slides, stomach acid whirlpools, the villi forest of the small intestine, the dehydration tunnel… and that exit. Textbook words become a river."
+      },
+      "category": "science",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g3",
+        "g4",
+        "g5"
+      ],
+      "tags": [
+        "人体",
+        "消化系统",
+        "营养"
+      ],
+      "icon": "🚣",
+      "order": 67,
+      "keywords": [
+        "Human Body",
+        "human body",
+        "器官",
+        "organs",
+        "Digestive System",
+        "digestive system",
+        "Nutrition",
+        "nutrition"
+      ],
+      "path": "courseware/body-rafting/index.html"
+    },
+    {
+      "id": "magnet-hockey",
+      "title": {
+        "zh": "磁力冰球",
+        "en": "Magnet Hockey"
+      },
+      "description": {
+        "zh": "一场不许碰球的冰球赛！球是磁铁，你手里也是磁铁：翻面用吸力拉、斥力推，隔空把球送进球门。戴上磁场眼镜，看不见的磁力线第一次现出原形。",
+        "en": "Ice hockey where touching the puck is forbidden! The puck is a magnet and so is yours: flip N/S to pull or push it into the goal from a distance. Put on field goggles and see invisible field lines come alive."
+      },
+      "category": "science",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g2",
+        "g3"
+      ],
+      "tags": [
+        "磁铁",
+        "实验"
+      ],
+      "icon": "🏒",
+      "order": 68,
+      "keywords": [
+        "Magnets",
+        "magnets",
+        "磁极",
+        "磁场",
+        "magnetic field",
+        "同极相斥",
+        "异极相吸",
+        "Experiment",
+        "experiment",
+        "simulation",
+        "lab",
+        "模拟"
+      ],
+      "path": "courseware/magnet-hockey/index.html"
+    },
+    {
+      "id": "hanoi-tower",
+      "title": {
+        "zh": "汉诺塔挑战",
+        "en": "Tower of Hanoi"
+      },
+      "description": {
+        "zh": "把整座彩虹塔搬到另一根柱子上，大盘子不能压小盘子。你能用最少的步数完成吗？",
+        "en": "Move the rainbow tower to another peg — never place a big disc on a small one. Can you do it in the fewest moves?"
+      },
+      "category": "logic",
+      "levels": [
+        "primary",
+        "junior",
+        "senior"
+      ],
+      "grades": [],
+      "tags": [
+        "递归",
+        "算法",
+        "策略",
+        "益智游戏"
+      ],
+      "icon": "🗼",
+      "order": 70,
+      "keywords": [
+        "Recursion",
+        "recursion",
+        "Algorithms",
+        "algorithms",
+        "algorithm",
+        "Strategy",
+        "strategy",
+        "博弈策略",
+        "game theory",
+        "尼姆游戏",
+        "nim",
+        "Puzzle Game",
+        "puzzle",
+        "game",
+        "益智",
+        "游戏"
+      ],
+      "path": "courseware/hanoi-tower/index.html"
+    },
+    {
+      "id": "magic-cube",
+      "title": {
+        "zh": "魔方小达人",
+        "en": "Cube Master"
+      },
+      "description": {
+        "zh": "亲手转动一颗逼真的 3D 魔方！2×2、3×3、4×4 三种阶数，三档打乱难度，卡住了还有提示和自动还原演示。",
+        "en": "Spin a realistic 3D Rubik's cube! Three sizes from 2×2 to 4×4, three scramble levels, plus hints and an auto-solve demo when you're stuck."
+      },
+      "category": "logic",
+      "levels": [
+        "primary",
+        "junior",
+        "senior"
+      ],
+      "grades": [],
+      "tags": [
+        "魔方",
+        "空间想象",
+        "3D",
+        "益智游戏"
+      ],
+      "icon": "🧊",
+      "order": 71,
+      "badge": "new",
+      "keywords": [
+        "Rubik's Cube",
+        "rubiks cube",
+        "rubik's cube",
+        "Spatial Reasoning",
+        "spatial reasoning",
+        "spatial",
+        "空间思维",
+        "3D",
+        "3d",
+        "三维",
+        "three.js",
+        "Puzzle Game",
+        "puzzle",
+        "game",
+        "益智",
+        "游戏"
+      ],
+      "path": "courseware/magic-cube/index.html"
+    },
+    {
+      "id": "sudoku-zoo",
+      "title": {
+        "zh": "数独动物园",
+        "en": "Sudoku Zoo"
+      },
+      "description": {
+        "zh": "帮小动物们住进笼舍！每行、每列、每个园区都不能有重复的动物。从 4×4 新手村一路闯到 9×9 传奇峰，5 级难度等你挑战！",
+        "en": "House the animals so no row, column or pen repeats! Climb five difficulty tiers, from a friendly 4×4 village to the legendary 9×9 peak."
+      },
+      "category": "logic",
+      "levels": [
+        "primary",
+        "junior"
+      ],
+      "grades": [],
+      "tags": [
+        "数独",
+        "推理",
+        "益智游戏"
+      ],
+      "icon": "🧩",
+      "order": 72,
+      "badge": "new",
+      "keywords": [
+        "Sudoku",
+        "sudoku",
+        "Reasoning",
+        "reasoning",
+        "演绎推理",
+        "deduction",
+        "排除法",
+        "elimination",
+        "逻辑网格",
+        "logic grid",
+        "逆向推理",
+        "backward reasoning",
+        "证据",
+        "evidence",
+        "inference",
+        "Puzzle Game",
+        "puzzle",
+        "game",
+        "益智",
+        "游戏"
+      ],
+      "path": "courseware/sudoku-zoo/index.html"
+    },
+    {
+      "id": "pattern-caterpillar",
+      "title": {
+        "zh": "规律毛毛虫",
+        "en": "Pattern Caterpillar"
+      },
+      "description": {
+        "zh": "毛毛虫只吃「有规律的东西」：红-黄-红-黄-？喂对下一个它就长一节，颜色、声音、动作三种规律轮番登场。吃饱结茧，破茧的蝴蝶翅膀就是它吃过的规律花纹！",
+        "en": "This caterpillar only eats things that follow a pattern: red-yellow-red-yellow-? Feed the right next item and it grows. Colors, sounds and moves — then it spins a cocoon, and the butterfly's wings wear every pattern it ate!"
+      },
+      "category": "logic",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g1",
+        "g2"
+      ],
+      "tags": [
+        "找规律",
+        "推理"
+      ],
+      "icon": "🐛",
+      "order": 73,
+      "keywords": [
+        "Patterns",
+        "patterns",
+        "模式识别",
+        "pattern recognition",
+        "逻辑启蒙",
+        "Reasoning",
+        "reasoning",
+        "演绎推理",
+        "deduction",
+        "排除法",
+        "elimination",
+        "逻辑网格",
+        "logic grid",
+        "逆向推理",
+        "backward reasoning",
+        "证据",
+        "evidence",
+        "inference"
+      ],
+      "path": "courseware/pattern-caterpillar/index.html"
+    },
+    {
+      "id": "detective-board",
+      "title": {
+        "zh": "侦探线索板",
+        "en": "Detective Clue Board"
+      },
+      "description": {
+        "zh": "谁偷吃了蛋糕？读线索、在网格上钉下 ❌ 和 ✅，看排除法像多米诺一样连锁倒下，红线在软木板上织出真相之网——经典逻辑网格谜题的侦探社版本。",
+        "en": "Who ate the cake? Read clues, pin ❌ and ✅ on the grid, and watch elimination cascade like dominoes as red strings weave the truth across the corkboard — classic logic-grid puzzles, detective style."
+      },
+      "category": "logic",
+      "levels": [
+        "primary",
+        "junior"
+      ],
+      "grades": [
+        "g4",
+        "g5",
+        "g6"
+      ],
+      "tags": [
+        "推理",
+        "益智游戏"
+      ],
+      "icon": "🕵️",
+      "order": 74,
+      "keywords": [
+        "Reasoning",
+        "reasoning",
+        "演绎推理",
+        "deduction",
+        "排除法",
+        "elimination",
+        "逻辑网格",
+        "logic grid",
+        "逆向推理",
+        "backward reasoning",
+        "证据",
+        "evidence",
+        "inference",
+        "Puzzle Game",
+        "puzzle",
+        "game",
+        "益智",
+        "游戏"
+      ],
+      "path": "courseware/detective-board/index.html"
+    },
+    {
+      "id": "venn-port",
+      "title": {
+        "zh": "维恩太空港",
+        "en": "Venn Spaceport"
+      },
+      "description": {
+        "zh": "当太空港塔台指挥官，把外星飞船停进正确的集合区域。找到「两个条件都满足」的重叠区，也别漏掉哪边都不属于的飞船！",
+        "en": "Guide alien ships into the right set at a spaceport. Discover the overlap where both rules are true — and the outer bay for ships that match neither!"
+      },
+      "category": "logic",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g1",
+        "g2",
+        "g3"
+      ],
+      "tags": [
+        "集合",
+        "分类"
+      ],
+      "icon": "🛸",
+      "order": 74,
+      "badge": "new",
+      "keywords": [
+        "Sets",
+        "sets",
+        "维恩图",
+        "venn diagram",
+        "交集",
+        "intersection",
+        "Classification",
+        "classification",
+        "categorize"
+      ],
+      "path": "courseware/venn-port/index.html"
+    },
+    {
+      "id": "fox-stones",
+      "title": {
+        "zh": "狐狸的石子",
+        "en": "The Fox's Stones"
+      },
+      "description": {
+        "zh": "和狡猾的狐狸轮流拿石子，每次 1–3 颗，拿到最后一颗就赢。狐狸开始总赢——直到你在复盘板上盯出「4 的倍数」的秘密，从结局倒着算出必胜策略！",
+        "en": "Take turns grabbing 1–3 stones from a sly fox — whoever takes the last stone wins. The fox keeps winning… until you spot the multiples-of-4 trap on the replay board and reason backwards to a winning strategy!"
+      },
+      "category": "logic",
+      "levels": [
+        "primary",
+        "junior"
+      ],
+      "grades": [
+        "g4",
+        "g5",
+        "g6"
+      ],
+      "tags": [
+        "策略",
+        "推理",
+        "益智游戏"
+      ],
+      "icon": "🦊",
+      "order": 75,
+      "keywords": [
+        "Strategy",
+        "strategy",
+        "博弈策略",
+        "game theory",
+        "尼姆游戏",
+        "nim",
+        "Reasoning",
+        "reasoning",
+        "演绎推理",
+        "deduction",
+        "排除法",
+        "elimination",
+        "逻辑网格",
+        "logic grid",
+        "逆向推理",
+        "backward reasoning",
+        "证据",
+        "evidence",
+        "inference",
+        "Puzzle Game",
+        "puzzle",
+        "game",
+        "益智",
+        "游戏"
+      ],
+      "path": "courseware/fox-stones/index.html"
+    }
+  ]
+}

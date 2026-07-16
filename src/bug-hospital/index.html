@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>🏥 虫虫医院 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    (() => {
+      try {
+        const t = localStorage.getItem('kidslab.theme')
+          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = t;
+        const l = localStorage.getItem('kidslab.lang')
+          || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+      } catch { /* Private mode fallback. */ }
+    })();
+  </script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🏥 <span data-t="title">虫虫医院</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="mission card" aria-live="polite">
+      <div class="case-id"><span data-t="caseLabel">病床</span> <b id="caseNumber">01</b></div>
+      <div class="mission-copy">
+        <h2 id="caseName">…</h2>
+        <p id="caseGoal">…</p>
+      </div>
+      <div class="progress" id="progress" aria-label="progress"></div>
+    </section>
+
+    <p class="tip" id="tip" aria-live="polite">…</p>
+
+    <section class="hospital">
+      <section class="patient-stage card">
+        <div class="room-sign"><span class="status-dot" id="statusDot"></span><span id="statusText">…</span></div>
+        <div class="window"><span>☁️</span><span>☀️</span></div>
+        <div class="patient-wrap" id="patientWrap">
+          <div class="patient-shadow"></div>
+          <div class="patient" id="patient">🤖</div>
+          <div class="bandage">🩹</div>
+        </div>
+        <div class="symptom" id="symptom">…</div>
+        <div class="floor-line"></div>
+      </section>
+
+      <section class="debug-panel card">
+        <div class="panel-head">
+          <div>
+            <span class="eyebrow" data-t="chart">电子病历 · 程序</span>
+            <b id="programName">…</b>
+          </div>
+          <span class="phase-badge" id="phaseBadge">…</span>
+        </div>
+        <div class="code-list" id="codeList"></div>
+      </section>
+
+      <aside class="monitor card">
+        <div class="monitor-head">
+          <span data-t="monitor">变量监护仪</span>
+          <span class="heart" id="heart">♥</span>
+        </div>
+        <svg class="ecg" viewBox="0 0 220 54" role="img" aria-label="program pulse">
+          <path class="ecg-grid" d="M0 27H220M22 0V54M66 0V54M110 0V54M154 0V54M198 0V54" />
+          <polyline id="pulse" points="0,27 38,27 48,27 55,7 64,46 72,18 82,27 220,27" />
+        </svg>
+        <div class="watch-list" id="watchList"></div>
+        <div class="output-box">
+          <span data-t="output">程序说</span>
+          <b id="outputValue">…</b>
+        </div>
+      </aside>
+
+      <section class="surgery card" id="surgery" hidden>
+        <div class="surgery-icon">🩺</div>
+        <div class="surgery-copy">
+          <span class="eyebrow" data-t="surgery">微创手术 · 只能改一行</span>
+          <h3 id="surgeryTitle">…</h3>
+        </div>
+        <div class="patches" id="patches"></div>
+      </section>
+    </section>
+
+    <section class="controls">
+      <button class="btn btn--ghost" id="resetBtn" type="button" data-t="reset">↻ 重开本例</button>
+      <button class="btn btn--step" id="stepBtn" type="button" disabled>👆 <span data-t="chooseLine">先预测病灶行</span></button>
+      <button class="btn" id="nextBtn" type="button" hidden><span data-t="nextCase">下一位病人</span> →</button>
+    </section>
+
+    <section class="win" id="win" hidden>
+      <div class="win-card">
+        <div class="win-seal">全部康复</div>
+        <p class="win-emoji">🎓</p>
+        <h2 data-t="winTitle">首席调试医生！</h2>
+        <p data-t="winText">你没有乱改代码，而是先预测、再单步观察、最后只修病灶。真正的程序员就是这样抓 bug 的。</p>
+        <div class="report" id="report"></div>
+        <button class="btn" id="replayBtn" type="button" data-t="replay">再值一次班</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>

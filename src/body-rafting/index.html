@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>消化道漂流记 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    /* 防闪烁：进 body 前先定好主题与语言（与主站同一套 localStorage 键） */
+    (() => {
+      try {
+        const t = localStorage.getItem('kidslab.theme')
+          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = t;
+        const l = localStorage.getItem('kidslab.lang')
+          || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+      } catch { /* 隐私模式下静默降级 */ }
+    })();
+  </script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🚣 <span data-t="title">消化道漂流记</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero card">
+      <div>
+        <p class="eyebrow" data-t="eyebrow">人体消化系统 · 轨道漂流体验</p>
+        <h2 data-t="heroTitle">把自己缩小，坐上皮划艇随一口饭出发！</h2>
+        <p class="tip" id="tip" data-t="tip0">按住屏幕左/右半边或拖动，让小艇躲浪、收集营养金币。</p>
+      </div>
+      <div class="food-picker" role="group" aria-label="food">
+        <button class="food active" data-food="rice" type="button"><b>🍚</b><span data-t="foodRice">米饭</span></button>
+        <button class="food" data-food="candy" type="button"><b>🍬</b><span data-t="foodCandy">糖果</span></button>
+        <button class="food" data-food="fat" type="button"><b>🥓</b><span data-t="foodFat">肥肉</span></button>
+      </div>
+    </section>
+
+    <section class="play card" id="playCard">
+      <canvas id="scene" aria-label="Digestive rafting 3D scene"></canvas>
+      <div id="nogl" class="nogl" hidden data-t="nogl">你的浏览器暂不支持 WebGL，但消化道图鉴仍可学习。</div>
+
+      <div class="hud top-left">
+        <div class="organ" id="organName">口腔 / Mouth</div>
+        <div class="mission" id="missionText">连点咀嚼按钮 20 下</div>
+      </div>
+      <div class="hud top-right">
+        <button class="mini" id="steadyBtn" type="button" data-t="steady">稳一点</button>
+        <button class="mini" id="soundBtn" type="button" data-t="soundOn">声音开</button>
+      </div>
+      <div class="hud stats">
+        <span>🪙 <b id="coinCount">0</b></span>
+        <span>⭐ <b id="starCount">0</b>/18</span>
+      </div>
+
+      <div class="labels" id="labels"></div>
+
+      <div class="map" id="map" aria-label="progress map">
+        <div class="map__line"></div>
+        <button class="map__dot active" data-seg="0" type="button">🦷</button>
+        <button class="map__dot" data-seg="1" type="button">〰️</button>
+        <button class="map__dot" data-seg="2" type="button">🧪</button>
+        <button class="map__dot" data-seg="3" type="button">🌸</button>
+        <button class="map__dot" data-seg="4" type="button">💧</button>
+        <button class="map__dot" data-seg="5" type="button">😆</button>
+      </div>
+
+      <div class="controls" id="controls">
+        <button class="btn" id="actionBtn" type="button" data-t="chewBtn">咀嚼！</button>
+        <button class="btn btn--ghost" id="startBtn" type="button" data-t="start">开始漂流</button>
+      </div>
+
+      <div class="toast" id="toast" hidden></div>
+      <div class="finish" id="finish" hidden>
+        <div class="finish__box">
+          <h2 id="finishTitle">漂流完成！</h2>
+          <p id="finishDesc"></p>
+          <button class="btn" id="restartBtn" type="button" data-t="restart">再漂一次</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="codex card">
+      <div class="codex__head">
+        <h2 data-t="codexTitle">器官图鉴</h2>
+        <p data-t="codexHint">每穿过一段河道，就解锁一张知识卡。</p>
+      </div>
+      <div class="cards" id="codexCards"></div>
+    </section>
+  </main>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

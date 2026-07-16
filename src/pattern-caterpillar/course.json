@@ -1,0 +1,25 @@
+{
+  "id": "pattern-caterpillar",
+  "title": {
+    "zh": "规律毛毛虫",
+    "en": "Pattern Caterpillar"
+  },
+  "description": {
+    "zh": "毛毛虫只吃「有规律的东西」：红-黄-红-黄-？喂对下一个它就长一节，颜色、声音、动作三种规律轮番登场。吃饱结茧，破茧的蝴蝶翅膀就是它吃过的规律花纹！",
+    "en": "This caterpillar only eats things that follow a pattern: red-yellow-red-yellow-? Feed the right next item and it grows. Colors, sounds and moves — then it spins a cocoon, and the butterfly's wings wear every pattern it ate!"
+  },
+  "category": "logic",
+  "levels": [
+    "primary"
+  ],
+  "grades": [
+    "g1",
+    "g2"
+  ],
+  "tags": [
+    "找规律",
+    "推理"
+  ],
+  "icon": "🐛",
+  "order": 73
+}

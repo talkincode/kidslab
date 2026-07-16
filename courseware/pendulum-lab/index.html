@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>单摆实验室 · KidsLab</title>
+  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg" />
+  <link rel="stylesheet" href="style.css" />
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🪀 <span data-t="title">单摆实验室</span></h1>
+    <button class="pill" id="langBtn" type="button">EN</button>
+  </header>
+
+  <main class="wrap">
+    <section class="panel stage-wrap">
+      <canvas id="stage"></canvas>
+      <p class="drag-hint" id="dragHint" data-t="dragHint">🖐 拖动摆球，松手开始摆动</p>
+    </section>
+
+    <aside class="panel side">
+      <section class="ctl">
+        <h2 data-t="planet">选择星球</h2>
+        <div class="planets" id="planets"></div>
+      </section>
+
+      <section class="ctl">
+        <label class="sl">
+          <span><span data-t="length">摆长 L</span> <b id="lenVal">1.5 m</b></span>
+          <input id="lenRange" type="range" min="0.4" max="3" step="0.05" value="1.5" />
+        </label>
+      </section>
+
+      <section class="readout">
+        <div class="ro">
+          <p class="ro__label" data-t="theory">理论周期 2π√(L/g)</p>
+          <p class="ro__val"><b id="tTheory">2.46</b> s</p>
+        </div>
+        <div class="ro">
+          <p class="ro__label" data-t="measured">实测周期</p>
+          <p class="ro__val ro__val--m"><b id="tMeasured">—</b> s</p>
+        </div>
+      </section>
+      <p class="note" id="bigAngleNote" hidden data-t="bigAngle">💡 摆角很大时，实测周期会比公式略长 —— 公式只在小角度下准确！</p>
+
+      <div class="btns">
+        <button class="btn" id="playBtn" type="button">⏸ <span data-t="pause">暂停</span></button>
+        <button class="btn btn--ghost" id="resetBtn" type="button">↺ <span data-t="reset">重置</span></button>
+      </div>
+    </aside>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>

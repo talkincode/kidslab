@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>海龟画室 · KidsLab</title>
+  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg" />
+  <link rel="stylesheet" href="style.css" />
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🐢 <span data-t="title">海龟画室</span></h1>
+    <button class="pill" id="langBtn" type="button">EN</button>
+  </header>
+
+  <main class="wrap">
+    <aside class="panel side">
+      <div class="examples" id="examples"></div>
+      <textarea id="code" class="editor" spellcheck="false" rows="9"></textarea>
+      <p class="err" id="errBox" hidden></p>
+      <div class="btns">
+        <button class="btn btn--run" id="runBtn" type="button">▶ <span data-t="run">运行</span></button>
+        <button class="btn btn--ghost" id="clearBtn" type="button">🧹 <span data-t="clear">清空画布</span></button>
+      </div>
+      <details class="docs" open>
+        <summary data-t="docsTitle">指令小抄</summary>
+        <table id="docsTable"></table>
+      </details>
+    </aside>
+
+    <section class="panel canvas-wrap">
+      <canvas id="paper"></canvas>
+    </section>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>

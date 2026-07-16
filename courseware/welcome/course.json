@@ -1,0 +1,27 @@
+{
+  "id": "welcome",
+  "title": {
+    "zh": "欢迎来到KidsLab · 从一盏灯到宇宙",
+    "en": "Welcome to KidsLab · From a Lamp to the Cosmos"
+  },
+  "description": {
+    "zh": "一场 Three.js 宇宙拉远之旅：从书桌上的一盏灯，穿过城市与地球，抵达银河与宇宙深处。四行诗与轻史诗配乐随尺度生长，点击底部圆点可在六个尺度间穿梭。",
+    "en": "A Three.js cosmic zoom-out: from a desk lamp, past the city and the Earth, to the galaxy and the deep universe. A four-line poem and a light-epic score grow with the scale — tap the dots to jump between six worlds."
+  },
+  "category": "featured",
+  "levels": [
+    "primary",
+    "junior",
+    "senior"
+  ],
+  "grades": [],
+  "tags": [
+    "宇宙",
+    "天文",
+    "3D",
+    "音乐"
+  ],
+  "icon": "🚀",
+  "pinned": true,
+  "order": 0
+}

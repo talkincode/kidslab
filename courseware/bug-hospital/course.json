@@ -1,0 +1,26 @@
+{
+  "id": "bug-hospital",
+  "title": {
+    "zh": "虫虫医院",
+    "en": "Bug Hospital"
+  },
+  "description": {
+    "zh": "给生病的小程序做听诊：先预测病灶，再逐行执行、观察变量，只改一行让计数器、机器人和循环恢复健康。",
+    "en": "Diagnose sick programs: predict the faulty line, step through the code, watch variables change, then fix one line to heal counters, robots, and loops."
+  },
+  "category": "programming",
+  "levels": [
+    "primary"
+  ],
+  "grades": [
+    "g3",
+    "g4",
+    "g5"
+  ],
+  "tags": [
+    "调试"
+  ],
+  "icon": "🏥",
+  "order": 54,
+  "badge": "new"
+}

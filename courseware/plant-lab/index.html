@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description" content="植物生长实验室 · KidsLab interactive plant growth simulation" />
+  <title>🌻 植物生长实验室 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    (() => {
+      try {
+        const theme = localStorage.getItem('kidslab.theme')
+          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        const lang = localStorage.getItem('kidslab.lang')
+          || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+      } catch {}
+    })();
+  </script>
+<link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🌻 <span data-t="title">植物生长实验室</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="sound">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="lab-shell">
+    <section class="status-strip" aria-label="plant status">
+      <div class="readout">
+        <span data-t="day">实验日</span>
+        <b id="dayRead">0.0</b>
+      </div>
+      <div class="readout">
+        <span data-t="stage">阶段</span>
+        <b id="stageRead">种子</b>
+      </div>
+      <div class="readout">
+        <span data-t="growth">生长</span>
+        <b id="growthRead">0%</b>
+      </div>
+      <div class="readout">
+        <span data-t="health">健康</span>
+        <b id="healthRead">100%</b>
+      </div>
+    </section>
+
+    <section class="lab-grid">
+      <div class="stage">
+        <canvas id="scene" aria-label="3D plant growth laboratory"></canvas>
+        <div class="hud hud--top">
+          <span id="plantBadge">向日葵</span>
+          <span id="speedBadge">10×</span>
+        </div>
+        <div class="hud hud--bottom" id="diagnosis">环境稳定，植物正在积累能量。</div>
+        <div class="nogl" id="nogl" hidden data-t="nogl">你的浏览器暂不支持 WebGL。</div>
+      </div>
+
+      <aside class="panel" aria-label="experiment controls">
+        <section class="control-group">
+          <h2 data-t="choosePlant">选择植物</h2>
+          <div class="segmented" id="plantChoices"></div>
+        </section>
+
+        <section class="control-group">
+          <h2 data-t="environment">环境参数</h2>
+          <label class="slider-row">
+            <span data-t="light">光照</span>
+            <output id="lightOut">72%</output>
+            <input id="light" type="range" min="0" max="100" value="72" />
+          </label>
+          <label class="slider-row">
+            <span data-t="humidity">湿度</span>
+            <output id="humidityOut">58%</output>
+            <input id="humidity" type="range" min="0" max="100" value="58" />
+          </label>
+          <label class="slider-row">
+            <span data-t="temperature">温度</span>
+            <output id="tempOut">24°C</output>
+            <input id="temperature" type="range" min="8" max="42" value="24" />
+          </label>
+          <label class="slider-row">
+            <span data-t="nutrients">养分</span>
+            <output id="nutrientOut">42%</output>
+            <input id="nutrients" type="range" min="0" max="100" value="42" />
+          </label>
+          <div class="actions">
+            <button class="btn" id="waterBtn" type="button" data-t="water">浇水</button>
+            <button class="btn" id="fertilizeBtn" type="button" data-t="fertilize">施肥</button>
+          </div>
+        </section>
+
+        <section class="control-group">
+          <h2 data-t="timeMachine">时间加快装置</h2>
+          <div class="speed-row" id="speedChoices"></div>
+          <label class="slider-row compact">
+            <span data-t="jump">快进</span>
+            <output id="jumpOut">7天</output>
+            <input id="jumpDays" type="range" min="1" max="30" value="7" />
+          </label>
+          <div class="actions">
+            <button class="btn" id="jumpBtn" type="button" data-t="jumpBtn">推进时间</button>
+            <button class="btn btn--quiet" id="resetBtn" type="button" data-t="reset">重置</button>
+          </div>
+        </section>
+
+        <section class="control-group log-group">
+          <h2 data-t="journal">实验日志</h2>
+          <ol class="journal" id="journal"></ol>
+        </section>
+      </aside>
+    </section>
+  </main>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

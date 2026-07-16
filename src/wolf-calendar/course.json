@@ -1,0 +1,29 @@
+{
+  "id": "wolf-calendar",
+  "title": {
+    "zh": "月相狼历",
+    "en": "Werewolf Moon Calendar"
+  },
+  "description": {
+    "zh": "友善的狼人请你当生活规划师：满月夜开嚎叫音乐会，新月夜隐身买薯片。亲手拖动月球公转，从地球视角看月亮圆缺——月相原来是位置魔术！",
+    "en": "A friendly werewolf needs a life planner: howling concerts on full moons, invisible chip runs on new moons. Drag the Moon around its orbit and watch its phase from Earth — it's all a game of positions!"
+  },
+  "category": "science",
+  "levels": [
+    "primary"
+  ],
+  "grades": [
+    "g3",
+    "g4",
+    "g5",
+    "g6"
+  ],
+  "tags": [
+    "月相",
+    "月球",
+    "地球运动",
+    "天文"
+  ],
+  "icon": "🌕",
+  "order": 65
+}

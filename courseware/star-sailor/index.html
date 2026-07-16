@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>⭐ 星海水手 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    (() => {
+      try {
+        const t = localStorage.getItem('kidslab.theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = t;
+        const l = localStorage.getItem('kidslab.lang') || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+      } catch {}
+    })();
+  </script>
+<link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">⭐ <span data-t="title">星海水手</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap sailor-wrap">
+    <section class="card intro-card"><p class="tip" id="tip" data-t="tip0">站在船上拖动天空环顾；按航海日志完成 6 个星空任务。</p></section>
+    <section class="stage-card">
+      <canvas id="scene" aria-label="star sailor scene"></canvas>
+      <canvas id="trails" aria-label="star trails"></canvas>
+      <svg id="overlay" class="overlay" aria-hidden="true"></svg>
+      <div id="nogl" class="nogl" hidden data-t="nogl">你的浏览器暂不支持 WebGL。</div>
+      <div id="toast" class="toast" hidden></div>
+      <div id="myth" class="myth" hidden>🐻</div>
+      <div class="helm" id="helm" hidden>
+        <div class="wheel" id="wheel">🛞<span>▲</span></div>
+        <p data-t="helmTip">拖动船头方向盘，让箭头对准北极星。</p>
+      </div>
+      <div class="month-box" id="monthBox" hidden>
+        <label><span data-t="monthLabel">月份轮盘</span><input id="monthRange" type="range" min="1" max="12" value="1" /></label>
+        <strong id="monthText">1</strong>
+      </div>
+    </section>
+    <aside class="log-card">
+      <div class="chapter-top"><span id="chapterNo">1/6</span><strong id="chapterTitle">连星成图</strong></div>
+      <p id="chapterText">依次点击北斗七星。</p>
+      <div class="actions">
+        <button class="btn" id="mainBtn" type="button" data-t="start">开始任务</button>
+        <button class="btn btn--ghost" id="fastBtn" type="button" data-t="fast" hidden>按住快进</button>
+      </div>
+      <div class="quiz" id="quiz" hidden></div>
+      <div class="badges" id="badges"></div>
+    </aside>
+  </main>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

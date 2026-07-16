@@ -1,0 +1,25 @@
+{
+  "id": "iffy-zoo",
+  "title": {
+    "zh": "如果动物园",
+    "en": "The If-Zoo"
+  },
+  "description": {
+    "zh": "给动物园的自动喂食机编规则：如果是食草动物就投青草，否则投肉——直到熊猫出现！加特例、调顺序、组合与和或，看你的规则机一只不错地喂饱 30 只动物。",
+    "en": "Program the zoo's auto-feeder: IF herbivore THEN grass ELSE meat — until the panda shows up! Add special cases, reorder rules, combine AND/OR, and feed 30 animals without a single mix-up."
+  },
+  "category": "programming",
+  "levels": [
+    "primary"
+  ],
+  "grades": [
+    "g3",
+    "g4"
+  ],
+  "tags": [
+    "条件判断",
+    "编程启蒙"
+  ],
+  "icon": "🦁",
+  "order": 53
+}

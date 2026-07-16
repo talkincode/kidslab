@@ -1,0 +1,27 @@
+{
+  "id": "venn-port",
+  "title": {
+    "zh": "维恩太空港",
+    "en": "Venn Spaceport"
+  },
+  "description": {
+    "zh": "当太空港塔台指挥官，把外星飞船停进正确的集合区域。找到「两个条件都满足」的重叠区，也别漏掉哪边都不属于的飞船！",
+    "en": "Guide alien ships into the right set at a spaceport. Discover the overlap where both rules are true — and the outer bay for ships that match neither!"
+  },
+  "category": "logic",
+  "levels": [
+    "primary"
+  ],
+  "grades": [
+    "g1",
+    "g2",
+    "g3"
+  ],
+  "tags": [
+    "集合",
+    "分类"
+  ],
+  "icon": "🛸",
+  "order": 74,
+  "badge": "new"
+}

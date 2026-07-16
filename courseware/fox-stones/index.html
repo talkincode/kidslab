@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>狐狸的石子 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    /* 防闪烁：进 body 前先定好主题与语言（与主站同一套 localStorage 键） */
+    (() => {
+      try {
+        const t = localStorage.getItem('kidslab.theme')
+          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = t;
+        const l = localStorage.getItem('kidslab.lang')
+          || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+      } catch { /* 隐私模式下静默降级 */ }
+    })();
+  </script>
+<link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🦊 <span data-t="title">狐狸的石子</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="card hero">
+      <div>
+        <p class="eyebrow" data-t="eyebrow">逆向推理森林</p>
+        <h2 id="modeTitle">最后一颗谁拿走？</h2>
+        <p class="tip" id="tip" data-t="tip0">每次拿 1–3 颗。狐狸很会算，但你也能从结局倒推。</p>
+      </div>
+      <div class="foxBox" id="foxBox">
+        <div class="fox" id="fox">🦊</div>
+        <b id="foxMood">thinking…</b>
+      </div>
+    </section>
+
+    <section class="card modes" id="modeTabs" role="tablist"></section>
+
+    <section class="gameShell">
+      <section class="card clearing">
+        <div class="scorebar">
+          <span id="remaining">石子：17</span>
+          <span id="turnBadge">你的回合</span>
+          <span id="streak">连胜：0/3</span>
+        </div>
+        <div class="choicePanel" id="choicePanel" hidden>
+          <p data-t="chooseFirst">这个开局你要先手，还是让狐狸先？</p>
+          <button class="btn" id="humanFirst" type="button" data-t="humanFirst">我先</button>
+          <button class="btn btn--ghost" id="foxFirst" type="button" data-t="foxFirst">狐狸先</button>
+        </div>
+        <div class="stones" id="stones" aria-live="polite"></div>
+        <div class="takeBar">
+          <button class="take" type="button" data-take="1">1</button>
+          <button class="take" type="button" data-take="2">2</button>
+          <button class="take" type="button" data-take="3">3</button>
+          <button class="take" type="button" data-take="4">4</button>
+        </div>
+        <div class="coach" id="coach"></div>
+      </section>
+
+      <aside class="card lab">
+        <h3 data-t="labTitle">策略实验室</h3>
+        <label class="switch"><input id="glasses" type="checkbox" disabled /> <span data-t="glasses">必胜眼镜（3局后解锁）</span></label>
+        <div class="setup" id="setupBox" hidden>
+          <label><span data-t="stonesCount">石子数</span><input id="setupCount" type="range" min="7" max="29" value="17" /></label>
+          <output id="setupOut">17</output>
+        </div>
+        <button class="btn" id="newRound" type="button" data-t="newRound">新开一局</button>
+        <button class="btn btn--ghost" id="replayBtn" type="button" data-t="openReplay">打开复盘板</button>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal" id="replayModal" hidden>
+    <div class="modal__card">
+      <button class="close" id="closeReplay" type="button">×</button>
+      <p class="modal__emoji" id="resultEmoji">🧠</p>
+      <h2 id="resultTitle">复盘</h2>
+      <p id="resultText"></p>
+      <div class="numberLine" id="numberLine"></div>
+      <p class="explain" id="explain"></p>
+      <button class="btn" id="againBtn" type="button" data-t="again">再来一局</button>
+    </div>
+  </div>
+
+  <div class="badge" id="badge" hidden>
+    <div>🏆</div><b data-t="badgeTitle">策略大师</b><span data-t="badgeSub">我不是运气好，我是算出来的。</span>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

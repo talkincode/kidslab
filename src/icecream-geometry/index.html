@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>🍦 冰淇淋几何 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    (() => {
+      try {
+        const t = localStorage.getItem('kidslab.theme')
+          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = t;
+        const l = localStorage.getItem('kidslab.lang')
+          || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+      } catch { /* 隐私模式下静默降级 */ }
+    })();
+  </script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🍦 <span data-t="title">冰淇淋几何</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero card">
+      <div>
+        <p class="eyebrow" data-t="eyebrow">六年级 · 圆柱 / 圆锥 / 旋转体</p>
+        <p class="tip" id="tip" data-t="tip0">欢迎来到冰淇淋工厂！先把纸片转成立体，再揭开圆锥体积“÷3”的秘密。</p>
+      </div>
+      <div class="scoreboard">
+        <span id="atlas" title="立体图鉴">📘 0/4</span><span id="money" title="赚到的金币">🪙 0</span><span id="branch" title="分店进度">🏪 0%</span>
+      </div>
+    </section>
+
+    <nav class="mode-tabs card" aria-label="stations">
+      <button class="tab is-active" data-station="lathe" type="button" data-t="stationLathe">🌀 旋转成型机</button>
+      <button class="tab" data-station="triple" type="button" data-t="stationTriple">🍦 三倍之谜</button>
+      <button class="tab" data-station="shop" type="button" data-t="stationShop">🏪 营业挑战</button>
+    </nav>
+
+    <section class="game card">
+      <div class="scene-wrap">
+        <canvas id="scene" aria-label="3D ice cream geometry"></canvas>
+        <div class="scene-hint" id="sceneHint" data-t="hintOrbit">🖐️ 拖动空白处旋转 · 滚轮缩放</div>
+        <div class="nogl" id="nogl" hidden data-t="nogl">你的浏览器暂不支持 WebGL，不过右边的挑战题还可以玩。</div>
+        <div class="toast" id="toast" hidden></div>
+      </div>
+      <aside class="panel">
+        <div class="station-panel" id="lathePanel">
+          <h2 data-t="latheTitle">🌀 旋转成型机</h2>
+          <p class="goal" data-t="latheGoal">🎯 任务：一张平平的纸片，绕着轴转一圈，就变出一个立体！集齐 4 种立体图鉴。</p>
+          <ol class="steps">
+            <li data-t="latheStep1">选一张纸片</li>
+            <li data-t="latheStep2">点“转起来！”，或直接拖动纸片</li>
+            <li data-t="latheStep3">转满一圈，立体就收进图鉴</li>
+          </ol>
+          <div class="choices" id="shapeButtons"></div>
+          <label id="radiusRow"><span data-t="radius">半径 r</span><b id="radiusVal">3</b><input id="radius" type="range" min="1" max="4" value="3" /></label>
+          <label id="heightRow"><span data-t="height">高 h</span><b id="heightVal">6</b><input id="height" type="range" min="2" max="8" value="6" /></label>
+          <div class="formula" id="latheFormula">r=3, h=6</div>
+          <button class="btn" id="spinBtn" type="button" data-t="spinBtn">🌀 转起来！</button>
+          <div class="atlas" id="atlasList"></div>
+        </div>
+
+        <div class="station-panel" id="triplePanel" hidden>
+          <h2 data-t="tripleTitle">🍦 三倍之谜</h2>
+          <p class="goal" data-t="tripleGoal">🎯 任务：圆锥杯和圆柱杯，底一样大、高一样高。猜猜倒几杯，圆柱杯正好满？</p>
+          <ol class="steps">
+            <li data-t="tripleStep1">点“接冰淇淋”，把圆锥杯接满（也可以把杯子拖到机器下）</li>
+            <li data-t="tripleStep2">点“倒进圆柱杯”（或把杯子拖过去）</li>
+            <li data-t="tripleStep3">数一数：第几杯刚好倒满？</li>
+          </ol>
+          <div class="formula" id="tripleReadout">🍦 0 杯</div>
+          <div class="choices">
+            <button class="btn" id="fillCone" type="button" data-t="fillCone">🍦 接冰淇淋</button>
+            <button class="btn" id="pourCone" type="button" data-t="pourCone">💧 倒进圆柱杯</button>
+          </div>
+          <div class="choices">
+            <button class="btn btn--ghost" id="resetTriple" type="button" data-t="resetTriple">↺ 重来一次</button>
+            <button class="btn btn--ghost" id="unequal" type="button" data-t="unequal">🔍 换个小杯子对照</button>
+          </div>
+        </div>
+
+        <div class="station-panel" id="shopPanel" hidden>
+          <h2 data-t="shopTitle">🏪 营业挑战</h2>
+          <p class="goal" data-t="shopGoal">🎯 任务：客人想要冰淇淋多的那份！用公式帮客人算一算，答对赚金币开分店。</p>
+          <div class="customer" id="customerCard"><span class="emoji" id="customerEmoji">🧒</span><span id="shopQuestion"></span></div>
+          <div class="formula formula--hint" id="shopHint" data-t="shopHintFormula">V柱 = πr²h　·　V锥 = πr²h ÷ 3</div>
+          <div class="formula" id="shopFormula" hidden></div>
+          <div class="choices" id="shopChoices"></div>
+          <button class="btn btn--ghost" id="nextOrder" type="button" data-t="nextOrder">下一位客人 →</button>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

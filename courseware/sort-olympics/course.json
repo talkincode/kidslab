@@ -1,0 +1,26 @@
+{
+  "id": "sort-olympics",
+  "title": {
+    "zh": "排序运动会",
+    "en": "Sorting Olympics"
+  },
+  "description": {
+    "zh": "企鹅按个头排队只能两两比较、相邻交换。先徒手排，再雇冒泡、选择、插入三位算法教练同场赛跑——比较次数实时对决，亲眼看出算法的性格！",
+    "en": "Penguins line up by height, but you can only compare two at a time. Sort by hand, then hire Bubble, Selection and Insertion coaches for a three-lane algorithm race — comparison counters dueling live!"
+  },
+  "category": "programming",
+  "levels": [
+    "primary",
+    "junior"
+  ],
+  "grades": [
+    "g5",
+    "g6"
+  ],
+  "tags": [
+    "排序算法",
+    "算法"
+  ],
+  "icon": "🐧",
+  "order": 54
+}

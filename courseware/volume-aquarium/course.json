@@ -1,0 +1,26 @@
+{
+  "id": "volume-aquarium",
+  "title": {
+    "zh": "体积水族馆",
+    "en": "Volume Aquarium"
+  },
+  "description": {
+    "zh": "用单位小方块搭鱼缸、数方块算体积，给每条鱼配够水量；再把丑石头丢进满水缸，溢出的水正好流进量杯——不规则物体的体积被你量出来了！",
+    "en": "Build tanks from unit cubes, count blocks to find volume, and give every fish enough water. Then drop a lumpy rock into a full tank — the overflow fills a measuring cup, and you've measured the unmeasurable!"
+  },
+  "category": "math",
+  "levels": [
+    "primary",
+    "junior"
+  ],
+  "grades": [
+    "g5"
+  ],
+  "tags": [
+    "体积",
+    "立体图形",
+    "计量单位"
+  ],
+  "icon": "🐠",
+  "order": 18
+}

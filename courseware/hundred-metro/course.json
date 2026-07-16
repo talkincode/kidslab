@@ -1,0 +1,26 @@
+{
+  "id": "hundred-metro",
+  "title": {
+    "zh": "百数地铁",
+    "en": "Hundred-Chart Metro"
+  },
+  "description": {
+    "zh": "把百数表变成地铁图：乘坐 ±10 快车和 ±1 慢车，用最少步数把乘客送到目标站，发现十位与个位的路线秘密。",
+    "en": "Turn the hundred chart into a metro map. Ride the ±10 express and ±1 local to reach each stop in the fewest moves and uncover the tens-and-ones route secret."
+  },
+  "category": "math",
+  "levels": [
+    "primary"
+  ],
+  "grades": [
+    "g1",
+    "g2"
+  ],
+  "tags": [
+    "数的认识",
+    "数位"
+  ],
+  "icon": "🚇",
+  "order": 20,
+  "badge": "new"
+}

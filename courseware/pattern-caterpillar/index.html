@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>规律毛毛虫 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    /* 防闪烁：进 body 前先定好主题与语言（与主站同一套 localStorage 键） */
+    (() => {
+      try {
+        const t = localStorage.getItem('kidslab.theme')
+          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = t;
+        const l = localStorage.getItem('kidslab.lang')
+          || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+      } catch { /* 隐私模式下静默降级 */ }
+    })();
+  </script>
+<link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🐛 <span data-t="title">规律毛毛虫</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="card hero">
+      <div><p class="eyebrow" data-t="eyebrow">零阅读找规律</p><p class="tip" id="tip" data-t="tip0">看、听、动：选下一个，让毛毛虫长大。</p></div>
+      <div class="hero__buttons">
+        <button class="btn" id="demoBtn" type="button" data-t="demo">👀 演示</button>
+        <button class="btn btn--ghost" id="muteBtn" type="button">🔊</button>
+        <button class="btn btn--ghost" id="gardenBtn" type="button" data-t="garden">🦋 蝴蝶园</button>
+      </div>
+    </section>
+
+    <section class="card meadow">
+      <div class="levelbar"><div id="levelStrip" class="levelstrip"></div><div class="meter"><span id="biteCount">0/8</span><div><i id="fullBar"></i></div></div></div>
+      <div class="skyline"><span>☁️</span><span>🌼</span><span>☀️</span><span>🌷</span></div>
+      <div id="patternTrack" class="pattern-track" aria-live="polite"></div>
+      <div id="caterpillar" class="caterpillar"></div>
+      <div id="speak" class="speak">💭</div>
+    </section>
+
+    <section class="workbench">
+      <section class="card tray"><h2 data-t="tray">果盘</h2><div id="choices" class="choices"></div></section>
+      <section class="card side"><h2 data-t="modeTitle">今日规律</h2><p id="hint" class="small"></p><div id="reverseTools" class="reverse-tools" hidden><button class="mini" id="thinkBtn" type="button" data-t="think">让毛毛虫接龙</button><button class="mini" id="resetReverseBtn" type="button" data-t="reset">重排</button></div></section>
+    </section>
+  </main>
+
+  <div class="modal" id="modal" hidden>
+    <div class="modal__card">
+      <p class="modal__emoji" id="modalEmoji">🦋</p>
+      <h2 id="modalTitle"></h2>
+      <canvas id="wingCanvas" width="420" height="260"></canvas>
+      <p id="modalText"></p>
+      <div class="modal__actions"><button class="btn" id="modalBtn" type="button" data-t="next">下一关</button></div>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

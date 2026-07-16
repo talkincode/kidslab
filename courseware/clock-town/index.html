@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>🕰️ 时钟小镇 · KidsLab</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%95%B0%EF%B8%8F%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    (() => {
+      try {
+        const theme = localStorage.getItem('kidslab.theme')
+          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = theme;
+        const lang = localStorage.getItem('kidslab.lang')
+          || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+      } catch {}
+    })();
+  </script>
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title"><span aria-hidden="true">🕰️</span> <span data-t="title">时钟小镇</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="sound">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="app">
+    <section class="mission card" aria-live="polite">
+      <div class="resident">
+        <span class="resident__face" id="residentFace">👩‍🍳</span>
+        <div class="resident__copy">
+          <span class="eyebrow" data-t="order">居民订单</span>
+          <strong id="missionText">早上 7:00，叫醒面包房！</strong>
+        </div>
+      </div>
+      <div class="mission__status">
+        <span><b data-t="round">订单</b> <strong id="levelText">1/6</strong></span>
+        <span class="stars" id="stars" aria-label="stars">★★★</span>
+      </div>
+    </section>
+
+    <section class="game-grid">
+      <section class="town-card card">
+        <div class="town" id="town" data-period="dawn">
+          <div class="sky" aria-hidden="true">
+            <span class="sun">☀</span>
+            <span class="moon">☾</span>
+            <i class="cloud cloud--one"></i>
+            <i class="cloud cloud--two"></i>
+            <i class="starfield"></i>
+          </div>
+
+          <div class="town__sign">
+            <span data-t="townSign">滴答小镇</span>
+            <small id="periodText">清晨</small>
+          </div>
+
+          <div class="clock-tower" id="clockTower">
+            <div class="tower__roof"><i></i></div>
+            <div class="clock-shell">
+              <svg id="clockSvg" viewBox="0 0 300 300" role="img" aria-label="Interactive clock">
+                <circle class="clock-rim" cx="150" cy="150" r="137"></circle>
+                <circle class="clock-paper" cx="150" cy="150" r="125"></circle>
+                <g id="tickMarks" class="tick-marks"></g>
+                <g class="clock-numbers" aria-hidden="true">
+                  <text x="150" y="54">12</text>
+                  <text x="247" y="158">3</text>
+                  <text x="150" y="258">6</text>
+                  <text x="52" y="158">9</text>
+                </g>
+                <g id="hourHand" class="hand hand--hour" data-hand="hour">
+                  <line class="hand__hit" x1="150" y1="150" x2="150" y2="79"></line>
+                  <line class="hand__line" x1="150" y1="157" x2="150" y2="79"></line>
+                  <circle class="hand__grip" cx="150" cy="79" r="11"></circle>
+                </g>
+                <g id="minuteHand" class="hand hand--minute" data-hand="minute">
+                  <line class="hand__hit" x1="150" y1="150" x2="150" y2="45"></line>
+                  <line class="hand__line" x1="150" y1="161" x2="150" y2="45"></line>
+                  <circle class="hand__grip" cx="150" cy="45" r="10"></circle>
+                </g>
+                <circle class="clock-pin" cx="150" cy="150" r="12"></circle>
+              </svg>
+              <span class="drag-note" data-t="drag">抓住指针转一转</span>
+            </div>
+            <div class="tower__body">
+              <span class="tower__window">♬</span>
+              <div class="tower__doors"><i></i><i></i></div>
+            </div>
+          </div>
+
+          <div class="street" aria-hidden="true">
+            <div class="building bakery"><span>🥐</span><b data-t="bakery">面包房</b><i></i></div>
+            <div class="building school"><span>🏫</span><b data-t="school">学校</b><i></i></div>
+            <div class="pond"><span>🎣</span><i></i><i></i></div>
+            <div class="building home"><span>🏠</span><b data-t="home">小屋</b><i></i></div>
+            <div class="bus">🚌<i></i><i></i></div>
+            <div class="cat">🐈<span>z</span><span>z</span></div>
+            <div class="fisher">🧒<span>〰</span></div>
+            <div class="lamps"><i></i><i></i><i></i></div>
+          </div>
+          <div class="celebrate" id="celebrate" aria-hidden="true"></div>
+        </div>
+      </section>
+
+      <aside class="control card">
+        <div class="target-ticket">
+          <span class="eyebrow" data-t="target">把钟拨到</span>
+          <strong id="targetText">早上 7:00</strong>
+          <small id="activityText">面包出炉</small>
+        </div>
+
+        <div class="time-readout">
+          <span data-t="now">钟楼现在</span>
+          <strong id="timeText">早上 6:20</strong>
+          <small id="handClue">分针指向 4，就是 20 分</small>
+        </div>
+
+        <div class="stepper" aria-label="Time controls">
+          <button type="button" data-step="-30"><span>−30</span><small data-t="minutes">分钟</small></button>
+          <button type="button" data-step="-5"><span>−5</span><small data-t="minutes">分钟</small></button>
+          <button type="button" data-step="5"><span>+5</span><small data-t="minutes">分钟</small></button>
+          <button type="button" data-step="30"><span>+30</span><small data-t="minutes">分钟</small></button>
+        </div>
+
+        <p class="tip" id="tip" data-t="tip0">拖动长长的分针。它走一圈，短短的时针会走一格！</p>
+
+        <div class="actions">
+          <button class="tool-btn" id="hintBtn" type="button"><span>💡</span><b data-t="hint">给点提示</b></button>
+          <button class="check-btn" id="checkBtn" type="button"><span>🔔</span><b data-t="check">敲钟报时</b></button>
+          <button class="tool-btn" id="resetBtn" type="button"><span>↺</span><b data-t="reset">重新拨</b></button>
+        </div>
+
+        <button class="day-button" id="dayBtn" type="button">
+          <span>☀ → ☾</span><b data-t="fastDay">让小镇快过一天</b>
+        </button>
+      </aside>
+    </section>
+  </main>
+
+  <div class="win" id="win" hidden>
+    <div class="win__card">
+      <div class="win__clock" id="winClock">7:00</div>
+      <p class="win__emoji" id="winEmoji">🥐✨</p>
+      <h2 id="winTitle">准时开门！</h2>
+      <p id="winText">长针指向 12，短针指向 7，就是 7:00。</p>
+      <button class="check-btn" id="nextBtn" type="button" data-t="next">下一张订单 →</button>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

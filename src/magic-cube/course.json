@@ -1,0 +1,27 @@
+{
+  "id": "magic-cube",
+  "title": {
+    "zh": "魔方小达人",
+    "en": "Cube Master"
+  },
+  "description": {
+    "zh": "亲手转动一颗逼真的 3D 魔方！2×2、3×3、4×4 三种阶数，三档打乱难度，卡住了还有提示和自动还原演示。",
+    "en": "Spin a realistic 3D Rubik's cube! Three sizes from 2×2 to 4×4, three scramble levels, plus hints and an auto-solve demo when you're stuck."
+  },
+  "category": "logic",
+  "levels": [
+    "primary",
+    "junior",
+    "senior"
+  ],
+  "grades": [],
+  "tags": [
+    "魔方",
+    "空间想象",
+    "3D",
+    "益智游戏"
+  ],
+  "icon": "🧊",
+  "order": 71,
+  "badge": "new"
+}

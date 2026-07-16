@@ -1,0 +1,27 @@
+{
+  "id": "detective-board",
+  "title": {
+    "zh": "侦探线索板",
+    "en": "Detective Clue Board"
+  },
+  "description": {
+    "zh": "谁偷吃了蛋糕？读线索、在网格上钉下 ❌ 和 ✅，看排除法像多米诺一样连锁倒下，红线在软木板上织出真相之网——经典逻辑网格谜题的侦探社版本。",
+    "en": "Who ate the cake? Read clues, pin ❌ and ✅ on the grid, and watch elimination cascade like dominoes as red strings weave the truth across the corkboard — classic logic-grid puzzles, detective style."
+  },
+  "category": "logic",
+  "levels": [
+    "primary",
+    "junior"
+  ],
+  "grades": [
+    "g4",
+    "g5",
+    "g6"
+  ],
+  "tags": [
+    "推理",
+    "益智游戏"
+  ],
+  "icon": "🕵️",
+  "order": 74
+}

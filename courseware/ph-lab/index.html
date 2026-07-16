@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>酸碱魔法水 · KidsLab</title>
+  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg" />
+  <link rel="stylesheet" href="style.css" />
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🧪 <span data-t="title">酸碱魔法水</span></h1>
+    <button class="pill" id="langBtn" type="button">EN</button>
+  </header>
+
+  <main class="wrap">
+    <section class="panel beaker-zone">
+      <svg id="beaker" viewBox="0 0 220 260" role="img" aria-label="beaker">
+        <defs>
+          <clipPath id="liquidClip"><path d="M58 60 L58 196 Q58 224 86 224 L134 224 Q162 224 162 196 L162 60 Z"/></clipPath>
+        </defs>
+        <g clip-path="url(#liquidClip)">
+          <rect id="liquid" x="50" y="110" width="120" height="120" fill="#8fd6a2"/>
+          <ellipse id="liquidTop" cx="110" cy="112" rx="52" ry="7" fill="#ffffff" opacity="0.35"/>
+          <circle class="bub b1" cx="90" cy="200" r="5"/>
+          <circle class="bub b2" cx="115" cy="210" r="3.6"/>
+          <circle class="bub b3" cx="135" cy="205" r="4.4"/>
+        </g>
+        <path d="M50 34 L58 44 L58 196 Q58 224 86 224 L134 224 Q162 224 162 196 L162 44 L170 34"
+              fill="none" stroke="#3d5a63" stroke-width="5" stroke-linecap="round"/>
+        <line x1="150" y1="88" x2="162" y2="88" stroke="#3d5a63" stroke-width="3"/>
+        <line x1="150" y1="132" x2="162" y2="132" stroke="#3d5a63" stroke-width="3"/>
+        <line x1="150" y1="176" x2="162" y2="176" stroke="#3d5a63" stroke-width="3"/>
+      </svg>
+      <div class="verdict">
+        <p class="verdict__ph">pH <b id="phVal">7.0</b></p>
+        <p class="verdict__tag" id="phTag">中性</p>
+        <p class="verdict__h" id="hIon">[H⁺] = 1×10⁻⁷ mol/L</p>
+      </div>
+    </section>
+
+    <aside class="panel side">
+      <section>
+        <h2 data-t="secSub">往烧杯里加点什么？</h2>
+        <div class="subs" id="subs"></div>
+      </section>
+
+      <section>
+        <h2 data-t="secPh">或者直接调节 pH</h2>
+        <div class="ph-slider">
+          <input id="phRange" type="range" min="0" max="14" step="0.1" value="7" />
+          <div class="ph-scale" aria-hidden="true"></div>
+          <div class="ph-ends"><span data-t="acid">← 酸性</span><span data-t="base">碱性 →</span></div>
+        </div>
+      </section>
+
+      <section>
+        <h2 data-t="secInd">换一种指示剂</h2>
+        <div class="inds" id="inds"></div>
+        <p class="ind-note" id="indNote"></p>
+      </section>
+    </aside>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>

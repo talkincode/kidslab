@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>🦁 如果动物园 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    /* 防闪烁：进 body 前先定好主题与语言（与主站同一套 localStorage 键） */
+    (() => {
+      try {
+        const t = localStorage.getItem('kidslab.theme')
+          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = t;
+        const l = localStorage.getItem('kidslab.lang')
+          || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+      } catch { /* 隐私模式下静默降级 */ }
+    })();
+  </script>
+<link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🦁 <span data-t="title">如果动物园</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="top card">
+      <button class="level-chip" id="prevBtn" type="button">‹</button>
+      <div class="level-copy">
+        <p class="mini" data-t="level">关卡</p>
+        <h2 id="levelName">—</h2>
+        <p id="levelGoal">—</p>
+      </div>
+      <button class="level-chip" id="nextBtn" type="button">›</button>
+      <div class="score"><span data-t="fed">已喂饱</span><b id="fedCount">0/0</b></div>
+      <label class="speed"><input id="fastToggle" type="checkbox" /> <span data-t="fast">快速营业</span></label>
+    </section>
+
+    <p class="tip" id="tip" data-t="tip0">先读动物徽章，再让规则从上往下排队检查。</p>
+
+    <section class="zoo-grid">
+      <aside class="card rules-panel">
+        <div class="panel-title"><span data-t="rules">规则机</span><button id="addRuleBtn" class="btn btn--ghost" type="button" data-t="addRule">加规则</button></div>
+        <div id="rules" class="rules"></div>
+      </aside>
+
+      <section class="card stage">
+        <div class="gate" id="gate">
+          <span class="deco deco--c1">☁️</span>
+          <span class="deco deco--c2">☁️</span>
+          <span class="deco deco--tree">🌳</span>
+          <span class="deco deco--flower">🌼</span>
+          <div class="belt" id="belt"></div>
+          <div class="walker" id="walker">🐾</div>
+          <div class="scanner" id="scanner">👀</div>
+          <div class="food-drop" id="foodDrop">❔</div>
+          <div class="keeper" id="keeper">🧑‍🌾</div>
+        </div>
+        <div id="animalCard" class="animal-card">
+          <div class="animal-emoji">🐾</div>
+          <div><b id="animalName">—</b><div id="badges" class="badges"></div></div>
+        </div>
+        <div class="controls">
+          <button id="runBtn" class="btn" type="button" data-t="openZoo">▶️ 营业</button>
+          <button id="resetBtn" class="btn btn--ghost" type="button" data-t="reset">重来</button>
+        </div>
+      </section>
+
+      <aside class="card queue-panel">
+        <div class="panel-title"><span data-t="queue">巡游队伍</span><b id="queueLeft">0</b></div>
+        <div id="queue" class="queue"></div>
+      </aside>
+    </section>
+
+    <section class="win" id="win" hidden>
+      <div class="win__card">
+        <p class="win__emoji" id="winEmoji">🎉</p>
+        <h2 id="winTitle">全员吃饱！</h2>
+        <p id="winText">—</p>
+        <button class="btn" id="againBtn" type="button" data-t="next">下一关 →</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>

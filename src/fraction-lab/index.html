@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>分数披萨店 · KidsLab</title>
+  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg" />
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    (() => {
+      try {
+        const theme = localStorage.getItem('kidslab.theme')
+          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = theme;
+        const lang = localStorage.getItem('kidslab.lang') || 'zh';
+        document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+      } catch {}
+    })();
+  </script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill pill--back" href="../../index.html">
+      <span aria-hidden="true">←</span><span data-t="back">返回平台</span>
+    </a>
+
+    <div class="brand">
+      <span class="brand__seal" aria-hidden="true"><i></i></span>
+      <div>
+        <p class="brand__eyebrow" data-t="brandKicker">KIDSLAB · MATH KITCHEN</p>
+        <h1><span data-t="title">分数披萨店</span></h1>
+      </div>
+    </div>
+
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="atelier">
+    <section class="intro">
+      <div class="intro__copy">
+        <p class="eyebrow" data-t="introKicker">今日数学菜单</p>
+        <h2 data-t="introTitle">把分数烤成看得见的美味</h2>
+        <p class="intro__lede" data-t="introLede">调一调切法和吃掉的份数，让披萨、小数、百分数一起变。</p>
+      </div>
+      <aside class="chef-note">
+        <span class="chef-note__star" aria-hidden="true">✦</span>
+        <p data-t="chefQuote">“先切好，再慢慢尝。”</p>
+        <small data-t="chefSignature">披萨师傅的小提示</small>
+      </aside>
+    </section>
+
+    <section class="workbench">
+      <aside class="panel order-ticket">
+        <div class="ticket-head">
+          <div>
+            <p class="section-kicker" data-t="ticketKicker">ORDER · 01</p>
+            <h2 data-t="ticketTitle">你的披萨订单</h2>
+          </div>
+          <span class="ticket-head__mark" aria-hidden="true">🍕</span>
+        </div>
+
+        <div class="ticket-rule" aria-hidden="true"></div>
+
+        <div class="frac-display" aria-live="polite">
+          <div class="frac" aria-label="fraction">
+            <span id="numShow">3</span>
+            <span class="frac__line"></span>
+            <span id="denShow">8</span>
+          </div>
+          <div class="conversions">
+            <p><span data-t="decimal">小数</span><b id="decShow">0.375</b></p>
+            <p><span data-t="percentage">百分数</span><b id="pctShow">37.5%</b></p>
+          </div>
+        </div>
+
+        <p class="ticket-prompt" data-t="ticketPrompt">设置要吃掉几块，以及披萨一共切成几块。</p>
+
+        <div class="stepper-stack">
+          <div class="stepper">
+            <p class="stepper__label"><span class="stepper__dot stepper__dot--tomato"></span><span data-t="numerator">分子 · 吃掉几块</span></p>
+            <div class="stepper__ctl">
+              <button type="button" data-step="num" data-d="-1" aria-label="减少分子">−</button>
+              <output id="numOut">3</output>
+              <button type="button" data-step="num" data-d="1" aria-label="增加分子">＋</button>
+            </div>
+          </div>
+          <div class="stepper">
+            <p class="stepper__label"><span class="stepper__dot stepper__dot--basil"></span><span data-t="denominator">分母 · 切成几块</span></p>
+            <div class="stepper__ctl">
+              <button type="button" data-step="den" data-d="-1" aria-label="减少分母">−</button>
+              <output id="denOut">8</output>
+              <button type="button" data-step="den" data-d="1" aria-label="增加分母">＋</button>
+            </div>
+          </div>
+        </div>
+
+        <button class="dice" id="diceBtn" type="button">
+          <span class="dice__icon" aria-hidden="true">✦</span>
+          <span data-t="randomize">随机来一份</span>
+          <span class="dice__die" aria-hidden="true">⚄</span>
+        </button>
+
+        <div class="fact">
+          <p id="simpleFact"></p>
+          <p id="equivFact"></p>
+        </div>
+      </aside>
+
+      <section class="panel pizza-stage">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker" data-t="pizzaKicker">FRESH FROM THE OVEN</p>
+            <h2 data-t="pizzaTitle">披萨图</h2>
+          </div>
+          <p class="pizza-tip"><span aria-hidden="true">↗</span><span data-t="pizzaHint">点一块披萨，标记为已经吃掉</span></p>
+        </div>
+        <div class="pizza-legend">
+          <span><i class="pizza-legend__swatch pizza-legend__swatch--eaten" aria-hidden="true"></i><span data-t="eatenLegend">已吃掉</span></span>
+          <span><i class="pizza-legend__swatch pizza-legend__swatch--left" aria-hidden="true"></i><span data-t="leftLegend">还剩下</span></span>
+        </div>
+
+        <div class="oven">
+          <span class="oven__heat oven__heat--one" aria-hidden="true"></span>
+          <span class="oven__heat oven__heat--two" aria-hidden="true"></span>
+          <div class="oven__inner">
+            <svg id="pizza" viewBox="-118 -118 236 236" role="img" aria-label="pizza fraction chart"></svg>
+          </div>
+        </div>
+        <p class="caption" id="pizzaCap"></p>
+      </section>
+
+      <aside class="panel tasting-card">
+        <div class="tasting-card__head">
+          <div>
+            <p class="section-kicker" data-t="sideKicker">TASTE TEST</p>
+            <h2 data-t="sideTitle">换个角度看看</h2>
+          </div>
+          <span class="tasting-card__stamp" aria-hidden="true">½</span>
+        </div>
+
+        <section class="measure measure--bar">
+          <div class="measure__head">
+            <h3 data-t="barTitle">巧克力条</h3>
+            <span id="barCount">3 / 8</span>
+          </div>
+          <p data-t="barHint">亮起的格子，就是吃掉的份数。</p>
+          <div class="bar-chart" id="barChart" aria-label="fraction chocolate bar"></div>
+        </section>
+
+        <div class="measure-divider" aria-hidden="true"><span>✦</span></div>
+
+        <section class="measure measure--line">
+          <div class="measure__head">
+            <h3 data-t="lineTitle">数轴上的位置</h3>
+          </div>
+          <p data-t="lineHint">同一个分数，也能在 0 和 1 之间找到家。</p>
+          <div class="numline">
+            <div class="numline__track">
+              <div class="numline__fill" id="lineFill"></div>
+              <div class="numline__marker" id="lineMarker"><span id="lineLabel">3/8</span></div>
+            </div>
+            <div class="numline__ticks"><span>0</span><span>½</span><span>1</span></div>
+          </div>
+        </section>
+      </aside>
+    </section>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>

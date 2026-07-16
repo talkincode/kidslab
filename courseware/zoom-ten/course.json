@@ -1,0 +1,28 @@
+{
+  "id": "zoom-ten",
+  "title": {
+    "zh": "数字宇宙",
+    "en": "The Number Universe"
+  },
+  "description": {
+    "zh": "一场十倍缩放之旅：从 1 米的小朋友出发，滚一格放大 10 倍——树、城市、地球、银河；再反向钻进瓢虫、蚂蚁的眼睛。数位不是练习册上的表格，是宇宙的楼层。",
+    "en": "A powers-of-ten journey: start at a 1-meter kid, scroll to zoom ×10 — trees, cities, Earth, the galaxy; then dive down into ladybugs and ants' eyes. Place value isn't a worksheet — it's the floors of the universe."
+  },
+  "category": "math",
+  "levels": [
+    "primary",
+    "junior"
+  ],
+  "grades": [
+    "g4",
+    "g5"
+  ],
+  "tags": [
+    "数位",
+    "小数",
+    "计量单位",
+    "估算"
+  ],
+  "icon": "🔭",
+  "order": 14
+}

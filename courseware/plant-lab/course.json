@@ -1,0 +1,25 @@
+{
+  "id": "plant-lab",
+  "title": {
+    "zh": "植物生长实验室",
+    "en": "Plant Growth Lab"
+  },
+  "description": {
+    "zh": "选择豌豆、向日葵或番茄，调节光照、湿度、温度和养分，浇水施肥并快进时间，观察植物从种子到开花结果的变化。",
+    "en": "Choose a pea, sunflower, or tomato plant, tune light, humidity, temperature, and nutrients, then water, fertilize, and fast-forward time to watch realistic growth."
+  },
+  "category": "science",
+  "levels": [
+    "primary",
+    "junior"
+  ],
+  "grades": [],
+  "tags": [
+    "植物",
+    "光合作用",
+    "生态",
+    "实验"
+  ],
+  "icon": "🌻",
+  "order": 29
+}

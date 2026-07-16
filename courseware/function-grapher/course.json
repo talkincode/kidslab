@@ -1,0 +1,22 @@
+{
+  "id": "function-grapher",
+  "title": {
+    "zh": "函数变形记",
+    "en": "Function Shapeshifter"
+  },
+  "description": {
+    "zh": "拖动 a、b、c 三个旋钮，亲眼看见一次函数、二次函数、反比例和正弦曲线如何变形。",
+    "en": "Drag the a, b, c knobs and watch linear, quadratic, inverse and sine curves morph in real time."
+  },
+  "category": "math",
+  "levels": [
+    "junior",
+    "senior"
+  ],
+  "grades": [],
+  "tags": [
+    "函数"
+  ],
+  "icon": "📈",
+  "order": 20
+}

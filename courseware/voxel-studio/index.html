@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>📷 方块摄影棚 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    (() => {
+      try {
+        const t = localStorage.getItem('kidslab.theme')
+          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = t;
+        const l = localStorage.getItem('kidslab.lang')
+          || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+      } catch { }
+    })();
+  </script>
+<link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">📷 <span data-t="title">方块摄影棚</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="card hud">
+      <p class="tip" id="tip" data-t="tip0">拖动观察雕塑，点机器人相机预测照片。</p>
+      <div class="hud-actions">
+        <button class="btn btn--ghost" id="modeBtn" type="button" data-t="modeBuild">搭出雕塑</button>
+        <button class="btn btn--ghost" id="freeBtn" type="button" data-t="free">自由搭建</button>
+        <span id="levelBadge" class="badge"></span>
+      </div>
+    </section>
+
+    <section class="studio card">
+      <div class="main-grid">
+        <div class="scene-shell">
+          <canvas id="scene"></canvas>
+          <div id="nogl" class="nogl" hidden data-t="nogl">你的浏览器暂不支持 WebGL，先用三视图卡片练习 ✨</div>
+          <button class="camera-tag cam-front" data-cam="front" type="button">📷 <span data-t="front">正面</span></button>
+          <button class="camera-tag cam-top" data-cam="top" type="button">📷 <span data-t="top">上面</span></button>
+          <button class="camera-tag cam-side" data-cam="side" type="button">📷 <span data-t="side">侧面</span></button>
+          <div id="flash" class="flash" hidden></div>
+        </div>
+
+        <aside class="panel">
+          <div class="label" data-t="photos">照片</div>
+          <div id="photoStrip" class="photo-strip"></div>
+          <div id="options" class="options"></div>
+          <div class="tools">
+            <button class="btn" id="hammerBtn" type="button" data-t="hammer">锤子：关</button>
+            <button class="btn btn--ghost" id="clearBtn" type="button" data-t="clear">清空</button>
+            <button class="btn" id="nextBtn" type="button" data-t="next">下一关</button>
+          </div>
+          <div id="codeBox" class="codebox" hidden>
+            <input id="codeInput" aria-label="code" />
+            <button class="btn btn--ghost" id="loadCode" type="button" data-t="load">载入</button>
+            <button class="btn" id="makeCode" type="button" data-t="makeCode">生成谜题码</button>
+          </div>
+        </aside>
+      </div>
+      <div id="toast" class="toast" hidden></div>
+    </section>
+  </main>
+
+  <div id="magic" class="magic" hidden>
+    <div class="magic-card">
+      <button id="closeMagic" class="pill pill--icon" type="button">×</button>
+      <h2 data-t="magicTitle">照片会骗人，要三张才够！</h2>
+      <div class="magic-scenes"><canvas id="magicA" width="150" height="150"></canvas><canvas id="magicB" width="150" height="150"></canvas></div>
+      <p data-t="magicText">两座不同雕塑，正面照片一模一样；加上上面和侧面，秘密才完整。</p>
+    </div>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

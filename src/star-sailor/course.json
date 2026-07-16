@@ -1,0 +1,27 @@
+{
+  "id": "star-sailor",
+  "title": {
+    "zh": "星海水手",
+    "en": "Star Sailor"
+  },
+  "description": {
+    "zh": "无罗盘的古代大海上，你是领航员：连星成图认出大熊座，从北斗勺口延伸五倍找到北极星——全天唯一不动的星。开启星轨快进，满天星辰绕它画出同心圆弧！",
+    "en": "On an ancient compass-less sea, you are the navigator: connect stars into the Great Bear, extend the Dipper's edge five times to find Polaris — the one star that never moves. Fast-forward the night and watch every star arc around it!"
+  },
+  "category": "science",
+  "levels": [
+    "primary",
+    "junior"
+  ],
+  "grades": [
+    "g5",
+    "g6"
+  ],
+  "tags": [
+    "星座",
+    "天文",
+    "宇宙"
+  ],
+  "icon": "⭐",
+  "order": 66
+}

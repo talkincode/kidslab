@@ -1,0 +1,28 @@
+{
+  "id": "voxel-studio",
+  "title": {
+    "zh": "方块摄影棚",
+    "en": "Voxel Photo Studio"
+  },
+  "description": {
+    "zh": "机器人摄影师从正面、上面、侧面拍方块雕塑，你来预测照片；反过来只给三张照片，亲手一块块搭出看不见的雕塑——三视图是拼出来的空间想象。",
+    "en": "A robot photographer shoots voxel sculptures from the front, top and side — you predict each photo. Then flip it: given just three photos, build the hidden sculpture block by block."
+  },
+  "category": "math",
+  "levels": [
+    "primary"
+  ],
+  "grades": [
+    "g2",
+    "g3",
+    "g4"
+  ],
+  "tags": [
+    "三视图",
+    "空间想象",
+    "立体图形",
+    "3D"
+  ],
+  "icon": "📷",
+  "order": 17
+}

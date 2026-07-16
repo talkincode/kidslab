@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>🔦 立体影子剧场 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    (() => {
+      try {
+        const t = localStorage.getItem('kidslab.theme')
+          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = t;
+        const l = localStorage.getItem('kidslab.lang')
+          || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+      } catch { }
+    })();
+  </script>
+<link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🔦 <span data-t="title">立体影子剧场</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap theater-wrap">
+    <section class="card top-card">
+      <p class="tip" id="tip" data-t="tip0">固定光源会把积木影子投到幕布上；拖动旋转积木，观察影子形状。</p>
+      <div class="progress"><span id="levelBadge"></span><span id="stars"></span></div>
+    </section>
+
+    <section class="theater card">
+      <div class="marquee" aria-hidden="true"><span>✦</span><span>◆</span><span>✦</span><span>◆</span><span>✦</span><span>◆</span></div>
+      <div class="stage-grid">
+        <aside class="target-panel">
+          <div class="label" data-t="target">目标</div>
+          <canvas id="targetCard" width="220" height="170"></canvas>
+          <div id="reverseCards" class="reverse-cards" hidden></div>
+          <div id="comboSlots" class="combo-slots" hidden></div>
+        </aside>
+        <div class="scene-shell">
+          <canvas id="scene"></canvas>
+          <div id="nogl" class="nogl" hidden data-t="nogl">你的浏览器暂不支持 WebGL，影子剧场改用图卡练习 ✨</div>
+          <div class="finger" id="finger">☝️</div>
+          <div class="curtain"></div>
+        </div>
+        <aside class="shelf">
+          <div class="label" data-t="blocks">积木架</div>
+          <div id="shapeShelf" class="shape-shelf"></div>
+          <button class="btn" id="checkBtn" type="button" data-t="check">演出！</button>
+          <button class="btn btn--ghost" id="resetBtn" type="button" data-t="reset">重置本幕</button>
+          <button class="btn btn--ghost" id="nextBtn" type="button" data-t="next">下一幕</button>
+        </aside>
+      </div>
+      <div id="toast" class="toast" hidden></div>
+      <div id="puppet" class="puppet" hidden>🎭</div>
+    </section>
+  </main>
+
+  <div id="magic" class="magic" hidden>
+    <div class="magic-card">
+      <button id="closeMagic" class="pill pill--icon" type="button">×</button>
+      <h2 data-t="magicTitle">一个体，好多面！</h2>
+      <div class="compare"><canvas id="magicA" width="150" height="150"></canvas><canvas id="magicB" width="150" height="150"></canvas></div>
+      <p data-t="magicText">圆锥转一转，正着看像圆，侧着看像三角形。</p>
+    </div>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

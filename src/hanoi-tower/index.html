@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>汉诺塔挑战 · KidsLab</title>
+  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🗼 <span data-t="title">汉诺塔挑战</span></h1>
+    <button class="pill" id="langBtn" type="button">EN</button>
+  </header>
+
+  <main class="wrap">
+    <section class="hud">
+      <div class="hud__box">
+        <p class="hud__label" data-t="discs">盘子数</p>
+        <div class="disc-pick" id="discPick"></div>
+      </div>
+      <div class="hud__box hud__box--score">
+        <p class="hud__label" data-t="moves">步数</p>
+        <p class="hud__num"><b id="moveCount">0</b><small> / <span data-t="minLabel">最少</span> <span id="minMoves">7</span></small></p>
+      </div>
+      <div class="hud__btns">
+        <button class="btn" id="solveBtn" type="button">🤖 <span data-t="solve">看看电脑怎么解</span></button>
+        <button class="btn btn--ghost" id="resetBtn" type="button">↺ <span data-t="reset">重新开始</span></button>
+      </div>
+    </section>
+
+    <p class="tip" id="tip" data-t="tip0">点一根柱子拿起最上面的盘子，再点另一根放下 🙌</p>
+
+    <section class="board" id="board">
+      <div class="peg" data-peg="0"><div class="peg__rod"></div><div class="peg__base"></div><div class="peg__discs"></div></div>
+      <div class="peg" data-peg="1"><div class="peg__rod"></div><div class="peg__base"></div><div class="peg__discs"></div></div>
+      <div class="peg" data-peg="2"><div class="peg__rod"></div><div class="peg__base"></div><div class="peg__discs"></div></div>
+    </section>
+
+    <div class="win" id="winBox" hidden>
+      <div class="win__card">
+        <p class="win__emoji">🏆</p>
+        <h2 id="winTitle">太棒了！</h2>
+        <p id="winDesc"></p>
+        <button class="btn" id="againBtn" type="button" data-t="again">再来一局</button>
+      </div>
+    </div>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>

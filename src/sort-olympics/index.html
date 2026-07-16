@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>🐧 排序运动会 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    /* 防闪烁：进 body 前先定好主题与语言（与主站同一套 localStorage 键） */
+    (() => {
+      try {
+        const t = localStorage.getItem('kidslab.theme')
+          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = t;
+        const l = localStorage.getItem('kidslab.lang')
+          || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+      } catch { /* 隐私模式下静默降级 */ }
+    })();
+  </script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🐧 <span data-t="title">排序运动会</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero card">
+      <div>
+        <p class="eyebrow" data-t="eyebrow">G5-6 · 算法比较实验场</p>
+        <h2 data-t="heroTitle">企鹅排队，只准两两比高矮</h2>
+        <p class="tip" id="tip" data-t="tip0">先徒手交换，再让三位算法教练同场赛跑。</p>
+      </div>
+      <div class="mascot" aria-hidden="true">🐧🏅</div>
+    </section>
+
+    <section class="panel card">
+      <div class="tabs" role="tablist">
+        <button class="tab on" data-mode="manual" type="button" data-t="modeManual">徒手排</button>
+        <button class="tab" data-mode="coach" type="button" data-t="modeCoach">教练演示</button>
+        <button class="tab" data-mode="race" type="button" data-t="modeRace">算法赛跑</button>
+        <button class="tab" data-mode="mega" type="button" data-t="modeMega">100 只极限赛</button>
+      </div>
+      <div class="hud">
+        <div class="stat"><span data-t="compares">比较</span><b id="compareCount">0</b></div>
+        <div class="stat"><span data-t="swaps">交换</span><b id="swapCount">0</b></div>
+        <div class="stat"><span data-t="stars">星星</span><b id="starCount">☆☆☆</b></div>
+        <label class="selectLine"><span data-t="coach">教练</span><select id="algoSelect"><option value="bubble" data-t="bubble">冒泡</option><option value="selection" data-t="selection">选择</option><option value="insertion" data-t="insertion">插入</option></select></label>
+        <label class="selectLine"><span data-t="startShape">队伍</span><select id="shapeSelect"><option value="random" data-t="random">乱序</option><option value="reverse" data-t="reverse">倒序</option><option value="nearly" data-t="nearly">几乎有序</option></select></label>
+        <label class="selectLine"><span data-t="predict">预测冠军</span><select id="predictSelect"><option value="bubble" data-t="bubble">冒泡</option><option value="selection" data-t="selection">选择</option><option value="insertion" data-t="insertion">插入</option></select></label>
+        <label class="speed"><span data-t="speed">速度</span><input id="speedRange" type="range" min="1" max="6" value="3" /></label>
+      </div>
+      <canvas id="stage" width="1100" height="560" aria-label="Sorting game canvas"></canvas>
+      <div class="controls">
+        <button class="btn" id="newBtn" type="button" data-t="newRound">换一队企鹅</button>
+        <button class="btn" id="swapBtn" type="button" data-t="doSwap">交换</button>
+        <button class="btn btn--ghost" id="noSwapBtn" type="button" data-t="noSwap">不换</button>
+        <button class="btn" id="stepBtn" type="button" data-t="singleStep">单步</button>
+        <button class="btn" id="autoBtn" type="button" data-t="autoRun">自动演示</button>
+      </div>
+      <p class="narrator" id="narrator" aria-live="polite"></p>
+    </section>
+
+    <div class="modal" id="winModal" hidden>
+      <div class="modal__card">
+        <p class="modal__emoji" id="modalEmoji">🏆</p>
+        <h2 id="modalTitle"></h2>
+        <p id="modalDesc"></p>
+        <button class="btn" id="modalBtn" type="button" data-t="again">再玩一次</button>
+      </div>
+    </div>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>

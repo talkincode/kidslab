@@ -1,0 +1,27 @@
+{
+  "id": "earth-dj",
+  "title": {
+    "zh": "地球调度员",
+    "en": "Earth Dispatcher"
+  },
+  "description": {
+    "zh": "入职地球运行调度中心：拨自转让北京日出，推公转让悉尼入夏，再亲手把 23.5° 的地轴掰直——全球四季瞬间消失！春夏秋冬全挂在这根斜斜的轴上。",
+    "en": "Join Earth Operations: spin the globe to give Beijing a sunrise, push it along its orbit to bring summer to Sydney, then straighten the 23.5° axial tilt with your own hands — and watch the seasons vanish worldwide!"
+  },
+  "category": "science",
+  "levels": [
+    "primary",
+    "junior"
+  ],
+  "grades": [
+    "g4",
+    "g5",
+    "g6"
+  ],
+  "tags": [
+    "地球运动",
+    "天文"
+  ],
+  "icon": "🌍",
+  "order": 64
+}

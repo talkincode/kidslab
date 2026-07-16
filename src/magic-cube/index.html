@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>🧊 魔方小达人 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    /* 防闪烁：进 body 前先定好主题与语言（与主站同一套 localStorage 键） */
+    (() => {
+      try {
+        const t = localStorage.getItem('kidslab.theme')
+          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = t;
+        const l = localStorage.getItem('kidslab.lang')
+          || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+      } catch { /* 隐私模式下静默降级 */ }
+    })();
+  </script>
+  <script type="importmap">
+    { "imports": { "three": "./vendor/three.module.min.js" } }
+  </script>
+</head>
+<body>
+  <!-- 3D 舞台（全屏） -->
+  <canvas id="scene" aria-label="3D cube"></canvas>
+  <p id="nogl" class="nogl" hidden data-t="nogl">你的浏览器暂不支持 WebGL，魔方转不起来啦，换个新浏览器试试 ✨</p>
+
+  <!-- 顶栏 -->
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🧊 <span data-t="title">魔方小达人</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="sound">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <!-- 计分板 -->
+  <div class="hud" id="hud">
+    <div class="hud__chip"><span class="hud__label" data-t="hudTime">时间</span><b id="timeVal">0:00</b></div>
+    <div class="hud__chip"><span class="hud__label" data-t="hudMoves">步数</span><b id="moveVal">0</b></div>
+    <div class="hud__chip"><span class="hud__label" data-t="hudBest">最佳</span><b id="bestVal">--</b></div>
+  </div>
+
+  <!-- 转动记号提示条（跟随每次转动） -->
+  <div class="notation" id="notation" hidden><b id="notationMove">R</b><span id="notationName"></span></div>
+
+  <!-- 公式阶段横幅（演示/提示时显示当前层先法阶段） -->
+  <div class="stage-banner" id="stageBanner" hidden>
+    <b id="stageBadge">1/8</b>
+    <div class="stage-banner__txt">
+      <span id="stageName">拼白色十字</span>
+      <small id="stageFormula">白棱回家：白朝上、侧色对门牌</small>
+    </div>
+  </div>
+
+  <!-- 参数面板 -->
+  <aside class="panel" id="panel">
+    <div class="panel__quick">
+      <button class="btn btn--big" id="scrambleBtn" type="button">🎲 <span data-t="btnScramble">打乱，开始挑战！</span></button>
+      <div class="btnrow">
+        <button class="btn btn--ghost btn--sm" id="undoBtn" type="button" disabled>↩️ <span data-t="btnUndo">撤销</span></button>
+        <button class="btn btn--ghost btn--sm" id="hintBtn" type="button" disabled>💡 <span data-t="btnHint">帮我一步</span></button>
+        <button class="btn btn--ghost btn--sm" id="solveBtn" type="button" disabled>🪄 <span data-t="btnSolve">还原演示</span></button>
+      </div>
+    </div>
+    <button class="panel__handle" id="panelHandle" type="button" aria-expanded="true">
+      <span data-t="panelTitle">⚙️ 参数面板</span><i id="panelArrow">▾</i>
+    </button>
+    <div class="panel__body" id="panelBody">
+      <section class="panel__group">
+        <p class="panel__label" data-t="labSize">魔方阶数</p>
+        <div class="seg" id="sizeSeg" role="group">
+          <button class="seg__btn" data-size="2" type="button">2×2</button>
+          <button class="seg__btn is-on" data-size="3" type="button">3×3</button>
+          <button class="seg__btn" data-size="4" type="button">4×4</button>
+        </div>
+      </section>
+
+      <section class="panel__group">
+        <p class="panel__label" data-t="labDiff">打乱难度</p>
+        <div class="seg" id="diffSeg" role="group">
+          <button class="seg__btn is-on" data-diff="0" type="button">🌱 <span data-t="diff0">轻松</span></button>
+          <button class="seg__btn" data-diff="1" type="button">🔥 <span data-t="diff1">进阶</span></button>
+          <button class="seg__btn" data-diff="2" type="button">👑 <span data-t="diff2">大师</span></button>
+        </div>
+      </section>
+
+      <section class="panel__group">
+        <p class="panel__label"><span data-t="labSpeed">转动速度</span><b id="speedVal" class="panel__val">1×</b></p>
+        <input type="range" id="speedRange" min="0.5" max="2" step="0.25" value="1" aria-label="speed" />
+      </section>
+
+      <section class="panel__group">
+        <p class="panel__label" data-t="labSkin">贴纸配色</p>
+        <div class="seg seg--skin" id="skinSeg" role="group">
+          <button class="seg__btn is-on" data-skin="classic" type="button"><i class="swatch sw-classic"></i><span data-t="skin0">经典</span></button>
+          <button class="seg__btn" data-skin="macaron" type="button"><i class="swatch sw-macaron"></i><span data-t="skin1">马卡龙</span></button>
+          <button class="seg__btn" data-skin="neon" type="button"><i class="swatch sw-neon"></i><span data-t="skin2">霓虹</span></button>
+        </div>
+      </section>
+
+      <section class="panel__group">
+        <div class="btnrow">
+          <button class="btn btn--ghost btn--sm" id="secretBtn" type="button">🔍 <span data-t="btnSecret">魔方的秘密</span></button>
+          <button class="btn btn--ghost btn--sm" id="resetBtn" type="button">🔄 <span data-t="btnReset">复原</span></button>
+        </div>
+      </section>
+
+      <section class="panel__group">
+        <button class="lesson__toggle" id="lessonBtn" type="button">📖 <span data-t="lessonTitle">小课堂：转动记号</span><i id="lessonArrow">▸</i></button>
+        <div class="lesson" id="lessonBody" hidden>
+          <p class="lesson__intro" data-t="lessonIntro">魔方的每个面都有自己的字母名字，字母后面加 ′ 表示反着转：</p>
+          <ul class="lesson__list">
+            <li><b>U</b> <span data-t="faceU">上层</span></li><li><b>D</b> <span data-t="faceD">下层</span></li>
+            <li><b>L</b> <span data-t="faceL">左层</span></li><li><b>R</b> <span data-t="faceR">右层</span></li>
+            <li><b>F</b> <span data-t="faceF">前层</span></li><li><b>B</b> <span data-t="faceB">后层</span></li>
+          </ul>
+          <p class="lesson__intro" data-t="lessonTip">💡 还原小妙招：别盯着颜色！盯住一个「零件」，看它该回哪个家。</p>
+        </div>
+      </section>
+    </div>
+  </aside>
+
+  <!-- 底部提示 -->
+  <p class="foot-tip" id="footTip" data-t="tipIdle">拖方块转一层 · 拖空白转视角</p>
+
+  <!-- 首次引导：先选「看秘密」还是「直接玩」 -->
+  <div class="guide" id="guide" hidden>
+    <div class="guide__card">
+      <p class="guide__step"><i>1️⃣</i><span data-t="guide1">按住魔方上的小方块，往上下左右拖 —— 就能转动一层！</span></p>
+      <p class="guide__step"><i>2️⃣</i><span data-t="guide2">按住旁边的空白处拖动，可以绕着魔方看一圈。</span></p>
+      <p class="guide__step"><i>3️⃣</i><span data-t="guide3">点「🎲 打乱」开始挑战，把每个面都转回同一种颜色！</span></p>
+      <button class="btn btn--big" id="guideSecretBtn" type="button">🔍 <span data-t="guideSecret">先看魔方的秘密（1 分钟）</span></button>
+      <button class="btn btn--ghost" id="guideBtn" type="button" data-t="guideGo">我知道啦，开转！</button>
+    </div>
+  </div>
+
+  <!-- 结构原理课：分步讲解浮层（不遮 3D 舞台） -->
+  <div class="lesson3d" id="lesson3d" hidden>
+    <div class="lesson3d__card">
+      <div class="lesson3d__top">
+        <span class="lesson3d__badge" id="lessonStepBadge">1/5</span>
+        <button class="lesson3d__close" id="lessonExitBtn" type="button" aria-label="close">✕</button>
+      </div>
+      <h2 class="lesson3d__title" id="lessonTitle3d"></h2>
+      <p class="lesson3d__text" id="lessonText3d"></p>
+      <div class="lesson3d__nav">
+        <button class="btn btn--ghost btn--sm" id="lessonPrevBtn" type="button" data-t="lessonPrev">← 上一步</button>
+        <button class="btn btn--sm" id="lessonNextBtn" type="button" data-t="lessonNext">下一步 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 胜利卡片 -->
+  <div class="win" id="win" hidden>
+    <div class="win__card">
+      <p class="win__emoji" id="winEmoji">🎉</p>
+      <h2 class="win__title" id="winTitle">太棒了，还原成功！</h2>
+      <p class="win__stats" id="winStats"></p>
+      <p class="win__note" id="winNote"></p>
+      <div class="btnrow">
+        <button class="btn btn--big" id="winAgainBtn" type="button">🎲 <span data-t="btnAgain">再来一局</span></button>
+        <button class="btn btn--ghost" id="winCloseBtn" type="button" data-t="btnClose">先歇会儿</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

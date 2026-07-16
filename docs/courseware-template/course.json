@@ -1,0 +1,14 @@
+{
+  "id": "my-course",
+  "title": { "zh": "✏️ 课件名", "en": "✏️ Course Title" },
+  "description": {
+    "zh": "✏️ 一句话说清孩子在玩什么、学到什么。",
+    "en": "✏️ One sentence: what kids play and what they learn."
+  },
+  "category": "math",
+  "levels": ["primary"],
+  "grades": ["g1"],
+  "tags": ["✏️词表canonical标签", "✏️见src/taxonomy.json"],
+  "icon": "✏️",
+  "order": 999
+}

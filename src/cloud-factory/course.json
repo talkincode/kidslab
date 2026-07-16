@@ -1,0 +1,26 @@
+{
+  "id": "cloud-factory",
+  "title": {
+    "zh": "云朵工厂",
+    "en": "Cloud Factory"
+  },
+  "description": {
+    "zh": "接管天空运营公司：调大太阳让湖水蒸发、送水汽上高空凝成云、攒够重量按下降水！雨、雪、雾、雹全是同一套水循环机器的不同参数。",
+    "en": "Run the sky company: crank up the sun to evaporate the lake, lift vapor to condense into clouds, then press the rain button! Rain, snow, fog and hail are just different settings of one water-cycle machine."
+  },
+  "category": "science",
+  "levels": [
+    "primary"
+  ],
+  "grades": [
+    "g3",
+    "g4"
+  ],
+  "tags": [
+    "水循环",
+    "天气",
+    "实验"
+  ],
+  "icon": "☁️",
+  "order": 61
+}

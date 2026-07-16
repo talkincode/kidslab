@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>🍎 果园订单 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    /* 防闪烁：进 body 前先定好主题与语言（与主站同一套 localStorage 键） */
+    (() => {
+      try {
+        const t = localStorage.getItem('kidslab.theme')
+          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = t;
+        const l = localStorage.getItem('kidslab.lang')
+          || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+      } catch { /* 隐私模式下静默降级 */ }
+    })();
+  </script>
+<link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🍎 <span data-t="title">果园订单</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero card">
+      <div class="customer" aria-live="polite">
+        <div class="customer__emoji" id="customerEmoji">🐰</div>
+        <div>
+          <p class="eyebrow" data-t="orderLabel">今日订单</p>
+          <h2 id="orderText">我要 24 个苹果！</h2>
+          <p class="tip" id="tip" data-t="tip0">拖拽田地画一个长方形，看看几行几列正好装满订单。</p>
+        </div>
+      </div>
+      <div class="patience" aria-label="patience"><span id="patienceBar"></span></div>
+      <div class="stats">
+        <div><span data-t="level">订单</span><b id="levelNum">1/10</b></div>
+        <div><span data-t="coins">果园币</span><b id="coins">0</b></div>
+        <div><span data-t="found">图鉴</span><b id="foundCount">0</b></div>
+      </div>
+    </section>
+
+    <section class="play">
+      <div class="field card">
+        <canvas id="fx" aria-hidden="true"></canvas>
+        <div class="field__top">
+          <p class="badge" id="liveMath">—</p>
+          <div class="actions">
+            <button class="btn btn--ghost" id="plantBtn" type="button" data-t="plant">播种</button>
+            <button class="btn" id="waterBtn" type="button" data-t="water">浇水交货</button>
+            <button class="btn btn--ghost" id="rotateBtn" type="button" data-t="rotate">旋转魔法</button>
+          </div>
+        </div>
+        <div class="grid" id="grid" role="application" aria-label="orchard field"></div>
+      </div>
+
+      <aside class="book card">
+        <h3 data-t="bookTitle">口诀图鉴</h3>
+        <p class="book__hint" data-t="bookHint">每找到一种新种法，就贴一张苹果贴纸。</p>
+        <div class="cards" id="cards"></div>
+        <button class="btn btn--wide" id="nextBtn" type="button" data-t="next">下一张订单 →</button>
+        <button class="btn btn--ghost btn--wide" id="restartBtn" type="button" data-t="restart">从头开园</button>
+      </aside>
+    </section>
+
+    <div class="toast" id="toast" hidden></div>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>

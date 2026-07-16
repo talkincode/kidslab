@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>🐹 仓鼠围栏 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    /* 防闪烁：进 body 前先定好主题与语言（与主站同一套 localStorage 键） */
+    (() => {
+      try {
+        const t = localStorage.getItem('kidslab.theme')
+          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = t;
+        const l = localStorage.getItem('kidslab.lang')
+          || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+      } catch { /* 隐私模式下静默降级 */ }
+    })();
+  </script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🐹 <span data-t="title">仓鼠围栏</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="card hud">
+      <div class="badge"><span data-t="level">关卡</span><b id="levelText">1/8</b></div>
+      <div class="badge"><span data-t="budget">栅栏预算</span><b id="budgetText">16m</b></div>
+      <div class="badge"><span data-t="used">已用</span><b id="usedText">0m</b></div>
+      <div class="badge"><span data-t="area">面积</span><b id="areaText">0㎡</b></div>
+      <div class="badge badge--happy"><span data-t="happy">幸福度</span><b id="happyText">😐</b></div>
+      <button class="btn" id="openBtn" type="button" data-t="open">开园！</button>
+    </section>
+
+    <section class="card controls">
+      <p class="tip" id="tip" data-t="tip0">拖动大手柄改变长和宽；周长刚好用完、面积达到目标，仓鼠才会开心开园。</p>
+      <div class="formula" id="formulaText">周长=2×(长+宽)</div>
+      <div class="buttons" aria-label="fence controls">
+        <button class="btn btn--ghost" data-act="w-" type="button" data-t="widthMinus">宽 −</button>
+        <button class="btn btn--ghost" data-act="w+" type="button" data-t="widthPlus">宽 +</button>
+        <button class="btn btn--ghost" data-act="h-" type="button" data-t="heightMinus">高 −</button>
+        <button class="btn btn--ghost" data-act="h+" type="button" data-t="heightPlus">高 +</button>
+        <button class="btn btn--ghost" id="retryBtn" type="button" data-t="retry">重来本关</button>
+      </div>
+      <canvas id="stage" aria-label="Hamster Fence game"></canvas>
+    </section>
+  </main>
+
+  <div class="win" id="win" hidden>
+    <div class="win__card">
+      <p class="win__emoji" id="winEmoji">🐹</p>
+      <h2 id="winTitle">仓鼠开园啦！</h2>
+      <p id="winDesc">同样周长，接近正方形面积更大。</p>
+      <div class="win__actions">
+        <button class="btn" id="nextBtn" type="button" data-t="next">下一关 →</button>
+        <button class="btn btn--ghost" id="againBtn" type="button" data-t="again">再玩一次</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

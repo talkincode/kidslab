@@ -1,0 +1,23 @@
+name = "kidslab-analytics"
+main = "worker.js"
+compatibility_date = "2026-07-01"
+
+# 自定义域名（zone 须在同一 Cloudflare 账号；DNS 记录与证书由 Cloudflare 自动创建）。
+# 子域名刻意避开 "analytics"/"track" 等词，防止被浏览器广告拦截列表误杀。
+workers_dev = false
+routes = [
+  { pattern = "cl-api.talkincode.net", custom_domain = true }
+]
+
+# 事件写入 Workers Analytics Engine（免费档：10 万写/天、SQL 查询 1 万次/天、留存 3 个月）
+[[analytics_engine_datasets]]
+binding = "EVENTS"
+dataset = "kidslab_events"
+
+[vars]
+# 逗号分隔的来源白名单；留空则接受任意来源（beacon 端点本就是公开的，白名单只挡低成本滥用）
+# 例："https://<你的用户名>.github.io"
+ALLOWED_ORIGINS = ""
+
+[observability]
+enabled = true

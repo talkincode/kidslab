@@ -1,0 +1,26 @@
+{
+  "id": "mystery-box",
+  "title": {
+    "zh": "神秘盒子",
+    "en": "Mystery Box"
+  },
+  "description": {
+    "zh": "化身五感小侦探：听声音、摸触感、闻气味、照剪影，让不符合证据的候选一个个退场，用最少线索猜中盒中宝物。",
+    "en": "Become a senses detective: listen, touch, smell, and reveal a silhouette. Eliminate suspects with evidence and identify the hidden object using as few clues as possible."
+  },
+  "category": "science",
+  "levels": [
+    "primary"
+  ],
+  "grades": [
+    "g1",
+    "g2"
+  ],
+  "tags": [
+    "观察",
+    "推理"
+  ],
+  "icon": "📦",
+  "order": 59,
+  "badge": "new"
+}

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>🌕 月相狼历 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    (() => {
+      try {
+        const t = localStorage.getItem('kidslab.theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = t;
+        const l = localStorage.getItem('kidslab.lang') || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+      } catch {}
+    })();
+  </script>
+<link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🌕 <span data-t="title">月相狼历</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap wolf-wrap">
+    <section class="card intro-card">
+      <p class="tip" id="tip" data-t="tip0">拖动月球绕地球走，右侧圆窗会显示地球上看到的月相。</p>
+    </section>
+    <section class="game-shell">
+      <div class="sky-card">
+        <canvas id="scene" aria-label="moon orbit scene"></canvas>
+        <div id="nogl" class="nogl" hidden data-t="nogl">你的浏览器暂不支持 WebGL。</div>
+        <div id="labels" class="labels"></div>
+        <div id="magic" class="magic" hidden>
+          <strong data-t="magicTitle">圆缺是位置魔术！</strong>
+          <span data-t="magicText">月球到日地之间时，朝向我们的半面是暗的，所以看到新月。</span>
+        </div>
+      </div>
+      <aside class="panel">
+        <div class="phase-window">
+          <canvas id="phaseCanvas" width="180" height="180"></canvas>
+          <strong id="phaseName">新月</strong>
+          <span id="lunarName">农历初一附近</span>
+        </div>
+        <div class="wolf-box">
+          <div id="wolf" class="wolf">🐺</div>
+          <div class="speech" id="speech">今晚想开嚎叫音乐会，要满月！</div>
+        </div>
+        <div class="controls">
+          <button class="btn" id="checkBtn" type="button" data-t="check">让狼人查看</button>
+          <button class="btn btn--ghost" id="nextBtn" type="button" data-t="next">下一单</button>
+          <button class="btn btn--ghost" id="tiltBtn" type="button" data-t="tiltOff">轨道倾角：关</button>
+        </div>
+        <div class="stickers" id="stickers" aria-live="polite"></div>
+        <button class="btn calendar-open" id="calendarOpen" type="button" data-t="calendarOpen">进入月历终极关</button>
+      </aside>
+    </section>
+    <section class="card lesson-card">
+      <h2 data-t="whyTitle">为什么不是每月都有日食/月食？</h2>
+      <p id="tiltExplain" data-t="tiltExplainOff">打开“轨道倾角”，会看到月球通常从太阳视线的上方或下方经过；只有节点附近排成直线才可能日食或月食。</p>
+    </section>
+  </main>
+
+  <div class="modal" id="calendarModal" hidden>
+    <div class="modal-card">
+      <button class="pill close" id="closeCalendar" type="button">×</button>
+      <h2 data-t="calendarTitle">月历排程终极关</h2>
+      <p data-t="calendarTip">把 4 张活动卡拖到合适农历日期；拖动时月球会自动演示当天月相。</p>
+      <div class="calendar-game">
+        <div class="cards" id="activityCards"></div>
+        <div class="month" id="monthGrid"></div>
+      </div>
+      <div class="calendar-feedback" id="calendarFeedback"></div>
+    </div>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

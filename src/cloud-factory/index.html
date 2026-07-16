@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>☁️ 云朵工厂 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    /* 防闪烁：进 body 前先定好主题与语言（与主站同一套 localStorage 键） */
+    (() => {
+      try {
+        const t = localStorage.getItem('kidslab.theme')
+          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = t;
+        const l = localStorage.getItem('kidslab.lang')
+          || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+      } catch { /* 隐私模式下静默降级 */ }
+    })();
+  </script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">☁️ <span data-t="title">云朵工厂</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero card">
+      <div>
+        <p class="eyebrow" data-t="eyebrow">天空运营公司 · 粒子模拟</p>
+        <h2 data-t="heroTitle">把一滴水送去旅行</h2>
+        <p class="tip" id="tip" data-t="tip0">调太阳蒸发湖水，开上升气流造云，再按降水按钮完成订单。</p>
+      </div>
+      <div class="score-strip" aria-live="polite">
+        <span id="stars">☆☆☆</span>
+        <b id="orderNum">1/8</b>
+      </div>
+    </section>
+
+    <section class="game-grid">
+      <section class="card stage-card">
+        <div class="stage-top">
+          <div>
+            <p class="eyebrow" data-t="currentOrder">当前订单</p>
+            <h3 id="orderTitle">—</h3>
+            <p id="orderDesc" class="order-desc">—</p>
+          </div>
+          <div class="meters">
+            <div><span data-t="water">湖水</span><meter id="waterMeter" min="0" max="100" low="30" high="65" optimum="100" value="100"></meter></div>
+            <div><span data-t="cloudWeight">云重</span><meter id="cloudMeter" min="0" max="100" low="25" high="45" optimum="100" value="0"></meter></div>
+            <div><span data-t="budget">能量</span><meter id="budgetMeter" min="0" max="100" low="30" high="65" optimum="100" value="100"></meter></div>
+          </div>
+        </div>
+        <canvas id="sky" width="960" height="540" aria-label="Cloud factory canvas"></canvas>
+        <div class="legend">
+          <span data-t="legendVapor">水汽=淡点</span>
+          <span data-t="legendCloud">云滴=团块</span>
+          <span data-t="legendRain">降水=雨/雪/雹</span>
+          <span data-t="legendTemp">蓝虚线=凝结高度 · 右侧=温度尺</span>
+        </div>
+      </section>
+
+      <aside class="card panel">
+        <h3 data-t="console">天气操作台</h3>
+        <label class="control"><span data-t="sun">☀️ 太阳强度</span><output id="sunOut">55%</output><input id="sun" type="range" min="0" max="100" value="55" /></label>
+        <label class="control"><span data-t="lift">🌬️ 上升气流</span><output id="liftOut">50%</output><input id="lift" type="range" min="0" max="100" value="50" /></label>
+        <label class="control"><span data-t="cold">🧊 冷锋高度</span><output id="coldOut">中层</output><input id="cold" type="range" min="0" max="100" value="58" /></label>
+        <p id="forecast" class="forecast" aria-live="polite">现在会下：🌧️ 雨</p>
+        <div class="button-row">
+          <button id="precipBtn" class="btn" type="button" disabled data-t="precip">🌧️ 降水！</button>
+          <button id="trackBtn" class="btn btn--ghost" type="button" data-t="track">🔎 跟踪一滴水</button>
+        </div>
+        <div class="button-row">
+          <button id="resetBtn" class="btn btn--ghost" type="button" data-t="reset">重开订单</button>
+          <button id="nextBtn" class="btn" type="button" hidden data-t="next">下一单</button>
+        </div>
+        <article class="science-note">
+          <b data-t="termsTitle">术语卡</b>
+          <p id="terms" data-t="termsHint">先让粒子跑起来，术语会在循环完成后出现。</p>
+        </article>
+        <ol id="orders" class="orders"></ol>
+      </aside>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" hidden></div>
+  <div id="win" class="win" hidden>
+    <div class="win__card">
+      <p class="win__emoji">🌈</p>
+      <h2 id="winTitle">—</h2>
+      <p id="winDesc">—</p>
+      <button id="againBtn" class="btn" type="button" data-t="again">再开一轮</button>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

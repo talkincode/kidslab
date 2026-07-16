@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>🪩 分子迪斯科 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    /* 防闪烁：进 body 前先定好主题与语言（与主站同一套 localStorage 键） */
+    (() => {
+      try {
+        const t = localStorage.getItem('kidslab.theme')
+          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = t;
+        const l = localStorage.getItem('kidslab.lang')
+          || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+      } catch { /* 隐私模式下静默降级 */ }
+    })();
+  </script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🪩 <span data-t="title">分子迪斯科</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero card">
+      <div>
+        <p class="eyebrow" data-t="eyebrow">DJ 温度台 · 微观/宏观同步</p>
+        <h2 data-t="heroTitle">把分子舞客调成固、液、气</h2>
+        <p class="tip" id="tip" data-t="tip0">拖动唱片滑杆：慢歌排方阵，快歌流动，拉满就飞成气体。</p>
+      </div>
+      <div class="status-stack" aria-live="polite">
+        <b id="tempRead">20°C</b>
+        <span id="stateBadge">液态</span>
+      </div>
+    </section>
+
+    <section class="game-grid">
+      <section class="card stage-card">
+        <div class="stage-top">
+          <div>
+            <p class="eyebrow" data-t="challenge">当前挑战</p>
+            <h3 id="challengeTitle">—</h3>
+            <p id="challengeDesc" class="order-desc">—</p>
+          </div>
+          <div class="meters">
+            <div><span data-t="energy">平均动能</span><meter id="energyMeter" min="0" max="100" value="40"></meter></div>
+            <div><span data-t="plateau">相变平台</span><meter id="plateauMeter" min="0" max="100" value="0"></meter></div>
+          </div>
+        </div>
+        <canvas id="disco" width="960" height="540" aria-label="Molecule disco canvas"></canvas>
+        <div class="legend">
+          <span data-t="micro">左：微观舞池</span>
+          <span data-t="macro">右：宏观观众席</span>
+          <span data-t="sync">同一个温度驱动两屏</span>
+        </div>
+      </section>
+
+      <aside class="card panel">
+        <h3 data-t="dj">DJ 台</h3>
+        <label class="control material"><span data-t="material">物质</span><select id="material"></select></label>
+        <label class="control temp-control"><span data-t="temperature">🎚️ 温度</span><output id="rangeOut">-20°C — 120°C</output><input id="temp" type="range" min="-20" max="120" step="1" value="20" /></label>
+        <button id="pressureBtn" class="btn btn--ghost pressure" type="button" data-t="pressure">🫧 按住加压包间</button>
+        <div class="button-row">
+          <button id="prevBtn" class="btn btn--ghost" type="button" data-t="prev">上一题</button>
+          <button id="nextBtn" class="btn" type="button" data-t="next">下一题</button>
+        </div>
+        <article class="science-note">
+          <b data-t="scienceTitle">观察提示</b>
+          <p id="scienceText">—</p>
+        </article>
+        <ol id="challenges" class="orders"></ol>
+      </aside>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" hidden></div>
+  <div id="win" class="win" hidden>
+    <div class="win__card">
+      <p class="win__emoji">🧪</p>
+      <h2 id="winTitle">—</h2>
+      <p id="winDesc">—</p>
+      <button id="againBtn" class="btn" type="button" data-t="again">再挑战</button>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

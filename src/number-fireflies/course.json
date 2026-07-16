@@ -1,0 +1,25 @@
+{
+  "id": "number-fireflies",
+  "title": {
+    "zh": "数字萤火虫",
+    "en": "Number Fireflies"
+  },
+  "description": {
+    "zh": "夜晚森林里圈住数字萤火虫，让它们相加正好等于灯笼上的目标数。凑出 10 会触发最亮的光爆——凑十法是最划算的抓法！",
+    "en": "Lasso glowing number fireflies so they add up to the lantern's target. Making ten sets off the brightest burst — the make-ten trick pays!"
+  },
+  "category": "math",
+  "levels": [
+    "primary"
+  ],
+  "grades": [
+    "g1"
+  ],
+  "tags": [
+    "加减法",
+    "运算",
+    "数的认识"
+  ],
+  "icon": "✨",
+  "order": 11
+}

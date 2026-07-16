@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>📦 神秘盒子 · KidsLab</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%93%A6%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    (() => {
+      try {
+        const theme = localStorage.getItem('kidslab.theme')
+          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = theme;
+        const lang = localStorage.getItem('kidslab.lang')
+          || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+      } catch {}
+    })();
+  </script>
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title"><span aria-hidden="true">📦</span> <span data-t="title">神秘盒子</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="sound">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="app">
+    <section class="case-strip card" aria-live="polite">
+      <div class="case-badge">
+        <span class="case-badge__stamp" aria-hidden="true">🔎</span>
+        <div>
+          <span class="eyebrow" data-t="caseFile">五感侦探档案</span>
+          <strong id="missionText">盒子里是什么？找线索，再选择！</strong>
+        </div>
+      </div>
+      <div class="case-score">
+        <span><b data-t="round">回合</b> <strong id="roundText">1</strong></span>
+        <span class="stars" id="stars" aria-label="stars">★★★</span>
+      </div>
+    </section>
+
+    <section class="game-grid">
+      <section class="lab card" id="lab">
+        <div class="lab__decor" aria-hidden="true">
+          <span>✦</span><span>✧</span><span>✦</span>
+        </div>
+
+        <div class="evidence-rack" id="evidenceRack" aria-label="Evidence"></div>
+
+        <div class="box-stage">
+          <div class="flashlight" aria-hidden="true"></div>
+          <button class="mystery-box" id="mysteryBox" type="button" aria-label="Mystery box">
+            <span class="box-lid"></span>
+            <span class="box-body">
+              <i class="box-tape"></i>
+              <b>?</b>
+            </span>
+            <span class="box-inside" id="boxInside">🦔</span>
+          </button>
+          <div class="box-shadow" aria-hidden="true"></div>
+          <span class="box-note" data-t="boxNote">禁止偷看 · ONLY CLUES</span>
+        </div>
+
+        <div class="sensor-dock" id="sensorDock">
+          <button class="sensor sensor--listen" type="button" data-sensor="sound">
+            <span>👂</span><b data-t="listen">听一听</b><i></i>
+          </button>
+          <button class="sensor sensor--touch" type="button" data-sensor="touch">
+            <span>✋</span><b data-t="touch">摸一摸</b><i></i>
+          </button>
+          <button class="sensor sensor--smell" type="button" data-sensor="smell">
+            <span>👃</span><b data-t="smell">闻一闻</b><i></i>
+          </button>
+          <button class="sensor sensor--shadow" type="button" data-sensor="shadow">
+            <span>🔦</span><b data-t="shadow">照剪影</b><i></i>
+          </button>
+        </div>
+
+        <p class="narrator" id="narrator" aria-live="polite">点一个感官按钮，看看谁会被证据排除。</p>
+      </section>
+
+      <aside class="suspects card">
+        <div class="suspects__head">
+          <div>
+            <span class="eyebrow" data-t="suspectFile">嫌疑物图鉴</span>
+            <h2 data-t="pickOne">证据指向谁？</h2>
+          </div>
+          <span class="remaining"><b id="remainingText">8</b><small data-t="remaining">还在</small></span>
+        </div>
+        <div class="suspect-grid" id="suspectGrid"></div>
+        <button class="new-case" id="newCaseBtn" type="button">
+          <span>↻</span><b data-t="newCase">换一个盒子</b>
+        </button>
+      </aside>
+    </section>
+  </main>
+
+  <div class="win" id="win" hidden>
+    <div class="win__card">
+      <span class="win__stamp" data-t="solved">破案</span>
+      <p class="win__emoji" id="winEmoji">🦔</p>
+      <h2 id="winTitle">是刺猬！</h2>
+      <p id="winText">沙沙声 + 刺刺的触感，两条证据锁定了它。</p>
+      <div class="win__stars" id="winStars">★★★</div>
+      <button class="next-case" id="nextBtn" type="button" data-t="nextCase">下一只神秘盒子 →</button>
+    </div>
+  </div>
+
+  <div class="confetti" id="confetti" aria-hidden="true"></div>
+  <script src="main.js"></script>
+</body>
+</html>

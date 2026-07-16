@@ -1,0 +1,27 @@
+{
+  "id": "electric-mouse",
+  "title": {
+    "zh": "电工鼠小镇",
+    "en": "Electric Mouse Town"
+  },
+  "description": {
+    "zh": "老鼠小镇大停电！接电池、开关、灯泡组成回路，看电流粒子在导线里奔跑。串联一户烧全街黑，改成并联各亮各的；勺子能当导线吗？橡皮鸭呢？全靠你试！",
+    "en": "Blackout in Mouse Town! Wire batteries, switches and bulbs into circuits and watch current particles race through the wires. Series makes the whole street go dark together — rewire in parallel! Can a spoon be a wire? A rubber duck? Try it!"
+  },
+  "category": "science",
+  "levels": [
+    "primary",
+    "junior"
+  ],
+  "grades": [
+    "g4",
+    "g5",
+    "g6"
+  ],
+  "tags": [
+    "电路",
+    "实验"
+  ],
+  "icon": "🐭",
+  "order": 63
+}

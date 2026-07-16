@@ -1,0 +1,106 @@
+/* ============================================================
+   ✏️ 课件名 · KidsLab 课件模板样式
+   规则：颜色只用 var(--token)；新颜色先同时加进两套主题
+   ============================================================ */
+* { box-sizing: border-box; }
+
+/* ---------- 主题 token（对齐主站 assets/css/app.css） ---------- */
+:root {
+  --font: ui-rounded, -apple-system, "PingFang SC", "Hiragino Sans GB",
+          "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --speed: 0.2s;
+  /* 学科签名色（按需取用） */
+  --c-math: #ef476f;  --c-programming: #06d6a0;  --c-science: #f8961e;
+  --c-logic: #ffd166; --c-physics: #118ab2;      --c-chemistry: #9b5de5;
+  --accent: #ff5d8f;  --accent-2: #ffd166;
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+  --paper: #fbf6ec;      /* 页面底色 */
+  --paper-2: #f4ecdc;    /* 次级底色 */
+  --card: #fffdf7;       /* 卡片 */
+  --ink: #2b2440;        /* 主文字 */
+  --ink-soft: #6f6885;   /* 次文字 */
+  --ink-faint: #a49cb8;  /* 弱文字 */
+  --line: #e5dccb;       /* 弱边框 */
+  --line-strong: #2b2440;/* 强边框/描边 */
+  --hover-bg: rgba(43, 36, 64, 0.05);
+  --dot: rgba(43, 36, 64, 0.07);
+  --ink-on-accent: #2b2440; /* 压在 accent/accent-2 等固定亮色上的文字 */
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #16132a;
+  --paper-2: #1d1936;
+  --card: #221d40;
+  --ink: #f3efff;
+  --ink-soft: #a9a1c6;
+  --ink-faint: #6f6790;
+  --line: #35305a;
+  --line-strong: #0b0918;
+  --hover-bg: rgba(243, 239, 255, 0.06);
+  --dot: rgba(243, 239, 255, 0.055);
+  --ink-on-accent: #2b2440; /* 两套主题都用深色，保证亮色底上可读 */
+}
+
+/* ---------- 基础 ---------- */
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font);
+  color: var(--ink);
+  background: var(--paper);
+  background-image: radial-gradient(var(--dot) 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color var(--speed), color var(--speed);
+}
+
+/* ---------- 顶栏 ---------- */
+.bar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; padding: 14px clamp(14px, 3vw, 30px);
+}
+.bar__title { margin: 0; font-size: clamp(18px, 2.6vw, 24px); font-weight: 800; }
+.bar__actions { display: flex; gap: 8px; }
+.pill {
+  display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px;
+  font: 700 13.5px/1 var(--font); color: var(--ink); text-decoration: none;
+  background: var(--card); border: 2px solid var(--line-strong); border-radius: 99px;
+  box-shadow: 3px 3px 0 var(--line-strong); cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s, background-color var(--speed);
+}
+.pill:hover { transform: translate(-1px, -2px); box-shadow: 5px 5px 0 var(--line-strong); }
+.pill:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--line-strong); }
+.pill--icon { padding: 8px 12px; }
+
+/* ---------- 内容区 ---------- */
+.wrap { max-width: 1050px; margin: 0 auto; padding: 0 clamp(14px, 3vw, 30px) 30px; }
+.card {
+  padding: 16px; background: var(--card);
+  border: 2.5px solid var(--line-strong); border-radius: var(--radius-lg);
+  box-shadow: 4px 5px 0 var(--line-strong);
+  transition: background-color var(--speed);
+}
+.tip { margin: 6px 4px; font-size: 14.5px; font-weight: 700; color: var(--ink-soft); min-height: 1.4em; }
+
+.btn {
+  padding: 12px 20px; font: 800 14.5px/1 var(--font); color: var(--ink-on-accent);
+  background: var(--accent); border: 2.5px solid var(--line-strong); border-radius: var(--radius-md);
+  box-shadow: 4px 4px 0 var(--line-strong); cursor: pointer;
+  transition: transform 0.14s, box-shadow 0.14s;
+}
+.btn:hover { transform: translate(-1px, -2px); box-shadow: 6px 6px 0 var(--line-strong); }
+.btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--line-strong); }
+.btn--ghost { background: var(--card); color: var(--ink); }
+.btn[disabled] { opacity: 0.55; cursor: not-allowed; transform: none; }
+
+/* Canvas 触屏基线：拖拽玩法不被浏览器手势打断 */
+canvas { display: block; touch-action: none; }
+
+/* hidden 属性硬保证：任何 display 规则都不得覆盖 */
+[hidden] { display: none !important; }
+
+/* ✏️ 你的玩法样式从这里开始 */

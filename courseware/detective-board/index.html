@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>侦探线索板 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    /* 防闪烁：进 body 前先定好主题与语言（与主站同一套 localStorage 键） */
+    (() => {
+      try {
+        const t = localStorage.getItem('kidslab.theme')
+          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = t;
+        const l = localStorage.getItem('kidslab.lang')
+          || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+      } catch { /* 隐私模式下静默降级 */ }
+    })();
+  </script>
+<link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🕵️ <span data-t="title">侦探线索板</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero card">
+      <div>
+        <p class="eyebrow" data-t="eyebrow">软木板侦探社</p>
+        <h2 id="caseTitle">谁偷吃了蛋糕？</h2>
+        <p class="tip" id="tip" data-t="tip0">读线索，点击格子钉 ❌ 或 ✅。✅ 会自动排除同行同列。</p>
+      </div>
+      <div class="progressBox" aria-live="polite">
+        <div class="ring" id="ring"><span id="progressText">0/0</span></div>
+        <small data-t="progressLabel">查案进度</small>
+      </div>
+    </section>
+
+    <section class="toolbar card">
+      <div class="caseTabs" id="caseTabs" role="tablist"></div>
+      <div class="tools">
+        <button class="btn" id="hintBtn" type="button" data-t="hintBtn">侦探直觉 ×3</button>
+        <button class="btn btn--ghost" id="resetBtn" type="button" data-t="resetBtn">重开本案</button>
+      </div>
+    </section>
+
+    <section class="office">
+      <aside class="card suspects" id="suspects" aria-label="suspects"></aside>
+      <section class="board card" id="boardWrap">
+        <div class="boardGuide" id="boardGuide" aria-live="polite">
+          <div class="boardGuide__copy">
+            <span class="boardGuide__step" id="guideStep">①</span>
+            <div>
+              <p class="boardGuide__eyebrow" data-t="nextMove">下一步</p>
+              <p class="boardGuide__text" id="guideText"></p>
+            </div>
+          </div>
+          <div class="markTools" role="group" aria-label="pin tools">
+            <span class="markTools__label" data-t="markLabel">选择图钉</span>
+            <button class="markTool" type="button" data-mark-mode="no" aria-pressed="false"><span aria-hidden="true">❌</span><span data-t="pinNo">排除</span></button>
+            <button class="markTool" type="button" data-mark-mode="yes" aria-pressed="false"><span aria-hidden="true">✅</span><span data-t="pinYes">确定</span></button>
+          </div>
+        </div>
+        <svg id="strings" class="strings" aria-hidden="true"></svg>
+        <div id="grids" class="grids"></div>
+      </section>
+      <aside class="card clues">
+        <h3 data-t="cluesTitle">线索卡</h3>
+        <p class="clueLead" data-t="cluesLead">先点一张线索卡，再照中间提示操作。</p>
+        <div id="clueList"></div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal" id="winModal" hidden>
+    <div class="modal__card">
+      <div class="stamp" data-t="closedStamp">结案</div>
+      <p class="modal__emoji">🎬</p>
+      <h2 data-t="restoreTitle">案情还原</h2>
+      <div id="story" class="story"></div>
+      <button class="btn" id="nextBtn" type="button" data-t="nextCase">下一案 →</button>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

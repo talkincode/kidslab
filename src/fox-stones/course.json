@@ -1,0 +1,28 @@
+{
+  "id": "fox-stones",
+  "title": {
+    "zh": "狐狸的石子",
+    "en": "The Fox's Stones"
+  },
+  "description": {
+    "zh": "和狡猾的狐狸轮流拿石子，每次 1–3 颗，拿到最后一颗就赢。狐狸开始总赢——直到你在复盘板上盯出「4 的倍数」的秘密，从结局倒着算出必胜策略！",
+    "en": "Take turns grabbing 1–3 stones from a sly fox — whoever takes the last stone wins. The fox keeps winning… until you spot the multiples-of-4 trap on the replay board and reason backwards to a winning strategy!"
+  },
+  "category": "logic",
+  "levels": [
+    "primary",
+    "junior"
+  ],
+  "grades": [
+    "g4",
+    "g5",
+    "g6"
+  ],
+  "tags": [
+    "策略",
+    "推理",
+    "益智游戏"
+  ],
+  "icon": "🦊",
+  "order": 75
+}

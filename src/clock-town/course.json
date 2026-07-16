@@ -1,0 +1,25 @@
+{
+  "id": "clock-town",
+  "title": {
+    "zh": "时钟小镇",
+    "en": "Clock Town"
+  },
+  "description": {
+    "zh": "当小镇钟楼管理员，拨动联动的时针和分针，按时叫醒面包房、校车、钓鱼客和晚安灯，认识整时、半时与几时几分。",
+    "en": "Run the town clock tower. Move its linked hands to wake the bakery, school bus, fishing crew, and bedtime lights while learning hours, half-hours, and minutes."
+  },
+  "category": "math",
+  "levels": [
+    "primary"
+  ],
+  "grades": [
+    "g1",
+    "g2"
+  ],
+  "tags": [
+    "时间"
+  ],
+  "icon": "🕰️",
+  "order": 21,
+  "badge": "new"
+}

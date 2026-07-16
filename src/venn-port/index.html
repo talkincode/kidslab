@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>维恩太空港 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    (() => {
+      try {
+        const theme = localStorage.getItem('kidslab.theme')
+          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = theme;
+        const lang = localStorage.getItem('kidslab.lang')
+          || (navigator.language?.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+      } catch { /* Browser privacy mode fallback. */ }
+    })();
+  </script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🛸 <span data-t="title">维恩太空港</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="mission card">
+      <div>
+        <p class="eyebrow" data-t="eyebrow">塔台任务</p>
+        <p class="mission__text" id="missionText">把飞船拖到正确停机坪。</p>
+      </div>
+      <div class="progress" aria-label="progress">
+        <span id="levelName">1 · 双重身份</span>
+        <div class="progress__track"><i id="progressBar"></i></div>
+        <strong id="score">0/5</strong>
+      </div>
+    </section>
+
+    <section class="spaceport card" id="spaceport">
+      <div class="stars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="rule-label rule-label--left" id="leftRule">有触角</div>
+      <div class="rule-label rule-label--right" id="rightRule">三只眼</div>
+
+      <div class="venn" id="venn">
+        <button class="zone zone--left" type="button" data-zone="left" aria-label="左边集合">
+          <span class="zone__tap" data-t="parkHere">停这里</span>
+        </button>
+        <button class="zone zone--both" type="button" data-zone="both" aria-label="交集">
+          <span class="both-badge"><b>AND</b><small data-t="both">两个都要</small></span>
+        </button>
+        <button class="zone zone--right" type="button" data-zone="right" aria-label="右边集合">
+          <span class="zone__tap" data-t="parkHere">停这里</span>
+        </button>
+        <button class="zone zone--neither" type="button" data-zone="neither" aria-label="两个集合外">
+          <span>↳ <b data-t="neither">两个都不是</b></span>
+        </button>
+      </div>
+      <div class="arrival">
+        <p class="arrival__label"><span class="pulse"></span><span data-t="incoming">新飞船请求降落</span></p>
+        <div class="ship" id="ship" role="button" tabindex="0" aria-label="拖动飞船">
+          <div class="ship__antennae"><i></i><i></i></div>
+          <div class="ship__dome"><div class="ship__eyes"></div></div>
+          <div class="ship__body"><span id="shipIcon">★</span></div>
+          <div class="ship__beam"></div>
+        </div>
+        <div class="feature-tags" id="featureTags"></div>
+      </div>
+
+      <div class="message" id="message" aria-live="polite">
+        <span class="message__face">👋</span>
+        <span id="messageText">拖动飞船，或点一下停机坪。</span>
+      </div>
+    </section>
+
+    <section class="controls">
+      <button class="btn btn--ghost" id="hintBtn" type="button" data-t="hint">💡 给点提示</button>
+      <div class="level-dots" id="levelDots" aria-label="levels"></div>
+      <button class="btn" id="resetBtn" type="button" data-t="reset">↻ 重开本关</button>
+    </section>
+  </main>
+
+  <div class="modal" id="modal" hidden>
+    <div class="modal__card">
+      <div class="portal" aria-hidden="true"><span>🛸</span></div>
+      <p class="eyebrow" data-t="missionDone">任务完成</p>
+      <h2 id="modalTitle">交集停机坪点亮了！</h2>
+      <p id="modalText">你找到了同时满足两个条件的飞船。</p>
+      <button class="btn" id="nextBtn" type="button" data-t="next">下一关 →</button>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

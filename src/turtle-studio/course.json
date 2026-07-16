@@ -1,0 +1,24 @@
+{
+  "id": "turtle-studio",
+  "title": {
+    "zh": "海龟画室",
+    "en": "Turtle Studio"
+  },
+  "description": {
+    "zh": "用「前进、右转、重复」指挥小海龟画出正方形、五角星和彩虹螺旋 —— 你的第一门编程语言！",
+    "en": "Command a turtle with “forward, right, repeat” to draw squares, stars and rainbow spirals — your first programming language!"
+  },
+  "category": "programming",
+  "levels": [
+    "primary",
+    "junior"
+  ],
+  "grades": [],
+  "tags": [
+    "循环",
+    "海龟绘图",
+    "编程启蒙"
+  ],
+  "icon": "🐢",
+  "order": 50
+}

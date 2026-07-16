@@ -1,0 +1,25 @@
+{
+  "id": "sudoku-zoo",
+  "title": {
+    "zh": "数独动物园",
+    "en": "Sudoku Zoo"
+  },
+  "description": {
+    "zh": "帮小动物们住进笼舍！每行、每列、每个园区都不能有重复的动物。从 4×4 新手村一路闯到 9×9 传奇峰，5 级难度等你挑战！",
+    "en": "House the animals so no row, column or pen repeats! Climb five difficulty tiers, from a friendly 4×4 village to the legendary 9×9 peak."
+  },
+  "category": "logic",
+  "levels": [
+    "primary",
+    "junior"
+  ],
+  "grades": [],
+  "tags": [
+    "数独",
+    "推理",
+    "益智游戏"
+  ],
+  "icon": "🧩",
+  "order": 72,
+  "badge": "new"
+}

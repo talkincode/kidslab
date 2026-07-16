@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>⭐ 星海水手 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    (() => {
+      try {
+        const t = localStorage.getItem('kidslab.theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = t;
+        const l = localStorage.getItem('kidslab.lang') || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+      } catch {}
+    })();
+  </script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">⭐ <span data-t="title">星海水手</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap sailor-wrap">
+    <section class="card intro-card"><p class="tip" id="tip" data-t="tip0">站在船上拖动天空环顾；按航海日志完成 6 个星空任务。</p></section>
+    <section class="stage-card">
+      <canvas id="scene" aria-label="star sailor scene"></canvas>
+      <canvas id="trails" aria-label="star trails"></canvas>
+      <svg id="overlay" class="overlay" aria-hidden="true"></svg>
+      <div id="nogl" class="nogl" hidden data-t="nogl">你的浏览器暂不支持 WebGL。</div>
+      <div id="toast" class="toast" hidden></div>
+      <div id="myth" class="myth" hidden>🐻</div>
+      <div class="helm" id="helm" hidden>
+        <div class="wheel" id="wheel">🛞<span>▲</span></div>
+        <p data-t="helmTip">拖动船头方向盘，让箭头对准北极星。</p>
+      </div>
+      <div class="month-box" id="monthBox" hidden>
+        <label><span data-t="monthLabel">月份轮盘</span><input id="monthRange" type="range" min="1" max="12" value="1" /></label>
+        <strong id="monthText">1</strong>
+      </div>
+    </section>
+    <aside class="log-card">
+      <div class="chapter-top"><span id="chapterNo">1/6</span><strong id="chapterTitle">连星成图</strong></div>
+      <p id="chapterText">依次点击北斗七星。</p>
+      <div class="actions">
+        <button class="btn" id="mainBtn" type="button" data-t="start">开始任务</button>
+        <button class="btn btn--ghost" id="fastBtn" type="button" data-t="fast" hidden>按住快进</button>
+      </div>
+      <div class="quiz" id="quiz" hidden></div>
+      <div class="badges" id="badges"></div>
+    </aside>
+  </main>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

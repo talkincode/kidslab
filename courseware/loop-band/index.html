@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>循环乐队 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    /* 防闪烁：进 body 前先定好主题与语言（与主站同一套 localStorage 键） */
+    (() => {
+      try {
+        const t = localStorage.getItem('kidslab.theme')
+          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = t;
+        const l = localStorage.getItem('kidslab.lang')
+          || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+      } catch { /* 隐私模式下静默降级 */ }
+    })();
+  </script>
+<link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🥁 <span data-t="title">循环乐队</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero card">
+      <div>
+        <p class="eyebrow" data-t="eyebrow">WebAudio 节拍编程</p>
+        <p class="tip" id="tip" data-t="tip0">拖进音符和循环块，听一听，折叠重复的节奏。</p>
+      </div>
+      <div class="hero__buttons">
+        <button class="btn" id="playBtn" type="button" data-t="play">▶️ 播放</button>
+        <button class="btn btn--ghost" id="targetBtn" type="button" data-t="target">🎧 听样带</button>
+        <button class="btn btn--ghost" id="muteBtn" type="button">🔊</button>
+      </div>
+    </section>
+
+    <section class="stage card" aria-live="polite">
+      <div class="levelbar">
+        <button class="tab on" data-mode="levels" type="button" data-t="levels">闯关</button>
+        <button class="tab" data-mode="free" type="button" data-t="free">自由</button>
+        <button class="tab" data-mode="bug" type="button" data-t="bug">错拍找 bug</button>
+        <div class="stars" id="stars">☆☆☆</div>
+      </div>
+      <div class="levelstrip" id="levelStrip"></div>
+      <div class="band" id="band">
+        <div class="animal" data-sound="boom"><span>🐻</span><b data-t="bear">鼓手</b></div>
+        <div class="animal" data-sound="clap"><span>🐱</span><b data-t="cat">沙锤</b></div>
+        <div class="animal" data-sound="bass"><span>🐸</span><b data-t="frog">贝斯</b></div>
+        <div class="animal" data-sound="bell"><span>🐦</span><b data-t="bird">铃铛</b></div>
+      </div>
+      <div class="meter"><div id="playHead"></div><div id="targetDots"></div></div>
+    </section>
+
+    <section class="workbench">
+      <aside class="palette card">
+        <h2 data-t="blocks">积木池</h2>
+        <div class="palette__grid" id="palette"></div>
+        <p class="small" data-t="dragHint">点一下添加；也可以拖到乐谱或循环框里。</p>
+      </aside>
+      <section class="score card">
+        <div class="score__head">
+          <h2 data-t="scoreTitle">乐谱轨道</h2>
+          <div class="score__tools">
+            <button class="mini" id="clearBtn" type="button" data-t="clear">清空</button>
+            <button class="mini" id="checkBtn" type="button" data-t="check">检查</button>
+          </div>
+        </div>
+        <div class="dropzone selected" id="scoreZone" data-path="root"></div>
+        <div class="status" id="status"></div>
+        <div class="free-tools" id="freeTools" hidden>
+          <button class="mini" id="saveBtn" type="button" data-t="save">保存</button>
+          <div id="songSlots" class="slots"></div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <div class="modal" id="modal" hidden>
+    <div class="modal__card">
+      <p class="modal__emoji" id="modalEmoji">🎉</p>
+      <h2 id="modalTitle"></h2>
+      <p id="modalText"></p>
+      <button class="btn" id="modalBtn" type="button" data-t="next">下一关</button>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

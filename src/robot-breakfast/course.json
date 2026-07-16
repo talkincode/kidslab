@@ -1,0 +1,25 @@
+{
+  "id": "robot-breakfast",
+  "title": {
+    "zh": "机器人早餐",
+    "en": "Robot Breakfast"
+  },
+  "description": {
+    "zh": "机器人管家完全按字面执行命令：顺序排错不报错，而是忠实演出一场厨房灾难——先涂黄油再进烤箱？糊啦！排对指令卡，让挑剔的小主人吃上完整早餐。",
+    "en": "The robot butler does exactly what you say: wrong order means no error message — just a faithful kitchen disaster. Butter before toasting? Charcoal! Arrange the cards so breakfast survives."
+  },
+  "category": "programming",
+  "levels": [
+    "primary"
+  ],
+  "grades": [
+    "g1",
+    "g2"
+  ],
+  "tags": [
+    "顺序执行",
+    "编程启蒙"
+  ],
+  "icon": "🍳",
+  "order": 51
+}

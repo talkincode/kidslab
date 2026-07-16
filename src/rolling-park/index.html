@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>🎡 滚轮乐园 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    /* 防闪烁：进 body 前先定好主题与语言（与主站同一套 localStorage 键） */
+    (() => {
+      try {
+        const t = localStorage.getItem('kidslab.theme')
+          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = t;
+        const l = localStorage.getItem('kidslab.lang')
+          || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+      } catch { /* 隐私模式下静默降级 */ }
+    })();
+  </script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🎡 <span data-t="title">滚轮乐园</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="card intro">
+      <div>
+        <p class="eyebrow" data-t="eyebrow">圆的周长与面积</p>
+        <h2 data-t="hero">把 π 亲手滚出来</h2>
+        <p class="tip" id="tip" data-t="tip0">车轮蘸了颜料：拖动它或点「滚一圈」，看看滚一圈能画出多长的线。</p>
+      </div>
+      <div class="pi-badge" id="piBadge">π</div>
+    </section>
+
+    <nav class="tabs" aria-label="modes">
+      <button class="tab on" type="button" data-mode="roll" data-t="tabRoll">A 滚出 π</button>
+      <button class="tab" type="button" data-mode="area" data-t="tabArea">B 拼出面积</button>
+      <button class="tab" type="button" data-mode="challenge" data-t="tabChallenge">C 算路程</button>
+    </nav>
+
+    <section class="studio">
+      <div class="stage card">
+        <canvas id="stage" width="900" height="560" aria-label="rolling park canvas"></canvas>
+      </div>
+      <aside class="panel card">
+        <div class="mode-panel" id="rollPanel">
+          <h3 data-t="rollTitle">滚出 π</h3>
+          <label class="control"><span data-t="radius">车轮大小</span><input id="radius" type="range" min="35" max="95" value="60" /></label>
+          <div class="buttons"><button class="btn" id="autoRoll" type="button" data-t="autoRoll">滚一圈</button><button class="btn btn--ghost" id="squareRoll" type="button" data-t="squareRoll">方轮试试</button></div>
+          <p class="mini" id="ratioText">—</p>
+          <div class="table" id="recordTable"></div>
+        </div>
+        <div class="mode-panel" id="areaPanel" hidden>
+          <h3 data-t="areaTitle">拼出面积</h3>
+          <label class="control"><span data-t="slices">切几片</span><input id="slices" type="range" min="8" max="32" step="8" value="16" /></label>
+          <div class="buttons"><button class="btn" id="sliceBtn" type="button" data-t="slice">切开</button><button class="btn" id="rearrangeBtn" type="button" data-t="rearrange">拼成长方形</button></div>
+          <p class="formula" id="formulaText">A = πr²</p>
+        </div>
+        <div class="mode-panel" id="challengePanel" hidden>
+          <h3 data-t="challengeTitle">算路程</h3>
+          <p class="question" id="questionText">—</p>
+          <input class="answer" id="answer" inputmode="decimal" />
+          <select class="answer" id="wheelChoice" hidden></select>
+          <div class="buttons"><button class="btn" id="verifyBtn" type="button" data-t="verify">看结果</button><button class="btn btn--ghost" id="nextQBtn" type="button" data-t="nextQ">下一题</button></div>
+          <p class="score" id="scoreText">0/6</p>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "id": "body-rafting",
+  "title": {
+    "zh": "消化道漂流记",
+    "en": "Digestive Rafting"
+  },
+  "description": {
+    "zh": "把自己缩小，坐上皮划艇随一口饭菜漂流人体：口腔急流、食道蠕动滑道、胃酸漩涡、小肠绒毛森林、大肠脱水隧道……最后你懂的出口。课本上的名词成了一条河。",
+    "en": "Shrink down and raft through the body with a bite of food: mouth rapids, esophagus peristalsis slides, stomach acid whirlpools, the villi forest of the small intestine, the dehydration tunnel… and that exit. Textbook words become a river."
+  },
+  "category": "science",
+  "levels": [
+    "primary"
+  ],
+  "grades": [
+    "g3",
+    "g4",
+    "g5"
+  ],
+  "tags": [
+    "人体",
+    "消化系统",
+    "营养"
+  ],
+  "icon": "🚣",
+  "order": 67
+}

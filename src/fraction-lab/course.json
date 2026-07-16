@@ -1,0 +1,22 @@
+{
+  "id": "fraction-lab",
+  "title": {
+    "zh": "分数披萨店",
+    "en": "Fraction Pizzeria"
+  },
+  "description": {
+    "zh": "切一块披萨，认识分数！调整分子分母，看看小数、百分数和等值分数怎么变。",
+    "en": "Slice a pizza to meet fractions! Tweak the numerator and denominator to see decimals, percentages and equivalent fractions change."
+  },
+  "category": "math",
+  "levels": [
+    "primary"
+  ],
+  "grades": [],
+  "tags": [
+    "分数",
+    "小数"
+  ],
+  "icon": "🍕",
+  "order": 10
+}

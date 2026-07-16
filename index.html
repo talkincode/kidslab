@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light" data-accent="candy">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="KidsLab — 为小学到高中学生打造的互动课件学习乐园 / An interactive courseware playground for K12 students" />
+  <meta name="color-scheme" content="light dark" />
+  <title>KidsLab · 互动课件学习乐园</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="preload" href="assets/fonts/baloo2-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="assets/css/app.css?v=7fb26d7f" />
+</head>
+<body>
+  <div class="app" id="app">
+
+    <!-- ======= 侧栏 Sidebar ======= -->
+    <aside class="sidebar" id="sidebar" aria-label="导航">
+      <div class="sidebar__head">
+        <a class="brand" href="./" aria-label="KidsLab 首页">
+          <img class="brand__mark" src="assets/logo.svg" alt="" width="42" height="42" />
+          <span class="brand__text">
+            <b data-i18n="siteName">KidsLab</b>
+            <small data-i18n="siteSub">K12 Playground</small>
+          </span>
+        </a>
+        <button class="icon-btn sidebar__collapse" id="collapseBtn" type="button"
+                data-i18n-title="tipCollapse" title="收起侧栏">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor"
+               stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="14 6 8 12 14 18"/>
+          </svg>
+        </button>
+      </div>
+
+      <nav class="sidebar__body">
+        <section class="side-sec">
+          <h2 class="side-sec__label" data-i18n="secLevel">学段</h2>
+          <div class="level-seg" id="levelSeg" role="radiogroup" aria-label="选择学段"></div>
+        </section>
+
+        <section class="side-sec">
+          <h2 class="side-sec__label" data-i18n="secCats">分类</h2>
+          <ul class="cat-list" id="catList"></ul>
+        </section>
+      </nav>
+
+      <div class="sidebar__foot">
+        <div class="accent-row" id="accentRow" aria-label="强调色"></div>
+        <p class="sidebar__ver">KidsLab <span id="courseTotal"></span></p>
+      </div>
+    </aside>
+
+    <div class="backdrop" id="backdrop" hidden></div>
+
+    <!-- ======= 主区 Main ======= -->
+    <main class="main">
+      <header class="topbar">
+        <button class="icon-btn topbar__menu" id="menuBtn" type="button" aria-label="打开菜单">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+               stroke-width="2.6" stroke-linecap="round" aria-hidden="true">
+            <line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/>
+          </svg>
+        </button>
+
+        <label class="search" for="searchInput">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor"
+               stroke-width="2.4" stroke-linecap="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/>
+          </svg>
+          <input id="searchInput" type="search" autocomplete="off"
+                 data-i18n-placeholder="searchPh" placeholder="搜索课件：分数、单摆、编程……" />
+          <kbd>/</kbd>
+        </label>
+
+        <button class="icon-btn starmap-btn" id="starmapBtn" type="button"
+                data-i18n-title="tipStarmap" title="知识星图" aria-haspopup="dialog">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="5.5" cy="17.5" r="2.3"/><circle cx="12" cy="6" r="2.3"/><circle cx="18.5" cy="14.5" r="2.3"/>
+            <line x1="7.3" y1="15.9" x2="10.4" y2="7.9"/><line x1="13.9" y1="7.4" x2="17" y2="13"/><line x1="7.8" y1="17" x2="16.2" y2="14.9"/>
+          </svg>
+        </button>
+
+        <div class="topbar__actions">
+          <button class="icon-btn" id="themeBtn" type="button" data-i18n-title="tipTheme" title="切换深浅主题">
+            <svg class="ico-sun" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor"
+                 stroke-width="2.4" stroke-linecap="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="4.4"/>
+              <path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M5 5l1.7 1.7M17.3 17.3 19 19M19 5l-1.7 1.7M6.7 17.3 5 19"/>
+            </svg>
+            <svg class="ico-moon" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor"
+                 stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20.4 14.2A8.5 8.5 0 0 1 9.8 3.6a8.5 8.5 0 1 0 10.6 10.6z"/>
+            </svg>
+          </button>
+          <button class="icon-btn lang-btn" id="langBtn" type="button" data-i18n-title="tipLang" title="Switch to English">EN</button>
+        </div>
+      </header>
+
+      <section class="grade-filter" id="gradeSec" hidden>
+        <h2 class="grade-filter__label" data-i18n="secGrade">年级</h2>
+        <div class="grade-list" id="gradeList" role="radiogroup" aria-label="选择年级"></div>
+      </section>
+
+      <section class="hero">
+        <h1 class="hero__title" id="heroTitle">嗨，小小探索家！<span class="hero__wave">👋</span></h1>
+        <p class="hero__sub"><span id="crumb"></span> · <span id="countText"></span></p>
+      </section>
+
+      <section class="grid" id="grid" aria-live="polite"></section>
+
+      <section class="empty" id="emptyBox" hidden>
+        <div class="empty__scope">🔭</div>
+        <h3 data-i18n="emptyTitle">没有找到匹配的课件</h3>
+        <p data-i18n="emptyDesc">换个关键词，或者去别的分类逛逛吧～</p>
+        <button class="btn-reset" id="resetBtn" type="button" data-i18n="emptyReset">清除筛选</button>
+      </section>
+
+      <footer class="foot">
+        <span data-i18n="footMade">用 ❤ 为好奇心而建</span>
+        <a href="https://github.com/talkincode/kidslab" target="_blank" rel="noopener">GitHub</a>
+      </footer>
+    </main>
+  </div>
+
+  <!-- ======= 星图模式 Star Map ======= -->
+  <section class="starmap" id="starmap" hidden role="dialog" aria-modal="true" aria-label="知识星图 Knowledge Star Map">
+    <canvas></canvas>
+    <header class="starmap__bar">
+      <h2 class="starmap__title">知识星图</h2>
+      <p class="starmap__hint"></p>
+      <button class="starmap__layout" type="button" id="starmapLayoutBtn"></button>
+      <button class="icon-btn starmap__close" type="button" title="返回列表 (Esc)">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+             stroke-width="2.6" stroke-linecap="round" aria-hidden="true">
+          <line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/>
+        </svg>
+      </button>
+    </header>
+    <div class="starmap__legend"></div>
+    <aside class="starmap__info" hidden></aside>
+  </section>
+
+  <script src="assets/js/app.js?v=366ab37f"></script>
+  <script src="assets/js/starmap.js?v=4673236f"></script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>海龟画室 · KidsLab</title>
+  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🐢 <span data-t="title">海龟画室</span></h1>
+    <button class="pill" id="langBtn" type="button">EN</button>
+  </header>
+
+  <main class="wrap">
+    <aside class="panel side">
+      <div class="examples" id="examples"></div>
+      <textarea id="code" class="editor" spellcheck="false" rows="9"></textarea>
+      <p class="err" id="errBox" hidden></p>
+      <div class="btns">
+        <button class="btn btn--run" id="runBtn" type="button">▶ <span data-t="run">运行</span></button>
+        <button class="btn btn--ghost" id="clearBtn" type="button">🧹 <span data-t="clear">清空画布</span></button>
+      </div>
+      <details class="docs" open>
+        <summary data-t="docsTitle">指令小抄</summary>
+        <table id="docsTable"></table>
+      </details>
+    </aside>
+
+    <section class="panel canvas-wrap">
+      <canvas id="paper"></canvas>
+    </section>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>

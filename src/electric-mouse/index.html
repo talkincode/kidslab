@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>🐭 电工鼠小镇 · KidsLab</title>
+  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg" />
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    /* 防闪烁：进 body 前先定好主题与语言（与主站同一套 localStorage 键） */
+    (() => {
+      try {
+        const t = localStorage.getItem('kidslab.theme')
+          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = t;
+        const l = localStorage.getItem('kidslab.lang')
+          || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+      } catch { /* 隐私模式下静默降级 */ }
+    })();
+  </script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🐭 <span data-t="title">电工鼠小镇</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero card">
+      <div>
+        <p class="eyebrow" data-t="eyebrow">科学课件 · 电路侦探任务</p>
+        <p class="tip" id="tip" data-t="tip0">拖元件、点端子接线，让小镇重新亮起来。</p>
+      </div>
+      <div class="hero__meter" aria-live="polite">
+        <span id="mouseMood">🐭</span>
+        <b id="statusText" data-t="statusOpen">断电中</b>
+      </div>
+    </section>
+
+    <section class="game-shell">
+      <aside class="panel toolbox" aria-label="toolbox">
+        <p class="panel__label" data-t="toolbox">工具箱</p>
+        <div class="tool-grid" id="toolbox"></div>
+        <p class="mini" data-t="toolHint">点工具再点板上放置；点空心端子○再点另一个端子接线。按住元件中间可拖动，点一下开关切换，双击灯泡拧下/装回。</p>
+      </aside>
+
+      <section class="board-card card">
+        <div class="hud">
+          <div class="hud__story">
+            <p class="panel__label" id="levelKicker">任务 1 / 10</p>
+            <h2 id="levelTitle">点亮第一盏灯</h2>
+            <p id="levelBrief">把电池和灯泡接成完整回路。</p>
+          </div>
+          <div class="hud__buttons">
+            <button class="btn" id="testBtn" type="button" data-t="test">通电测试 ⚡</button>
+            <button class="btn btn--ghost" id="resetBtn" type="button" data-t="reset">重置</button>
+            <button class="btn btn--ghost" id="deleteBtn" type="button" data-t="delete">删除选中</button>
+            <button class="btn" id="nextBtn" type="button" data-t="next" disabled>下一关 →</button>
+          </div>
+        </div>
+        <canvas id="stage" aria-label="Electric circuit board"></canvas>
+      </section>
+
+      <aside class="panel notebook">
+        <p class="panel__label" data-t="notebook">电工鼠笔记</p>
+        <div class="bubble" id="coachBubble">先放电池和灯泡，再把四个端子连起来。</div>
+        <div class="dex">
+          <div><b data-t="conductors">会导电</b><ul id="goodDex"></ul></div>
+          <div><b data-t="insulators">不导电</b><ul id="badDex"></ul></div>
+        </div>
+        <div class="legend">
+          <span><i class="dot dot--on"></i><span data-t="legendOn">通路</span></span>
+          <span><i class="dot dot--gap"></i><span data-t="legendGap">断路</span></span>
+          <span><i class="dot dot--short"></i><span data-t="legendShort">短路</span></span>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" hidden></div>
+  <div class="win" id="win" hidden>
+    <div class="win__card">
+      <p class="win__emoji" id="winEmoji">🏅</p>
+      <h2 id="winTitle">电工鼠盖章通过！</h2>
+      <p id="winDesc">小镇又亮了一户。</p>
+      <button class="btn" id="winNext" type="button" data-t="next">下一关 →</button>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

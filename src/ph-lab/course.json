@@ -1,0 +1,24 @@
+{
+  "id": "ph-lab",
+  "title": {
+    "zh": "酸碱魔法水",
+    "en": "Acid-Base Magic Water"
+  },
+  "description": {
+    "zh": "往烧杯里倒入柠檬汁、肥皂水……换一种指示剂，看看溶液变出什么颜色？理解 pH 的秘密。",
+    "en": "Pour lemon juice or soapy water into the beaker, switch indicators, and watch the colours change. Discover the secret of pH."
+  },
+  "category": "chemistry",
+  "levels": [
+    "junior",
+    "senior"
+  ],
+  "grades": [],
+  "tags": [
+    "酸碱",
+    "溶液",
+    "实验"
+  ],
+  "icon": "🧪",
+  "order": 40
+}

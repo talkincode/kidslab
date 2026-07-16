@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>🏒 磁力冰球 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    /* 防闪烁：进 body 前先定好主题与语言（与主站同一套 localStorage 键） */
+    (() => {
+      try {
+        const t = localStorage.getItem('kidslab.theme')
+          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = t;
+        const l = localStorage.getItem('kidslab.lang')
+          || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+      } catch { /* 隐私模式下静默降级 */ }
+    })();
+  </script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🏒 <span data-t="title">磁力冰球</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="card hero">
+      <div>
+        <p class="eyebrow" data-t="eyebrow">G2-3 · 看不见的力</p>
+        <h2 data-t="heroTitle">不许碰球，也能进球！</h2>
+        <p class="tip" id="tip" data-t="tip0">移动手磁铁，翻转 N/S，用吸力和斥力把冰球送进球门。</p>
+      </div>
+      <div class="mascot" aria-hidden="true">🧲🏒</div>
+    </section>
+
+    <section class="card rinkCard">
+      <div class="hud">
+        <button class="btn" id="flipBtn" type="button" data-t="flip">翻转磁铁</button>
+        <button class="btn btn--ghost" id="gogglesBtn" type="button" data-t="goggles">磁场眼镜</button>
+        <button class="btn btn--ghost" id="resetBtn" type="button" data-t="reset">重来</button>
+        <label class="selectLine"><span data-t="level">关卡</span><select id="levelSelect"></select></label>
+        <div class="stat"><span data-t="time">用时</span><b id="timeText">0.0</b></div>
+        <div class="stat"><span data-t="flips">翻面</span><b id="flipText">0</b></div>
+        <div class="legend"><i class="nPole"></i><span data-t="north">N 北极</span><i class="sPole"></i><span data-t="south">S 南极</span></div>
+      </div>
+      <canvas id="rink" width="1100" height="650" aria-label="Magnet hockey canvas"></canvas>
+      <p class="narrator" id="narrator" aria-live="polite"></p>
+    </section>
+
+    <div class="modal" id="winModal" hidden>
+      <div class="modal__card">
+        <p class="modal__emoji" id="modalEmoji">⭐</p>
+        <h2 id="modalTitle"></h2>
+        <p id="modalDesc"></p>
+        <button class="btn" id="nextBtn" type="button" data-t="next">下一关</button>
+      </div>
+    </div>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>

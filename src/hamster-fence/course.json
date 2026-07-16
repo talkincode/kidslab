@@ -1,0 +1,25 @@
+{
+  "id": "hamster-fence",
+  "title": {
+    "zh": "仓鼠围栏",
+    "en": "Hamster Fence"
+  },
+  "description": {
+    "zh": "用固定长度的栅栏给仓鼠围草地：同样的周长，围法不同面积天差地别！靠墙围、L 形围，当一名让仓鼠开心打滚的围栏设计师。",
+    "en": "Fence a lawn for hamsters with a fixed length of fence: same perimeter, wildly different areas! Use walls and L-shapes to make every hamster roll with joy."
+  },
+  "category": "math",
+  "levels": [
+    "primary"
+  ],
+  "grades": [
+    "g3"
+  ],
+  "tags": [
+    "周长",
+    "面积",
+    "平面图形"
+  ],
+  "icon": "🐹",
+  "order": 13
+}

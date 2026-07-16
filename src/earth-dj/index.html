@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>🌍 地球调度员 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    /* 防闪烁：进 body 前先定好主题与语言（与主站同一套 localStorage 键） */
+    (() => {
+      try {
+        const t = localStorage.getItem('kidslab.theme')
+          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = t;
+        const l = localStorage.getItem('kidslab.lang')
+          || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+      } catch { /* 隐私模式下静默降级 */ }
+    })();
+  </script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🌍 <span data-t="title">地球调度员</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero card">
+      <div>
+        <p class="eyebrow" data-t="eyebrow">地球运行调度中心 · 新员工训练</p>
+        <p class="tip" id="tip" data-t="tip0">拖动视角观察，拨自转、推公转、掰地轴，亲手调出昼夜和四季。</p>
+      </div>
+      <div class="hero__meters">
+        <div class="big-readout"><span data-t="tiltNow">地轴</span><b id="tiltRead">23.5°</b></div>
+        <div class="big-readout"><span data-t="dateNow">日期</span><b id="dateRead">Jun 21</b></div>
+        <div class="big-readout season" id="seasonBadge"><span data-t="northSeason">北半球</span><b>Summer</b></div>
+      </div>
+    </section>
+
+    <section class="sim-grid">
+      <div class="stage card" id="stageCard">
+        <canvas id="scene" aria-label="Earth Dispatcher 3D scene"></canvas>
+        <div class="nogl" id="nogl" hidden data-t="nogl">你的浏览器暂不支持 WebGL，请换一个支持 3D 的浏览器继续调度地球。</div>
+        <div class="label-layer" id="labelLayer"></div>
+        <div class="view-chip" id="viewChip" data-t="mainView">主视角：拖拽绕行，滚轮缩放，双击聚焦地球</div>
+        <div class="ground-panel" id="groundPanel" hidden>
+          <div class="ground-title" id="groundTitle">Beijing</div>
+          <div class="sky-dome"><span class="sun-dot" id="sunDot">☀</span><span class="horizon"></span></div>
+          <div class="ground-stats" id="groundStats"></div>
+        </div>
+      </div>
+
+      <aside class="side card">
+        <div class="tabs">
+          <button class="mini active" id="mainViewBtn" type="button" data-t="mainViewBtn">主视角</button>
+          <button class="mini" id="groundViewBtn" type="button" data-t="groundViewBtn">地面视角</button>
+        </div>
+
+        <div class="control-block">
+          <label for="spinSlider"><span data-t="spinDial">自转拨盘</span><output id="spinOut">0°</output></label>
+          <input id="spinSlider" type="range" min="0" max="360" value="0" step="1" />
+          <p data-t="spinHelp">让城市转进阳光，就是日出；转出阳光，就是夜晚。</p>
+        </div>
+
+        <div class="control-block">
+          <label for="daySlider"><span data-t="orbitPush">公转推杆</span><output id="dayOut">Day 172</output></label>
+          <input id="daySlider" type="range" min="0" max="365" value="172" step="1" />
+          <div class="season-ticks"><span data-t="spring">春分</span><span data-t="summer">夏至</span><span data-t="autumn">秋分</span><span data-t="winter">冬至</span></div>
+          <p data-t="orbitHelp">推地球绕太阳走，地轴方向保持不变，四季才会出现。</p>
+        </div>
+
+        <div class="control-block star-control">
+          <label for="tiltSlider"><span data-t="tiltKnob">地轴倾斜旋钮</span><output id="tiltOut">23.5°</output></label>
+          <input id="tiltSlider" type="range" min="0" max="90" value="23.5" step="0.5" />
+          <p id="magicHint" data-t="tiltHelp">默认 23.5°。掰直为 0°，全球四季会瞬间熄灭。</p>
+        </div>
+
+        <div class="city-picker" id="cityPicker"></div>
+
+        <div class="clocks">
+          <h2 data-t="clocks">四城当地时间</h2>
+          <div id="clockRows"></div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="mission card">
+      <div class="mission__head">
+        <div>
+          <p class="eyebrow" data-t="dispatchDesk">调度工单</p>
+          <h2 id="missionTitle">让北京日出</h2>
+        </div>
+        <div class="stamp-row" id="stampRow"></div>
+      </div>
+      <p id="missionBody" class="mission__body"></p>
+      <div class="mission__actions" id="missionActions"></div>
+      <div class="answer-row" id="answerRow"></div>
+      <button class="btn" id="nextMission" type="button" disabled data-t="nextMission">下一张工单 →</button>
+    </section>
+  </main>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

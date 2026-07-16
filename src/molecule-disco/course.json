@@ -1,0 +1,27 @@
+{
+  "id": "molecule-disco",
+  "title": {
+    "zh": "分子迪斯科",
+    "en": "Molecule Disco"
+  },
+  "description": {
+    "zh": "物质是一间迪斯科舞厅，分子是舞客，你是掌管温度的 DJ：慢歌固态方阵摇摆，快歌液态滑动，拉满全场乱飞变气态！微观舞池与宏观视图左右分屏、永远同步。",
+    "en": "Matter is a disco, molecules are dancers, and you're the DJ of temperature: slow songs for a solid lattice, faster for liquid flow, max it out and dancers fly off as gas! Micro dance floor and macro view stay in sync, side by side."
+  },
+  "category": "science",
+  "levels": [
+    "primary"
+  ],
+  "grades": [
+    "g3",
+    "g4",
+    "g5"
+  ],
+  "tags": [
+    "物质三态",
+    "分子运动",
+    "实验"
+  ],
+  "icon": "🪩",
+  "order": 62
+}

@@ -1,0 +1,24 @@
+{
+  "id": "solar-explorer",
+  "title": {
+    "zh": "太阳系漫游",
+    "en": "Solar System Cruise"
+  },
+  "description": {
+    "zh": "让八大行星在你眼前转起来！点一颗行星，看看它的一年有多长、藏着什么小秘密。",
+    "en": "Set the eight planets spinning! Tap any planet to see how long its year is and the secrets it keeps."
+  },
+  "category": "science",
+  "levels": [
+    "primary",
+    "junior"
+  ],
+  "grades": [],
+  "tags": [
+    "太阳系",
+    "天文",
+    "宇宙"
+  ],
+  "icon": "🪐",
+  "order": 60
+}

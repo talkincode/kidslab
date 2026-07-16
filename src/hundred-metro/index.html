@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>🚇 百数地铁 · KidsLab</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%9A%87%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    (() => {
+      try {
+        const theme = localStorage.getItem('kidslab.theme')
+          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = theme;
+        const lang = localStorage.getItem('kidslab.lang')
+          || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+      } catch {}
+    })();
+  </script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title"><span aria-hidden="true">🚇</span> <span data-t="title">百数地铁</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="sound">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="app">
+    <section class="mission card" aria-live="polite">
+      <div class="rider">
+        <span class="rider__face" id="rider">🧒</span>
+        <div>
+          <span class="eyebrow" data-t="passenger">乘客任务</span>
+          <strong id="missionText">去 67 站看恐龙！</strong>
+        </div>
+      </div>
+      <div class="ticket">
+        <span class="station-number" id="startText">23</span>
+        <span class="ticket__line"><i></i><b>🚇</b><i></i></span>
+        <span class="station-number station-number--goal" id="targetText">67</span>
+      </div>
+      <div class="scoreboard">
+        <div><span data-t="mission">路线</span><b id="levelText">1/6</b></div>
+        <div><span data-t="moves">已走</span><b id="movesText">0</b></div>
+        <div><span data-t="best">最短</span><b id="bestText">8</b></div>
+        <div class="stars" id="stars" aria-label="stars">☆☆☆</div>
+      </div>
+    </section>
+
+    <section class="game-grid">
+      <section class="map-card card">
+        <div class="map-head">
+          <p class="tip" id="tip" data-t="tip0">先坐竖着的 ±10 快车，再坐横着的 ±1 慢车。</p>
+          <span class="line-key"><i class="line-key__express"></i><span data-t="express">快车 ±10</span></span>
+          <span class="line-key"><i class="line-key__local"></i><span data-t="local">慢车 ±1</span></span>
+        </div>
+        <div class="map-shell">
+          <div class="station-grid" id="stationGrid" role="grid" aria-label="Hundred chart"></div>
+          <div class="map-badge" aria-hidden="true">100<br><small>METRO</small></div>
+        </div>
+      </section>
+
+      <aside class="control-panel card">
+        <div class="platforms">
+          <div class="platform">
+            <span class="eyebrow" data-t="now">现在</span>
+            <strong id="currentText">23</strong>
+            <small id="placeText">2 个十 · 3 个一</small>
+          </div>
+          <div class="platform platform--goal">
+            <span class="eyebrow" data-t="destination">终点</span>
+            <strong id="sideTargetText">67</strong>
+            <small id="targetPlaceText">6 个十 · 7 个一</small>
+          </div>
+        </div>
+
+        <div class="driver">
+          <p class="driver__label" data-t="drive">开哪班车？</p>
+          <div class="dpad" aria-label="Metro controls">
+            <button class="move move--express move--up" data-delta="-10" type="button"><span>↑</span><b>−10</b></button>
+            <button class="move move--local move--left" data-delta="-1" type="button"><span>←</span><b>−1</b></button>
+            <div class="driver__cab" aria-hidden="true">🚇</div>
+            <button class="move move--local move--right" data-delta="1" type="button"><b>+1</b><span>→</span></button>
+            <button class="move move--express move--down" data-delta="10" type="button"><b>+10</b><span>↓</span></button>
+          </div>
+        </div>
+
+        <div class="tools">
+          <button class="tool-btn" id="undoBtn" type="button"><span>↶</span><b data-t="undo">退一站</b></button>
+          <button class="tool-btn" id="hintBtn" type="button"><span>💡</span><b data-t="hint">提示</b></button>
+          <button class="tool-btn" id="resetBtn" type="button"><span>↺</span><b data-t="reset">重新出发</b></button>
+        </div>
+
+        <div class="route-card">
+          <span class="eyebrow" data-t="routeLog">列车记录</span>
+          <div class="route-log" id="routeLog"><span class="route-empty">23</span></div>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="win" id="win" hidden>
+    <div class="win__card">
+      <div class="secret-sign">
+        <span data-t="secret">你发现了数位秘密！</span>
+        <strong id="secretEquation">23 + 4×10 + 4×1 = 67</strong>
+      </div>
+      <div class="win__train" aria-hidden="true">🚇<span>✨</span></div>
+      <h2 id="winTitle">正好 8 站，满星到达！</h2>
+      <p id="winText">竖着跳十位，横着走个位。整张百数表都变成了地铁图！</p>
+      <button class="btn" id="nextBtn" type="button" data-t="next">下一位乘客 →</button>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

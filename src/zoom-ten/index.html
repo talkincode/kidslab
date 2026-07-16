@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>数字宇宙 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    /* 防闪烁：进 body 前先定好主题与语言（与主站同一套 localStorage 键） */
+    (() => {
+      try {
+        const t = localStorage.getItem('kidslab.theme')
+          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = t;
+        const l = localStorage.getItem('kidslab.lang')
+          || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+      } catch { /* 隐私模式下静默降级 */ }
+    })();
+  </script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🔭 <span data-t="title">数字宇宙</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap zoom-wrap">
+    <section class="stage-shell card" aria-label="Powers of ten explorer">
+      <p class="tip" id="tip" data-t="tip0">滚轮或捏合，乘着宇宙电梯一层一层看见 10 倍。</p>
+
+      <div class="stage" id="stage">
+        <canvas id="scene" aria-label="three.js scene"></canvas>
+        <div class="nogl" id="nogl" hidden data-t="nogl">你的浏览器暂不支持 WebGL，但数字宇宙仍在：试试更新浏览器或换一台设备 ✨</div>
+        <div class="labels" id="labels" aria-hidden="true"></div>
+
+        <aside class="readout" aria-live="polite">
+          <div class="readout__top">
+            <span class="badge" id="powBadge">10⁰</span>
+            <span class="floor" id="floorText">0F</span>
+          </div>
+          <div class="meter" id="meterReadout">1 m</div>
+          <div class="place" id="placeReadout">个位 · ones</div>
+          <div class="mini" id="stationHint">数位就是宇宙的楼层</div>
+        </aside>
+
+        <nav class="elevator" id="elevator" aria-label="Universe elevator"></nav>
+
+        <section class="dock card" id="dockCard">
+          <div class="dock__kicker" data-t="dockKicker">当前停靠站</div>
+          <h2 id="dockTitle">10⁰ · 小朋友</h2>
+          <p id="dockFact">1 米，是一个小朋友张开手臂附近的世界。</p>
+          <div class="dock__actions">
+            <button class="btn btn--ghost" id="minusBtn" type="button">−</button>
+            <input id="zoomSlider" class="zoom-slider" type="range" min="-3" max="21" step="0.001" value="0" aria-label="zoom" />
+            <button class="btn btn--ghost" id="plusBtn" type="button">＋</button>
+          </div>
+        </section>
+
+        <section class="quiz card" id="quizCard" hidden>
+          <div class="quiz__head">
+            <span data-t="quizKicker">估算小卡</span>
+            <button class="quiz__close" id="quizClose" type="button" aria-label="close">×</button>
+          </div>
+          <h3 id="quizQuestion">这里有多少？</h3>
+          <div class="choices" id="choices"></div>
+          <p class="reveal" id="reveal"></p>
+        </section>
+
+        <section class="challenge card" id="challengeCard" hidden>
+          <div class="challenge__head">
+            <span data-t="challengeTitle">电梯直达 · 单位换算</span>
+            <button class="quiz__close" id="challengeClose" type="button" aria-label="close">×</button>
+          </div>
+          <p id="challengePrompt">3 km = ? m</p>
+          <div class="digits" id="challengeDigits"></div>
+          <div class="choices" id="challengeChoices"></div>
+          <p class="reveal" id="challengeReveal"></p>
+        </section>
+      </div>
+
+      <footer class="control-strip">
+        <button class="btn" id="homeBtn" type="button" data-t="home">一键回家</button>
+        <button class="btn btn--ghost" id="challengeBtn" type="button" data-t="challenge">单位换算挑战</button>
+        <button class="btn btn--ghost" id="soundBtn" type="button" data-t="soundOn">声音：开</button>
+        <div class="stamp-book" id="stampBook" aria-label="stamp book"></div>
+      </footer>
+    </section>
+  </main>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

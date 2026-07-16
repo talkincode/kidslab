@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>太阳系漫游 · KidsLab</title>
+  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg" />
+  <link rel="stylesheet" href="style.css" />
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🪐 <span data-t="title">太阳系漫游</span></h1>
+    <button class="pill" id="langBtn" type="button">EN</button>
+  </header>
+
+  <main class="stage-wrap">
+    <canvas id="space"></canvas>
+
+    <div class="ctl-bar">
+      <label class="speed">
+        <span data-t="speed">时间流速</span>
+        <input id="speedRange" type="range" min="0" max="3" step="0.05" value="1.3" />
+        <b id="speedVal">×20</b>
+      </label>
+      <p class="tap-hint" data-t="tapHint">👆 点一颗行星看看它的秘密</p>
+    </div>
+
+    <aside class="info" id="infoCard" hidden>
+      <button class="info__close" id="infoClose" type="button" aria-label="close">✕</button>
+      <p class="info__emoji" id="infoEmoji">🌍</p>
+      <h2 id="infoName">地球</h2>
+      <dl>
+        <div><dt data-t="fDiameter">直径</dt><dd id="fDiameter"></dd></div>
+        <div><dt data-t="fDist">离太阳</dt><dd id="fDist"></dd></div>
+        <div><dt data-t="fYear">绕一圈</dt><dd id="fYear"></dd></div>
+      </dl>
+      <p class="info__fact" id="infoFact"></p>
+    </aside>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>

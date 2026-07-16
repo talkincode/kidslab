@@ -1,0 +1,24 @@
+{
+  "id": "orchard-orders",
+  "title": {
+    "zh": "果园订单",
+    "en": "Orchard Orders"
+  },
+  "description": {
+    "zh": "客人订 24 个苹果？拖出 4 行 × 6 列播种，浇水长成果林正好交货！同一订单多种种法，转个方向就是交换律——乘法是种出来的。",
+    "en": "An order for 24 apples? Plant 4 rows × 6 columns, water them, and harvest exactly right! Many layouts per order — rotate the field and discover commutativity."
+  },
+  "category": "math",
+  "levels": [
+    "primary"
+  ],
+  "grades": [
+    "g2"
+  ],
+  "tags": [
+    "乘法",
+    "运算"
+  ],
+  "icon": "🍎",
+  "order": 12
+}

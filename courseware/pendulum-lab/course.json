@@ -1,0 +1,25 @@
+{
+  "id": "pendulum-lab",
+  "title": {
+    "zh": "单摆实验室",
+    "en": "Pendulum Lab"
+  },
+  "description": {
+    "zh": "拖动摆球放手，测量真实周期，再和公式 T=2π√(L/g) 对比。去月球和木星上荡一荡试试？",
+    "en": "Drag the bob, let go, measure the real period, then compare with T=2π√(L/g). Fancy a swing on the Moon or Jupiter?"
+  },
+  "category": "physics",
+  "levels": [
+    "junior",
+    "senior"
+  ],
+  "grades": [],
+  "tags": [
+    "单摆",
+    "重力",
+    "月球",
+    "实验"
+  ],
+  "icon": "🪀",
+  "order": 30
+}

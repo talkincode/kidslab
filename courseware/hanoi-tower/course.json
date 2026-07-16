@@ -1,0 +1,26 @@
+{
+  "id": "hanoi-tower",
+  "title": {
+    "zh": "汉诺塔挑战",
+    "en": "Tower of Hanoi"
+  },
+  "description": {
+    "zh": "把整座彩虹塔搬到另一根柱子上，大盘子不能压小盘子。你能用最少的步数完成吗？",
+    "en": "Move the rainbow tower to another peg — never place a big disc on a small one. Can you do it in the fewest moves?"
+  },
+  "category": "logic",
+  "levels": [
+    "primary",
+    "junior",
+    "senior"
+  ],
+  "grades": [],
+  "tags": [
+    "递归",
+    "算法",
+    "策略",
+    "益智游戏"
+  ],
+  "icon": "🗼",
+  "order": 70
+}

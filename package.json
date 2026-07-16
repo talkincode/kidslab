@@ -1,0 +1,21 @@
+{
+  "name": "kidslab",
+  "version": "1.0.0",
+  "private": true,
+  "description": "KidsLab — K12 互动课件学习平台 / Interactive courseware platform for K12 students",
+  "type": "module",
+  "kidslab": {
+    "analyticsEndpoint": ""
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "preview": "node scripts/serve.mjs",
+    "report": "node scripts/report.mjs",
+    "vendor": "cp node_modules/three/build/three.module.min.js src/welcome/vendor/three.module.min.js"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "esbuild": "^0.28.1",
+    "three": "^0.170.0"
+  }
+}

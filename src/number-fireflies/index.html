@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>✨ 数字萤火虫 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    /* 防闪烁：进 body 前先定好主题与语言（与主站同一套 localStorage 键） */
+    (() => {
+      try {
+        const t = localStorage.getItem('kidslab.theme')
+          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = t;
+        const l = localStorage.getItem('kidslab.lang')
+          || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+      } catch { /* 隐私模式下静默降级 */ }
+    })();
+  </script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">✨ <span data-t="title">数字萤火虫</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero card">
+      <div class="lantern" aria-live="polite">
+        <span class="lantern__top" data-t="lantern">灯笼目标</span>
+        <strong id="targetText">10</strong>
+        <small id="modeText" data-t="modeAdd">圈住相加正好等于它</small>
+      </div>
+      <div class="stats">
+        <div><span data-t="level">关卡</span><b id="levelText">1/8</b></div>
+        <div><span data-t="forest">森林亮度</span><b id="lightText">0%</b></div>
+        <div><span data-t="timer">时间</span><b id="timeText">∞</b></div>
+      </div>
+      <div class="actions">
+        <button class="btn" id="startBtn" type="button" data-t="start">开始发光</button>
+        <button class="btn btn--ghost" id="retryBtn" type="button" data-t="retry">重来本关</button>
+      </div>
+    </section>
+
+    <section class="card playcard">
+      <p class="tip" id="tip" data-t="tip0">用手指画圈套住萤火虫，数字加起来等于灯笼就会点亮森林！</p>
+      <canvas id="stage" aria-label="Number Fireflies game"></canvas>
+    </section>
+  </main>
+
+  <div class="win" id="win" hidden>
+    <div class="win__card">
+      <p class="win__emoji" id="winEmoji">🌟</p>
+      <h2 id="winTitle">森林亮起来啦！</h2>
+      <p id="winDesc">7+3 变成了小太阳。</p>
+      <div class="win__actions">
+        <button class="btn" id="nextBtn" type="button" data-t="next">下一关 →</button>
+        <button class="btn btn--ghost" id="againBtn" type="button" data-t="again">再玩一次</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

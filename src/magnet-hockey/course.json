@@ -1,0 +1,25 @@
+{
+  "id": "magnet-hockey",
+  "title": {
+    "zh": "磁力冰球",
+    "en": "Magnet Hockey"
+  },
+  "description": {
+    "zh": "一场不许碰球的冰球赛！球是磁铁，你手里也是磁铁：翻面用吸力拉、斥力推，隔空把球送进球门。戴上磁场眼镜，看不见的磁力线第一次现出原形。",
+    "en": "Ice hockey where touching the puck is forbidden! The puck is a magnet and so is yours: flip N/S to pull or push it into the goal from a distance. Put on field goggles and see invisible field lines come alive."
+  },
+  "category": "science",
+  "levels": [
+    "primary"
+  ],
+  "grades": [
+    "g2",
+    "g3"
+  ],
+  "tags": [
+    "磁铁",
+    "实验"
+  ],
+  "icon": "🏒",
+  "order": 68
+}

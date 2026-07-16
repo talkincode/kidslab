@@ -1,0 +1,35 @@
+name: Deploy Analytics Worker
+
+# cloudflare/analytics/ 变更时自动部署埋点接收 Worker 到 Cloudflare。
+# 前置（一次性）：
+#   1. https://dash.cloudflare.com/profile/api-tokens 用「Edit Cloudflare Workers」模板建 token
+#   2. gh secret set CLOUDFLARE_API_TOKEN
+#   3.（多账号时才需要）gh secret set CLOUDFLARE_ACCOUNT_ID
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'cloudflare/analytics/**'
+      - '.github/workflows/deploy-analytics.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: analytics-worker
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy worker
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: cloudflare/analytics

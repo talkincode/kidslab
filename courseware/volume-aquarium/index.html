@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>🐠 体积水族馆 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    (() => {
+      try {
+        const t = localStorage.getItem('kidslab.theme')
+          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = t;
+        const l = localStorage.getItem('kidslab.lang')
+          || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+      } catch { /* 隐私模式下静默降级 */ }
+    })();
+  </script>
+<link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🐠 <span data-t="title">体积水族馆</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero card">
+      <div>
+        <p class="eyebrow" data-t="eyebrow">五年级 · 体积与容积</p>
+        <p class="tip" id="tip">你是水族馆小馆长！给鱼儿盖大小合适的新家吧。</p>
+      </div>
+      <div class="scoreboard">
+        <span id="stars" title="盖鱼缸得的星星">⭐ 0</span><span id="shells" title="猜对体积得的贝壳">🐚 0</span><span id="pumps" title="答对换算题">💧 0/3</span>
+      </div>
+    </section>
+
+    <nav class="mode-tabs card" aria-label="modes">
+      <button class="tab is-active" data-mode="build" type="button" data-t="modeBuild">🏠 盖鱼缸</button>
+      <button class="tab" data-mode="displace" type="button" data-t="modeDisplace">🪨 量石头</button>
+      <button class="tab" data-mode="pump" type="button" data-t="modePump">💧 认识“升”</button>
+      <button class="tab" data-mode="bonus" type="button" data-t="modeBonus">🧩 组合缸</button>
+    </nav>
+
+    <section class="game card">
+      <div class="scene-wrap">
+        <canvas id="scene" aria-label="3D aquarium"></canvas>
+        <div class="scene-hint" id="sceneHint" data-t="hintOrbit">🖐️ 拖动空白处旋转 · 滚轮缩放</div>
+        <div class="nogl" id="nogl" hidden data-t="nogl">你的浏览器暂不支持 WebGL，可以继续玩右侧的文字挑战。</div>
+        <div class="toast" id="toast" hidden></div>
+      </div>
+      <aside class="panel">
+        <div class="mode-panel" id="buildPanel">
+          <h2 data-t="buildTitle">🏠 盖鱼缸</h2>
+          <p class="goal" data-t="buildGoal">🎯 任务：调好长、宽、高，给这条鱼盖一个够大的家。</p>
+          <div class="customer" id="customerCard"></div>
+          <ol class="steps">
+            <li data-t="buildStep1">拖滑块，改变鱼缸的长、宽、高</li>
+            <li data-t="buildStep2">看公式：长 × 宽 × 高 = 体积</li>
+            <li data-t="buildStep3">体积够大了？点“放水！请鱼入住”</li>
+          </ol>
+          <label><span data-t="length">长</span><b id="lenVal">4</b><input id="len" type="range" min="1" max="6" value="4" /></label>
+          <label><span data-t="width">宽</span><b id="widVal">3</b><input id="wid" type="range" min="1" max="6" value="3" /></label>
+          <label><span data-t="height">高</span><b id="heiVal">2</b><input id="hei" type="range" min="1" max="6" value="2" /></label>
+          <div class="formula" id="formula">4×3×2 = 24 cm³</div>
+          <button class="btn" id="confirmTank" type="button" data-t="fillTank">💦 放水！请鱼入住</button>
+          <div class="btn-row">
+            <button class="btn btn--ghost" id="toggleGrid" type="button" data-t="hideGrid">隐藏小方块刻度</button>
+            <button class="btn btn--ghost" id="nextCustomer" type="button" data-t="nextCustomer">下一位客人 →</button>
+          </div>
+        </div>
+
+        <div class="mode-panel" id="displacePanel" hidden>
+          <h2 data-t="displaceTitle">🪨 量石头</h2>
+          <p class="goal" data-t="displaceGoal">🎯 任务：石头凹凸不平，尺子量不了——把它放进满满的水缸，溢出多少水，它就有多大！</p>
+          <ol class="steps">
+            <li data-t="displaceStep1">选一个宝贝</li>
+            <li data-t="displaceStep2">先猜猜它有多少 cm³</li>
+            <li data-t="displaceStep3">把它拖进水缸（或点下面的按钮），看量杯接住多少水</li>
+          </ol>
+          <div class="choices" id="objectButtons"></div>
+          <p class="mini" data-t="guessLabel">我猜它是——</p>
+          <div class="choices" id="guessButtons"></div>
+          <div class="formula" id="measureReadout" data-t="measureIdle">量杯空空的，等水流进来……</div>
+          <button class="btn" id="dropObject" type="button" data-t="dropObject">💧 放进水里！</button>
+        </div>
+
+        <div class="mode-panel" id="pumpPanel" hidden>
+          <h2 data-t="pumpTitle">💧 认识“升”</h2>
+          <p class="goal" data-t="pumpGoal">🎯 任务：左边的正方体水箱边长 10cm，装满正好是 1000 cm³ 的水——人们给它起了个名字，叫 1 升（L）。</p>
+          <div class="formula" id="pumpFormula">1 L = 1000 cm³</div>
+          <div class="question" id="pumpQuestion"></div>
+          <div class="choices" id="pumpChoices"></div>
+          <button class="btn btn--ghost" id="pumpAgain" type="button" data-t="pumpAgain">▶ 再看一遍抽水</button>
+        </div>
+
+        <div class="mode-panel" id="bonusPanel" hidden>
+          <h2 data-t="bonusTitle">🧩 组合缸</h2>
+          <p class="goal" data-t="bonusGoal">🎯 任务：这个 L 形大缸不是长方体，怎么算体积？——切成两块长方体，分别算，再加起来！</p>
+          <div class="formula" id="bonusFormula">(4×2×2) + (2×2×3) = 28 cm³</div>
+          <div class="choices">
+            <button class="btn" id="solveL" type="button" data-t="solveL">✂️ 切开看看</button>
+            <button class="btn btn--ghost" id="whale" type="button" data-t="whale">🐋 鲸鲨彩蛋</button>
+          </div>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

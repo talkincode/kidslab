@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>数独动物园 · KidsLab</title>
+  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg" />
+  <link rel="stylesheet" href="style.css" />
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🧩 <span data-t="title">数独动物园</span></h1>
+    <div class="bar__right">
+      <button class="pill" id="soundBtn" type="button" title="sound">🔊</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- 关卡选择 -->
+    <section class="menu" id="menu">
+      <div class="coach coach--menu">
+        <span class="coach__face">🐼</span>
+        <p class="coach__bubble" id="menuBubble" data-t="menuHi">你好呀！我是园长胖达。小动物们排队等着住进笼舍啦，你来当管理员好不好？</p>
+      </div>
+      <h2 class="menu__title" data-t="pickLevel">选一座动物园开始冒险</h2>
+      <div class="menu__grid" id="levelGrid"></div>
+      <label class="menu__toggle">
+        <input type="checkbox" id="numberMode" />
+        <span data-t="numberMode">用数字代替小动物（高手模式）</span>
+      </label>
+    </section>
+
+    <!-- 游戏面板 -->
+    <section class="game" id="game" hidden>
+      <div class="game__top">
+        <button class="pill" id="backBtn" type="button">🗺️ <span data-t="levels">选关</span></button>
+        <div class="badges">
+          <span class="badge badge--level" id="levelBadge"></span>
+          <span class="badge" title="time">⏱ <b id="timer">0:00</b></span>
+          <span class="badge" title="streak">🔥 <b id="streak">0</b></span>
+        </div>
+      </div>
+
+      <div class="coach">
+        <span class="coach__face" id="coachFace">🐼</span>
+        <p class="coach__bubble" id="coachBubble"></p>
+      </div>
+
+      <div class="stage">
+        <div class="board-wrap">
+          <div class="board" id="board"></div>
+        </div>
+
+        <aside class="side">
+          <div class="tray" id="tray"></div>
+          <div class="tools">
+            <button class="tool" id="eraseBtn" type="button" title="erase">
+              <span class="tool__icon">🧹</span><span data-t="erase">擦掉</span>
+            </button>
+            <button class="tool" id="hintBtn" type="button" title="hint">
+              <span class="tool__icon">🪄</span><span data-t="hint">魔法提示</span>
+              <b class="tool__count" id="hintCount">3</b>
+            </button>
+            <button class="tool" id="checkBtn" type="button" title="check">
+              <span class="tool__icon">🔍</span><span data-t="check">找找错</span>
+            </button>
+            <button class="tool" id="newBtn" type="button" title="new">
+              <span class="tool__icon">🎲</span><span data-t="newGame">换一题</span>
+            </button>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- 胜利 -->
+    <div class="win" id="winBox" hidden>
+      <div class="win__card">
+        <div class="win__parade" id="parade"></div>
+        <p class="win__stars" id="winStars"></p>
+        <h2 id="winTitle">动物园开园啦！</h2>
+        <p id="winDesc"></p>
+        <div class="win__btns">
+          <button class="btn btn--ghost" id="winMenuBtn" type="button">🗺️ <span data-t="levels">选关</span></button>
+          <button class="btn" id="winNextBtn" type="button"></button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>
