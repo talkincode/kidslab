@@ -23,6 +23,7 @@
     <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
     <h1 class="bar__title">🏥 <span data-t="title">虫虫医院</span></h1>
     <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="声音开启" aria-pressed="true">🔊</button>
       <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
       <button class="pill" id="langBtn" type="button">EN</button>
     </div>
@@ -61,6 +62,7 @@
           </div>
           <span class="phase-badge" id="phaseBadge">…</span>
         </div>
+        <p class="action-nudge" id="actionNudge" data-t="firstAction">👆 第一步：点一行，猜猜 bug 藏在哪里</p>
         <div class="code-list" id="codeList"></div>
       </section>
 
@@ -107,6 +109,18 @@
       </div>
     </section>
   </main>
+
+  <aside class="onboarding card" id="onboarding" role="dialog" aria-labelledby="onboardingTitle" hidden>
+    <span class="onboarding__tag" data-t="onboardingTag">新手值班卡</span>
+    <h2 id="onboardingTitle" data-t="onboardingTitle">值班医生上岗</h2>
+    <p class="onboarding__lead" data-t="onboardingLead">别急着改代码。像医生一样，按这 3 步抓住 bug：</p>
+    <ol class="onboarding__steps">
+      <li><b data-t="guidePredict">① 先猜病灶</b><span data-t="guidePredictDesc">点一行你觉得有问题的代码。</span></li>
+      <li><b data-t="guideTrace">② 单步听诊</b><span data-t="guideTraceDesc">每点一次执行一行，同时看变量变化。</span></li>
+      <li><b data-t="guideRepair">③ 只改一行</b><span data-t="guideRepairDesc">虫虫现身后，选一针让程序康复。</span></li>
+    </ol>
+    <button class="btn onboarding__start" id="guideStartBtn" type="button" data-t="guideStart">开始问诊</button>
+  </aside>
 
   <script src="main.js"></script>
 </body>

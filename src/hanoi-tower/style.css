@@ -138,3 +138,40 @@ body {
   .disc { height: 24px; }
   .hud__btns { margin-left: 0; }
 }
+
+:root {
+  --page-ink: #4a3423;
+  --page-bg: #fdf3e3;
+  --glow-a: rgba(255, 209, 102, 0.25);
+  --glow-b: rgba(6, 214, 160, 0.14);
+  --surface: #fffdf8;
+  --surface-soft: #fdeed3;
+  --surface-border: #e0c9a4;
+  --muted: #8a6a4a;
+  --shadow: rgba(74, 52, 35, 0.9);
+}
+[data-theme="dark"] {
+  --page-ink: #f7e8cf;
+  --page-bg: #21170f;
+  --glow-a: rgba(255, 159, 28, 0.14);
+  --glow-b: rgba(6, 214, 160, 0.08);
+  --surface: #322318;
+  --surface-soft: #49321f;
+  --surface-border: #795737;
+  --muted: #d2b790;
+  --shadow: rgba(5, 2, 1, 0.72);
+}
+body {
+  color: var(--page-ink);
+  background: radial-gradient(520px 340px at 100% 0%, var(--glow-a), transparent 62%),
+    radial-gradient(460px 340px at 0% 100%, var(--glow-b), transparent 62%), var(--page-bg);
+  transition: color 0.25s, background 0.25s;
+}
+.bar__actions { display: flex; gap: 8px; }
+.pill { color: var(--page-ink); background: var(--surface); border-color: var(--page-ink); box-shadow: 3px 3px 0 var(--shadow); }
+.pill--icon { width: 44px; height: 44px; padding: 0; justify-content: center; }
+.hud__box, .board, .win__card { color: var(--page-ink); background: var(--surface); border-color: var(--page-ink); box-shadow: 4px 5px 0 var(--shadow); }
+.disc-pick button { color: var(--page-ink); background: var(--surface-soft); border-color: var(--surface-border); }
+.hud__num, .win__card p { color: var(--muted); }
+.btn, .btn--ghost { border-color: var(--page-ink); box-shadow: 4px 4px 0 var(--shadow); }
+.btn--ghost { color: var(--page-ink); background: var(--surface); }

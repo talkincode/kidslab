@@ -5,19 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>✏️ 课件名 · KidsLab</title>
   <link rel="stylesheet" href="style.css" />
-  <script>
-    /* 防闪烁：进 body 前先定好主题与语言（与主站同一套 localStorage 键） */
-    (() => {
-      try {
-        const t = localStorage.getItem('kidslab.theme')
-          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-        document.documentElement.dataset.theme = t;
-        const l = localStorage.getItem('kidslab.lang')
-          || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
-        document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
-      } catch { /* 隐私模式下静默降级 */ }
-    })();
-  </script>
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
 </head>
 <body>
   <header class="bar">

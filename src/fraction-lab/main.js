@@ -204,7 +204,7 @@
           cy: (Math.sin(mid + 0.15) * basilRadius).toFixed(1),
           rx: Math.max(2.5, 5.5 - den * 0.18),
           ry: Math.max(4, 8 - den * 0.24),
-          transform: `rotate(${(mid * 180) / Math.PI + 45} ${(Math.cos(mid + 0.15) * basilRadius).toFixed(1)} ${(Math.sin(mid + 0.15) * basilRadius).toFixed(1)}`,
+          transform: `rotate(${(mid * 180) / Math.PI + 45} ${(Math.cos(mid + 0.15) * basilRadius).toFixed(1)} ${(Math.sin(mid + 0.15) * basilRadius).toFixed(1)})`,
         });
         svg.appendChild(basil);
       }

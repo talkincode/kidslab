@@ -142,6 +142,14 @@ h2 { margin: 0; font-size: clamp(24px, 4vw, 42px); line-height: 1.05; }
 .field__top { position: relative; z-index: 4; display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 12px; }
 .badge { margin: 0; min-height: 42px; display: inline-flex; align-items: center; padding: 10px 14px; font-weight: 900; color: var(--ink-on-accent); background: var(--accent-2); border: 2.5px solid var(--line-strong); border-radius: 16px; box-shadow: 3px 3px 0 var(--line-strong); }
 .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.odd-guide {
+  position: relative; z-index: 4; display: grid; grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 10px 14px; align-items: center; margin-bottom: 12px; padding: 12px 14px;
+  background: color-mix(in srgb, var(--gold) 24%, var(--card)); border: 2.5px solid var(--line-strong);
+  border-radius: 18px; box-shadow: 3px 3px 0 var(--line-strong); font-weight: 800; line-height: 1.35;
+}
+.odd-guide__formula { font-size: clamp(20px, 3vw, 28px); color: var(--accent); white-space: nowrap; }
+.odd-guide__help { padding: 10px 14px; white-space: nowrap; }
 .grid { position: relative; z-index: 2; display: grid; grid-template-columns: repeat(12, minmax(25px, 1fr)); gap: clamp(4px, 0.75vw, 8px); padding: clamp(10px, 2vw, 18px); background: linear-gradient(180deg, var(--soil-2), var(--soil)); border: 3px solid var(--line-strong); border-radius: 24px; box-shadow: inset 0 -8px 0 var(--soil); touch-action: none; user-select: none; }
 .cell { aspect-ratio: 1; display: grid; place-items: center; font-size: clamp(17px, 3vw, 28px); background: color-mix(in srgb, var(--paper) 28%, transparent); border: 2px dashed color-mix(in srgb, var(--line-strong) 35%, transparent); border-radius: 13px; cursor: crosshair; transition: transform 0.12s, background 0.15s, border-color 0.15s; }
 .cell.preview { background: var(--accent-2); border-style: solid; transform: scale(1.04) rotate(-1deg); }
@@ -171,6 +179,8 @@ h2 { margin: 0; font-size: clamp(24px, 4vw, 42px); line-height: 1.05; }
   .grid { grid-template-columns: repeat(12, minmax(17px, 1fr)); gap: 3px; padding: 8px; }
   .cell { border-width: 1.5px; border-radius: 8px; }
   .actions .btn { flex: 1 1 42%; padding-inline: 10px; }
+  .odd-guide { grid-template-columns: 1fr; }
+  .odd-guide__help { width: 100%; }
   .cards { grid-template-columns: repeat(2, 1fr); }
 }
 

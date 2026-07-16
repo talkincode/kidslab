@@ -77,12 +77,12 @@ const hintText = $('hintText');
 const musicBtn = $('musicBtn');
 const musicState = $('musicState');
 const langBtn = $('langBtn');
+const themeBtn = $('themeBtn');
 const titleEl = $('title');
 
 /* ---------- 状态 ---------- */
-const LS_LANG = 'kidslab.lang';
 const LS_MUSIC = 'kidslab.welcome.music';
-let lang = localStorage.getItem(LS_LANG) === 'en' ? 'en' : 'zh';
+let lang = window.cool.preferences.lang;
 let musicStarted = false;
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const music = createMusic();
@@ -330,10 +330,21 @@ function applyLang() {
   for (const fn of langHooks) fn(lang);
 }
 
-langBtn.addEventListener('click', () => {
-  lang = lang === 'zh' ? 'en' : 'zh';
-  localStorage.setItem(LS_LANG, lang);
-  applyLang();
+function applyTheme() {
+  const dark = window.cool.preferences.theme === 'dark';
+  themeBtn.textContent = dark ? '☀️' : '🌙';
+  if (renderer) renderer.toneMappingExposure = dark ? 1.05 : 0.9;
+}
+
+langBtn.addEventListener('click', () => window.cool.preferences.toggleLang());
+themeBtn.addEventListener('click', () => window.cool.preferences.toggleTheme());
+window.cool.preferences.subscribe(({ kind }) => {
+  if (kind === 'lang') {
+    lang = window.cool.preferences.lang;
+    applyLang();
+  } else {
+    applyTheme();
+  }
 });
 
 /* ---------- 视差 ---------- */
@@ -393,6 +404,7 @@ document.addEventListener('visibilitychange', () => {
 
 /* ---------- 启动 ---------- */
 buildJourney();
+applyTheme();
 if (renderer) {
   initGL();
   applyLang();

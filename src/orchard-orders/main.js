@@ -17,7 +17,11 @@
       bookHint: '每找到一种新种法，就贴一张苹果贴纸。', next: '下一张订单 →', restart: '从头开园',
       order: (emoji, n) => `${emoji} 客人说：我要 ${n} 个苹果！`,
       splitOrder: (emoji, n) => `${emoji} 石头挡路！请拼两块田，凑 ${n} 个苹果。`,
-      oddOrder: (emoji, n) => `${emoji} 奇怪订单：想要 ${n} 个苹果，整齐长方形能做到吗？`,
+      oddOrder: (emoji, n) => `${emoji} 小猪订单：种 24 个、吃掉 1 个，交货 ${n} 个！`,
+      oddGuide: '23 不能正好排成长方形。先铺 4×6＝24 格，小猪会吃掉多出的 1 个。',
+      oddHelp: '帮我铺成 4×6',
+      oddTip: '特殊玩法：铺 4 行×6 列，点“播种”，再点“浇水交货”。',
+      oddSelected: '已经铺好 4×6＝24 格。现在点“播种”！',
       live: (r, c, n) => `${r} 行 × ${c} 列 = ${n} 个`,
       liveSplit: (sum, n) => `已经播种 ${sum} / ${n} 个苹果`,
       empty: '从任意格按住拖动，画出苹果田。',
@@ -25,13 +29,15 @@
       badOverlap: '这块田已经种过啦，试试旁边的空地。',
       badSize: (got, need) => `现在是 ${got} 个苹果，订单要 ${need} 个。客人打了个哈欠：再调一下～`,
       planted: '种子排队躺好啦！点浇水壶让它们唰唰长大。',
-      splitPlanted: '第一块很棒！再拖一块田，让两块加起来刚好。',
+      splitNeedTwo: '必须分成两块田！先画一块少于 36 格的田，再用第二块补足。',
+      splitPlanted: (sum, rest) => `第一块有 ${sum} 个苹果，还差 ${rest} 个。现在画第二块田！`,
+      splitSecondSize: (got, need) => `第二块要有 ${need} 个苹果，现在是 ${got} 个。再调一下～`,
       harvest: (fact) => `${fact}，装箱交货！`,
       chant: (r, c, n) => `${numZh(r)}${numZh(c)}${numZh(n)}！`,
       chantEn: () => '',
       comm: (a, b) => `${a}×${b} = ${b}×${a}！果园转个方向，苹果一个没少！`,
-      oddWin: '23 不是整齐长方形：4×6=24，多 1 个掉地上，被小猪嗷呜吃掉啦！有余数出现了。',
-      splitWin: '4×6 + 4×3 = 36！两块田拼起来，就是大订单的秘密。',
+      oddWin: '24 − 1 = 23！小猪吃掉多出的 1 个，订单正好完成。这就是有余数。',
+      splitWin: (r1, c1, r2, c2, n) => `${r1}×${c1} + ${r2}×${c2} = ${n}！两块田拼起来，就是大订单的秘密。`,
       wrongOdd: '如果非要整整齐齐，23 会剩 1 个洞。试试画 4×6 或 3×8，再让小猪帮忙。',
       firework: '七八五十六！最难口诀被你种成烟花啦！🎆',
       complete: '果园全通关！图鉴继续收集不同种法吧。',
@@ -45,7 +51,11 @@
       bookHint: 'Every new array becomes an apple sticker.', next: 'Next order →', restart: 'Restart orchard',
       order: (emoji, n) => `${emoji} customer says: I want ${n} apples!`,
       splitOrder: (emoji, n) => `${emoji} Rocks in the way! Use two fields to make ${n} apples.`,
-      oddOrder: (emoji, n) => `${emoji} Odd order: ${n} apples. Can one neat rectangle do it?`,
+      oddOrder: (emoji, n) => `${emoji} Piggy order: grow 24, munch 1, and deliver ${n}!`,
+      oddGuide: '23 cannot fill a rectangle. Make 4×6＝24 squares and Piggy will munch the extra one.',
+      oddHelp: 'Show me 4×6',
+      oddTip: 'Special rule: make 4 rows × 6 columns, Plant, then Water & deliver.',
+      oddSelected: 'Your 4×6＝24 field is ready. Now tap Plant!',
       live: (r, c, n) => `${r} rows × ${c} columns = ${n} apples`,
       liveSplit: (sum, n) => `Planted ${sum} / ${n} apples`,
       empty: 'Press and drag from any square to draw an orchard.',
@@ -53,13 +63,15 @@
       badOverlap: 'That patch already has seeds. Try empty ground.',
       badSize: (got, need) => `That makes ${got} apples; the order needs ${need}. The customer yawns and waits.`,
       planted: 'Seeds are lined up! Tap the watering can and watch them grow.',
-      splitPlanted: 'Great first patch! Drag another field so both add up exactly.',
+      splitNeedTwo: 'This order must use two fields! Make a first field smaller than 36, then fill the rest with a second.',
+      splitPlanted: (sum, rest) => `The first field has ${sum} apples; ${rest} remain. Now draw the second field!`,
+      splitSecondSize: (got, need) => `The second field needs ${need} apples, but this one has ${got}. Adjust it and try again.`,
       harvest: (fact) => `${fact}. Box them up!`,
       chant: () => '',
       chantEn: (r, c, n) => `${numberWord(r)} ${numberWord(c)}s are ${numberWord(n)}!`,
       comm: (a, b) => `${a}×${b} = ${b}×${a}! Rotate the orchard — not one apple is lost!`,
-      oddWin: '23 cannot make a neat rectangle: 4×6=24, so 1 extra apple falls down and the piggy munches it. That is a remainder!',
-      splitWin: '4×6 + 4×3 = 36! Two fields join forces for one big order.',
+      oddWin: '24 − 1 = 23! Piggy munches the extra apple and the order is complete. That is a remainder!',
+      splitWin: (r1, c1, r2, c2, n) => `${r1}×${c1} + ${r2}×${c2} = ${n}! Two fields join forces for one big order.`,
       wrongOdd: 'A perfect rectangle leaves 1 gap for 23. Try 4×6 or 3×8, then let the piggy help.',
       firework: 'Seven eights are fifty-six — the tricky fact became fireworks! 🎆',
       complete: 'All orchard orders delivered! Keep collecting more array stickers.',
@@ -129,6 +141,7 @@
     grid: $('grid'), fx: $('fx'), tip: $('tip'), customerEmoji: $('customerEmoji'), orderText: $('orderText'),
     levelNum: $('levelNum'), coins: $('coins'), foundCount: $('foundCount'), patienceBar: $('patienceBar'),
     liveMath: $('liveMath'), plantBtn: $('plantBtn'), waterBtn: $('waterBtn'), rotateBtn: $('rotateBtn'),
+    oddGuide: $('oddGuide'), oddHelpBtn: $('oddHelpBtn'),
     cards: $('cards'), nextBtn: $('nextBtn'), restartBtn: $('restartBtn'), toast: $('toast'),
   };
   const ctx = els.fx.getContext('2d');
@@ -242,7 +255,7 @@
     timer = setInterval(() => { patience = Math.max(14, patience - 0.7); els.patienceBar.style.width = `${patience}%`; }, 1000);
     /* 切换到下一张订单时，清掉上一单遗留的提示文案（如“六八48！”），恢复默认操作提示 */
     clearTimeout(show.timer);
-    els.tip.textContent = t('tip0');
+    els.tip.textContent = order().odd ? t('oddTip') : t('tip0');
     els.toast.hidden = true;
     els.toast.classList.remove('magic');
     render(); renderCells();
@@ -257,10 +270,28 @@
     const current = planted.reduce((a, p) => a + p.total, 0);
     const o = order();
     if (o.split) {
-      if (current + sz.total > o.n) { show(t('badSize')(current + sz.total, o.n)); sfx.wrong(); return; }
-      planted.push({ ...preview, ...sz, cells: pcs }); preview = null; sfx.plant();
-      show(current + sz.total === o.n ? t('planted') : t('splitPlanted'));
+      if (current === 0 && sz.total >= o.n) {
+        show(sz.total === o.n ? t('splitNeedTwo') : t('badSize')(sz.total, o.n));
+        sfx.wrong();
+        return;
+      }
+      if (current > 0 && current + sz.total !== o.n) {
+        show(t('splitSecondSize')(sz.total, o.n - current));
+        sfx.wrong();
+        return;
+      }
+      planted.push({ ...preview, ...sz, cells: pcs });
+      preview = null;
+      sfx.plant();
+      if (planted.length === 2) {
+        stage = 'planted';
+        show(t('planted'));
+      } else {
+        show(t('splitPlanted')(sz.total, o.n - sz.total));
+      }
     } else {
+      if (o.odd && sz.total !== 24) { show(t('wrongOdd')); sfx.wrong(); return; }
+      if (!o.odd && sz.total !== o.n) { show(t('badSize')(sz.total, o.n)); sfx.wrong(); return; }
       planted = [{ ...preview, ...sz, cells: pcs }]; preview = null; stage = 'planted'; sfx.plant(); show(t('planted'));
     }
     render(); renderCells();
@@ -271,7 +302,7 @@
     if (!planted.length) { show(t('empty')); return; }
     const o = order();
     const total = planted.reduce((a, p) => a + p.total, 0);
-    const ok = o.odd ? [24, 18].includes(total) : total === o.n;
+    const ok = o.split ? planted.length === 2 && total === o.n : o.odd ? total === 24 : total === o.n;
     if (!ok) { show(o.odd ? t('wrongOdd') : t('badSize')(total, o.n)); sfx.wrong(); return; }
     stage = 'growing';
     let all = planted.flatMap((p) => p.cells);
@@ -294,7 +325,10 @@
       facts.add(k);
     }
     planted.forEach((part) => facts.add(keyOf(part.rows, part.cols)));
-    if (o.split) show(t('splitWin')); else if (o.odd) show(t('oddWin')); else {
+    if (o.split) {
+      const [a, b] = planted;
+      show(t('splitWin')(a.rows, a.cols, b.rows, b.cols, o.n));
+    } else if (o.odd) show(t('oddWin')); else {
       const chant = lang === 'zh' ? t('chant')(p.rows, p.cols, p.total) : t('chantEn')(p.rows, p.cols, p.total);
       show(t('harvest')(chant));
     }
@@ -312,6 +346,14 @@
       { transform: 'rotate(0deg) scale(1)' }, { transform: 'rotate(90deg) scale(.92)' }, { transform: 'rotate(0deg) scale(1)' },
     ], { duration: 900, easing: 'cubic-bezier(.2,1.4,.5,1)' });
     burst(50); sfx.win(); render();
+  }
+  function showOddExample() {
+    if (!order().odd || stage !== 'draw') return;
+    preview = { r0: 0, r1: 3, c0: 0, c1: 5 };
+    els.liveMath.textContent = t('live')(4, 6, 24);
+    show(t('oddSelected'));
+    render();
+    renderCells();
   }
   function nextOrder() {
     orderIndex += 1;
@@ -352,6 +394,7 @@
     const o = order();
     els.customerEmoji.textContent = o.emoji;
     els.orderText.textContent = o.split ? t('splitOrder')(o.emoji, o.n) : o.odd ? t('oddOrder')(o.emoji, o.n) : t('order')(o.emoji, o.n);
+    els.oddGuide.hidden = !o.odd;
     els.levelNum.textContent = `${orderIndex + 1}/${ORDERS.length}`;
     els.coins.textContent = coins;
     els.foundCount.textContent = facts.size;
@@ -410,6 +453,7 @@
   els.plantBtn.addEventListener('click', plant);
   els.waterBtn.addEventListener('click', water);
   els.rotateBtn.addEventListener('click', rotateMagic);
+  els.oddHelpBtn.addEventListener('click', showOddExample);
   els.nextBtn.addEventListener('click', nextOrder);
   els.restartBtn.addEventListener('click', restart);
   addEventListener('resize', resizeFx);

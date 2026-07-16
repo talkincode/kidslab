@@ -54,8 +54,7 @@
       },
     },
   };
-  let lang = localStorage.getItem('kidslab.lang') || 'zh';
-  if (!I18N[lang]) lang = 'zh';
+  let lang = window.cool.preferences.lang;
 
   const ALIASES = {
     fd: ['前进', 'fd', 'forward', 'qj'],
@@ -85,6 +84,7 @@
   };
 
   const $ = (s) => document.querySelector(s);
+  const cssVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
   const canvas = $('#paper');
   const ctx = canvas.getContext('2d');
 
@@ -214,9 +214,9 @@
   function drawBase() {
     const { w, h } = view();
     ctx.clearRect(0, 0, w, h);
-    ctx.fillStyle = '#081410';
+    ctx.fillStyle = cssVar('--paper-bg');
     ctx.fillRect(0, 0, w, h);
-    ctx.strokeStyle = 'rgba(6, 214, 160, 0.07)';
+    ctx.strokeStyle = cssVar('--paper-grid');
     ctx.lineWidth = 1;
     const g = 40 * (w / 900 + 0.5);
     for (let x = (w / 2) % g; x < w; x += g) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
@@ -301,10 +301,15 @@
   $('#langBtn').addEventListener('click', () => {
     const prev = I18N[lang];
     const wasExample = Object.values(prev.examples).some(([, code]) => code === $('#code').value);
-    lang = lang === 'zh' ? 'en' : 'zh';
-    localStorage.setItem('kidslab.lang', lang);
+    window.cool.preferences.toggleLang();
+    if (wasExample || !$('#code').value.trim()) $('#code').value = Object.values(I18N[window.cool.preferences.lang].examples)[2][1];
+  });
+  $('#themeBtn').addEventListener('click', () => window.cool.preferences.toggleTheme());
+  window.cool.preferences.subscribe(({ kind }) => {
+    $('#themeBtn').textContent = window.cool.preferences.theme === 'light' ? '🌙' : '☀️';
+    if (kind === 'theme') { run(); return; }
+    lang = window.cool.preferences.lang;
     applyLang();
-    if (wasExample || !$('#code').value.trim()) $('#code').value = Object.values(I18N[lang].examples)[2][1];
   });
 
   function resize() {
@@ -318,6 +323,7 @@
   addEventListener('resize', resize);
 
   applyLang();
+  $('#themeBtn').textContent = window.cool.preferences.theme === 'light' ? '🌙' : '☀️';
   $('#code').value = I18N[lang].examples.spiral[1];
   resize();
   run();

@@ -1,17 +1,21 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="light">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>函数变形记 · KidsLab</title>
   <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg" />
   <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
 </head>
 <body>
   <header class="bar">
     <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
     <h1 class="bar__title">📈 <span data-t="title">函数变形记</span></h1>
-    <button class="pill" id="langBtn" type="button">EN</button>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
   </header>
 
   <main class="wrap">

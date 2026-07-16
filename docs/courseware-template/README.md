@@ -3,9 +3,9 @@
 新课件的标准起步模板。复制本目录四个文件到 `src/<courseware-id>/`，改 `course.json`，在标注了
 `✏️` 的位置填入你的玩法即可。模板解决了每个课件都必须做对的三件事：
 
-1. **中英双语**：`I18N` 字典 + `data-t` 属性，读写 `localStorage: kidslab.lang`，与主站即时同步；
-2. **深浅主题**：两套 CSS token（对齐主站 `assets/css/app.css`），读写 `localStorage: kidslab.theme`，
-   跟随系统偏好，Canvas 通过 `cssVar()` 取色、监听 `themechange` 事件重绘；
+1. **中英双语**：`I18N` 字典 + `data-t` 属性交给 `window.cool.bindI18n()`，与主站即时同步；
+2. **深浅主题**：两套 CSS token（对齐主站 `assets/css/app.css`），由 `window.cool.preferences`
+   管理偏好，Canvas 通过 `cssVar()` 取色、监听 `themechange` 事件重绘；
 3. **平台外壳**：返回主站的顶栏、语言/主题切换按钮、移动端 viewport 与触屏事件基线。
 
 ## 使用方法
@@ -24,6 +24,7 @@ npm run build   # 必须通过（退出码 0）
 | 事项 | 约定 |
 |---|---|
 | 文案 | 一律进 `I18N.zh` / `I18N.en`，静态节点挂 `data-t="key"`，动态文案用 `t('key')` 或函数 key |
+| SDK | `index.html` 保留带 `data-kidslab-sdk` 的源码脚本；构建时会替换为内联 SDK，产物不依赖外部目录 |
 | 语言切换 | `#langBtn`，按钮文字显示「对方语言」（当前中文则显示 `EN`） |
 | 主题切换 | `#themeBtn`，light 显示 `🌙`、dark 显示 `☀️`；`<html data-theme="light|dark">` |
 | 颜色 | CSS 永远 `var(--*)`；JS/Canvas 用 `cssVar('--ink')` 实时读取，禁止硬编码双主题色值 |
@@ -33,6 +34,8 @@ npm run build   # 必须通过（退出码 0）
 | 独立性 | 只用相对路径；第三方库放本课件 `vendor/`（three.js 参考 `src/welcome/vendor/`），禁止 CDN |
 | 音频 | WebAudio 必须在首次用户手势里 `resume()`；提供静音开关是加分项 |
 | 埋点（可选） | 关键阶段调 `window.cool?.stage('level2')`、核心动作调 `window.cool?.track('flip')`（埋点由构建注入，务必用可选链，未注入时自然空操作）；详见 `docs/analytics.md` |
+
+平台 API 与存量迁移步骤见 [`docs/sdk.md`](../sdk.md)。
 
 ## three.js 课件补充
 

@@ -219,3 +219,37 @@ body {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-delay: 0s !important; }
 }
+
+:root {
+  --page-bg: radial-gradient(1300px 900px at 50% 40%, #e9f2ff 0%, #dce9ff 55%, #cbdcff 100%);
+  --page-ink: #172345;
+  --pill-bg: rgba(255, 255, 255, 0.58);
+  --pill-border: rgba(44, 68, 120, 0.32);
+  --stage-halo: radial-gradient(closest-side, rgba(255, 255, 255, 0.86), transparent 78%);
+  --muted: #53658f;
+  --poem: #465a87;
+  --poem-on: #172345;
+  --caption: #293b68;
+}
+[data-theme="dark"] {
+  --page-bg: radial-gradient(1300px 900px at 50% 40%, #100b2e 0%, #08051c 55%, #030310 100%);
+  --page-ink: #f2efff;
+  --pill-bg: rgba(14, 10, 34, 0.4);
+  --pill-border: rgba(255, 255, 255, 0.25);
+  --stage-halo: radial-gradient(closest-side, rgba(3, 2, 14, 0.5), transparent 78%);
+  --muted: #9c91cf;
+  --poem: #b9aede;
+  --poem-on: #fff6e8;
+  --caption: #e8e0ff;
+}
+body { color: var(--page-ink); background: var(--page-bg); transition: color 0.3s, background 0.3s; }
+#scene { opacity: 0.4; filter: saturate(0.75) brightness(1.35); }
+[data-theme="dark"] #scene { opacity: 1; filter: none; }
+.vignette { background: radial-gradient(125% 95% at 50% 44%, transparent 52%, color-mix(in srgb, var(--page-ink) 18%, transparent) 100%); }
+.pill { color: var(--page-ink); background: var(--pill-bg); border-color: var(--pill-border); }
+.pill--icon { width: 44px; height: 44px; padding: 0; justify-content: center; }
+.stage::before { background: var(--stage-halo); }
+.kicker, .hint, .credit { color: var(--muted); }
+.poem__line { color: var(--poem); text-shadow: 0 1px 12px color-mix(in srgb, var(--page-bg) 75%, transparent); }
+.poem__line--on { color: var(--poem-on); }
+.journey__caption { color: var(--caption); }

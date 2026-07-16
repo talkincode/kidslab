@@ -38,8 +38,7 @@
       },
     },
   };
-  let lang = localStorage.getItem('kidslab.lang') || 'zh';
-  if (!I18N[lang]) lang = 'zh';
+  let lang = window.cool.preferences.lang;
 
   const SUBS = [
     { id: 'lemon', icon: '🍋', ph: 2.0 },
@@ -154,21 +153,18 @@
     update();
   });
 
-  function applyLang() {
-    const t = I18N[lang];
-    document.querySelectorAll('[data-t]').forEach((n) => { n.textContent = t[n.dataset.t]; });
-    $('#langBtn').textContent = t.langBtn;
-    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
-    document.title = t.doc;
-    renderSubs();
-    renderInds();
-    update();
-  }
-  $('#langBtn').addEventListener('click', () => {
-    lang = lang === 'zh' ? 'en' : 'zh';
-    localStorage.setItem('kidslab.lang', lang);
-    applyLang();
+  $('#langBtn').addEventListener('click', () => window.cool.preferences.toggleLang());
+  $('#themeBtn').addEventListener('click', () => window.cool.preferences.toggleTheme());
+  window.cool.bindI18n(I18N, {
+    onChange({ kind, lang: nextLang, theme, t }) {
+      $('#themeBtn').textContent = theme === 'light' ? '🌙' : '☀️';
+      if (kind === 'theme') return;
+      lang = nextLang;
+      $('#langBtn').textContent = t('langBtn');
+      document.title = t('doc');
+      renderSubs();
+      renderInds();
+      update();
+    },
   });
-
-  applyLang();
 })();
