@@ -109,6 +109,7 @@
       pinned: '精选',
       played: '玩过',
       completed: '已完成',
+      offline: '可离线',
       clearProgress: '清除本机进度',
       clearProgressConfirm: '清除全部本机课件进度？语言和主题设置会保留。',
       gradeAll: '全部年级',
@@ -147,6 +148,7 @@
       pinned: 'Featured',
       played: 'Played',
       completed: 'Completed',
+      offline: 'Offline OK',
       clearProgress: 'Clear local progress',
       clearProgressConfirm: 'Clear all local course progress? Language and theme settings will stay unchanged.',
       gradeAll: 'All grades',
@@ -410,6 +412,13 @@
       status.textContent = t()[progress];
       cover.appendChild(status);
     }
+    if (offlineIds.has(c.id)) {
+      const off = document.createElement('span');
+      off.className = 'card__offline';
+      off.textContent = `📥 ${t().offline}`;
+      off.title = state.lang === 'zh' ? '玩过的课件已缓存，断网也能玩' : 'Cached on this device — playable offline';
+      cover.appendChild(off);
+    }
 
     const body = document.createElement('div');
     body.className = 'card__body';
@@ -520,13 +529,41 @@
     }
   });
 
+  /* ---------- PWA：Service Worker + 「可离线」角标 ---------- */
+  const offlineIds = new Set();
+
+  /* 读运行时缓存（cache-on-visit），标记断网可玩的课件 */
+  async function refreshOfflineBadges() {
+    if (!('caches' in window)) return;
+    try {
+      const cache = await caches.open('kidslab-courseware');
+      const keys = await cache.keys();
+      const next = new Set();
+      for (const req of keys) {
+        const m = new URL(req.url).pathname.match(/\/courseware\/([^/]+)\/(?:index\.html)?$/);
+        if (m) next.add(decodeURIComponent(m[1]));
+      }
+      const changed = next.size !== offlineIds.size || [...next].some((id) => !offlineIds.has(id));
+      offlineIds.clear();
+      next.forEach((id) => offlineIds.add(id));
+      if (changed && state.courses.length) renderGrid();
+    } catch { /* Cache API 不可用（如隐私模式）时静默降级 */ }
+  }
+
+  if ('serviceWorker' in navigator) {
+    addEventListener('load', () => {
+      /* 更新策略保守：不 skipWaiting，新版本等所有页面关闭后接管 */
+      navigator.serviceWorker.register('sw.js').then(refreshOfflineBadges).catch(() => {});
+    });
+  }
+
   /* ---------- 启动 ---------- */
   el.search.value = state.q;
   applyChrome();
 
   fetch('courseware/index.json', { cache: 'no-cache' })
     .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
-    .then((m) => { state.courses = m.courses || []; update(); })
+    .then((m) => { state.courses = m.courses || []; update(); return refreshOfflineBadges(); })
     .catch(() => {
       el.grid.innerHTML = '';
       el.empty.hidden = false;
@@ -539,5 +576,6 @@
     });
   addEventListener('pageshow', () => {
     if (state.courses.length) renderGrid();
+    refreshOfflineBadges();
   });
 })();

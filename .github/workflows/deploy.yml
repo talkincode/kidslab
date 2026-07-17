@@ -49,7 +49,7 @@ jobs:
       - name: Stage site
         run: |
           mkdir -p _site
-          cp -r index.html assets courseware _site/
+          cp -r index.html manifest.webmanifest sw.js assets courseware _site/
           touch _site/.nojekyll
 
       - uses: actions/configure-pages@v5
