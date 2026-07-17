@@ -81,7 +81,8 @@
 
 /* ---------- base ---------- */
 * { box-sizing: border-box; }
-html { height: 100%; }
+/* 触控延时优化：取消双击缩放的手势仲裁等待，点按即时响应（PWA/平板） */
+html { height: 100%; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
 body {
   margin: 0;
   min-height: 100%;
@@ -599,6 +600,19 @@ button { font-family: inherit; color: inherit; }
 }
 .card__progress--played { background: #ffe29a; }
 .card__progress--completed { background: #8be3b2; }
+.card__offline {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  padding: 4px 10px;
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #0d3b4f;
+  background: #aee3f5;
+  border: 2px solid var(--line-strong);
+  border-radius: 99px;
+  box-shadow: 2px 2px 0 var(--shadow);
+}
 
 .card__body { padding: 14px 16px 6px; }
 .card__title {

@@ -8,6 +8,11 @@
   const w = window;
   const cool = w.cool || {};
   if (cool.sdkVersion) return;
+
+  /* 触控延时优化：取消双击缩放的手势仲裁等待，点按即时响应。
+     只收紧浏览器手势，不影响课件内 touch-action:none 的拖拽画布。 */
+  try { document.documentElement.style.touchAction = 'manipulation'; } catch { /* noop */ }
+
   const configuredCourseId = '__COURSE_ID__';
   const pathParts = location.pathname.split('/').filter(Boolean);
   const pathTail = pathParts.at(-1) || '';

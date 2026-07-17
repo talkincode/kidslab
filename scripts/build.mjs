@@ -227,7 +227,8 @@ async function main() {
   await writeFile(path.join(OUT, 'index.json'), JSON.stringify(manifest, null, 2) + '\n');
   ok(`courseware/index.json  共 ${courses.length} 个课件`);
 
-  await bustAssets();
+  const assetVersions = await bustAssets();
+  await emitServiceWorker(assetVersions);
 }
 
 /**
@@ -239,13 +240,69 @@ async function bustAssets() {
   const page = path.join(ROOT, 'index.html');
   let html = await readFile(page, 'utf8');
   const before = html;
+  const versions = {};
   for (const asset of ['assets/css/app.css', 'assets/js/app.js', 'assets/js/starmap.js']) {
     const v = createHash('md5').update(await readFile(path.join(ROOT, asset))).digest('hex').slice(0, 8);
+    versions[asset] = v;
     html = html.replaceAll(new RegExp(`${asset.replaceAll('/', '\\/')}(\\?v=[0-9a-f]+)?`, 'g'), () => `${asset}?v=${v}`);
     if (!html.includes(`${asset}?v=${v}`)) fail(`index.html 未找到对 ${asset} 的引用，cache-busting 失效`);
   }
   if (html !== before) await writeFile(page, html);
   ok('index.html 资源引用已注入内容指纹（cache-busting）');
+  return versions;
+}
+
+/**
+ * 生成根目录 sw.js（入库构建产物）：以 scripts/sw.js 为模板，注入
+ * 预缓存清单与版本号（预缓存内容整体 hash）。幂等：内容不变则产物一致。
+ * courseware/index.json 参与预缓存但不参与版本计算——它在运行时走
+ * network-first 持续刷新，若纳入版本会因 generatedAt 时间戳导致每次构建
+ * 都产生无意义的缓存换代。
+ */
+async function emitServiceWorker(assetVersions) {
+  const shellFiles = [
+    'index.html',
+    'assets/fonts/baloo2-latin.woff2',
+    'assets/logo.svg',
+    'assets/favicon.svg',
+    'manifest.webmanifest',
+    'assets/icons/icon-192.png',
+    'assets/icons/icon-512.png',
+    'assets/icons/icon-maskable-512.png',
+    'assets/icons/apple-touch-icon.png',
+  ];
+  const precache = [
+    './',
+    ...Object.entries(assetVersions).map(([asset, v]) => `${asset}?v=${v}`),
+    ...shellFiles.slice(1),
+    'courseware/index.json',
+  ];
+
+  const hash = createHash('md5');
+  hash.update(precache.join('\n'));
+  for (const rel of [...shellFiles, ...Object.keys(assetVersions)]) {
+    const file = path.join(ROOT, rel);
+    try {
+      hash.update(await readFile(file));
+    } catch {
+      throw new Error(`sw.js 预缓存文件缺失: ${rel}`);
+    }
+  }
+  await stat(path.join(OUT, 'index.json')); // 预缓存引用，仅校验存在
+  const version = hash.digest('hex').slice(0, 12);
+
+  const template = await readFile(path.join(ROOT, 'scripts', 'sw.js'), 'utf8');
+  const source = template
+    .replaceAll('__CACHE_VERSION__', () => version)
+    .replaceAll('__PRECACHE__', () => JSON.stringify(precache));
+  const { code } = await transform(source, {
+    loader: 'js',
+    minify: true,
+    charset: 'utf8',
+    banner: `/* KidsLab SW ${version} — 构建产物，源码见 scripts/sw.js，勿手改 */`,
+  });
+  await writeFile(path.join(ROOT, 'sw.js'), code + '\n');
+  ok(`sw.js 已生成（版本 ${version}，预缓存 ${precache.length} 项）`);
 }
 
 main().catch((e) => { fail(e.message); process.exit(1); });

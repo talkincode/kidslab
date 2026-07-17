@@ -18,6 +18,8 @@
 ## ✨ 特性
 
 - **纯静态网站** — 无后端、无框架运行时,GitHub Pages 直接托管
+- **PWA 全屏壳** — 可"添加到主屏幕",平板/手机以全屏应用形态运行,无浏览器界面干扰
+- **课件离线可玩** — Service Worker 渐进缓存:主站壳预缓存,玩过的课件自动进缓存(cache-on-visit),断网可重玩;主站卡片显示「可离线」角标
 - **左右分栏主界面** — 学段选择(小学 / 初中 / 高中)+ 年级过滤 + 学科分类(数学 / 物理 / 化学 / 编程 / 科学 / 逻辑,小学自动隐藏物理化学)
 - **课件完全独立** — 每个课件一个目录,自带 HTML/CSS/JS,互不依赖
 - **中英双语** — 主站与全部课件共享语言偏好(`localStorage: kidslab.lang`)
@@ -31,7 +33,9 @@
 ```
 kidslab/
 ├── index.html              # 主站入口
-├── assets/                 # 主站样式/脚本/字体/logo
+├── manifest.webmanifest    # PWA manifest(全屏壳 + 图标)
+├── sw.js                   # Service Worker(构建产物,由 build 生成,勿手改)
+├── assets/                 # 主站样式/脚本/字体/logo/PWA 图标
 ├── src/                    # 课件源码(开发目录)
 │   └── <courseware-id>/
 │       ├── course.json     # 课件元数据(必需)
@@ -39,7 +43,9 @@ kidslab/
 │       └── *.css / *.js    # 课件资源
 ├── courseware/             # 构建产物(minify 后) + index.json 清单
 ├── scripts/
-│   ├── build.mjs           # 构建:校验 + 压缩 + 生成清单
+│   ├── build.mjs           # 构建:校验 + 压缩 + 生成清单与 sw.js
+│   ├── sw.js               # Service Worker 源码模板
+│   ├── icons.mjs           # PWA 图标生成(logo 变更后 npm run icons)
 │   └── serve.mjs           # 本地预览服务器
 └── .github/workflows/deploy.yml   # 推送 main 自动发布 Pages
 ```
@@ -88,7 +94,14 @@ npm run preview   # http://localhost:8080
 
 ## 🚀 部署
 
-推送到 `main` 即触发 `.github/workflows/deploy.yml`:`npm ci` → `npm run build` → 组装 `_site/` → 发布 GitHub Pages。
+推送到 `main` 即触发 `.github/workflows/deploy.yml`:`npm ci` → `npm run build` → 组装 `_site/`(含 `manifest.webmanifest` 与 `sw.js`)→ 发布 GitHub Pages。
+
+### 📲 PWA 与离线
+
+- 主站与课件可"添加到主屏幕",以全屏(fullscreen)应用形态运行
+- 缓存策略:主站壳(index.html + assets)按内容 hash 预缓存,发版自动失效;课件 **network-first + cache-on-visit** —— 在线永远拿最新,玩过的断网可重玩
+- SW 更新保守:新版本等所有页面关闭后接管,不打断正在玩的孩子
+- 本地验证:`npm run build && npm run preview`,访问后停掉服务器,已访问页面仍可打开
 
 > 首次启用:仓库 **Settings → Pages → Source** 选择 **GitHub Actions**。
 
