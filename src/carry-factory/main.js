@@ -512,7 +512,10 @@
     els.result.hidden = false;
     els.next.focus();
     window.cool?.track('complete-order');
-    if (final) window.cool?.stage('carry-factory-complete');
+    if (final) {
+      window.cool?.stage('carry-factory-complete');
+      window.cool?.complete?.();
+    }
   }
 
   function handleAction() {

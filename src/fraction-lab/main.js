@@ -18,9 +18,9 @@
       chefSignature: '披萨师傅的小提示',
       ticketKicker: 'ORDER · 01',
       ticketTitle: '你的披萨订单',
-      ticketPrompt: '设置已经吃掉几块，以及披萨一共切成几块。',
-      numerator: '分子 · 已经吃掉几块',
-      denominator: '分母 · 一共切成几块',
+      ticketPrompt: '设置已经吃掉几份，以及披萨平均切成几份。',
+      numerator: '分子 · 已经吃掉几份',
+      denominator: '分母 · 平均切成几份',
       decimal: '小数',
       percentage: '百分数',
       randomize: '随机来一份',
@@ -34,9 +34,9 @@
       barTitle: '巧克力条',
       barHint: '浅色碎屑格已经吃掉，深色巧克力还剩下。',
       lineTitle: '数轴上的位置',
-      lineHint: '同一个分数，也能在 0 和 1 之间找到家。',
-      cap: (n, d) => `一共切成 ${d} 块，已经吃掉 ${n} 块，还剩 ${d - n} 块`,
-      slice: (i, d, eaten) => `第 ${i} 块，共 ${d} 块；${eaten ? '已经吃掉，盘上只剩碎屑' : '还没吃，是完整披萨'}。按 Enter 可以切换。`,
+      lineHint: '同一个分数，也能在 0 到 1 上找到家（含 0 和 1）。',
+      cap: (n, d) => `整个披萨平均切成 ${d} 份，已经吃掉 ${n} 份，还剩 ${d - n} 份`,
+      slice: (i, d, eaten) => `平均分成 ${d} 份中的第 ${i} 份；${eaten ? '已经吃掉，盘上只剩碎屑' : '还没吃，是完整披萨'}。按 Enter 可以切换。`,
       simplest: (f) => `✔ ${f} 已经是最简分数啦`,
       simplify: (f, s, g) => `✂ 约分：${f} 的分子和分母同时 ÷${g}，得到 ${s}`,
       equiv: (list) => `✦ 等值分数：${list.join(' = ')}`,
@@ -58,9 +58,9 @@
       chefSignature: 'A note from the pizzaiolo',
       ticketKicker: 'ORDER · 01',
       ticketTitle: 'Your pizza order',
-      ticketPrompt: 'Choose how many slices have already been eaten, and how many slices make the whole pizza.',
+      ticketPrompt: 'Choose how many equal slices have been eaten, and how many equal slices make the whole pizza.',
       numerator: 'Numerator · slices already eaten',
-      denominator: 'Denominator · total slices',
+      denominator: 'Denominator · equal slices in the whole',
       decimal: 'Decimal',
       percentage: 'Percent',
       randomize: 'Surprise me',
@@ -74,9 +74,9 @@
       barTitle: 'Chocolate bar',
       barHint: 'The pale crumb squares are eaten; the dark chocolate is left.',
       lineTitle: 'On the number line',
-      lineHint: 'The same fraction lives somewhere between 0 and 1.',
-      cap: (n, d) => `${n} of ${d} slices have been eaten; ${d - n} are left`,
-      slice: (i, d, eaten) => `Slice ${i} of ${d}; ${eaten ? 'eaten, with only crumbs left' : 'not eaten, still a whole slice'}. Press Enter to toggle.`,
+      lineHint: 'The same fraction lies from 0 to 1 on the number line, including both endpoints.',
+      cap: (n, d) => `The pizza has ${d} equal slices; ${n} have been eaten and ${d - n} are left`,
+      slice: (i, d, eaten) => `Equal slice ${i} of ${d}; ${eaten ? 'eaten, with only crumbs left' : 'not eaten, still a whole slice'}. Press Enter to toggle.`,
       simplest: (f) => `✔ ${f} is already in simplest form`,
       simplify: (f, s, g) => `✂ Simplify: divide top and bottom of ${f} by ${g} → ${s}`,
       equiv: (list) => `✦ Equivalent fractions: ${list.join(' = ')}`,
@@ -88,6 +88,12 @@
   const LS = { lang: 'kidslab.lang', theme: 'kidslab.theme' };
   const $ = (selector) => document.querySelector(selector);
   const gcd = (a, b) => (b ? gcd(b, a % b) : a);
+  const hasTerminatingDecimal = (n, d) => {
+    let reducedDenominator = d / gcd(n, d);
+    while (reducedDenominator % 2 === 0) reducedDenominator /= 2;
+    while (reducedDenominator % 5 === 0) reducedDenominator /= 5;
+    return reducedDenominator === 1;
+  };
   const readStore = (key) => {
     try { return localStorage.getItem(key); } catch { return null; }
   };
@@ -259,8 +265,9 @@
     $('#numOut').textContent = num;
     $('#denShow').textContent = den;
     $('#denOut').textContent = den;
-    $('#decShow').textContent = (+value.toFixed(4)).toString();
-    $('#pctShow').textContent = `${+(value * 100).toFixed(2)}%`;
+    const approximation = hasTerminatingDecimal(num, den) ? '' : '≈ ';
+    $('#decShow').textContent = `${approximation}${(+value.toFixed(4)).toString()}`;
+    $('#pctShow').textContent = `${approximation}${+(value * 100).toFixed(2)}%`;
     $('#pizzaCap').textContent = t.cap(num, den);
     $('#barCount').textContent = `${num} / ${den}`;
     $('#lineFill').style.width = `${value * 100}%`;

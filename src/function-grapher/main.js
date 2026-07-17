@@ -25,12 +25,16 @@
       fn: (p, x) => p.a * x + p.b,
       eq: (p) => `y = ${fmt(p.a)}x ${signed(p.b)}`,
       info: (p) => lang === 'zh'
-        ? [`斜率 <b>a = ${fmt(p.a)}</b>：${p.a > 0 ? '上坡 ↗' : p.a < 0 ? '下坡 ↘' : '水平线 →'}`,
-           `与 y 轴交于 <b>(0, ${fmt(p.b)})</b>`,
-           p.a !== 0 ? `与 x 轴交于 <b>(${fmt(-p.b / p.a)}, 0)</b>` : 'a = 0 时它只是一条水平线']
-        : [`Slope <b>a = ${fmt(p.a)}</b>: ${p.a > 0 ? 'uphill ↗' : p.a < 0 ? 'downhill ↘' : 'flat →'}`,
-           `Crosses the y-axis at <b>(0, ${fmt(p.b)})</b>`,
-           p.a !== 0 ? `Crosses the x-axis at <b>(${fmt(-p.b / p.a)}, 0)</b>` : 'With a = 0 it is just a flat line'],
+        ? [p.a === 0
+          ? `<b>a = 0</b> 时 y = ${fmt(p.b)} 是常函数，不再是一次函数`
+          : `斜率 <b>a = ${fmt(p.a)}</b>：${p.a > 0 ? '上坡 ↗' : '下坡 ↘'}`,
+        `与 y 轴交于 <b>(0, ${fmt(p.b)})</b>`,
+        p.a !== 0 ? `与 x 轴交于 <b>(${fmt(-p.b / p.a)}, 0)</b>` : '图像是一条水平线']
+        : [p.a === 0
+          ? `<b>a = 0</b> gives the constant function y = ${fmt(p.b)}, not a linear function with nonzero slope`
+          : `Slope <b>a = ${fmt(p.a)}</b>: ${p.a > 0 ? 'uphill ↗' : 'downhill ↘'}`,
+        `Crosses the y-axis at <b>(0, ${fmt(p.b)})</b>`,
+        p.a !== 0 ? `Crosses the x-axis at <b>(${fmt(-p.b / p.a)}, 0)</b>` : 'Its graph is a horizontal line'],
       marks: (p) => (p.a !== 0 ? [[0, p.b], [-p.b / p.a, 0]] : [[0, p.b]]),
     },
     quadratic: {
@@ -38,13 +42,15 @@
       fn: (p, x) => p.a * x * x + p.b * x + p.c,
       eq: (p) => `y = ${fmt(p.a)}x² ${signed(p.b, 'x')} ${signed(p.c)}`,
       info: (p) => {
-        if (Math.abs(p.a) < 0.05) return lang === 'zh' ? ['a ≈ 0，抛物线被压成了直线！'] : ['a ≈ 0 — the parabola collapses into a line!'];
+        if (p.a === 0) return lang === 'zh'
+          ? ['a = 0 时不再是二次函数，而是一次函数或常函数']
+          : ['With a = 0 this is no longer quadratic; it is linear or constant'];
         const vx = -p.b / (2 * p.a), vy = p.fnv ?? p.a * vx * vx + p.b * vx + p.c;
         return lang === 'zh'
-          ? [`开口 <b>${p.a > 0 ? '向上 ∪' : '向下 ∩'}</b>，a 越大越“瘦”`,
+          ? [`开口 <b>${p.a > 0 ? '向上 ∪' : '向下 ∩'}</b>；其余参数固定时，|a| 越大图像越窄`,
              `顶点 <b>(${fmt(vx)}, ${fmt(vy)})</b>`,
              `对称轴 <b>x = ${fmt(vx)}</b>`]
-          : [`Opens <b>${p.a > 0 ? 'upward ∪' : 'downward ∩'}</b>; bigger |a| = skinnier`,
+          : [`Opens <b>${p.a > 0 ? 'upward ∪' : 'downward ∩'}</b>; with other parameters fixed, bigger |a| means narrower`,
              `Vertex at <b>(${fmt(vx)}, ${fmt(vy)})</b>`,
              `Axis of symmetry <b>x = ${fmt(vx)}</b>`];
       },
@@ -57,14 +63,18 @@
     inverse: {
       params: { k: [-8, 8, 0.1, 4] },
       fn: (p, x) => (Math.abs(x) < 1e-6 ? NaN : p.k / x),
-      eq: (p) => `y = ${fmt(p.k)} / x`,
-      info: (p) => lang === 'zh'
-        ? [`k = <b>${fmt(p.k)}</b>，曲线在<b>第${p.k >= 0 ? '一、三' : '二、四'}象限</b>`,
+      eq: (p) => p.k === 0 ? 'y = 0 / x  (x ≠ 0)' : `y = ${fmt(p.k)} / x`,
+      info: (p) => p.k === 0
+        ? (lang === 'zh'
+          ? ['k = 0 时不属于反比例函数：在 x ≠ 0 上函数值为 0，x = 0 仍无定义']
+          : ['With k = 0 this is not an inverse variation: y = 0 for x ≠ 0, while x = 0 remains undefined'])
+        : (lang === 'zh'
+          ? [`k = <b>${fmt(p.k)}</b>，曲线在<b>第${p.k > 0 ? '一、三' : '二、四'}象限</b>`,
            '两条渐近线：<b>x = 0</b> 和 <b>y = 0</b>，曲线永远碰不到它们',
-           '|k| 越大，曲线离原点越远']
-        : [`k = <b>${fmt(p.k)}</b>: branches live in <b>quadrants ${p.k >= 0 ? 'I & III' : 'II & IV'}</b>`,
+           '固定 x ≠ 0 时，|k| 越大，|y| 越大']
+          : [`k = <b>${fmt(p.k)}</b>: branches live in <b>quadrants ${p.k > 0 ? 'I & III' : 'II & IV'}</b>`,
            'Two asymptotes: <b>x = 0</b> and <b>y = 0</b> — never touched',
-           'Bigger |k| pushes the curve away from the origin'],
+           'For a fixed x ≠ 0, bigger |k| means bigger |y|']),
       marks: () => [],
     },
     sine: {
@@ -72,12 +82,12 @@
       fn: (p, x) => p.a * Math.sin(p.b * x + p.c),
       eq: (p) => `y = ${fmt(p.a)}·sin(${fmt(p.b)}x ${signed(p.c)})`,
       info: (p) => lang === 'zh'
-        ? [`振幅 <b>|a| = ${fmt(Math.abs(p.a))}</b>：波峰有多高`,
-           `周期 <b>T = 2π/b ≈ ${fmt((2 * Math.PI) / p.b)}</b>：一次完整波动的长度`,
-           `相位 c = ${fmt(p.c)}：整条波左右平移`]
-        : [`Amplitude <b>|a| = ${fmt(Math.abs(p.a))}</b> — the wave height`,
-           `Period <b>T = 2π/b ≈ ${fmt((2 * Math.PI) / p.b)}</b> — length of one full wave`,
-           `Phase c = ${fmt(p.c)} shifts the whole wave sideways`],
+        ? [p.a === 0 ? 'a = 0 时是零函数，没有最小正周期' : `振幅 <b>|a| = ${fmt(Math.abs(p.a))}</b>：波峰有多高`,
+          p.a === 0 ? '函数值始终为 0' : `最小正周期 <b>T = 2π/b ≈ ${fmt((2 * Math.PI) / p.b)}</b>`,
+          `相位参数 c = ${fmt(p.c)}；水平平移量 <b>−c/b = ${fmt(-p.c / p.b)}</b>（弧度）`]
+        : [p.a === 0 ? 'With a = 0 this is the zero function and has no least positive period' : `Amplitude <b>|a| = ${fmt(Math.abs(p.a))}</b>`,
+          p.a === 0 ? 'The function value is always 0' : `Least positive period <b>T = 2π/b ≈ ${fmt((2 * Math.PI) / p.b)}</b>`,
+          `Phase parameter c = ${fmt(p.c)}; horizontal shift <b>−c/b = ${fmt(-p.c / p.b)}</b> radians`],
       marks: () => [],
     },
   };
@@ -118,9 +128,10 @@
       const div = document.createElement('div');
       div.className = 'sl';
       const label = document.createElement('label');
+      label.htmlFor = `slider-${type}-${p}`;
       label.innerHTML = `<span>${t.params[p]}</span><b id="v-${p}">${fmt(values[type][p])}</b>`;
       const input = document.createElement('input');
-      Object.assign(input, { type: 'range', min, max, step, value: values[type][p] });
+      Object.assign(input, { id: `slider-${type}-${p}`, type: 'range', min, max, step, value: values[type][p] });
       input.addEventListener('input', () => {
         values[type][p] = +input.value;
         $(`#v-${p}`).textContent = fmt(+input.value);

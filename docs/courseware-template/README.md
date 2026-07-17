@@ -1,6 +1,6 @@
 # 课件双语/主题模板 · Bilingual & Theme Courseware Template
 
-新课件的标准起步模板。复制本目录四个文件到 `src/<courseware-id>/`，改 `course.json`，在标注了
+新课件的标准起步模板。复制本目录五个文件到 `src/<courseware-id>/`，改 `course.json` 与 `facts.md`，在标注了
 `✏️` 的位置填入你的玩法即可。模板解决了每个课件都必须做对的三件事：
 
 1. **中英双语**：`I18N` 字典 + `data-t` 属性交给 `window.cool.bindI18n()`，与主站即时同步；
@@ -11,11 +11,12 @@
 ## 使用方法
 
 ```bash
-cp docs/courseware-template/{index.html,style.css,main.js,course.json} src/my-course/
+cp docs/courseware-template/{index.html,style.css,main.js,course.json,facts.md} src/my-course/
 # 1. 改 course.json：id 必须等于目录名，title/description 填 zh/en 双语
-# 2. index.html：改标题 emoji 与 <main> 里的舞台结构
-# 3. main.js：往 I18N 里加文案 key，在“游戏区”写玩法
-# 4. style.css：只用 var(--token) 上色，新增颜色先加进两套主题 token
+# 2. 改 facts.md：标题 id 同目录名，只列实际教授/依赖且可独立核对的知识
+# 3. index.html：改标题 emoji 与 <main> 里的舞台结构
+# 4. main.js：往 I18N 里加文案 key，在“游戏区”写玩法
+# 5. style.css：只用 var(--token) 上色，新增颜色先加进两套主题 token
 npm run build   # 必须通过（退出码 0）
 ```
 
@@ -32,8 +33,9 @@ npm run build   # 必须通过（退出码 0）
 | Canvas | 监听 `resize` 与 `themechange`（模板派发的自定义事件）重设尺寸/配色 |
 | 触屏 | 交互用 Pointer Events（`pointerdown/move/up`），画布加 `touch-action: none` |
 | 独立性 | 只用相对路径；第三方库放本课件 `vendor/`（three.js 参考 `src/welcome/vendor/`），禁止 CDN |
+| 知识断言 | `facts.md` 必须写适用范围、带编号断言和权威来源；每条断言至少引用一个 `[S编号]` |
 | 音频 | WebAudio 必须在首次用户手势里 `resume()`；提供静音开关是加分项 |
-| 埋点（可选） | 关键阶段调 `window.cool?.stage('level2')`、核心动作调 `window.cool?.track('flip')`（埋点由构建注入，务必用可选链，未注入时自然空操作）；详见 `docs/analytics.md` |
+| 进度/埋点 | 关键阶段调 `window.cool?.stage('level2')`，真正最终通关时调 `window.cool?.complete?.()`；核心动作可调 `window.cool?.track('flip')`；详见 `docs/sdk.md` |
 
 平台 API 与存量迁移步骤见 [`docs/sdk.md`](../sdk.md)。
 

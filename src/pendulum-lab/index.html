@@ -28,6 +28,7 @@
       <section class="ctl">
         <h2 data-t="planet">选择星球</h2>
         <div class="planets" id="planets"></div>
+        <p class="model-note" data-t="modelNote">参考重力下的理想环境；公式适用于约 15° 以内的小摆角。</p>
       </section>
 
       <section class="ctl">
@@ -39,15 +40,15 @@
 
       <section class="readout">
         <div class="ro">
-          <p class="ro__label" data-t="theory">理论周期 2π√(L/g)</p>
+          <p class="ro__label" data-t="theory">小角近似周期 2π√(L/g)</p>
           <p class="ro__val"><b id="tTheory">2.46</b> s</p>
         </div>
         <div class="ro">
-          <p class="ro__label" data-t="measured">实测周期</p>
+          <p class="ro__label" data-t="measured">仿真测得周期</p>
           <p class="ro__val ro__val--m"><b id="tMeasured">—</b> s</p>
         </div>
       </section>
-      <p class="note" id="bigAngleNote" hidden data-t="bigAngle">💡 摆角很大时，实测周期会比公式略长 —— 公式只在小角度下准确！</p>
+      <p class="note" id="bigAngleNote" hidden data-t="bigAngle">💡 超过约 15° 时，仿真周期会比小角公式预测值更长。</p>
 
       <div class="btns">
         <button class="btn" id="playBtn" type="button">⏸ <span data-t="pause">暂停</span></button>

@@ -420,6 +420,7 @@
       els.win.hidden = false;
     }, 680);
     window.cool?.stage(`solved_round_${state.round}`);
+    window.cool?.complete?.();
     window.cool?.track('solve', { clues: state.used.size, stars: state.stars });
   }
 

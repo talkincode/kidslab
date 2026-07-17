@@ -62,6 +62,9 @@ body {
   box-shadow: 2.5px 2.5px 0 #23424a; transition: background 0.4s;
 }
 .verdict__h { margin: 4px 0 0; font-size: 13.5px; font-weight: 600; color: #5a7a83; font-variant-numeric: tabular-nums; }
+.scope-note, .safety-note { width: min(100%, 410px); margin: 4px 0 0; font-size: 13px; line-height: 1.45; text-align: center; }
+.scope-note { color: var(--page-muted); }
+.safety-note { padding: 9px 12px; color: #81351f; background: #fff2e8; border: 2px dashed #e08a5b; border-radius: 12px; font-weight: 700; }
 
 /* --- 右栏 --- */
 .side { display: flex; flex-direction: column; gap: 20px; }
@@ -114,6 +117,8 @@ body {
   --shadow: rgba(35, 66, 74, 0.9);
   --note-bg: #f5efff;
   --note-ink: #5b3d8f;
+  --safety-bg: #fff2e8;
+  --safety-ink: #81351f;
 }
 [data-theme="dark"] {
   --page-ink: #e7fff8;
@@ -127,6 +132,8 @@ body {
   --shadow: rgba(2, 10, 8, 0.72);
   --note-bg: #2c2240;
   --note-ink: #e4d1ff;
+  --safety-bg: #3c241d;
+  --safety-ink: #ffd5c2;
 }
 body {
   color: var(--page-ink);
@@ -142,3 +149,4 @@ body {
 .verdict__ph b { color: var(--page-ink); }
 .subs button, .inds button { color: var(--page-ink); background: var(--surface-soft); border-color: var(--surface-border); }
 .ind-note { color: var(--note-ink); background: var(--note-bg); }
+.safety-note { color: var(--safety-ink); background: var(--safety-bg); }

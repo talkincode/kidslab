@@ -25,6 +25,7 @@
   const COURSE = '__COURSE_ID__';
   const w = window;
   const cool = w.cool || {};
+  const persistStage = typeof cool.stage === 'function' ? cool.stage.bind(cool) : () => {};
 
   let optOut = false;
   try {
@@ -149,6 +150,7 @@
       }
     },
     stage(name) {
+      persistStage(name);
       if (typeof name !== 'string' || !name || name === stage) return;
       stage = name.slice(0, 48);
       streakName = ''; streak = 0;

@@ -380,6 +380,25 @@ button { font-family: inherit; color: inherit; }
 }
 .accent-row button:hover { transform: scale(1.18) rotate(10deg); }
 .accent-row button.is-active { box-shadow: 0 0 0 3px var(--paper), 0 0 0 5.5px var(--sw); }
+.progress-clear {
+  width: 100%;
+  padding: 7px 9px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--ink-faint);
+  font: inherit;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+.progress-clear:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--seg-bg);
+}
+.progress-clear[hidden] { display: none; }
 .sidebar__ver { margin: 0; padding: 0 4px; font-size: 11.5px; color: var(--ink-faint); white-space: nowrap; }
 
 /* --- collapsed rail --- */
@@ -389,7 +408,8 @@ button { font-family: inherit; color: inherit; }
 .is-collapsed .cat__name,
 .is-collapsed .cat__count,
 .is-collapsed .sidebar__ver,
-.is-collapsed .accent-row { display: none; }
+.is-collapsed .accent-row,
+.is-collapsed .progress-clear { display: none; }
 .is-collapsed .sidebar__head { flex-direction: column; gap: 10px; }
 .is-collapsed .brand__mark { width: 38px; height: 38px; }
 .is-collapsed .level-seg { grid-template-columns: 1fr; }
@@ -565,6 +585,20 @@ button { font-family: inherit; color: inherit; }
   box-shadow: 2px 2px 0 var(--shadow);
 }
 .card__new { position: absolute; top: 10px; right: 10px; font-size: 17px; filter: drop-shadow(1px 2px 0 rgba(0,0,0,0.3)); }
+.card__progress {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  padding: 4px 10px;
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #263323;
+  border: 2px solid var(--line-strong);
+  border-radius: 99px;
+  box-shadow: 2px 2px 0 var(--shadow);
+}
+.card__progress--played { background: #ffe29a; }
+.card__progress--completed { background: #8be3b2; }
 
 .card__body { padding: 14px 16px 6px; }
 .card__title {
@@ -678,6 +712,7 @@ button { font-family: inherit; color: inherit; }
   /* 移动端不使用收拢态 */
   .is-collapsed .brand__text, .is-collapsed .side-sec__label, .is-collapsed .cat__name,
   .is-collapsed .cat__count, .is-collapsed .sidebar__ver, .is-collapsed .accent-row { display: revert; }
+  .is-collapsed .progress-clear:not([hidden]) { display: block; }
   .is-collapsed .level-seg { grid-template-columns: repeat(3, 1fr); }
   .is-collapsed .cat-list button { justify-content: flex-start; padding: 9px 10px; }
   .is-collapsed .sidebar__head { flex-direction: row; }

@@ -14,6 +14,29 @@
     grade: 'kidslab.grade',
     collapsed: 'kidslab.sidebar',
   };
+  const PROGRESS_PREFIX = 'kidslab.progress.';
+  const local = {
+    get(key) {
+      try { return localStorage.getItem(key); } catch { return null; }
+    },
+    set(key, value) {
+      try { localStorage.setItem(key, value); return true; } catch { return false; }
+    },
+    remove(key) {
+      try { localStorage.removeItem(key); return true; } catch { return false; }
+    },
+    keys() {
+      try { return Object.keys(localStorage); } catch { return []; }
+    },
+  };
+  const session = {
+    get(key) {
+      try { return sessionStorage.getItem(key); } catch { return null; }
+    },
+    set(key, value) {
+      try { sessionStorage.setItem(key, value); return true; } catch { return false; }
+    },
+  };
 
   const LEVELS = ['primary', 'junior', 'senior'];
   const GRADES = [
@@ -84,6 +107,10 @@
       count: (n) => `共 ${n} 个课件`,
       total: (n) => `· ${n} 个课件`,
       pinned: '精选',
+      played: '玩过',
+      completed: '已完成',
+      clearProgress: '清除本机进度',
+      clearProgressConfirm: '清除全部本机课件进度？语言和主题设置会保留。',
       gradeAll: '全部年级',
       loadErr: '课件清单加载失败，请先运行 npm run build 并通过 npm run preview 访问。',
       levels: { primary: '小学', junior: '初中', senior: '高中' },
@@ -118,6 +145,10 @@
       count: (n) => `${n} courseware${n === 1 ? '' : 's'}`,
       total: (n) => `· ${n} items`,
       pinned: 'Featured',
+      played: 'Played',
+      completed: 'Completed',
+      clearProgress: 'Clear local progress',
+      clearProgressConfirm: 'Clear all local course progress? Language and theme settings will stay unchanged.',
       gradeAll: 'All grades',
       loadErr: 'Failed to load the manifest. Run `npm run build` then `npm run preview`.',
       levels: { primary: 'Primary', junior: 'Middle', senior: 'High' },
@@ -136,13 +167,13 @@
   /* ---------- 状态 ---------- */
   const params = new URLSearchParams(location.search);
   const state = {
-    lang: params.get('lang') || localStorage.getItem(LS.lang) || (navigator.language?.startsWith('zh') ? 'zh' : 'en'),
-    theme: localStorage.getItem(LS.theme) || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'),
-    accent: localStorage.getItem(LS.accent) || 'candy',
-    level: params.get('level') || localStorage.getItem(LS.level) || 'primary',
-    grade: params.get('grade') || localStorage.getItem(LS.grade) || 'all',
-    cat: params.get('cat') || sessionStorage.getItem('kidslab.cat') || 'all',
-    q: params.get('q') ?? sessionStorage.getItem('kidslab.q') ?? '',
+    lang: params.get('lang') || local.get(LS.lang) || (navigator.language?.startsWith('zh') ? 'zh' : 'en'),
+    theme: local.get(LS.theme) || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'),
+    accent: local.get(LS.accent) || 'candy',
+    level: params.get('level') || local.get(LS.level) || 'primary',
+    grade: params.get('grade') || local.get(LS.grade) || 'all',
+    cat: params.get('cat') || session.get('kidslab.cat') || 'all',
+    q: params.get('q') ?? session.get('kidslab.q') ?? '',
     courses: [],
   };
   if (!LEVELS.includes(state.level)) state.level = 'primary';
@@ -161,7 +192,7 @@
     gradeSec: $('#gradeSec'), gradeList: $('#gradeList'),
     grid: $('#grid'), empty: $('#emptyBox'), search: $('#searchInput'),
     heroTitle: $('#heroTitle'), crumb: $('#crumb'), countText: $('#countText'),
-    courseTotal: $('#courseTotal'),
+    courseTotal: $('#courseTotal'), clearProgress: $('#clearProgressBtn'),
   };
 
   /* ---------- 主题 / 强调色 / 语言 ---------- */
@@ -180,13 +211,13 @@
   }
 
   function persist() {
-    localStorage.setItem(LS.lang, state.lang);
-    localStorage.setItem(LS.theme, state.theme);
-    localStorage.setItem(LS.accent, state.accent);
-    localStorage.setItem(LS.level, state.level);
-    localStorage.setItem(LS.grade, state.grade);
-    sessionStorage.setItem('kidslab.cat', state.cat);
-    sessionStorage.setItem('kidslab.q', state.q);
+    local.set(LS.lang, state.lang);
+    local.set(LS.theme, state.theme);
+    local.set(LS.accent, state.accent);
+    local.set(LS.level, state.level);
+    local.set(LS.grade, state.grade);
+    session.set('kidslab.cat', state.cat);
+    session.set('kidslab.q', state.q);
     const p = new URLSearchParams();
     if (state.level !== 'primary') p.set('level', state.level);
     if (state.grade !== 'all') p.set('grade', state.grade);
@@ -350,6 +381,15 @@
     return (CATS.find((c) => c.id === id) || {}).color || 'var(--c-featured)';
   }
 
+  function courseProgress(id) {
+    try {
+      const value = JSON.parse(local.get(`${PROGRESS_PREFIX}${id}`) || 'null');
+      return value && ['played', 'completed'].includes(value.status) ? value.status : '';
+    } catch {
+      return '';
+    }
+  }
+
   function card(c, i) {
     const a = document.createElement('a');
     a.className = 'card';
@@ -362,6 +402,14 @@
     cover.innerHTML = `<span class="card__emoji">${c.icon || '📘'}</span>`;
     if (c.pinned) cover.insertAdjacentHTML('beforeend', `<span class="card__pin">⭐ ${t().pinned}</span>`);
     if (c.badge === 'new') cover.insertAdjacentHTML('beforeend', `<span class="card__new">✨</span>`);
+    const progress = courseProgress(c.id);
+    if (progress) {
+      a.dataset.progress = progress;
+      const status = document.createElement('span');
+      status.className = `card__progress card__progress--${progress}`;
+      status.textContent = t()[progress];
+      cover.appendChild(status);
+    }
 
     const body = document.createElement('div');
     body.className = 'card__body';
@@ -398,6 +446,7 @@
     el.countText.textContent = t().count(list.length);
     el.crumb.innerHTML = `<b>${t().levels[state.level]}</b>${state.grade !== 'all' ? ` · ${t().grades[state.grade]}` : ''} · ${t().cats[state.cat]}${state.q ? ` · “${esc(state.q)}”` : ''}`;
     el.courseTotal.textContent = t().total(state.courses.length);
+    el.clearProgress.hidden = !local.keys().some((key) => key.startsWith(PROGRESS_PREFIX));
   }
 
   const esc = (s) => s.replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
@@ -423,7 +472,7 @@
 
   $('#collapseBtn').addEventListener('click', () => {
     const on = el.app.classList.toggle('is-collapsed');
-    localStorage.setItem(LS.collapsed, on ? '1' : '');
+    local.set(LS.collapsed, on ? '1' : '');
   });
   $('#menuBtn').addEventListener('click', () => {
     el.app.classList.add('menu-open');
@@ -431,7 +480,7 @@
   });
   el.backdrop.addEventListener('click', closeDrawer);
   addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
-  if (localStorage.getItem(LS.collapsed) === '1') el.app.classList.add('is-collapsed');
+  if (local.get(LS.collapsed) === '1') el.app.classList.add('is-collapsed');
 
   /* ---------- 顶栏交互 ---------- */
   $('#themeBtn').addEventListener('click', () => {
@@ -449,6 +498,14 @@
     el.search.value = '';
     update();
     el.search.focus();
+  });
+  el.clearProgress.addEventListener('click', () => {
+    if (!confirm(t().clearProgressConfirm)) return;
+    local.keys()
+      .filter((key) => key.startsWith(PROGRESS_PREFIX))
+      .forEach((key) => local.remove(key));
+    renderGrid();
+    closeDrawer();
   });
 
   let debounce = 0;
@@ -480,4 +537,7 @@
       el.empty.querySelector('p').removeAttribute('data-i18n');
       $('#resetBtn').hidden = true;
     });
+  addEventListener('pageshow', () => {
+    if (state.courses.length) renderGrid();
+  });
 })();

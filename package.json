@@ -11,6 +11,7 @@
     "build": "node scripts/build.mjs",
     "preview": "node scripts/serve.mjs",
     "report": "node scripts/report.mjs",
+    "test:unit": "node --test tests/unit/*.test.mjs",
     "test:e2e": "playwright test",
     "vendor": "cp node_modules/three/build/three.module.min.js src/welcome/vendor/three.module.min.js"
   },

@@ -8,6 +8,11 @@
   const w = window;
   const cool = w.cool || {};
   if (cool.sdkVersion) return;
+  const configuredCourseId = '__COURSE_ID__';
+  const pathParts = location.pathname.split('/').filter(Boolean);
+  const pathTail = pathParts.at(-1) || '';
+  const inferredCourseId = pathTail.includes('.') ? pathParts.at(-2) : pathTail;
+  const courseId = configuredCourseId.startsWith('__') ? inferredCourseId : configuredCourseId;
 
   const storage = {
     get(key, fallback = null) {
@@ -134,12 +139,51 @@
     };
   }
 
-  cool.sdkVersion = 1;
+  const progressKey = courseId ? `kidslab.progress.${courseId}` : '';
+  function readProgress() {
+    if (!progressKey) return null;
+    try {
+      const value = JSON.parse(storage.get(progressKey, 'null'));
+      if (!value || !['played', 'completed'].includes(value.status)) return null;
+      return value;
+    } catch {
+      return null;
+    }
+  }
+
+  function writeProgress(status, stage) {
+    if (!progressKey) return null;
+    const current = readProgress() || {};
+    const next = {
+      status: current.status === 'completed' ? 'completed' : status,
+      stage: stage || current.stage || '',
+      updatedAt: Date.now(),
+    };
+    if (current.status === next.status && current.stage === next.stage) return current;
+    storage.set(progressKey, JSON.stringify(next));
+    return next;
+  }
+
+  const progress = {
+    get: readProgress,
+    clear() {
+      if (!progressKey) return false;
+      return storage.remove(progressKey);
+    },
+  };
+
+  cool.sdkVersion = 2;
+  cool.courseId = courseId;
   cool.storage = storage;
   cool.preferences = preferences;
   cool.bindI18n = bindI18n;
+  cool.progress = progress;
   if (typeof cool.track !== 'function') cool.track = () => {};
-  if (typeof cool.stage !== 'function') cool.stage = () => {};
+  cool.stage = (name) => {
+    if (typeof name !== 'string' || !name) return;
+    writeProgress('played', name.slice(0, 48));
+  };
+  cool.complete = () => writeProgress('completed');
   w.cool = cool;
   applyDocument();
 })();

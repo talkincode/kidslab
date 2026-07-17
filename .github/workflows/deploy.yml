@@ -28,6 +28,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Run unit tests
+        run: npm run test:unit
+
       - name: Build courseware for tests
         run: npm run build
 
