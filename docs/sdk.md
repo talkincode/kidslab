@@ -23,13 +23,15 @@ const i18n = window.cool.bindI18n(I18N, {
 });
 
 window.cool?.stage('level2');
+window.cool?.complete?.();
 window.cool?.track('flip', { value: 3 });
 ```
 
 - `preferences` 负责校验、保存并应用 `kidslab.lang` / `kidslab.theme`。
 - `bindI18n()` 自动更新 `[data-t]` 静态文案；动态文案通过返回的 `t()` 读取。
 - 主题变化继续派发 `themechange`，Canvas 与 three.js 可沿用现有监听方式。
-- `track()` / `stage()` 始终存在；未配置 analytics 时为空操作，配置后由 `scripts/track.js` 扩展实现。
+- `stage()` 始终存在并把本课件记为“玩过”；`complete()` 在最终通关或可无限复玩课件的首个完整成功闭环后，把本课件记为“已完成”。状态只保存在本机 `kidslab.progress.<id>`。
+- `track()` 未配置 analytics 时为空操作；配置后由 `scripts/track.js` 扩展。analytics 会包装 `stage()`，不会替换本地进度写入。
 
 ## 存量迁移
 

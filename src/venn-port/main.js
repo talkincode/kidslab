@@ -259,6 +259,7 @@
     $('#modal').hidden = false;
     confetti();
     window.cool?.stage(`venn_level_${levelIndex + 1}`);
+    if (levelIndex === LEVELS.length - 1) window.cool?.complete?.();
   }
 
   function startLevel(index) {
@@ -268,6 +269,7 @@
     locked = false;
     $('#modal').hidden = true;
     render();
+    window.cool?.stage(`venn_level_${index + 1}_started`);
   }
 
   function nextLevel() {

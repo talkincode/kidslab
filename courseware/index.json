@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-16T18:13:47.853Z",
+  "generatedAt": "2026-07-17T09:36:56.332Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -321,7 +321,11 @@
       "levels": [
         "primary"
       ],
-      "grades": [],
+      "grades": [
+        "g3",
+        "g5",
+        "g6"
+      ],
       "tags": [
         "分数",
         "小数"
@@ -971,8 +975,8 @@
         "en": "Pendulum Lab"
       },
       "description": {
-        "zh": "拖动摆球放手，测量真实周期，再和公式 T=2π√(L/g) 对比。去月球和木星上荡一荡试试？",
-        "en": "Drag the bob, let go, measure the real period, then compare with T=2π√(L/g). Fancy a swing on the Moon or Jupiter?"
+        "zh": "拖动摆球放手，对比非线性仿真周期与小角近似公式 T≈2π√(L/g)，探索不同参考重力。",
+        "en": "Release the bob and compare the nonlinear simulated period with the small-angle approximation T≈2π√(L/g) under different reference gravities."
       },
       "category": "physics",
       "levels": [
@@ -1015,8 +1019,8 @@
         "en": "Acid-Base Magic Water"
       },
       "description": {
-        "zh": "往烧杯里倒入柠檬汁、肥皂水……换一种指示剂，看看溶液变出什么颜色？理解 pH 的秘密。",
-        "en": "Pour lemon juice or soapy water into the beaker, switch indicators, and watch the colours change. Discover the secret of pH."
+        "zh": "选择典型样品并切换指示剂，观察示意颜色与 pH 的关系；每次选择都会换成一杯新样品。",
+        "en": "Choose a typical sample and switch indicators to explore the modelled relationship between colour and pH; each choice replaces the sample."
       },
       "category": "chemistry",
       "levels": [

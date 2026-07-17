@@ -366,6 +366,7 @@
 
   function showWin() {
     const last = state.level === ORDERS.length - 1;
+    if (last) window.cool?.complete?.();
     els.winClock.textContent = timeLabel(order().target, false);
     els.winEmoji.textContent = last ? '🕰️🌟' : order().emoji;
     els.winTitle.textContent = last ? t('finalTitle') : copy().win;

@@ -120,6 +120,128 @@ test.describe('main site', () => {
     }
     await expectHealthyPage(page, failures);
   });
+
+  test('course cards show local played and completed states in both languages', async ({ page }) => {
+    const [playedCourse, completedCourse] = manifest.courses.filter((course) =>
+      !course.pinned && course.levels.includes('primary')).slice(0, 2);
+    await page.addInitScript(({ playedId, completedId }) => {
+      localStorage.setItem('kidslab.lang', 'zh');
+      localStorage.setItem(`kidslab.progress.${playedId}`, JSON.stringify({ status: 'played', stage: 'started' }));
+      localStorage.setItem(`kidslab.progress.${completedId}`, JSON.stringify({ status: 'completed', stage: 'final' }));
+    }, { playedId: playedCourse.id, completedId: completedCourse.id });
+    await page.goto('/');
+
+    const playedCard = page.locator(`a.card[href="${playedCourse.path}"]`);
+    const completedCard = page.locator(`a.card[href="${completedCourse.path}"]`);
+    await expect(playedCard).toHaveAttribute('data-progress', 'played');
+    await expect(playedCard.locator('.card__progress')).toHaveText('玩过');
+    await expect(completedCard).toHaveAttribute('data-progress', 'completed');
+    await expect(completedCard.locator('.card__progress')).toHaveText('已完成');
+
+    await page.locator('#langBtn').click();
+    await expect(playedCard.locator('.card__progress')).toHaveText('Played');
+    await expect(completedCard.locator('.card__progress')).toHaveText('Completed');
+
+    let confirmation = '';
+    page.once('dialog', (dialog) => {
+      confirmation = dialog.message();
+      dialog.accept();
+    });
+    if (await page.locator('#menuBtn').isVisible()) await page.locator('#menuBtn').click();
+    await page.getByRole('button', { name: 'Clear local progress' }).click();
+    expect(confirmation).toBe('Clear all local course progress? Language and theme settings will stay unchanged.');
+    await expect(page.locator('.card__progress')).toHaveCount(0);
+    await expect(page.locator('#clearProgressBtn')).toBeHidden();
+    expect(await page.evaluate(() => localStorage.getItem('kidslab.lang'))).toBe('en');
+    expect(await page.evaluate(() =>
+      Object.keys(localStorage).filter((key) => key.startsWith('kidslab.progress.')))).toEqual([]);
+  });
+
+  test('main site still works when browser storage becomes unavailable', async ({ page }) => {
+    const failures = observeFailures(page);
+    await page.addInitScript(() => {
+      localStorage.setItem('kidslab.progress.unavailable', JSON.stringify({ status: 'played' }));
+      for (const method of ['getItem', 'setItem', 'removeItem']) {
+        Object.defineProperty(Storage.prototype, method, {
+          configurable: true,
+          value() { throw new DOMException('Storage disabled', 'SecurityError'); },
+        });
+      }
+    });
+    await page.goto('/');
+
+    await expect(page.locator('#grid .card').first()).toBeVisible();
+    if (await page.locator('#menuBtn').isVisible()) await page.locator('#menuBtn').click();
+    page.once('dialog', (dialog) => dialog.accept());
+    await page.locator('#clearProgressBtn').click();
+    await expectHealthyPage(page, failures);
+  });
+});
+
+test.describe('fraction pizzeria', () => {
+  test('marks rounded decimal and percent conversions as approximate', async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem('kidslab.lang', 'zh'));
+    await page.goto('/courseware/fraction-lab/');
+
+    await expect(page.locator('#decShow')).toHaveText('0.375');
+    await page.getByRole('button', { name: '减少分子' }).click({ clickCount: 2 });
+    await page.getByRole('button', { name: '减少分母' }).click({ clickCount: 5 });
+
+    await expect(page.locator('#decShow')).toHaveText('≈ 0.3333');
+    await expect(page.locator('#pctShow')).toHaveText('≈ 33.33%');
+    await expect(page.getByText('同一个分数，也能在 0 到 1 上找到家（含 0 和 1）。')).toBeVisible();
+  });
+});
+
+test.describe('high-risk knowledge models', () => {
+  test('function grapher explains degenerate parameters instead of misclassifying them', async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem('kidslab.lang', 'zh'));
+    await page.goto('/courseware/function-grapher/');
+
+    await page.getByRole('tab', { name: '二次函数' }).click();
+    await page.locator('#sliders input').first().fill('0');
+    await expect(page.locator('#info')).toContainText('a = 0 时不再是二次函数');
+
+    await page.getByRole('tab', { name: '反比例' }).click();
+    await page.locator('#sliders input').first().fill('0');
+    await expect(page.locator('#info')).toContainText('k = 0 时不属于反比例函数');
+
+    await page.getByRole('tab', { name: '正弦函数' }).click();
+    await page.locator('#sliders input').first().fill('0');
+    await expect(page.locator('#info')).toContainText('没有最小正周期');
+  });
+
+  test('pendulum lab distinguishes the approximation from its simulated measurement', async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem('kidslab.lang', 'zh'));
+    await page.goto('/courseware/pendulum-lab/');
+
+    await expect(page.getByText('小角近似周期 2π√(L/g)')).toBeVisible();
+    await expect(page.getByText('仿真测得周期')).toBeVisible();
+    await expect(page.getByText('参考重力下的理想环境；公式适用于约 15° 以内的小摆角。')).toBeVisible();
+  });
+
+  test('pH lab exposes approximation limits and bleach safety', async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem('kidslab.lang', 'zh'));
+    await page.goto('/courseware/ph-lab/');
+
+    await expect(page.getByText('选择一杯样品（不会混合）')).toBeVisible();
+    await expect(page.locator('#hIon')).toContainText('估算 [H₃O⁺] ≈');
+    await expect(page.getByText('仅为虚拟模拟。现实中切勿混合漂白水与氨水、食醋、柠檬汁或其他清洁剂。')).toBeVisible();
+
+    await page.getByRole('button', { name: /牛奶/ }).click();
+    await expect(page.locator('#phTag')).toHaveText('酸性');
+  });
+});
+
+test.describe('progress completion pilots', () => {
+  test('solving a mystery-box case completes the replayable course', async ({ page }) => {
+    await page.addInitScript(() => localStorage.removeItem('kidslab.progress.mystery-box'));
+    await page.goto('/courseware/mystery-box/');
+
+    await page.locator('[data-guess="0"]').click();
+    await expect.poll(() => page.evaluate(() =>
+      JSON.parse(localStorage.getItem('kidslab.progress.mystery-box') || 'null')?.status)).toBe('completed');
+  });
 });
 
 test.describe('bug hospital onboarding', () => {
@@ -338,9 +460,14 @@ test.describe('courseware manifest', () => {
       window.cool.preferences.setTheme('dark');
       window.cool.track('sdk-smoke');
       window.cool.stage('ready');
+      const played = window.cool.progress.get();
+      window.cool.complete();
+      window.cool.stage('after-complete');
+      const completed = window.cool.progress.get();
       stop();
 
       const snapshot = {
+        courseId: window.cool.courseId,
         lang: window.cool.preferences.lang,
         theme: window.cool.preferences.theme,
         storedLang: localStorage.getItem('kidslab.lang'),
@@ -349,6 +476,8 @@ test.describe('courseware manifest', () => {
         documentTheme: document.documentElement.dataset.theme,
         translation: marker.textContent,
         directTranslation: i18n.t('greeting'),
+        played: { status: played.status, stage: played.stage },
+        completed: { status: completed.status, stage: completed.stage },
         changes,
       };
       i18n.destroy();
@@ -357,6 +486,7 @@ test.describe('courseware manifest', () => {
     });
 
     expect(result).toEqual({
+      courseId: manifest.courses[0].id,
       lang: 'en',
       theme: 'dark',
       storedLang: 'en',
@@ -365,6 +495,8 @@ test.describe('courseware manifest', () => {
       documentTheme: 'dark',
       translation: 'Hello',
       directTranslation: 'Hello',
+      played: { status: 'played', stage: 'ready' },
+      completed: { status: 'completed', stage: 'after-complete' },
       changes: [
         { kind: 'lang', value: 'en' },
         { kind: 'theme', value: 'dark' },
@@ -399,6 +531,7 @@ test.describe('courseware manifest', () => {
         samePreferences: window.cool.preferences === preferences,
         track: typeof window.cool.track,
         stage: typeof window.cool.stage,
+        progressStatus: window.cool.progress.get().status,
         beacon: beacons[0],
         beaconCount: beacons.length,
       };
@@ -408,6 +541,7 @@ test.describe('courseware manifest', () => {
       samePreferences: true,
       track: 'function',
       stage: 'function',
+      progressStatus: 'played',
       beacon: '/sdk-analytics',
       beaconCount: 1,
     });

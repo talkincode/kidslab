@@ -2,19 +2,24 @@
 (() => {
   'use strict';
 
+  const DEFAULT_ANGLE = 0.2;
+  const SMALL_ANGLE_LIMIT = (15 * Math.PI) / 180;
+
   const I18N = {
     zh: {
       back: '返回平台', title: '单摆实验室', langBtn: 'EN', doc: '单摆实验室 · KidsLab',
-      planet: '选择星球', length: '摆长 L', theory: '理论周期 2π√(L/g)', measured: '实测周期',
+      planet: '选择星球', length: '摆长 L', theory: '小角近似周期 2π√(L/g)', measured: '仿真测得周期',
       pause: '暂停', play: '继续', reset: '重置', dragHint: '🖐 拖动摆球，松手开始摆动',
-      bigAngle: '💡 摆角很大时，实测周期会比公式略长 —— 公式只在小角度下准确！',
+      modelNote: '参考重力下的理想环境；公式适用于约 15° 以内的小摆角。',
+      bigAngle: '💡 超过约 15° 时，仿真周期会比小角公式预测值更长。',
       planets: { earth: '地球', moon: '月球', mars: '火星', jupiter: '木星' },
     },
     en: {
       back: 'Back to platform', title: 'Pendulum Lab', langBtn: '中', doc: 'Pendulum Lab · KidsLab',
-      planet: 'Pick a planet', length: 'Length L', theory: 'Theory 2π√(L/g)', measured: 'Measured period',
+      planet: 'Pick a planet', length: 'Length L', theory: 'Small-angle period 2π√(L/g)', measured: 'Simulated period',
       pause: 'Pause', play: 'Play', reset: 'Reset', dragHint: '🖐 Drag the bob, release to swing',
-      bigAngle: '💡 At large angles the measured period runs longer than the formula — it only holds for small swings!',
+      modelNote: 'Ideal environment under reference gravity; the formula applies to swings of about 15° or less.',
+      bigAngle: '💡 Above about 15°, the simulated period is longer than the small-angle prediction.',
       planets: { earth: 'Earth', moon: 'Moon', mars: 'Mars', jupiter: 'Jupiter' },
     },
   };
@@ -31,7 +36,7 @@
     planet: 'earth',
     g: 9.81,
     L: 1.5,
-    theta: 0.6,
+    theta: DEFAULT_ANGLE,
     omega: 0,
     running: true,
     dragging: false,
@@ -39,7 +44,8 @@
     /* 周期测量：记录同方向过零时刻 */
     lastCross: null,
     period: null,
-    releaseAngle: 0.6,
+    releaseAngle: DEFAULT_ANGLE,
+    simTime: 0,
   };
 
   const $ = (s) => document.querySelector(s);
@@ -54,13 +60,16 @@
     const h = dt / sub;
     for (let i = 0; i < sub; i++) {
       const prevTheta = state.theta;
+      const prevTime = state.simTime;
       state.omega += (-(state.g / state.L) * Math.sin(state.theta)) * h;
       state.theta += state.omega * h;
+      state.simTime += h;
       /* 正向过零 → 记录周期 */
       if (prevTheta <= 0 && state.theta > 0 && state.omega > 0) {
-        const now = performance.now() / 1000;
-        if (state.lastCross != null) state.period = now - state.lastCross;
-        state.lastCross = now;
+        const fraction = -prevTheta / (state.theta - prevTheta);
+        const crossTime = prevTime + fraction * h;
+        if (state.lastCross != null) state.period = crossTime - state.lastCross;
+        state.lastCross = crossTime;
       }
     }
   }
@@ -152,7 +161,7 @@
     $('#tTheory').textContent = T.toFixed(2);
     $('#tMeasured').textContent = state.period ? state.period.toFixed(2) : '—';
     $('#lenVal').textContent = `${state.L.toFixed(2)} m`;
-    $('#bigAngleNote').hidden = Math.abs(state.releaseAngle) < 0.7;
+    $('#bigAngleNote').hidden = Math.abs(state.releaseAngle) <= SMALL_ANGLE_LIMIT;
   }
 
   /* ---------- 主循环 ---------- */
@@ -169,7 +178,17 @@
   function resetMeasure() {
     state.lastCross = null;
     state.period = null;
+    state.simTime = 0;
     state.trail = [];
+  }
+
+  function resetMotion() {
+    state.theta = DEFAULT_ANGLE;
+    state.omega = 0;
+    state.releaseAngle = DEFAULT_ANGLE;
+    state.running = true;
+    resetMeasure();
+    syncPlayBtn();
   }
 
   /* ---------- 交互 ---------- */
@@ -184,7 +203,7 @@
     state.dragging = true;
     canvas.classList.add('dragging');
     canvas.setPointerCapture(e.pointerId);
-    state.theta = pointerAngle(e);
+    state.theta = Math.max(-1.45, Math.min(1.45, pointerAngle(e)));
     state.omega = 0;
     resetMeasure();
     $('#dragHint').style.opacity = '0';
@@ -204,7 +223,7 @@
 
   $('#lenRange').addEventListener('input', (e) => {
     state.L = +e.target.value;
-    resetMeasure();
+    resetMotion();
   });
 
   function renderPlanets() {
@@ -219,7 +238,7 @@
       b.addEventListener('click', () => {
         state.planet = p.id;
         state.g = p.g;
-        resetMeasure();
+        resetMotion();
         renderPlanets();
       });
       box.appendChild(b);
@@ -231,12 +250,7 @@
     $('#playBtn').innerHTML = state.running ? `⏸ <span>${t.pause}</span>` : `▶ <span>${t.play}</span>`;
   }
   $('#playBtn').addEventListener('click', () => { state.running = !state.running; syncPlayBtn(); });
-  $('#resetBtn').addEventListener('click', () => {
-    state.theta = 0.6; state.omega = 0; state.releaseAngle = 0.6;
-    state.running = true;
-    resetMeasure();
-    syncPlayBtn();
-  });
+  $('#resetBtn').addEventListener('click', resetMotion);
 
   $('#langBtn').addEventListener('click', () => window.cool.preferences.toggleLang());
   $('#themeBtn').addEventListener('click', () => window.cool.preferences.toggleTheme());

@@ -12,7 +12,11 @@
   "levels": [
     "primary"
   ],
-  "grades": [],
+  "grades": [
+    "g3",
+    "g5",
+    "g6"
+  ],
   "tags": [
     "分数",
     "小数"

@@ -330,6 +330,7 @@
     confetti(stars === 3 ? 34 : 18);
     setTimeout(() => { els.win.hidden = false; }, 380);
     window.cool?.stage(`route_${state.level + 1}_complete`);
+    if (state.level === MISSIONS.length - 1) window.cool?.complete?.();
   }
 
   function confetti(count) {

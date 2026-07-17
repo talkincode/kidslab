@@ -14,6 +14,7 @@ import { cp, mkdir, readdir, readFile, rm, stat, writeFile } from 'node:fs/promi
 import { createHash } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { validateFactsCoverage, validateFactsDocument } from './facts.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SRC = path.join(ROOT, 'src');
@@ -38,6 +39,38 @@ async function loadTaxonomy() {
     }
   }
   return tags;
+}
+
+async function validateKnowledgeAssertions(courses) {
+  const documented = new Set();
+  for (const { id } of courses) {
+    try {
+      const document = await readFile(path.join(SRC, id, 'facts.md'), 'utf8');
+      documented.add(id);
+      for (const error of validateFactsDocument(id, document)) {
+        fail(`src/${id}/facts.md: ${error}`);
+      }
+    } catch (error) {
+      if (error.code !== 'ENOENT') throw error;
+    }
+  }
+
+  const legacyEntries = JSON.parse(
+    await readFile(path.join(ROOT, 'scripts', 'facts-legacy.json'), 'utf8'),
+  );
+  if (!Array.isArray(legacyEntries) || legacyEntries.some((id) => typeof id !== 'string' || !id)) {
+    throw new TypeError('scripts/facts-legacy.json 必须是非空课件 id 的数组');
+  }
+  const legacy = new Set(legacyEntries);
+  if (legacy.size !== legacyEntries.length) fail('scripts/facts-legacy.json 存在重复课件 id');
+  for (const error of validateFactsCoverage(
+    courses.map(({ id }) => id),
+    documented,
+    legacy,
+  )) {
+    fail(`knowledge assertions: ${error}`);
+  }
+  if (!process.exitCode) ok(`知识断言 ${documented.size} 个已审计，${legacy.size} 个存量待补`);
 }
 
 function validate(id, meta, taxonomy) {
@@ -99,6 +132,7 @@ async function buildCourse(id, sdk, tracker) {
   for await (const file of walk(srcDir)) {
     const rel = path.relative(srcDir, file);
     if (rel === '.DS_Store' || rel.endsWith('.DS_Store')) continue;
+    if (rel === 'facts.md') continue;
     const dest = path.join(outDir, rel);
     await mkdir(path.dirname(dest), { recursive: true });
     const ext = path.extname(file);
@@ -108,7 +142,7 @@ async function buildCourse(id, sdk, tracker) {
       if (html.includes('data-kidslab-sdk')) throw new Error(`src/${id}: SDK 源码标签未能内联替换`);
       const tags = [];
       if (!/<link[^>]+rel=["'][^"']*icon/i.test(html)) tags.push(FAVICON_TAG);
-      tags.push(`<script>${sdk}</script>`);
+      tags.push(`<script>${sdk.replaceAll('__COURSE_ID__', () => id)}</script>`);
       tags.push(STARMAP_BACK_TAG);
       if (tracker) tags.push(`<script>${tracker.replaceAll('__COURSE_ID__', () => id)}</script>`);
       const out = injectHead(html, tags);
@@ -155,7 +189,8 @@ async function main() {
     seen.add(meta.id);
     courses.push(meta);
   }
-  if (process.exitCode) throw new Error('course.json 校验未通过');
+  await validateKnowledgeAssertions(courses);
+  if (process.exitCode) throw new Error('构建前校验未通过');
   if (courses.filter((c) => c.pinned).length > 1) throw new Error('pinned 课件只能有一个');
 
   courses.sort((a, b) =>

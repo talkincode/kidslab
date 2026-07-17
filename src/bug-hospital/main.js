@@ -590,6 +590,7 @@
     els.report.append(score);
     els.win.hidden = false;
     window.cool?.stage('bug-hospital-complete');
+    window.cool?.complete?.();
   }
 
   function replay() {

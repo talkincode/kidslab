@@ -76,11 +76,11 @@
           </div>
         </div>
 
-        <p class="ticket-prompt" data-t="ticketPrompt">设置要吃掉几块，以及披萨一共切成几块。</p>
+        <p class="ticket-prompt" data-t="ticketPrompt">设置已经吃掉几份，以及披萨平均切成几份。</p>
 
         <div class="stepper-stack">
           <div class="stepper">
-            <p class="stepper__label"><span class="stepper__dot stepper__dot--tomato"></span><span data-t="numerator">分子 · 吃掉几块</span></p>
+            <p class="stepper__label"><span class="stepper__dot stepper__dot--tomato"></span><span data-t="numerator">分子 · 已经吃掉几份</span></p>
             <div class="stepper__ctl">
               <button type="button" data-step="num" data-d="-1" aria-label="减少分子">−</button>
               <output id="numOut">3</output>
@@ -88,7 +88,7 @@
             </div>
           </div>
           <div class="stepper">
-            <p class="stepper__label"><span class="stepper__dot stepper__dot--basil"></span><span data-t="denominator">分母 · 切成几块</span></p>
+            <p class="stepper__label"><span class="stepper__dot stepper__dot--basil"></span><span data-t="denominator">分母 · 平均切成几份</span></p>
             <div class="stepper__ctl">
               <button type="button" data-step="den" data-d="-1" aria-label="减少分母">−</button>
               <output id="denOut">8</output>
@@ -156,7 +156,7 @@
           <div class="measure__head">
             <h3 data-t="lineTitle">数轴上的位置</h3>
           </div>
-          <p data-t="lineHint">同一个分数，也能在 0 和 1 之间找到家。</p>
+          <p data-t="lineHint">同一个分数，也能在 0 到 1 上找到家（含 0 和 1）。</p>
           <div class="numline">
             <div class="numline__track">
               <div class="numline__fill" id="lineFill"></div>
