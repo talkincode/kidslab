@@ -5,6 +5,9 @@ const manifest = JSON.parse(
   readFileSync(new URL('../../courseware/index.json', import.meta.url), 'utf8'),
 );
 
+// 依赖 three.js/WebGL 的重课件，CI 软件渲染下需要更长超时
+const HEAVY_WEBGL_COURSES = new Set(['plant-lab', 'magic-cube']);
+
 function observeFailures(page) {
   const failures = [];
   page.on('console', (message) => {
@@ -549,6 +552,8 @@ test.describe('courseware manifest', () => {
 
   for (const course of manifest.courses) {
     test(`${course.id} loads across preferences`, async ({ page }) => {
+      // three.js 课件在 CI 的 SwiftShader 软件渲染下初始化极慢（如 PMREM 环境贴图），超时 ×3
+      if (HEAVY_WEBGL_COURSES.has(course.id)) test.slow();
       const failures = observeFailures(page);
       await page.addInitScript(() => {
         if (sessionStorage.getItem('kidslab.smoke.seeded')) return;
