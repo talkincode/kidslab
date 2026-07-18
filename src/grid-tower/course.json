@@ -1,0 +1,27 @@
+{
+  "id": "grid-tower",
+  "title": {
+    "zh": "格子大厦",
+    "en": "Grid Tower"
+  },
+  "description": {
+    "zh": "把 23×14 的大厦拆成四块施工区：20×10、20×4、3×10、3×4。算完局部房间再合并总数，用能亲手盖起来的面积模型理解多位数乘法与乘除互逆。",
+    "en": "Split a 23×14 tower into four build zones: 20×10, 20×4, 3×10 and 3×4. Solve each area, combine the rooms, and use a buildable area model to understand multi-digit multiplication and inverse division."
+  },
+  "category": "math",
+  "levels": [
+    "primary"
+  ],
+  "grades": [
+    "g3",
+    "g4"
+  ],
+  "tags": [
+    "乘法",
+    "运算",
+    "面积"
+  ],
+  "icon": "🏗️",
+  "order": 13,
+  "badge": "new"
+}

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>格子大厦 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🏗️ <span data-t="title">格子大厦</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <div>
+        <p class="eyebrow" data-t="eyebrow">面积模型施工队</p>
+        <p class="tip" id="tip" data-t="tip0">点一块施工区，算对房间数，就能把整栋楼盖起来。</p>
+      </div>
+      <div class="site-badge" aria-hidden="true"><span>▦</span><b id="siteBadge">13 × 6</b></div>
+    </section>
+
+    <nav class="level-strip" id="levelStrip" aria-label="levels"></nav>
+
+    <section class="game-shell">
+      <section class="blueprint card" aria-labelledby="missionTitle">
+        <div class="mission">
+          <div>
+            <p class="mission__label" data-t="mission">今日任务</p>
+            <h2 id="missionTitle">盖一座 13 × 6 的公寓</h2>
+          </div>
+          <button class="icon-button" id="resetBtn" type="button" data-t-aria="reset" aria-label="重新开始">↻</button>
+        </div>
+
+        <div class="rulers" aria-hidden="true">
+          <span class="ruler ruler--top" id="topRuler">13</span>
+          <span class="ruler ruler--side" id="sideRuler">6</span>
+        </div>
+        <div class="tower" id="tower" aria-label="building zones"></div>
+        <div class="equation" id="equation" aria-live="polite"></div>
+      </section>
+
+      <aside class="control card">
+        <div class="foreman">
+          <span class="foreman__face" id="foremanFace" aria-hidden="true">👷</span>
+          <p id="feedback" aria-live="polite">先点亮一块施工区！</p>
+        </div>
+        <div class="question" id="question">
+          <p class="question__label" data-t="chooseZone">选中施工区后，在这里报数</p>
+          <strong id="questionText">10 × 6 = ?</strong>
+        </div>
+        <div class="answer-grid" id="answerGrid"></div>
+        <button class="hint-button" id="hintBtn" type="button" data-t="hint">💡 看施工提示</button>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+    <div class="modal__card">
+      <div class="celebration" id="celebration" aria-hidden="true">🏙️</div>
+      <p class="modal__kicker" data-t="inspection">验收通过</p>
+      <h2 id="modalTitle">第一栋楼封顶！</h2>
+      <p id="modalText"></p>
+      <button class="btn" id="nextBtn" type="button">下一张施工图</button>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

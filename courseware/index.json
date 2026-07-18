@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-17T11:02:37.183Z",
+  "generatedAt": "2026-07-18T15:08:17.792Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -430,6 +430,50 @@
         "四则运算"
       ],
       "path": "courseware/orchard-orders/index.html"
+    },
+    {
+      "id": "grid-tower",
+      "title": {
+        "zh": "格子大厦",
+        "en": "Grid Tower"
+      },
+      "description": {
+        "zh": "把 23×14 的大厦拆成四块施工区：20×10、20×4、3×10、3×4。算完局部房间再合并总数，用能亲手盖起来的面积模型理解多位数乘法与乘除互逆。",
+        "en": "Split a 23×14 tower into four build zones: 20×10, 20×4, 3×10 and 3×4. Solve each area, combine the rooms, and use a buildable area model to understand multi-digit multiplication and inverse division."
+      },
+      "category": "math",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g3",
+        "g4"
+      ],
+      "tags": [
+        "乘法",
+        "运算",
+        "面积"
+      ],
+      "icon": "🏗️",
+      "order": 13,
+      "badge": "new",
+      "keywords": [
+        "Multiplication",
+        "multiplication",
+        "times tables",
+        "乘法口诀",
+        "arrays",
+        "交换律",
+        "commutative",
+        "Arithmetic",
+        "arithmetic",
+        "operations",
+        "四则运算",
+        "Area",
+        "area",
+        "圆的面积"
+      ],
+      "path": "courseware/grid-tower/index.html"
     },
     {
       "id": "hamster-fence",
