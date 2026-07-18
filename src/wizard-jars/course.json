@@ -1,0 +1,18 @@
+{
+  "id": "wizard-jars",
+  "title": {
+    "zh": "巫师的罐子",
+    "en": "The Wizard's Jars"
+  },
+  "description": {
+    "zh": "把金币、龙的怒气和颜色装进会变化的魔法罐，用赋值咒语让数值增长、翻倍，再借一个空罐完成经典交换谜题。",
+    "en": "Store coins, dragon anger, and colors in changing magic jars. Use assignment spells to update and double values, then borrow an empty jar to solve the classic swap puzzle."
+  },
+  "category": "programming",
+  "levels": ["primary"],
+  "grades": ["g4", "g5"],
+  "tags": ["变量", "编程启蒙"],
+  "icon": "🫙",
+  "order": 55,
+  "badge": "new"
+}

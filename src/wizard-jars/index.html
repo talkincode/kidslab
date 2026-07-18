@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>巫师的罐子 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🫙 <span data-t="title">巫师的罐子</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="brief">
+      <div>
+        <p class="eyebrow" data-t="eyebrow">变量魔法课</p>
+        <p class="tip" data-t="tip">按顺序放入咒语，再点“施法”。透明罐会告诉你每一步发生了什么。</p>
+      </div>
+      <div class="goal-chip" id="goalChip">目标：金币 13</div>
+    </section>
+
+    <nav class="level-strip" id="levelStrip" aria-label="levels"></nav>
+
+    <section class="game-shell">
+      <section class="tower card" aria-labelledby="missionTitle">
+        <div class="tower__heading">
+          <div>
+            <p class="section-label" data-t="missionLabel">本节魔法任务</p>
+            <h2 id="missionTitle">给金币罐补货</h2>
+          </div>
+          <button class="icon-button" id="resetBtn" type="button" data-t-aria="reset" aria-label="重新开始">↻</button>
+        </div>
+
+        <div class="wizard">
+          <div class="wizard__portrait" aria-hidden="true">🧙‍♀️</div>
+          <p id="feedback" aria-live="polite">金币现在是 8。选一句咒语，让它变成 13。</p>
+        </div>
+
+        <div class="jar-rack" id="jarRack" aria-label="variable jars"></div>
+        <div class="rune-line" aria-hidden="true"><span>✦</span><span>☾</span><span>✧</span><span>♢</span><span>✦</span></div>
+      </section>
+
+      <aside class="spellbook card">
+        <div class="spellbook__heading">
+          <div>
+            <p class="section-label" data-t="spellbookLabel">你的咒语脚本</p>
+            <h2 data-t="spellbookTitle">从上到下执行</h2>
+          </div>
+          <span class="quill" aria-hidden="true">🪶</span>
+        </div>
+
+        <div class="script-slots" id="scriptSlots"></div>
+        <p class="palette-label" data-t="chooseSpell">选择咒语卡</p>
+        <div class="spell-palette" id="spellPalette"></div>
+
+        <div class="actions">
+          <button class="hint-button" id="hintBtn" type="button" data-t="hint">💡 递一条线索</button>
+          <button class="cast-button" id="castBtn" type="button" data-t="cast">✨ 开始施法</button>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+    <div class="modal__card">
+      <div class="modal__magic" id="modalMagic" aria-hidden="true">🪙✨</div>
+      <p class="modal__kicker" data-t="lessonPassed">魔法生效</p>
+      <h2 id="modalTitle">金币罐补满啦！</h2>
+      <p id="modalText"></p>
+      <button class="next-button" id="nextBtn" type="button">下一本咒语书</button>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

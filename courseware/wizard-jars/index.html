@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>巫师的罐子 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<script>(()=>{"use strict";const g=window,r=g.cool||{};if(r.sdkVersion)return;try{document.documentElement.style.touchAction="manipulation"}catch{}const w="wizard-jars",b=location.pathname.split("/").filter(Boolean),E=b.at(-1)||"",A=E.includes(".")?b.at(-2):E,f=w.startsWith("__")?A:w,l={get(t,n=null){try{const e=localStorage.getItem(t);return e===null?n:e}catch{return n}},set(t,n){try{return localStorage.setItem(t,n),!0}catch{return!1}},remove(t){try{return localStorage.removeItem(t),!0}catch{return!1}}},d=new Set,S=new Set(["zh","en"]),I=new Set(["light","dark"]),C=(navigator.language||"").toLowerCase().startsWith("zh")?"zh":"en";let m="light";try{m=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch{}let s=l.get("kidslab.lang",C),c=l.get("kidslab.theme",m);S.has(s)||(s=C),I.has(c)||(c=m);function p(){document.documentElement.lang=s==="zh"?"zh-CN":"en",document.documentElement.dataset.theme=c}function T(t,n){const e={kind:t,value:n};for(const o of[...d])o(e);g.dispatchEvent(new CustomEvent(`${t}change`,{detail:{[t]:n}}))}const z={get lang(){return s},get theme(){return c},setLang(t){if(!S.has(t))throw new RangeError(`Unsupported language: ${t}`);t!==s&&(s=t,l.set("kidslab.lang",t),p(),T("lang",t))},setTheme(t){if(!I.has(t))throw new RangeError(`Unsupported theme: ${t}`);t!==c&&(c=t,l.set("kidslab.theme",t),p(),T("theme",t))},toggleLang(){this.setLang(s==="zh"?"en":"zh")},toggleTheme(){this.setTheme(c==="light"?"dark":"light")},subscribe(t){if(typeof t!="function")throw new TypeError("Preference listener must be a function");return d.add(t),()=>d.delete(t)}};function D(t,n={}){if(!t||typeof t!="object")throw new TypeError("Messages must be an object");const e=n.root||document;if(!e.querySelectorAll&&!e.matches)throw new TypeError("i18n root must be a Document or Element");function o(a,...h){const i=t[s]?.[a]??t.zh?.[a]??t.en?.[a];return typeof i=="function"?i(...h):i??a}function y(a="lang"){const h=[];e.matches?.("[data-t]")&&h.push(e),e.querySelectorAll&&h.push(...e.querySelectorAll("[data-t]"));for(const i of h){const L=o(i.dataset.t);typeof L=="string"&&(i.textContent=L)}n.onChange?.({kind:a,lang:s,theme:c,t:o})}const $=z.subscribe(({kind:a})=>{a==="lang"?y("lang"):n.onChange?.({kind:a,lang:s,theme:c,t:o})});return y("init"),{t:o,render:y,destroy:$}}const u=f?`kidslab.progress.${f}`:"";function _(){if(!u)return null;try{const t=JSON.parse(l.get(u,"null"));return!t||!["played","completed"].includes(t.status)?null:t}catch{return null}}function k(t,n){if(!u)return null;const e=_()||{},o={status:e.status==="completed"?"completed":t,stage:n||e.stage||"",updatedAt:Date.now()};return e.status===o.status&&e.stage===o.stage?e:(l.set(u,JSON.stringify(o)),o)}const P={get:_,clear(){return u?l.remove(u):!1}};r.sdkVersion=2,r.courseId=f,r.storage=l,r.preferences=z,r.bindI18n=D,r.progress=P,typeof r.track!="function"&&(r.track=()=>{}),r.stage=t=>{typeof t!="string"||!t||k("played",t.slice(0,48))},r.complete=()=>k("completed"),g.cool=r,p()})();
+</script>
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🫙 <span data-t="title">巫师的罐子</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="brief">
+      <div>
+        <p class="eyebrow" data-t="eyebrow">变量魔法课</p>
+        <p class="tip" data-t="tip">按顺序放入咒语，再点“施法”。透明罐会告诉你每一步发生了什么。</p>
+      </div>
+      <div class="goal-chip" id="goalChip">目标：金币 13</div>
+    </section>
+
+    <nav class="level-strip" id="levelStrip" aria-label="levels"></nav>
+
+    <section class="game-shell">
+      <section class="tower card" aria-labelledby="missionTitle">
+        <div class="tower__heading">
+          <div>
+            <p class="section-label" data-t="missionLabel">本节魔法任务</p>
+            <h2 id="missionTitle">给金币罐补货</h2>
+          </div>
+          <button class="icon-button" id="resetBtn" type="button" data-t-aria="reset" aria-label="重新开始">↻</button>
+        </div>
+
+        <div class="wizard">
+          <div class="wizard__portrait" aria-hidden="true">🧙‍♀️</div>
+          <p id="feedback" aria-live="polite">金币现在是 8。选一句咒语，让它变成 13。</p>
+        </div>
+
+        <div class="jar-rack" id="jarRack" aria-label="variable jars"></div>
+        <div class="rune-line" aria-hidden="true"><span>✦</span><span>☾</span><span>✧</span><span>♢</span><span>✦</span></div>
+      </section>
+
+      <aside class="spellbook card">
+        <div class="spellbook__heading">
+          <div>
+            <p class="section-label" data-t="spellbookLabel">你的咒语脚本</p>
+            <h2 data-t="spellbookTitle">从上到下执行</h2>
+          </div>
+          <span class="quill" aria-hidden="true">🪶</span>
+        </div>
+
+        <div class="script-slots" id="scriptSlots"></div>
+        <p class="palette-label" data-t="chooseSpell">选择咒语卡</p>
+        <div class="spell-palette" id="spellPalette"></div>
+
+        <div class="actions">
+          <button class="hint-button" id="hintBtn" type="button" data-t="hint">💡 递一条线索</button>
+          <button class="cast-button" id="castBtn" type="button" data-t="cast">✨ 开始施法</button>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+    <div class="modal__card">
+      <div class="modal__magic" id="modalMagic" aria-hidden="true">🪙✨</div>
+      <p class="modal__kicker" data-t="lessonPassed">魔法生效</p>
+      <h2 id="modalTitle">金币罐补满啦！</h2>
+      <p id="modalText"></p>
+      <button class="next-button" id="nextBtn" type="button">下一本咒语书</button>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

@@ -52,6 +52,7 @@
     "顺序执行": { "en": "Sequencing", "kind": "knowledge", "aliases": ["sequencing", "指令", "instructions"] },
     "循环": { "en": "Loops", "kind": "knowledge", "aliases": ["loop", "loops", "嵌套循环", "nested loops"] },
     "条件判断": { "en": "Conditionals", "kind": "knowledge", "aliases": ["conditionals", "if-else", "if else", "逻辑运算", "boolean logic"] },
+    "变量": { "en": "Variables", "kind": "knowledge", "aliases": ["variable", "variables", "赋值", "assignment", "更新变量", "update variable", "临时变量", "temporary variable"] },
     "调试": { "en": "Debugging", "kind": "knowledge", "aliases": ["debugging", "单步执行", "step through", "程序阅读", "read code", "预测输出"] },
     "算法": { "en": "Algorithms", "kind": "knowledge", "aliases": ["algorithms", "algorithm"] },
     "排序算法": { "en": "Sorting", "kind": "knowledge", "aliases": ["sorting", "冒泡排序", "bubble sort", "选择排序", "selection sort", "插入排序", "insertion sort"] },

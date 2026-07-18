@@ -1,6 +1,6 @@
 # KidsLab 计划状态清单
 
-最后核验：2026-07-18
+最后核验：2026-07-19
 
 事实来源：`src/*/course.json`、`docs/courseware-plan/*.md`、`README.md`、`AGENT.md`。本文件负责回答“哪些已完成、哪些未实现、后续 Agent 完成计划后要更新哪里”。
 
@@ -31,7 +31,7 @@ KidsLab 应该是一组孩子打开就想玩的交互课件，而不是题库或
 
 - 主站课程浏览：`index.html`、`assets/js/app.js` 支持学段、年级、分类、搜索、双语、主题、强调色与置顶课件。
 - 静态构建发布：`scripts/build.mjs` 校验 `course.json`、压缩资源、生成 `courseware/index.json`；GitHub Pages workflow 在 `main` 推送后构建发布。
-- 课件源码库：当前 `src/` 下有 41 个课件目录，其中小学规划内按 ID 直接完成 35 个。
+- 课件源码库：当前 `src/` 下有 43 个课件目录，其中小学规划内按 ID 直接完成 37 个。
 - 小学课件规划：`docs/courseware-plan/` 覆盖数学、编程、逻辑、科学 84 个小学目标课件。
 - 课件模板：`docs/courseware-template/` 提供双语、主题、静态独立课件起点。
 - 行为分析：`docs/analytics.md`、`scripts/track.js`、`cloudflare/analytics/` 提供可选埋点链路。
@@ -67,10 +67,10 @@ Agent 每次完成计划项后必须同步更新：
 | 学科 | 目标数 | 已完成（按规划 ID） | 未实现 | 备注 |
 | --- | ---: | ---: | ---: | --- |
 | 数学 | 32 | 14 | 18 | P0 已完成 |
-| 编程 | 15 | 6 | 9 | P0 已完成 |
+| 编程 | 15 | 7 | 8 | P0 已完成 |
 | 逻辑 | 15 | 6 | 9 | P0 已完成；`magic-cube` 为规划外补充 |
 | 科学 | 22 | 10 | 12 | `plant-lab` 可能对应 `plant-xray`，但 ID/标题未对齐 |
-| 合计 | 84 | 36 | 48 | 另有 6 个规划外已上线课件 |
+| 合计 | 84 | 37 | 47 | 另有 6 个规划外已上线课件 |
 
 ## 已完成（规划内）
 
@@ -99,6 +99,7 @@ Agent 每次完成计划项后必须同步更新：
 - [x] 如果动物园 `iffy-zoo`
 - [x] 排序运动会 `sort-olympics`
 - [x] 虫虫医院 `bug-hospital`
+- [x] 巫师的罐子 `wizard-jars`
 
 ### 逻辑
 
@@ -147,7 +148,6 @@ Agent 每次完成计划项后必须同步更新：
 
 ### 编程
 
-- [ ] 巫师的罐子 `wizard-jars`
 - [ ] 惊喜鬼屋 `haunted-events`
 - [ ] 函数厨房 `function-kitchen`
 - [ ] 二进制灯塔 `binary-lighthouse`
@@ -232,7 +232,7 @@ Agent 每次完成计划项后必须同步更新：
 | 主站浏览与筛选 | 中 | 缺口 | 缺口 | 不适用：纯静态无角色 | 不适用：只读 UI | `assets/js/app.js`；需补 E2E 覆盖学段/年级/分类/搜索 |
 | 课件构建与 manifest 生成 | 中 | 部分：`npm run build` | 部分：`scripts/build.mjs` 校验非法 `course.json` | 不适用：本地构建无角色 | 部分：构建失败不应写入错误 manifest，需补回归验证 | `scripts/build.mjs`、`.github/workflows/deploy.yml` |
 | PWA 壳与课件离线缓存 | 高 | 已覆盖：manifest 合法性 + SW 激活预缓存 + cache-on-visit 角标 | 已覆盖：杀死服务器后离线回放已玩课件与主站壳 | 不适用：纯静态无角色 | 已覆盖：断网时 SW 缓存兜底，联网 network-first 自动恢复最新内容 | `tests/e2e/pwa.spec.js` |
-| 单个课件核心玩法 | 中 | 部分：格子大厦三关完整闭环 | 部分：格子大厦错误答案后可原地重试 | 不适用：纯静态无角色 | 部分：格子大厦支持重开与错误恢复，其余课件需逐项确认 | `tests/e2e/grid-tower.spec.js`；`AGENT.md` 提交前自检；其余课件需补 E2E 或交互烟测 |
+| 单个课件核心玩法 | 中 | 部分：格子大厦与巫师的罐子三关完整闭环 | 部分：两课件均覆盖错误选择后原地重试 | 不适用：纯静态无角色 | 部分：两课件支持重开与错误恢复，其余课件需逐项确认 | `tests/e2e/grid-tower.spec.js`、`tests/e2e/wizard-jars.spec.js`；`AGENT.md` 提交前自检；其余课件需补 E2E 或交互烟测 |
 | 双语、主题、移动端适配 | 中 | 缺口 | 缺口 | 不适用：纯静态无角色 | 不适用：偏好写入 localStorage，无远端状态 | `AGENT.md` 质量规约；需补 1280x800 与 375x667 验收证据 |
 | 行为分析埋点 | 中 | 缺口 | 缺口 | 不适用：无用户身份 | 缺口：endpoint 缺失时应空操作 | `docs/analytics.md`、`scripts/track.js`、`cloudflare/analytics/` |
 | GitHub Pages 发布 | 中 | 部分：workflow 运行 `npm run build` | 缺口 | 不适用：GitHub Actions 权限由仓库配置控制 | 缺口：发布失败回滚依赖 Pages 历史版本 | `.github/workflows/deploy.yml` |
