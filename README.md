@@ -10,14 +10,16 @@
 </p>
 
 <p align="center">
-  <a href="https://talkincode.github.io/kidslab/"><b>🚀 在线访问 Live Site</b></a>
+  <a href="https://talkincode.github.io/kidslab/"><b>🚀 GitHub Pages</b></a>
+  ·
+  <a href="https://kidslab.talkincode.net/"><b>🌏 Cloudflare Pages</b></a>
 </p>
 
 ---
 
 ## ✨ 特性
 
-- **纯静态网站** — 无后端、无框架运行时,GitHub Pages 直接托管
+- **纯静态网站** — 无后端、无框架运行时,GitHub Pages 与 Cloudflare Pages 双渠道托管
 - **PWA 全屏壳** — 可"添加到主屏幕",平板/手机以全屏应用形态运行,无浏览器界面干扰
 - **课件离线可玩** — Service Worker 渐进缓存:主站壳预缓存,玩过的课件自动进缓存(cache-on-visit),断网可重玩;主站卡片显示「可离线」角标
 - **左右分栏主界面** — 学段选择(小学 / 初中 / 高中)+ 年级过滤 + 学科分类(数学 / 物理 / 化学 / 编程 / 科学 / 逻辑,小学自动隐藏物理化学)
@@ -47,7 +49,7 @@ kidslab/
 │   ├── sw.js               # Service Worker 源码模板
 │   ├── icons.mjs           # PWA 图标生成(logo 变更后 npm run icons)
 │   └── serve.mjs           # 本地预览服务器
-└── .github/workflows/deploy.yml   # 推送 main 自动发布 Pages
+└── .github/workflows/deploy.yml   # 推送 main 自动发布 GitHub Pages + Cloudflare Pages
 ```
 
 ## 🧩 添加一个新课件
@@ -94,7 +96,30 @@ npm run preview   # http://localhost:8080
 
 ## 🚀 部署
 
-推送到 `main` 即触发 `.github/workflows/deploy.yml`:`npm ci` → `npm run build` → 组装 `_site/`(含 `manifest.webmanifest` 与 `sw.js`)→ 发布 GitHub Pages。
+推送到 `main` 即触发 `.github/workflows/deploy.yml`:`npm ci` → `npm run build` → smoke 测试 → 按仓库变量重新构建发布产物 → 组装同一份 `_site/`(含 `manifest.webmanifest` 与 `sw.js`)→ 同步发布到 GitHub Pages 与 Cloudflare Pages。
+
+| 渠道 | 入口 | 说明 |
+|---|---|---|
+| GitHub Pages | <https://talkincode.github.io/kidslab/> | 默认 GitHub Actions Pages 发布 |
+| Cloudflare Pages | <https://kidslab.talkincode.net/> | 第二部署渠道，自定义域名绑定到 Cloudflare Pages；国内可达性以多地区实测记录为准 |
+
+Cloudflare Pages 一次性配置：
+
+```bash
+# 1. 在 Cloudflare 创建 Pages 项目，项目名保持 kidslab，Production branch 设为 main
+# 2. 复用 Cloudflare API token；token 需具备 Account → Cloudflare Pages → Edit
+gh secret set CLOUDFLARE_API_TOKEN
+# 3.（Cloudflare 账号下有多个 account 时才需要）
+gh secret set CLOUDFLARE_ACCOUNT_ID
+```
+
+自定义域名绑定：
+
+1. 在 Cloudflare Pages 项目 `kidslab` 的 Custom domains 添加 `kidslab.talkincode.net`。
+2. 确认 `talkincode.net` DNS 里存在记录：`kidslab CNAME kidslab.pages.dev`。如果域名与 Pages 项目在同一 Cloudflare 账号，Cloudflare 通常会自动创建；否则需要按 Custom domains 页面提示手动添加。
+3. 等待 Custom domains 状态变为 Active，再用 `dig kidslab.talkincode.net CNAME` 和 `curl -I https://kidslab.talkincode.net/` 验证。
+
+> 国内访问稳定性必须以实测为准。未完成多地区/多运营商验证前，不把任何入口表述为“国内稳定访问”。
 
 ### 📲 PWA 与离线
 

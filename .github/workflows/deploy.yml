@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy site
 
 on:
   push:
@@ -51,6 +51,13 @@ jobs:
           mkdir -p _site
           cp -r index.html manifest.webmanifest sw.js assets courseware _site/
           touch _site/.nojekyll
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy _site --project-name=kidslab --branch=${{ github.ref_name }} --commit-dirty=true
 
       - uses: actions/configure-pages@v5
 
