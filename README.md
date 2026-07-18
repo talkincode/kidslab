@@ -107,11 +107,13 @@ Cloudflare Pages 一次性配置：
 
 ```bash
 # 1. 在 Cloudflare 创建 Pages 项目，项目名保持 kidslab，Production branch 设为 main
-# 2. 复用 Cloudflare API token；token 需具备 Account → Cloudflare Pages → Edit
-gh secret set CLOUDFLARE_API_TOKEN
+# 2. 配置 Cloudflare Pages 专用 API token；token 需具备 Account → Cloudflare Pages → Edit
+gh secret set CLOUDFLARE_PAGES_API_TOKEN
 # 3.（Cloudflare 账号下有多个 account 时才需要）
 gh secret set CLOUDFLARE_ACCOUNT_ID
 ```
+
+`cloudflare/analytics/` Worker 可继续使用 `CLOUDFLARE_API_TOKEN`；Pages 发布优先读取 `CLOUDFLARE_PAGES_API_TOKEN`，避免把 Worker token 扩权。
 
 自定义域名绑定：
 

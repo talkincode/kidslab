@@ -52,20 +52,18 @@ jobs:
           cp -r index.html manifest.webmanifest sw.js assets courseware _site/
           touch _site/.nojekyll
 
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy _site --project-name=kidslab --branch=${{ github.ref_name }} --commit-dirty=true
-
       - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
 
-  deploy:
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: _site
+
+  deploy-github-pages:
     needs: build
     runs-on: ubuntu-latest
     environment:
@@ -74,3 +72,19 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  deploy-cloudflare-pages:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: _site
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_PAGES_API_TOKEN || secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy _site --project-name=kidslab --branch=${{ github.ref_name }} --commit-dirty=true
