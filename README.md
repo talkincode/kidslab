@@ -106,7 +106,7 @@ npm run preview   # http://localhost:8080
 Cloudflare Pages 一次性配置：
 
 ```bash
-# 1. 在 Cloudflare 创建 Pages 项目，项目名保持 kidslab，Production branch 设为 main
+# 1. 在 Cloudflare 创建 Pages 项目，项目名 kidslab-app（"kidslab" 已被他人占用），Production branch 设为 main
 # 2. 配置 Cloudflare Pages 专用 API token；token 需具备 Account → Cloudflare Pages → Edit
 gh secret set CLOUDFLARE_PAGES_API_TOKEN
 # 3.（Cloudflare 账号下有多个 account 时才需要）
@@ -117,8 +117,8 @@ gh secret set CLOUDFLARE_ACCOUNT_ID
 
 自定义域名绑定：
 
-1. 在 Cloudflare Pages 项目 `kidslab` 的 Custom domains 添加 `kidslab.talkincode.net`。
-2. 确认 `talkincode.net` DNS 里存在记录：`kidslab CNAME kidslab.pages.dev`。如果域名与 Pages 项目在同一 Cloudflare 账号，Cloudflare 通常会自动创建；否则需要按 Custom domains 页面提示手动添加。
+1. 在 Cloudflare Pages 项目 `kidslab-app` 的 Custom domains 添加 `kidslab.talkincode.net`。
+2. 确认 `talkincode.net` DNS 里存在记录：`kidslab CNAME kidslab-app.pages.dev`（注意不是 `kidslab.pages.dev`，那是他人的同名项目）。如果域名与 Pages 项目在同一 Cloudflare 账号，Cloudflare 通常会自动创建；否则需要按 Custom domains 页面提示手动添加。
 3. 等待 Custom domains 状态变为 Active，再用 `dig kidslab.talkincode.net CNAME` 和 `curl -I https://kidslab.talkincode.net/` 验证。
 
 > 国内访问稳定性必须以实测为准。未完成多地区/多运营商验证前，不把任何入口表述为“国内稳定访问”。

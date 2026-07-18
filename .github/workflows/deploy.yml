@@ -87,4 +87,4 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_PAGES_API_TOKEN || secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy _site --project-name=kidslab --branch=${{ github.ref_name }} --commit-dirty=true
+          command: pages deploy _site --project-name=kidslab-app --branch=${{ github.ref_name }} --commit-dirty=true
