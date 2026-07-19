@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>变形旅馆 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🦋 <span data-t="title">变形旅馆</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="app">
+    <section class="brief card">
+      <div class="brief__stamp" aria-hidden="true">🔑</div>
+      <div class="brief__copy">
+        <p class="eyebrow" data-t="eyebrow">今日值班任务</p>
+        <p data-t="tip">看清客人现在的样子，安排合适房间。住对一晚，它就会进入下一个生命阶段！</p>
+      </div>
+      <div class="record-chip"><span data-t="records">变形档案</span> <strong id="recordCount">0/3</strong></div>
+    </section>
+
+    <nav class="guest-tabs" id="guestTabs" aria-label="旅馆客人"></nav>
+
+    <section class="game-shell">
+      <section class="hotel card" aria-labelledby="guestTitle">
+        <div class="hotel__head">
+          <div>
+            <p class="section-label" data-t="guestCard">入住登记卡</p>
+            <h2 id="guestTitle">蝴蝶客人</h2>
+          </div>
+          <button class="reset-button" id="resetBtn" type="button" aria-label="重新接待">↻</button>
+        </div>
+
+        <div class="stage-trail" id="stageTrail" aria-label="生命周期"></div>
+
+        <div class="room" id="room">
+          <div class="window" aria-hidden="true"><span></span><i></i></div>
+          <div class="room__plant" aria-hidden="true">🌿</div>
+          <div class="guest-wrap" id="guestWrap">
+            <div class="guest-glow" aria-hidden="true"></div>
+            <div class="guest-icon" id="guestIcon" aria-hidden="true">🥚</div>
+          </div>
+          <div class="desk" aria-hidden="true"><span>🔔</span></div>
+          <div class="stage-plaque">
+            <span data-t="currentStage">当前阶段</span>
+            <strong id="stageName">卵</strong>
+          </div>
+        </div>
+
+        <p class="narrator" id="narrator" aria-live="polite">蝴蝶从一枚小小的卵开始。哪间房能保护它？</p>
+      </section>
+
+      <aside class="service card">
+        <div class="service__head">
+          <div>
+            <p class="section-label" data-t="roomService">房间服务台</p>
+            <h2 data-t="chooseRoom">为这一阶段选房</h2>
+          </div>
+          <span class="bell" aria-hidden="true">🛎️</span>
+        </div>
+
+        <p class="mission" id="mission">选一间适合蝴蝶卵的房间。</p>
+        <div class="choice-grid" id="choiceGrid"></div>
+        <div class="service__actions">
+          <button class="hint-button" id="hintBtn" type="button" data-t="hint">💡 看一眼提示</button>
+          <div class="night-counter"><span data-t="night">旅程</span> <strong id="nightCount">1/4</strong></div>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+    <div class="modal__card">
+      <div class="modal__art" id="modalArt" aria-hidden="true">🦋✨</div>
+      <p class="modal__kicker" data-t="filed">档案已收录</p>
+      <h2 id="modalTitle">蝴蝶展翅退房啦！</h2>
+      <p id="modalText"></p>
+      <div class="cycle-summary" id="cycleSummary"></div>
+      <button class="next-button" id="nextBtn" type="button">接待下一位客人</button>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

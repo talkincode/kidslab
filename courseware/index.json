@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-18T18:16:00.135Z",
+  "generatedAt": "2026-07-19T15:08:31.880Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -1426,6 +1426,50 @@
         "inference"
       ],
       "path": "courseware/mystery-box/index.html"
+    },
+    {
+      "id": "metamorph-hotel",
+      "title": {
+        "zh": "变形旅馆",
+        "en": "Metamorphosis Hotel"
+      },
+      "description": {
+        "zh": "经营一家会见证变形的旅馆：为蝴蝶、青蛙和蝗虫的每个生命阶段安排合适房间，看它们从入住到退房彻底变样。",
+        "en": "Run a hotel that witnesses amazing transformations. Match every life stage of a butterfly, frog, and grasshopper with the right room, then watch each guest check out transformed."
+      },
+      "category": "science",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g2",
+        "g3"
+      ],
+      "tags": [
+        "生态",
+        "观察",
+        "益智游戏"
+      ],
+      "icon": "🦋",
+      "order": 60,
+      "badge": "new",
+      "keywords": [
+        "Ecology",
+        "ecology",
+        "biology",
+        "生物",
+        "Observation",
+        "observation",
+        "五感",
+        "five senses",
+        "特征",
+        "Puzzle Game",
+        "puzzle",
+        "game",
+        "益智",
+        "游戏"
+      ],
+      "path": "courseware/metamorph-hotel/index.html"
     },
     {
       "id": "solar-explorer",

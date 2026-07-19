@@ -69,8 +69,8 @@ Agent 每次完成计划项后必须同步更新：
 | 数学 | 32 | 14 | 18 | P0 已完成 |
 | 编程 | 15 | 7 | 8 | P0 已完成 |
 | 逻辑 | 15 | 6 | 9 | P0 已完成；`magic-cube` 为规划外补充 |
-| 科学 | 22 | 10 | 12 | `plant-lab` 可能对应 `plant-xray`，但 ID/标题未对齐 |
-| 合计 | 84 | 37 | 47 | 另有 6 个规划外已上线课件 |
+| 科学 | 22 | 11 | 11 | `plant-lab` 可能对应 `plant-xray`，但 ID/标题未对齐 |
+| 合计 | 84 | 38 | 46 | 另有 6 个规划外已上线课件 |
 
 ## 已完成（规划内）
 
@@ -113,6 +113,7 @@ Agent 每次完成计划项后必须同步更新：
 ### 科学
 
 - [x] 神秘盒子 `mystery-box`
+- [x] 变形旅馆 `metamorph-hotel`
 - [x] 太阳系漫游 `solar-explorer`
 - [x] 磁力冰球 `magnet-hockey`
 - [x] 云朵工厂 `cloud-factory`
@@ -172,7 +173,6 @@ Agent 每次完成计划项后必须同步更新：
 ### 科学
 
 - [ ] 植物透视园 `plant-xray`
-- [ ] 变形旅馆 `metamorph-hotel`
 - [ ] 小小港湾 `tiny-harbor`
 - [ ] 造兽工坊 `creature-workshop`
 - [ ] 垃圾变形记 `trash-transform`
@@ -232,7 +232,7 @@ Agent 每次完成计划项后必须同步更新：
 | 主站浏览与筛选 | 中 | 缺口 | 缺口 | 不适用：纯静态无角色 | 不适用：只读 UI | `assets/js/app.js`；需补 E2E 覆盖学段/年级/分类/搜索 |
 | 课件构建与 manifest 生成 | 中 | 部分：`npm run build` | 部分：`scripts/build.mjs` 校验非法 `course.json` | 不适用：本地构建无角色 | 部分：构建失败不应写入错误 manifest，需补回归验证 | `scripts/build.mjs`、`.github/workflows/deploy.yml` |
 | PWA 壳与课件离线缓存 | 高 | 已覆盖：manifest 合法性 + SW 激活预缓存 + cache-on-visit 角标 | 已覆盖：杀死服务器后离线回放已玩课件与主站壳 | 不适用：纯静态无角色 | 已覆盖：断网时 SW 缓存兜底，联网 network-first 自动恢复最新内容 | `tests/e2e/pwa.spec.js` |
-| 单个课件核心玩法 | 中 | 部分：格子大厦与巫师的罐子三关完整闭环 | 部分：两课件均覆盖错误选择后原地重试 | 不适用：纯静态无角色 | 部分：两课件支持重开与错误恢复，其余课件需逐项确认 | `tests/e2e/grid-tower.spec.js`、`tests/e2e/wizard-jars.spec.js`；`AGENT.md` 提交前自检；其余课件需补 E2E 或交互烟测 |
+| 单个课件核心玩法 | 中 | 部分：格子大厦、巫师的罐子与变形旅馆完整闭环 | 部分：三课件均覆盖错误选择后原地重试 | 不适用：纯静态无角色 | 部分：三课件支持重开与错误恢复，其余课件需逐项确认 | `tests/e2e/grid-tower.spec.js`、`tests/e2e/wizard-jars.spec.js`、`tests/e2e/metamorph-hotel.spec.js`；`AGENT.md` 提交前自检；其余课件需补 E2E 或交互烟测 |
 | 双语、主题、移动端适配 | 中 | 缺口 | 缺口 | 不适用：纯静态无角色 | 不适用：偏好写入 localStorage，无远端状态 | `AGENT.md` 质量规约；需补 1280x800 与 375x667 验收证据 |
 | 行为分析埋点 | 中 | 缺口 | 缺口 | 不适用：无用户身份 | 缺口：endpoint 缺失时应空操作 | `docs/analytics.md`、`scripts/track.js`、`cloudflare/analytics/` |
 | GitHub Pages 发布 | 中 | 部分：workflow 运行 `npm run build` | 缺口 | 不适用：GitHub Actions 权限由仓库配置控制 | 缺口：发布失败回滚依赖 Pages 历史版本 | `.github/workflows/deploy.yml` |
