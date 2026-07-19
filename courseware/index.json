@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-19T15:08:31.880Z",
+  "generatedAt": "2026-07-19T18:15:06.020Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -2201,6 +2201,50 @@
         "游戏"
       ],
       "path": "courseware/fox-stones/index.html"
+    },
+    {
+      "id": "tangram-theater",
+      "title": {
+        "zh": "七巧板皮影戏",
+        "en": "Tangram Shadow Play"
+      },
+      "description": {
+        "zh": "红幕拉开，故事却缺了角色！拖动、旋转和翻转七块七巧板，拼出桥、狐狸和大雁；最后一块归位时，剪影会立刻活过来走进戏里。",
+        "en": "The red curtain rises, but the story is missing its cast. Slide, turn, and flip all seven tangram pieces into a bridge, a fox, and a goose — then watch each finished shadow come alive on stage."
+      },
+      "category": "logic",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g1",
+        "g2",
+        "g3"
+      ],
+      "tags": [
+        "平面图形",
+        "空间想象",
+        "益智游戏"
+      ],
+      "icon": "🎭",
+      "order": 75,
+      "badge": "new",
+      "keywords": [
+        "2D Shapes",
+        "2d shapes",
+        "长方形",
+        "rectangle",
+        "Spatial Reasoning",
+        "spatial reasoning",
+        "spatial",
+        "空间思维",
+        "Puzzle Game",
+        "puzzle",
+        "game",
+        "益智",
+        "游戏"
+      ],
+      "path": "courseware/tangram-theater/index.html"
     }
   ]
 }

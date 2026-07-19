@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>七巧板皮影戏 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<script>(()=>{"use strict";const g=window,r=g.cool||{};if(r.sdkVersion)return;try{document.documentElement.style.touchAction="manipulation"}catch{}const w="tangram-theater",b=location.pathname.split("/").filter(Boolean),E=b.at(-1)||"",A=E.includes(".")?b.at(-2):E,f=w.startsWith("__")?A:w,l={get(t,n=null){try{const e=localStorage.getItem(t);return e===null?n:e}catch{return n}},set(t,n){try{return localStorage.setItem(t,n),!0}catch{return!1}},remove(t){try{return localStorage.removeItem(t),!0}catch{return!1}}},d=new Set,S=new Set(["zh","en"]),I=new Set(["light","dark"]),C=(navigator.language||"").toLowerCase().startsWith("zh")?"zh":"en";let m="light";try{m=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch{}let s=l.get("kidslab.lang",C),c=l.get("kidslab.theme",m);S.has(s)||(s=C),I.has(c)||(c=m);function p(){document.documentElement.lang=s==="zh"?"zh-CN":"en",document.documentElement.dataset.theme=c}function T(t,n){const e={kind:t,value:n};for(const o of[...d])o(e);g.dispatchEvent(new CustomEvent(`${t}change`,{detail:{[t]:n}}))}const z={get lang(){return s},get theme(){return c},setLang(t){if(!S.has(t))throw new RangeError(`Unsupported language: ${t}`);t!==s&&(s=t,l.set("kidslab.lang",t),p(),T("lang",t))},setTheme(t){if(!I.has(t))throw new RangeError(`Unsupported theme: ${t}`);t!==c&&(c=t,l.set("kidslab.theme",t),p(),T("theme",t))},toggleLang(){this.setLang(s==="zh"?"en":"zh")},toggleTheme(){this.setTheme(c==="light"?"dark":"light")},subscribe(t){if(typeof t!="function")throw new TypeError("Preference listener must be a function");return d.add(t),()=>d.delete(t)}};function D(t,n={}){if(!t||typeof t!="object")throw new TypeError("Messages must be an object");const e=n.root||document;if(!e.querySelectorAll&&!e.matches)throw new TypeError("i18n root must be a Document or Element");function o(a,...h){const i=t[s]?.[a]??t.zh?.[a]??t.en?.[a];return typeof i=="function"?i(...h):i??a}function y(a="lang"){const h=[];e.matches?.("[data-t]")&&h.push(e),e.querySelectorAll&&h.push(...e.querySelectorAll("[data-t]"));for(const i of h){const L=o(i.dataset.t);typeof L=="string"&&(i.textContent=L)}n.onChange?.({kind:a,lang:s,theme:c,t:o})}const $=z.subscribe(({kind:a})=>{a==="lang"?y("lang"):n.onChange?.({kind:a,lang:s,theme:c,t:o})});return y("init"),{t:o,render:y,destroy:$}}const u=f?`kidslab.progress.${f}`:"";function _(){if(!u)return null;try{const t=JSON.parse(l.get(u,"null"));return!t||!["played","completed"].includes(t.status)?null:t}catch{return null}}function k(t,n){if(!u)return null;const e=_()||{},o={status:e.status==="completed"?"completed":t,stage:n||e.stage||"",updatedAt:Date.now()};return e.status===o.status&&e.stage===o.stage?e:(l.set(u,JSON.stringify(o)),o)}const P={get:_,clear(){return u?l.remove(u):!1}};r.sdkVersion=2,r.courseId=f,r.storage=l,r.preferences=z,r.bindI18n=D,r.progress=P,typeof r.track!="function"&&(r.track=()=>{}),r.stage=t=>{typeof t!="string"||!t||k("played",t.slice(0,48))},r.complete=()=>k("completed"),g.cool=r,p()})();
+</script>
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🎭 <span data-t="title">七巧板皮影戏</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="app">
+    <section class="story-strip">
+      <div class="story-strip__seal" aria-hidden="true">影</div>
+      <div class="story-strip__copy">
+        <p class="eyebrow" data-t="eyebrow">今晚演出：狐狸过河</p>
+        <p id="mission">第一幕缺一座桥。把七块木片都送进发光剪影，故事才能继续！</p>
+      </div>
+      <div class="progress-chip"><span data-t="progress">归位</span> <strong id="progressCount">0/7</strong></div>
+    </section>
+
+    <nav class="scene-tabs" id="sceneTabs" aria-label="故事幕次"></nav>
+
+    <section class="game-shell">
+      <section class="theater" aria-label="皮影戏舞台">
+        <div class="curtain curtain--left" aria-hidden="true"></div>
+        <div class="curtain curtain--right" aria-hidden="true"></div>
+        <canvas id="stage" role="img" aria-label="可拖动的七巧板拼图舞台"></canvas>
+        <div class="stage-badge"><span data-t="act">幕</span> <strong id="actNumber">1</strong></div>
+      </section>
+
+      <aside class="toolbox">
+        <div class="toolbox__head">
+          <div>
+            <p class="eyebrow" data-t="workbench">后台木片桌</p>
+            <h2 id="pieceName">大三角一</h2>
+          </div>
+          <button class="reset-button" id="resetBtn" type="button" aria-label="重开本幕">↻</button>
+        </div>
+
+        <p class="feedback" id="feedback" aria-live="polite">拖住木片送到同形剪影。方向不对，就转一转！</p>
+
+        <div class="piece-shelf" id="pieceShelf" role="listbox" aria-label="七巧板木片"></div>
+
+        <div class="control-row" role="group" aria-label="木片动作">
+          <button class="control" id="leftBtn" type="button" aria-label="向左转">↶ <span data-t="turnLeft">左转</span></button>
+          <button class="control" id="rightBtn" type="button" aria-label="向右转"><span data-t="turnRight">右转</span> ↷</button>
+          <button class="control" id="flipBtn" type="button" aria-label="翻面">⇋ <span data-t="flip">翻面</span></button>
+        </div>
+
+        <button class="hint-button" id="hintBtn" type="button" aria-label="灯笼提示：帮我放一块"><span aria-hidden="true">🏮</span> <span data-t="hint">灯笼提示：帮我放一块</span></button>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+    <div class="modal__card">
+      <div class="modal__spark" aria-hidden="true">✦</div>
+      <p class="modal__kicker" id="modalKicker">第一幕 · 桥</p>
+      <div class="modal__art" id="modalArt" aria-hidden="true">🦊🌉</div>
+      <h2 id="modalTitle">桥架起来了！</h2>
+      <p id="modalText">七块木片没有变大或缩小，只是滑动、转向和翻面，就组成了新的轮廓。</p>
+      <button class="next-button" id="nextBtn" type="button">下一幕 →</button>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
