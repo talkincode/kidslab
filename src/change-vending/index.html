@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>找零售货机 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🪙 <span data-t="title">找零售货机</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <div>
+        <p class="eyebrow" data-t="eyebrow">叮当街自动售货站</p>
+        <p class="tip" data-t="tip">先算应找多少钱，再点硬币把零钱送进托盘。</p>
+      </div>
+      <div class="shift-badge"><span>OPEN</span><b id="progress">1 / 3</b></div>
+    </section>
+
+    <nav class="level-strip" id="levelStrip" aria-label="关卡"></nav>
+
+    <section class="game-shell">
+      <section class="machine-card card" aria-labelledby="missionTitle">
+        <div class="machine-top">
+          <div>
+            <p class="machine-label" data-t="mission">本次订单</p>
+            <h2 id="missionTitle"></h2>
+          </div>
+          <button class="reset-button" id="resetBtn" type="button" aria-label="重新开始">↻</button>
+        </div>
+
+        <div class="customer-scene">
+          <div class="shop-awning" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="customer">
+            <span class="customer__face" id="customerFace" aria-hidden="true">🐰</span>
+            <span class="customer__bubble" id="customerBubble">来一瓶果汁！</span>
+          </div>
+          <div class="product">
+            <span id="productIcon" aria-hidden="true">🧃</span>
+            <b id="priceTag">3 元 5 角</b>
+          </div>
+          <div class="payment">
+            <span data-t="paidLabel">顾客投入</span>
+            <strong id="paidAmount">5 元</strong>
+          </div>
+        </div>
+
+        <div class="display">
+          <span id="equation"></span>
+          <strong><span data-t="trayLabel">托盘里</span> <b id="trayAmount">0 元</b></strong>
+        </div>
+
+        <div class="coin-bank" id="coinBank" aria-label="零钱按钮"></div>
+
+        <div class="machine-actions">
+          <button class="secondary-button" id="clearBtn" type="button" data-t="clear">清空托盘</button>
+          <button class="dispense-button" id="dispenseBtn" type="button" data-t="dispense">叮！弹出找零</button>
+        </div>
+      </section>
+
+      <aside class="control-card card">
+        <div class="clerk">
+          <span class="clerk__face" id="clerkFace" aria-hidden="true">🤖</span>
+          <p id="feedback" aria-live="polite"></p>
+        </div>
+
+        <section class="inventory">
+          <div class="section-title">
+            <span data-t="inventory">机器肚子里的零钱</span>
+            <span id="stockMode"></span>
+          </div>
+          <div class="inventory-grid" id="inventoryGrid"></div>
+        </section>
+
+        <section class="exchange-box" id="exchangeBox">
+          <div class="exchange-visual" aria-hidden="true">
+            <span class="note-mini">1 元</span><b>→</b>
+            <span class="dime-stack">●●●●●<br />●●●●●</span>
+          </div>
+          <button class="exchange-button" id="exchangeBtn" type="button" data-t="exchange">把 1 元换成 10 个 1 角</button>
+        </section>
+
+        <button class="hint-button" id="hintBtn" type="button" data-t="hint">💡 给我一点提示</button>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+    <div class="modal__card">
+      <div class="celebration" id="celebration" aria-hidden="true">🪙✨</div>
+      <p class="modal__kicker" data-t="orderDone">找零成功</p>
+      <h2 id="modalTitle"></h2>
+      <p id="modalText"></p>
+      <div class="coin-rain" id="coinRain" hidden aria-label="1 元等于 2 个 5 角，也等于 10 个 1 角">
+        <div><b>1 元</b><span class="rain-note">¥1</span></div>
+        <i>=</i>
+        <div><b>2 × 5 角</b><span class="rain-halves">● ●</span></div>
+        <i>=</i>
+        <div><b>10 × 1 角</b><span class="rain-dimes">●●●●●<br />●●●●●</span></div>
+      </div>
+      <button class="next-button" id="nextBtn" type="button"></button>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

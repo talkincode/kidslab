@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-20T15:12:54.854Z",
+  "generatedAt": "2026-07-20T18:14:37.593Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -563,6 +563,54 @@
         "rectangle"
       ],
       "path": "courseware/hamster-fence/index.html"
+    },
+    {
+      "id": "change-vending",
+      "title": {
+        "zh": "找零售货机",
+        "en": "Change Machine"
+      },
+      "description": {
+        "zh": "变身会算账的售货机，为小动物配出刚刚好的找零；零钱不够时，把 1 元换成 10 个 1 角继续营业。",
+        "en": "Become a change-making vending machine for animal customers, and exchange one yuan for ten jiao when the coin tubes run short."
+      },
+      "category": "math",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g1",
+        "g2"
+      ],
+      "tags": [
+        "加减法",
+        "计量单位",
+        "益智游戏"
+      ],
+      "icon": "🪙",
+      "order": 14,
+      "badge": "new",
+      "keywords": [
+        "Addition & Subtraction",
+        "addition",
+        "subtraction",
+        "凑十法",
+        "make ten",
+        "数的分解",
+        "number bonds",
+        "Units & Measurement",
+        "units",
+        "measurement",
+        "单位换算",
+        "unit conversion",
+        "cubic units",
+        "Puzzle Game",
+        "puzzle",
+        "game",
+        "益智",
+        "游戏"
+      ],
+      "path": "courseware/change-vending/index.html"
     },
     {
       "id": "zoom-ten",
