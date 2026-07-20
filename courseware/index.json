@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-19T18:15:06.020Z",
+  "generatedAt": "2026-07-20T15:12:54.854Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -434,6 +434,52 @@
         "四则运算"
       ],
       "path": "courseware/orchard-orders/index.html"
+    },
+    {
+      "id": "combo-closet",
+      "title": {
+        "zh": "搭配衣橱",
+        "en": "Combo Closet"
+      },
+      "description": {
+        "zh": "给小羊驼搭出每一套不重样的帽子和上衣，让组合树一枝枝开花；最后反过来为 12 套时装秀搭配设计进货单。",
+        "en": "Dress a little alpaca in every unique hat-and-top outfit and watch a combination tree bloom, then work backward to stock exactly 12 fashion-show looks."
+      },
+      "category": "math",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g2",
+        "g3"
+      ],
+      "tags": [
+        "乘法",
+        "运算",
+        "益智游戏"
+      ],
+      "icon": "👕",
+      "order": 13,
+      "badge": "new",
+      "keywords": [
+        "Multiplication",
+        "multiplication",
+        "times tables",
+        "乘法口诀",
+        "arrays",
+        "交换律",
+        "commutative",
+        "Arithmetic",
+        "arithmetic",
+        "operations",
+        "四则运算",
+        "Puzzle Game",
+        "puzzle",
+        "game",
+        "益智",
+        "游戏"
+      ],
+      "path": "courseware/combo-closet/index.html"
     },
     {
       "id": "grid-tower",
