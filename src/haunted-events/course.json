@@ -1,0 +1,18 @@
+{
+  "id": "haunted-events",
+  "title": {
+    "zh": "惊喜鬼屋",
+    "en": "Surprise Haunted House"
+  },
+  "description": {
+    "zh": "给可爱鬼屋接上“当…就…”事件导线，让游客开门、踩地板和碰机关时触发惊喜，最后搭出一整条连锁反应。",
+    "en": "Wire a friendly haunted house with when-then event connections. Trigger surprises as visitors open doors and step on tiles, then build one big chain reaction."
+  },
+  "category": "programming",
+  "levels": ["primary"],
+  "grades": ["g4", "g5"],
+  "tags": ["事件驱动", "编程启蒙"],
+  "icon": "👻",
+  "order": 56,
+  "badge": "new"
+}

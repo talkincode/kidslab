@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>惊喜鬼屋 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">👻 <span data-t="title">惊喜鬼屋</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="brief">
+      <div>
+        <p class="eyebrow" data-t="eyebrow">事件配线训练营</p>
+        <p class="tip" data-t="tip">先点一个“当…”，再点一个“就…”，接好导线后开门营业。</p>
+      </div>
+      <div class="scoreboard" aria-label="score">
+        <span>😱 <b id="scareScore">0</b></span>
+        <span>😂 <b id="laughScore">0</b></span>
+      </div>
+    </section>
+
+    <nav class="level-strip" id="levelStrip" aria-label="levels"></nav>
+
+    <section class="game-shell">
+      <section class="house card" aria-labelledby="missionTitle">
+        <div class="house__heading">
+          <div>
+            <p class="section-label" data-t="roomLabel">今晚的鬼屋任务</p>
+            <h2 id="missionTitle">大门口的三重惊喜</h2>
+          </div>
+          <button class="icon-button" id="resetBtn" type="button" data-t-aria="reset" aria-label="重新开始">↻</button>
+        </div>
+
+        <div class="stage" id="stage" aria-label="haunted house stage">
+          <div class="moon" aria-hidden="true">☾</div>
+          <div class="tower tower--left" aria-hidden="true"></div>
+          <div class="tower tower--right" aria-hidden="true"></div>
+          <div class="visitor" id="visitor" aria-hidden="true">🧒</div>
+          <div class="prop prop--door" data-prop="door" aria-hidden="true">🚪</div>
+          <div class="prop prop--bats" data-prop="bats" aria-hidden="true">🦇🦇</div>
+          <div class="prop prop--bell" data-prop="bell" aria-hidden="true">🔔</div>
+          <div class="prop prop--ghost" data-prop="ghost" aria-hidden="true">👻</div>
+          <div class="prop prop--pumpkin" data-prop="pumpkin" aria-hidden="true">🎃</div>
+          <div class="prop prop--skeleton" data-prop="skeleton" aria-hidden="true">💀🎤</div>
+          <div class="prop prop--confetti" data-prop="confetti" aria-hidden="true">✨🎊✨</div>
+          <div class="prop prop--owl" data-prop="owl" aria-hidden="true">🦉</div>
+          <div class="prop prop--cobweb" data-prop="cobweb" aria-hidden="true">🕸️</div>
+          <div class="event-pop" id="eventPop" aria-live="polite"></div>
+        </div>
+
+        <div class="control-row">
+          <p id="feedback" aria-live="polite">游客会先开门。把每个事件接到正确机关吧！</p>
+          <button class="open-button" id="openBtn" type="button">🎟️ 开门营业</button>
+        </div>
+        <div class="event-feed" id="eventFeed" aria-label="event feed"></div>
+      </section>
+
+      <aside class="wiring card">
+        <div class="wiring__heading">
+          <div>
+            <p class="section-label" data-t="wiresLabel">事件导线台</p>
+            <h2 data-t="wiresTitle">当发生 → 就启动</h2>
+          </div>
+          <button class="hint-button" id="hintBtn" type="button" data-t-aria="hint" aria-label="提示">💡</button>
+        </div>
+
+        <div class="wiring-board" id="wiringBoard">
+          <svg class="wire-layer" id="wireLayer" aria-hidden="true"></svg>
+          <div class="wire-column">
+            <p class="column-label" data-t="whenLabel">当 WHEN</p>
+            <div class="wire-list" id="triggerList"></div>
+          </div>
+          <div class="wire-column">
+            <p class="column-label" data-t="thenLabel">就 THEN</p>
+            <div class="wire-list" id="actionList"></div>
+          </div>
+        </div>
+
+        <div class="legend">
+          <span><i class="dot dot--waiting"></i><span data-t="waiting">等待事件</span></span>
+          <span><i class="dot dot--fired"></i><span data-t="fired">已经触发</span></span>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+    <div class="modal__card">
+      <div class="modal__magic" id="modalMagic" aria-hidden="true">🦇🔔👻🎃</div>
+      <p class="modal__kicker" data-t="showPassed">演出成功</p>
+      <h2 id="modalTitle">第一批游客笑着跑出来啦！</h2>
+      <p id="modalText"></p>
+      <button class="next-button" id="nextBtn" type="button">下一间鬼屋</button>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
