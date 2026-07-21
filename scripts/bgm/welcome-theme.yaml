@@ -1,0 +1,102 @@
+# Welcome 页 BGM · 「一盏灯到宇宙」主题
+# scorekit 场景源码 —— 由 scripts/bgm/build.sh 编译为 src/welcome/audio/ 下的三层循环音频。
+# 轨道 0-2 = base 层（台灯书桌），3-5 = mid 层（城市/地球/太阳系），6-8 = epic 层（银河/宇宙之网）。
+title: From a Lamp to the Cosmos
+story: >
+  KidsLab welcome page cosmic zoom. A music-box lamp glows on a desk; strings
+  carry it past the city and the Earth; choir, timpani and stardust bells open
+  the galaxy. Light-epic, childlike wonder, seamless loop. Layers are mixed at
+  runtime by scale: base always on, strings join at city scale, choir at galaxy.
+tempo: 72
+key: A_minor
+time_signature: 4/4
+bars: 16
+loop: true
+
+# Am Am F F C C G G —— 延续旧版程序化 BGM 的 Am–F–C–G 轻史诗进行（每和弦 2 小节）
+harmony: [i, i, VI, VI, III, III, VII, VII]
+
+performance:
+  humanize: { timing_ms: 12, velocity: 8, seed: 42 }
+  legato: true
+  dynamics: { start: p, peak: mf }
+
+motifs:
+  # 主题「灯芯」：A 小调五声（1/3/4/5/7），音乐盒主奏，8 小节 × 2
+  lumen:
+    - { degree: 1, beats: 1.5 }
+    - { degree: 3, beats: 0.5 }
+    - { degree: 5, beats: 2 }
+    - { degree: 0, beats: 1 }
+    - { degree: 8, beats: 1.5 }
+    - { degree: 7, beats: 0.5 }
+    - { degree: 5, beats: 1 }
+    - { degree: 4, beats: 2 }
+    - { degree: 3, beats: 1 }
+    - { degree: 4, beats: 1 }
+    - { degree: 3, beats: 1 }
+    - { degree: 1, beats: 1 }
+    - { degree: 0, beats: 2 }
+    - { degree: 5, beats: 1.5 }
+    - { degree: 7, beats: 0.5 }
+    - { degree: 8, beats: 2 }
+    - { degree: 10, beats: 2 }
+    - { degree: 8, beats: 1 }
+    - { degree: 7, beats: 1 }
+    - { degree: 7, beats: 1 }
+    - { degree: 5, beats: 1 }
+    - { degree: 4, beats: 1 }
+    - { degree: 3, beats: 1 }
+    - { degree: 4, beats: 1 }
+    - { degree: 5, beats: 1 }
+    - { degree: 0, beats: 2 }
+  # 小提琴应答：填在主题呼吸处的对话句
+  answer:
+    - { degree: 0, beats: 4 }
+    - { degree: 0, beats: 2 }
+    - { degree: 3, beats: 1 }
+    - { degree: 4, beats: 1 }
+    - { degree: 5, beats: 3 }
+    - { degree: 4, beats: 1 }
+    - { degree: 3, beats: 2 }
+    - { degree: 1, beats: 2 }
+    - { degree: 0, beats: 2 }
+    - { degree: 7, beats: 1 }
+    - { degree: 8, beats: 1 }
+    - { degree: 8, beats: 3 }
+    - { degree: 7, beats: 1 }
+    - { degree: 5, beats: 2 }
+    - { degree: 4, beats: 2 }
+    - { degree: 5, beats: 4 }
+  # 星尘：极稀疏的高音闪烁（大量休止）
+  stardust:
+    - { degree: 0, beats: 3 }
+    - { degree: 12, beats: 1 }
+    - { degree: 0, beats: 4 }
+    - { degree: 0, beats: 2 }
+    - { degree: 10, beats: 0.5 }
+    - { degree: 11, beats: 0.5 }
+    - { degree: 0, beats: 1 }
+    - { degree: 0, beats: 4 }
+    - { degree: 0, beats: 1 }
+    - { degree: 12, beats: 0.5 }
+    - { degree: 14, beats: 0.5 }
+    - { degree: 0, beats: 2 }
+    - { degree: 0, beats: 4 }
+    - { degree: 0, beats: 3 }
+    - { degree: 15, beats: 1 }
+    - { degree: 0, beats: 4 }
+
+tracks:
+  # ---- base 层：台灯与书桌 ----
+  - { instrument: music_box, pattern: melody, motif: lumen, intensity: 0.6, pan: 0.45, reverb: 0.45 }
+  - { instrument: harp, pattern: arpeggio, intensity: 0.32, pan: 0.62, reverb: 0.4 }
+  - { instrument: warm_pad, pattern: sustain, intensity: 0.38, pan: 0.5, reverb: 0.55 }
+  # ---- mid 层：城市 · 地球 · 太阳系 ----
+  - { instrument: slow_strings, pattern: sustain, intensity: 0.45, pan: 0.38, reverb: 0.5 }
+  - { instrument: cello, pattern: bass, intensity: 0.4, pan: 0.5, reverb: 0.35 }
+  - { instrument: violin, pattern: melody, motif: answer, intensity: 0.48, pan: 0.6, reverb: 0.5, glide: 0.1 }
+  # ---- epic 层：银河 · 宇宙之网 ----
+  - { instrument: choir, pattern: sustain, intensity: 0.46, pan: 0.5, reverb: 0.65 }
+  - { instrument: timpani, pattern: bass, intensity: 0.5, pan: 0.44, reverb: 0.4 }
+  - { instrument: glockenspiel, pattern: melody, motif: stardust, intensity: 0.5, pan: 0.7, reverb: 0.6 }
