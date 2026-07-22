@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>平方根建筑师 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill back-pill" href="../../index.html" aria-label="返回平台">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title"><span aria-hidden="true">📐</span> <span data-t="title">平方根建筑师</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill lang-pill" id="langBtn" type="button" aria-label="Switch to English">EN</button>
+    </div>
+  </header>
+
+  <main class="app">
+    <section class="control-card" aria-labelledby="missionTitle">
+      <div class="intro">
+        <p class="eyebrow" data-t="eyebrow">AREA → SIDE · 面积反推边长</p>
+        <h2 id="missionTitle" data-t="mission">给我正方形的面积，我来找边长。</h2>
+        <p class="intro__hint" data-t="hint">输入一个不小于 0 的数，看看哪条边乘自己刚好得到它。</p>
+      </div>
+
+      <div class="mode-tabs" role="tablist" aria-label="学习模式">
+        <button class="mode-tab is-active" id="exploreTab" type="button" role="tab" aria-selected="true" aria-controls="explorePanel" data-mode="explore" data-t="exploreTab">自由探索</button>
+        <button class="mode-tab" id="challengeTab" type="button" role="tab" aria-selected="false" aria-controls="challengePanel" data-mode="challenge" data-t="challengeTab">闯关</button>
+      </div>
+
+      <div class="mode-panel" id="explorePanel" role="tabpanel" aria-labelledby="exploreTab">
+        <label class="input-label" for="areaInput" data-t="areaLabel">正方形面积 A</label>
+        <div class="input-row">
+          <div class="number-box">
+            <span aria-hidden="true">A =</span>
+            <input id="areaInput" type="number" min="0" max="1000000000000" step="any" inputmode="decimal" value="72" aria-describedby="inputHelp" />
+          </div>
+          <button class="primary-btn" id="calculateBtn" type="button" data-t="calculate">开始测量</button>
+        </div>
+        <p class="sr-only" id="inputHelp" data-t="inputHelp">请输入零到一万亿之间的数</p>
+        <div class="quick-picks" aria-label="快速示例">
+          <span data-t="try">试一试</span>
+          <button type="button" data-value="2">2</button>
+          <button type="button" data-value="9">9</button>
+          <button type="button" data-value="20">20</button>
+          <button type="button" data-value="72">72</button>
+          <button type="button" data-value="144">144</button>
+        </div>
+        <p class="feedback" id="feedback" role="status" aria-live="polite"></p>
+        <div class="result-card" id="resultCard">
+          <p class="result-kicker" data-t="blueprint">建筑蓝图</p>
+          <output class="result-value" id="resultValue" for="areaInput">√72 = 6√2 ≈ 8.4853</output>
+          <p class="bounds" id="boundsText">8² &lt; 72 &lt; 9²</p>
+        </div>
+      </div>
+
+      <div class="mode-panel" id="challengePanel" role="tabpanel" aria-labelledby="challengeTab" hidden>
+        <div class="challenge-head">
+          <span class="level-badge" id="levelBadge">1 / 5</span>
+          <span class="streak" id="streak">◇ ◇ ◇ ◇ ◇</span>
+        </div>
+        <h3 class="challenge-prompt" id="challengePrompt">一块正方形地砖面积是 49 cm²，边长是多少？</h3>
+        <div class="choice-grid" id="choiceGrid"></div>
+        <p class="challenge-feedback" id="challengeFeedback" role="status" aria-live="polite"></p>
+        <button class="primary-btn next-btn" id="nextChallenge" type="button" hidden data-t="next">下一题</button>
+      </div>
+    </section>
+
+    <section class="drafting-card" aria-labelledby="drawingTitle">
+      <div class="drafting-head">
+        <div>
+          <p class="eyebrow" data-t="drawingEyebrow">LIVE BLUEPRINT · 实时蓝图</p>
+          <h2 id="drawingTitle" data-t="drawingTitle">这条边，就是 √A</h2>
+        </div>
+        <div class="area-stamp" id="areaStamp">A = 72</div>
+      </div>
+      <div class="canvas-wrap">
+        <canvas id="squareCanvas" aria-label="平方根面积示意图"></canvas>
+      </div>
+      <div class="equation-ribbon" aria-live="polite">
+        <span id="sideEquation">8.4853 × 8.4853 ≈ 72</span>
+        <span class="ribbon-mark" aria-hidden="true">✓</span>
+      </div>
+      <div class="insight-strip">
+        <span class="insight-icon" aria-hidden="true">💡</span>
+        <p id="insightText">√72 在 8 和 9 之间，因为 8² = 64，9² = 81。</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>

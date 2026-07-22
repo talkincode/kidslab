@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-21T20:11:54.562Z",
+  "generatedAt": "2026-07-22T15:16:37.147Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -95,6 +95,10 @@
     },
     "小数": {
       "en": "Decimals",
+      "kind": "knowledge"
+    },
+    "平方根": {
+      "en": "Square Roots",
       "kind": "knowledge"
     },
     "平面图形": {
@@ -1072,6 +1076,58 @@
       "path": "courseware/carry-factory/index.html"
     },
     {
+      "id": "square-root-lab",
+      "title": {
+        "zh": "平方根建筑师",
+        "en": "Square Root Builder"
+      },
+      "description": {
+        "zh": "输入正方形面积，用蓝图看懂平方根、整数夹逼、根式化简与小数近似。",
+        "en": "Enter a square's area and use a live blueprint to explore square roots, integer bounds, radical simplification, and decimal estimates."
+      },
+      "category": "math",
+      "levels": [
+        "junior",
+        "senior"
+      ],
+      "grades": [
+        "g7",
+        "g8",
+        "g9"
+      ],
+      "tags": [
+        "平方根",
+        "运算",
+        "估算",
+        "平面图形"
+      ],
+      "icon": "📐",
+      "order": 24,
+      "badge": "new",
+      "keywords": [
+        "Square Roots",
+        "square root",
+        "square roots",
+        "根号",
+        "radical",
+        "radicals",
+        "算术平方根",
+        "无理数",
+        "Arithmetic",
+        "arithmetic",
+        "operations",
+        "四则运算",
+        "Estimation",
+        "estimation",
+        "estimate",
+        "2D Shapes",
+        "2d shapes",
+        "长方形",
+        "rectangle"
+      ],
+      "path": "courseware/square-root-lab/index.html"
+    },
+    {
       "id": "plant-lab",
       "title": {
         "zh": "植物生长实验室",
@@ -1518,6 +1574,47 @@
         "编程"
       ],
       "path": "courseware/haunted-events/index.html"
+    },
+    {
+      "id": "tiny-harbor",
+      "title": {
+        "zh": "小小港湾",
+        "en": "Tiny Harbor"
+      },
+      "description": {
+        "zh": "在会呼吸的玩具港口里装货、捏橡皮泥船、预测材料沉浮。看吃水线一点点下降，亲手把会沉的泥球变成能载三颗螺丝帽的小船。",
+        "en": "Load cargo, reshape clay, and predict what floats in a lively toy harbor. Watch the waterline rise, then turn a sinking clay ball into a little boat that carries three metal nuts."
+      },
+      "category": "science",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g1",
+        "g2",
+        "g3",
+        "g5"
+      ],
+      "tags": [
+        "观察",
+        "实验"
+      ],
+      "icon": "⛵",
+      "order": 58,
+      "badge": "new",
+      "keywords": [
+        "Observation",
+        "observation",
+        "五感",
+        "five senses",
+        "特征",
+        "Experiment",
+        "experiment",
+        "simulation",
+        "lab",
+        "模拟"
+      ],
+      "path": "courseware/tiny-harbor/index.html"
     },
     {
       "id": "mystery-box",

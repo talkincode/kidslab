@@ -7,6 +7,7 @@
     "加减法": { "en": "Addition & Subtraction", "kind": "knowledge", "aliases": ["addition", "subtraction", "凑十法", "make ten", "数的分解", "number bonds"] },
     "乘法": { "en": "Multiplication", "kind": "knowledge", "aliases": ["multiplication", "times tables", "乘法口诀", "arrays", "交换律", "commutative"] },
     "运算": { "en": "Arithmetic", "kind": "knowledge", "aliases": ["arithmetic", "operations", "四则运算"] },
+    "平方根": { "en": "Square Roots", "kind": "knowledge", "aliases": ["square root", "square roots", "根号", "radical", "radicals", "算术平方根", "无理数"] },
     "数的认识": { "en": "Numbers & Counting", "kind": "knowledge", "aliases": ["百数表", "hundred chart", "数序", "number order", "100以内的数", "counting"] },
     "数位": { "en": "Place Value", "kind": "knowledge", "aliases": ["place value", "十进制", "大数", "powers of ten"] },
     "估算": { "en": "Estimation", "kind": "knowledge", "aliases": ["estimation", "estimate"] },

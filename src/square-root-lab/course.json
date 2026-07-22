@@ -1,0 +1,30 @@
+{
+  "id": "square-root-lab",
+  "title": {
+    "zh": "平方根建筑师",
+    "en": "Square Root Builder"
+  },
+  "description": {
+    "zh": "输入正方形面积，用蓝图看懂平方根、整数夹逼、根式化简与小数近似。",
+    "en": "Enter a square's area and use a live blueprint to explore square roots, integer bounds, radical simplification, and decimal estimates."
+  },
+  "category": "math",
+  "levels": [
+    "junior",
+    "senior"
+  ],
+  "grades": [
+    "g7",
+    "g8",
+    "g9"
+  ],
+  "tags": [
+    "平方根",
+    "运算",
+    "估算",
+    "平面图形"
+  ],
+  "icon": "📐",
+  "order": 24,
+  "badge": "new"
+}

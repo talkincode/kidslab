@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>⛵ 小小港湾 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">⛵ <span data-t="title">小小港湾</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭音效" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="mission-strip" aria-label="mission progress">
+      <div>
+        <p class="eyebrow" data-t="eyebrow">今天的港务证</p>
+        <p class="tip" id="tip" data-t="tip0">先装正好 4 箱货，再把一团泥变成会浮的小船。</p>
+      </div>
+      <ol class="route" id="route">
+        <li data-step="cargo"><span>1</span><b data-t="routeCargo">装货</b></li>
+        <li data-step="clay"><span>2</span><b data-t="routeClay">造船</b></li>
+        <li data-step="materials"><span>3</span><b data-t="routeMaterials">试水</b></li>
+      </ol>
+    </section>
+
+    <section class="game-shell">
+      <section class="stage-card" aria-labelledby="stageLabel">
+        <div class="stage-label" id="stageLabel">1 · 装货码头</div>
+        <canvas id="harborCanvas" aria-label="港口沉浮实验动画"></canvas>
+        <div class="water-meter">
+          <span data-t="waterline">吃水线</span>
+          <strong id="waterlineValue">低</strong>
+        </div>
+        <div class="harbor-master" id="harborMaster" aria-hidden="true">🦦</div>
+      </section>
+
+      <section class="control-card">
+        <div class="mission-copy">
+          <p class="step-count" id="stepCount">任务 1 / 3</p>
+          <h2 id="missionTitle">给渡船装 4 箱货</h2>
+          <p id="missionText">每加一箱，船会沉低一点。别让水漫过红色安全线！</p>
+        </div>
+        <div class="cargo-readout" id="readout" aria-live="polite"></div>
+        <div class="controls" id="controls"></div>
+        <div class="feedback" id="feedback" role="status" aria-live="polite"></div>
+        <div class="control-foot">
+          <button class="text-btn" id="hintBtn" type="button">💡 <span data-t="hint">给我一点提示</span></button>
+          <button class="text-btn" id="resetBtn" type="button">↻ <span data-t="reset">重做这一步</span></button>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <div class="celebration" id="celebration" hidden>
+    <section class="certificate">
+      <div class="seal">⚓</div>
+      <p class="eyebrow" data-t="certEyebrow">港务局特别颁发</p>
+      <h2 data-t="certTitle">小小浮力工程师</h2>
+      <p data-t="certText">你用吃水线管住了货物，还让一块会沉的泥载着三颗螺丝帽漂起来了！</p>
+      <button class="primary" id="againBtn" type="button" data-t="again">再巡一次港</button>
+    </section>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

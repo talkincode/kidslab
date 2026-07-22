@@ -1,0 +1,28 @@
+{
+  "id": "tiny-harbor",
+  "title": {
+    "zh": "小小港湾",
+    "en": "Tiny Harbor"
+  },
+  "description": {
+    "zh": "在会呼吸的玩具港口里装货、捏橡皮泥船、预测材料沉浮。看吃水线一点点下降，亲手把会沉的泥球变成能载三颗螺丝帽的小船。",
+    "en": "Load cargo, reshape clay, and predict what floats in a lively toy harbor. Watch the waterline rise, then turn a sinking clay ball into a little boat that carries three metal nuts."
+  },
+  "category": "science",
+  "levels": [
+    "primary"
+  ],
+  "grades": [
+    "g1",
+    "g2",
+    "g3",
+    "g5"
+  ],
+  "tags": [
+    "观察",
+    "实验"
+  ],
+  "icon": "⛵",
+  "order": 58,
+  "badge": "new"
+}
