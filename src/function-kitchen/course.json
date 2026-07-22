@@ -1,0 +1,18 @@
+{
+  "id": "function-kitchen",
+  "title": {
+    "zh": "函数厨房",
+    "en": "Function Kitchen"
+  },
+  "description": {
+    "zh": "在爆单甜品店里把重复步骤封装成配方函数，再传入口味和大小参数，用短短几行调用完成整队订单。",
+    "en": "Survive a dessert-shop rush by packaging repeated steps into a recipe function, then pass flavor and size parameters to serve a whole queue with short calls."
+  },
+  "category": "programming",
+  "levels": ["primary"],
+  "grades": ["g5", "g6"],
+  "tags": ["函数", "编程启蒙"],
+  "icon": "🧁",
+  "order": 56,
+  "badge": "new"
+}

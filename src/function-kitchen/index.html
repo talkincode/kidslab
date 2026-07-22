@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>🧁 函数厨房 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🧁 <span data-t="title">函数厨房</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭音效" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="brief">
+      <div>
+        <p class="eyebrow" data-t="eyebrow">今日甜点训练</p>
+        <p class="tip" id="tip">先亲手做一份，再把重复步骤收进一张配方卡。</p>
+      </div>
+      <div class="rush-meter" aria-label="order meter">
+        <span data-t="orders">订单</span>
+        <strong id="orderCount">1</strong>
+        <i id="rushLight" aria-hidden="true"></i>
+      </div>
+    </section>
+
+    <nav class="level-strip" id="levelStrip" aria-label="levels"></nav>
+
+    <section class="game-shell">
+      <section class="kitchen-card" aria-labelledby="missionTitle">
+        <div class="kitchen-heading">
+          <div>
+            <p class="section-label" id="shiftLabel">第一班 · 小单试做</p>
+            <h2 id="missionTitle">按顺序做一只纸杯蛋糕</h2>
+          </div>
+          <button class="icon-button" id="resetBtn" type="button" aria-label="重新开始">↻</button>
+        </div>
+
+        <div class="kitchen-stage" id="kitchenStage">
+          <div class="awning" aria-hidden="true"></div>
+          <div class="chef" id="chef" aria-hidden="true">👩‍🍳</div>
+          <div class="speech" id="feedback" role="status" aria-live="polite">点三张步骤卡，排好制作顺序。</div>
+          <div class="counter">
+            <div class="mixer" id="mixer" aria-hidden="true">
+              <span class="mixer__head">◒</span>
+              <span class="mixer__bowl">◡</span>
+            </div>
+            <div class="oven" id="oven" aria-hidden="true">
+              <span>♨</span>
+              <i></i>
+            </div>
+            <div class="cake-window" id="cakeWindow" aria-live="polite"></div>
+          </div>
+          <div class="ticket-rail" id="ticketRail" aria-label="order tickets"></div>
+          <div class="steam" aria-hidden="true"><i></i><i></i><i></i></div>
+        </div>
+      </section>
+
+      <aside class="workbench-card">
+        <div class="workbench-heading">
+          <div>
+            <p class="section-label" data-t="workbenchLabel">程序工作台</p>
+            <h2 id="workbenchTitle">今天先手工做</h2>
+          </div>
+          <button class="hint-button" id="hintBtn" type="button" aria-label="提示">💡</button>
+        </div>
+
+        <div class="workspace" id="workspace"></div>
+
+        <div class="action-row">
+          <button class="secondary-button" id="undoBtn" type="button">↶ <span data-t="undo">撤回一步</span></button>
+          <button class="primary-button" id="runBtn" type="button">▶ <span>开始制作</span></button>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+    <section class="modal-card">
+      <div class="modal-magic" id="modalMagic" aria-hidden="true">🧁✨</div>
+      <p class="modal-kicker" data-t="shiftPassed">本班通关</p>
+      <h2 id="modalTitle">第一份甜点出炉！</h2>
+      <p id="modalText"></p>
+      <button class="primary-button modal-next" id="nextBtn" type="button">下一班</button>
+    </section>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
