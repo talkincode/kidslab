@@ -33,37 +33,47 @@
     <section class="card hero">
       <div>
         <p class="eyebrow" data-t="eyebrow">逆向推理森林</p>
-        <h2 id="modeTitle">最后一颗谁拿走？</h2>
-        <p class="tip" id="tip" data-t="tip0">每次拿 1–3 颗。狐狸很会算，但你也能从结局倒推。</p>
+        <h2 id="modeTitle">经典 1–3</h2>
+        <p class="tip" id="tip" data-t="tip0">你和狐狸轮流拿石子。先会拿，再想办法赢！</p>
       </div>
       <div class="foxBox" id="foxBox">
         <div class="fox" id="fox">🦊</div>
-        <b id="foxMood">thinking…</b>
+        <b id="foxMood">盯着石子</b>
       </div>
     </section>
 
-    <section class="card modes" id="modeTabs" role="tablist"></section>
+    <details class="card modePicker" id="modePicker">
+      <summary><span data-t="moreModes">换一种玩法</span><strong id="modeSummary">经典 1–3</strong></summary>
+      <section class="modes" id="modeTabs" role="tablist"></section>
+    </details>
 
     <section class="gameShell">
       <section class="card clearing">
         <div class="scorebar">
-          <span id="remaining">石子：17</span>
-          <span id="turnBadge">你的回合</span>
-          <span id="streak">连胜：0/3</span>
+          <span id="remaining">还剩 9 颗</span>
+          <span id="turnBadge">🟠 你的回合</span>
+          <span id="streak">连胜挑战：0/3</span>
         </div>
+        <div class="quickRules" id="quickRules">
+          <span id="ruleTake">① 你先拿</span>
+          <span id="ruleFox">② 狐狸再拿</span>
+          <strong id="ruleGoal">③ 最后一颗赢</strong>
+          <button id="dismissRules" type="button" data-t="gotIt">我懂了</button>
+        </div>
+        <div class="moveLog" id="moveLog" aria-live="polite">石子都在这里。现在轮到你先选。</div>
         <div class="choicePanel" id="choicePanel" hidden>
           <p data-t="chooseFirst">这个开局你要先手，还是让狐狸先？</p>
           <button class="btn" id="humanFirst" type="button" data-t="humanFirst">我先</button>
           <button class="btn btn--ghost" id="foxFirst" type="button" data-t="foxFirst">狐狸先</button>
         </div>
-        <div class="stones" id="stones" aria-live="polite"></div>
-        <div class="takeBar">
-          <button class="take" type="button" data-take="1">1</button>
-          <button class="take" type="button" data-take="2">2</button>
-          <button class="take" type="button" data-take="3">3</button>
-          <button class="take" type="button" data-take="4">4</button>
+        <div class="stones" id="stones" role="img" aria-live="polite"></div>
+        <div class="takeBar" aria-label="拿石子">
+          <button class="take" type="button" data-take="1">拿 1 颗</button>
+          <button class="take" type="button" data-take="2">拿 2 颗</button>
+          <button class="take" type="button" data-take="3">拿 3 颗</button>
+          <button class="take" type="button" data-take="4">拿 4 颗</button>
         </div>
-        <div class="coach" id="coach"></div>
+        <div class="coach" id="coach" role="status" aria-live="polite"></div>
       </section>
 
       <aside class="card lab">
@@ -75,6 +85,7 @@
         </div>
         <button class="btn" id="newRound" type="button" data-t="newRound">新开一局</button>
         <button class="btn btn--ghost" id="replayBtn" type="button" data-t="openReplay">打开复盘板</button>
+        <button class="btn btn--ghost" id="rulesBtn" type="button" data-t="howTo">❓ 怎么玩</button>
       </aside>
     </section>
   </main>

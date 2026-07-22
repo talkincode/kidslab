@@ -34,7 +34,7 @@ npm run build   # 必须通过（退出码 0）
 | 触屏 | 交互用 Pointer Events（`pointerdown/move/up`），画布加 `touch-action: none` |
 | 独立性 | 只用相对路径；第三方库放本课件 `vendor/`（three.js 参考 `src/welcome/vendor/`），禁止 CDN |
 | 知识断言 | `facts.md` 必须写适用范围、带编号断言和权威来源；每条断言至少引用一个 `[S编号]` |
-| 音频 | WebAudio 必须在首次用户手势里 `resume()`；提供静音开关是加分项 |
+| 音频 | 核心操作、成功、错误与通关（按玩法实际状态）必须有语义不同的音效；首次用户手势前不得播放；必须提供可见、可访问且能关闭全部声音的静音开关；禁止在 `pointermove`、动画帧或物理帧中无节制创建音源；音频失败时静默降级，音效不能作为唯一反馈 |
 | 进度/埋点 | 关键阶段调 `window.cool?.stage('level2')`，真正最终通关时调 `window.cool?.complete?.()`；核心动作可调 `window.cool?.track('flip')`；详见 `docs/sdk.md` |
 
 平台 API 与存量迁移步骤见 [`docs/sdk.md`](../sdk.md)。

@@ -10,40 +10,56 @@
     zh: {
       doc: '狐狸的石子 · KidsLab',
       back: '返回平台', title: '狐狸的石子',
-      tip0: '每次拿 1–3 颗。狐狸很会算，但你也能从结局倒推。',
-      eyebrow: '逆向推理森林', chooseFirst: '这个开局你要先手，还是让狐狸先？', humanFirst: '我先', foxFirst: '狐狸先',
-      labTitle: '策略实验室', glasses: '必胜眼镜（3局后解锁）', stonesCount: '石子数', newRound: '新开一局', openReplay: '打开复盘板', again: '再来一局', badgeTitle: '策略大师', badgeSub: '我不是运气好，我是算出来的。',
-      classic: '经典 1–3', max4: '变体 1–4', misere: '反转局', chooser: '先后手选择', setup: '设局教兔子',
-      classicSub: '拿到最后一颗赢', max4Sub: '坑位变成 5 的倍数', misereSub: '拿最后一颗反而输', chooserSub: '先判断坑位再决定', setupSub: '你教笨兔子下棋',
-      remain: (n) => `石子：${n}`, turnHuman: '你的回合', turnFox: '狐狸思考中', turnRabbit: '兔子等你教', streak: (n) => `无眼镜连胜：${n}/3`,
-      foxThink: '眨眼计算…', foxSmug: '嘿嘿，再猜猜～', foxSad: '帽子、帽子飞啦！', foxIdle: '盯着石子',
-      takeTip: (min, max) => `点按钮拿 ${min}–${max} 颗，目标是把坑位留给狐狸。`, bestTip: (n, pit) => `必胜眼镜：拿 ${n} 颗，把狐狸推进 ${pit}。`, noBest: '这个数已经是坑位：努力把损失降到最小！',
-      rabbitAsk: '小兔子问：我该拿几颗呀？你替它选。', rabbitGood: '兔子照做了！狐狸掉进坑位。', rabbitBad: '哎呀，这步没把狐狸推进坑位。',
-      humanWin: '你赢了！从终点倒着算，狐狸也会摔帽子。', foxWin: '狐狸赢了！复盘看看哪个 4 的倍数/坑位把你困住。', rabbitWin: '你和兔子赢了！教学相长。',
-      replayTitle: '复盘板', replayIntro: '从 0 往回看：能把对手送到坑位，就握住主动权。',
-      pitExplain: (n, base) => `${n} 是 ${base} 的倍数坑位：轮到谁面对它，完美对手就能镜像拿完。`,
-      safeExplain: (n, take, pit) => `从 ${n} 拿 ${take} 颗，留下 ${pit}，这是稳赢入口。`,
-      normalExplain: (n) => `${n} 不是坑位。试着找一个拿法，让剩下的数变成发光数字。`,
-      unlocked: '必胜眼镜解锁！发光按钮会提示“拿几颗”。',
+      tip0: '你和狐狸轮流拿石子。先会拿，再想办法赢！',
+      eyebrow: '逆向推理森林', moreModes: '换一种玩法', chooseFirst: '这一局谁先拿？', humanFirst: '我先拿', foxFirst: '狐狸先拿',
+      gotIt: '我懂了', howTo: '❓ 怎么玩',
+      labTitle: '策略实验室', glasses: '提示眼镜（玩 3 局后解锁）', stonesCount: '石子数', newRound: '新开一局', openReplay: '打开复盘板', again: '再来一局', badgeTitle: '策略大师', badgeSub: '我不是运气好，我是算出来的。',
+      classic: '经典 1–3', max4: '变体 1–4', misere: '反转局', chooser: '谁先拿？', setup: '教兔子',
+      classicSub: '每次拿 1–3 颗，最后一颗赢', max4Sub: '每次最多拿 4 颗', misereSub: '拿最后一颗反而输', chooserSub: '先选谁开始', setupSub: '替兔子选择拿几颗',
+      modeRule: (max, misere) => `每次可以拿 1–${max} 颗，${misere ? '拿到最后一颗的人输' : '拿到最后一颗的人赢'}。`,
+      ruleTake: '① 你先拿', ruleFox: '② 狐狸再拿', ruleWin: '③ 最后一颗赢', ruleLose: '③ 最后一颗输',
+      takeButton: (n) => `拿 ${n} 颗`, stonesLabel: (n) => `桌上还剩 ${n} 颗石子`,
+      remain: (n) => `还剩 ${n} 颗`, turnHuman: '🟠 你的回合', turnFox: '🦊 狐狸的回合', turnRabbit: '🐰 帮兔子选', streak: (n) => `连胜挑战：${n}/3`,
+      foxThink: '正在挑…', foxSmug: '嘿嘿，看我的～', foxSad: '帽子飞啦！', foxIdle: '等你先拿',
+      startMove: '石子都在这里。现在轮到你先选。', foxStarts: '这局狐狸先拿。看看它拿几颗。', rabbitStarts: '小兔子等你替它选。',
+      youTook: (n, left) => `你拿走 ${n} 颗，还剩 ${left} 颗。`, foxTook: (n, left) => `狐狸拿走 ${n} 颗，还剩 ${left} 颗。轮到你！`, rabbitTook: (n, left) => `兔子照你说的拿走 ${n} 颗，还剩 ${left} 颗。`,
+      taking: (n) => `拿起 ${n} 颗石子…`, foxTaking: '狐狸正在拿石子…', waitFox: '狐狸正在选，不用点，马上又轮到你。',
+      firstTakeTip: (max, misere) => `先试一次：点“拿 1 颗”到“拿 ${max} 颗”。${misere ? '小心，拿到最后一颗反而会输！' : '谁拿到最后一颗，谁就赢！'}`, takeTip: (max) => `轮到你：选一个橙色按钮，拿走 1–${max} 颗。`,
+      bestTip: (n, pit) => `提示眼镜说：拿 ${n} 颗，给狐狸留下 ${pit} 颗。`, noBest: '现在没有稳稳的一步，先选一个合法拿法。',
+      rabbitAsk: '小兔子问：我该拿几颗呀？请替它选一个橙色按钮。', rabbitGood: '兔子照做了！狐狸面对的是一个难赢的数。', rabbitBad: '这一步还没把难题留给狐狸，再观察一轮。',
+      humanWin: '你拿到了最后一颗，你赢了！', foxWin: '狐狸拿到了最后一颗。看看复盘板，再试一次！', humanWinMisere: '狐狸拿了最后一颗，所以你赢了！', foxWinMisere: '你拿了最后一颗，所以这一局狐狸赢。', rabbitWin: '你和兔子拿到了最后一颗，配合成功！',
+      replayTitle: '这一局发生了什么？', replayIntro: '点一点击过的数字。红色数字很难赢，我们把它叫作“坑位”。',
+      pitExplain: (n, base) => `剩 ${n} 颗是“坑位”。对手可以让两人这一轮合计拿 ${base} 颗，把好机会一直留给自己。`,
+      safeExplain: (n, take, pit) => `剩 ${n} 颗时拿 ${take} 颗，就会给狐狸留下红色的 ${pit} 颗。`,
+      normalExplain: (n) => `剩 ${n} 颗不是坑位。找找看，拿几颗能留下红色数字？`,
+      unlocked: '提示眼镜解锁！打开它，橙色按钮会告诉你该拿几颗。',
     },
     en: {
       doc: "The Fox's Stones · KidsLab",
       back: 'Back to platform', title: "The Fox's Stones",
-      tip0: 'Take 1–3 stones. The fox calculates well, but you can reason backward.',
-      eyebrow: 'Backward Reasoning Forest', chooseFirst: 'For this start, do you move first or let the fox?', humanFirst: 'I go first', foxFirst: 'Fox first',
-      labTitle: 'Strategy lab', glasses: 'Winning glasses (unlock after 3 games)', stonesCount: 'Stones', newRound: 'New round', openReplay: 'Open replay board', again: 'Play again', badgeTitle: 'Strategy Master', badgeSub: 'Not luck — I calculated it.',
-      classic: 'Classic 1–3', max4: 'Variant 1–4', misere: 'Reverse game', chooser: 'Choose turn order', setup: 'Set-up & teach rabbit',
-      classicSub: 'Last stone wins', max4Sub: 'Pits become multiples of 5', misereSub: 'Last stone loses', chooserSub: 'Judge the pit first', setupSub: 'Teach a silly rabbit',
-      remain: (n) => `Stones: ${n}`, turnHuman: 'Your turn', turnFox: 'Fox thinking', turnRabbit: 'Rabbit waits', streak: (n) => `No-glasses streak: ${n}/3`,
-      foxThink: 'Blinking math…', foxSmug: 'Hehe, guess again~', foxSad: 'My hat! My hat!', foxIdle: 'Watching stones',
-      takeTip: (min, max) => `Tap a button to take ${min}–${max}. Try to leave a pit for the fox.`, bestTip: (n, pit) => `Winning glasses: take ${n}, push fox to ${pit}.`, noBest: 'This number is already a pit: minimize the damage!',
-      rabbitAsk: 'Bunny asks: how many should I take? Choose for it.', rabbitGood: 'Bunny followed you! Fox falls into a pit.', rabbitBad: 'Oops, that move did not push fox to a pit.',
-      humanWin: 'You win! Reasoning backward makes the fox drop its hat.', foxWin: 'Fox wins! Replay which multiple/pit trapped you.', rabbitWin: 'You and Bunny win! Teaching makes learning stick.',
-      replayTitle: 'Replay board', replayIntro: 'Look backward from 0: if you can send the opponent to a pit, you control the game.',
-      pitExplain: (n, base) => `${n} is a multiple-of-${base} pit: whoever faces it loses to perfect mirror play.`,
-      safeExplain: (n, take, pit) => `From ${n}, take ${take} and leave ${pit}. That is the winning gate.`,
-      normalExplain: (n) => `${n} is not a pit. Find a take that leaves a glowing number.`,
-      unlocked: 'Winning glasses unlocked! Glowing buttons show what to take.',
+      tip0: 'You and the fox take turns. Learn one move first, then outsmart the fox!',
+      eyebrow: 'Backward Reasoning Forest', moreModes: 'Try another game', chooseFirst: 'Who takes first?', humanFirst: 'I go first', foxFirst: 'Fox goes first',
+      gotIt: 'Got it', howTo: '❓ How to play',
+      labTitle: 'Strategy lab', glasses: 'Hint glasses (unlock after 3 games)', stonesCount: 'Stones', newRound: 'New round', openReplay: 'Open replay', again: 'Play again', badgeTitle: 'Strategy Master', badgeSub: 'Not luck — I calculated it.',
+      classic: 'Classic 1–3', max4: 'Variant 1–4', misere: 'Reverse game', chooser: 'Who starts?', setup: 'Teach Bunny',
+      classicSub: 'Take 1–3; the last stone wins', max4Sub: 'Take up to 4 stones', misereSub: 'The last stone loses', chooserSub: 'Choose who starts', setupSub: 'Choose each move for Bunny',
+      modeRule: (max, misere) => `Take 1–${max} stones each turn. ${misere ? 'Whoever takes the last stone loses.' : 'Whoever takes the last stone wins.'}`,
+      ruleTake: '① Your pick', ruleFox: "② Fox's pick", ruleWin: '③ Last stone wins', ruleLose: '③ Last stone loses',
+      takeButton: (n) => `Take ${n}`, stonesLabel: (n) => `${n} stones remain on the table`,
+      remain: (n) => `${n} left`, turnHuman: '🟠 Your turn', turnFox: "🦊 Fox's turn", turnRabbit: '🐰 Help Bunny', streak: (n) => `Win challenge: ${n}/3`,
+      foxThink: 'Choosing…', foxSmug: 'Hehe, watch this~', foxSad: 'My hat flew off!', foxIdle: 'Waiting for you',
+      startMove: 'All stones are ready. You choose first.', foxStarts: 'The fox goes first this round. Watch how many it takes.', rabbitStarts: 'Bunny is waiting for you to choose.',
+      youTook: (n, left) => `You took ${n}. ${left} stones remain.`, foxTook: (n, left) => `Fox took ${n}. ${left} remain — your turn!`, rabbitTook: (n, left) => `Bunny took ${n} as you said. ${left} remain.`,
+      taking: (n) => `Picking up ${n}…`, foxTaking: 'The fox is picking up stones…', waitFox: 'The fox is choosing. Wait a moment — you are next.',
+      firstTakeTip: (max, misere) => `Try it: tap “Take 1” through “Take ${max}”. ${misere ? 'Careful: taking the last stone loses!' : 'Whoever takes the last stone wins!'}`, takeTip: (max) => `Your turn: choose one orange button to take 1–${max}.`,
+      bestTip: (n, pit) => `Hint glasses say: take ${n} and leave ${pit} for the fox.`, noBest: 'There is no guaranteed move here. Pick any legal move.',
+      rabbitAsk: 'Bunny asks how many to take. Choose an orange button for it.', rabbitGood: 'Bunny followed you! The fox now faces a hard number.', rabbitBad: 'That move did not leave the hard number yet. Watch one more turn.',
+      humanWin: 'You took the last stone. You win!', foxWin: 'The fox took the last stone. Check the replay and try again!', humanWinMisere: 'The fox took the last stone, so you win!', foxWinMisere: 'You took the last stone, so the fox wins this round.', rabbitWin: 'You and Bunny took the last stone. Teamwork wins!',
+      replayTitle: 'What happened this round?', replayIntro: 'Tap a number you visited. Red numbers are hard to win from; we call them “pits.”',
+      pitExplain: (n, base) => `${n} stones is a “pit.” An opponent can make both moves total ${base} each round and keep the good chances.`,
+      safeExplain: (n, take, pit) => `With ${n} left, take ${take} to leave the red ${pit} for the fox.`,
+      normalExplain: (n) => `${n} is not a pit. Can you take some stones and leave a red number?`,
+      unlocked: 'Hint glasses unlocked! Turn them on to see which orange button to choose.',
     },
   };
 
@@ -113,15 +129,18 @@
   ];
 
   const el = {
-    modeTitle: $('#modeTitle'), tip: $('#tip'), fox: $('#fox'), foxMood: $('#foxMood'), modes: $('#modeTabs'), remaining: $('#remaining'), turn: $('#turnBadge'), streak: $('#streak'),
+    modeTitle: $('#modeTitle'), modePicker: $('#modePicker'), modeSummary: $('#modeSummary'), tip: $('#tip'), fox: $('#fox'), foxMood: $('#foxMood'), modes: $('#modeTabs'), remaining: $('#remaining'), turn: $('#turnBadge'), streak: $('#streak'),
+    quickRules: $('#quickRules'), ruleTake: $('#ruleTake'), ruleFox: $('#ruleFox'), ruleGoal: $('#ruleGoal'), dismissRules: $('#dismissRules'), rulesBtn: $('#rulesBtn'), moveLog: $('#moveLog'),
     choice: $('#choicePanel'), humanFirst: $('#humanFirst'), foxFirst: $('#foxFirst'), stones: $('#stones'), takes: $$('.take'), coach: $('#coach'), glasses: $('#glasses'), setupBox: $('#setupBox'), setupCount: $('#setupCount'), setupOut: $('#setupOut'), newRound: $('#newRound'), replayBtn: $('#replayBtn'), replay: $('#replayModal'), closeReplay: $('#closeReplay'), resultEmoji: $('#resultEmoji'), resultTitle: $('#resultTitle'), resultText: $('#resultText'), line: $('#numberLine'), explain: $('#explain'), again: $('#againBtn'), badge: $('#badge'),
   };
 
-  let modeIndex = Math.max(0, MODES.findIndex((m) => m.id === (save.mode || 'classic')));
-  let stones = 17;
-  let initial = 17;
+  let modeIndex = Math.max(0, MODES.findIndex((m) => m.id === (save.games ? (save.mode || 'classic') : 'classic')));
+  let stones = 9;
+  let initial = 9;
   let turn = 'human';
   let over = false;
+  let moving = false;
+  let roundToken = 0;
   let foxState = 'idle';
   let history = [];
   let games = save.games || 0;
@@ -129,11 +148,20 @@
   let glassesUnlocked = games >= 3;
   let lastWinner = null;
   let waitingChoice = false;
+  let rulesOpen = !save.rulesSeen;
+  let moveMessage = { key: 'startMove', args: [] };
+
+  function setMoveMessage(key, ...args) { moveMessage = { key, args }; }
+  function moveMessageText() {
+    const value = t(moveMessage.key);
+    return typeof value === 'function' ? value(...moveMessage.args) : value;
+  }
 
   function mode() { return MODES[modeIndex]; }
   function randStart() {
+    if (games === 0 && mode().id === 'classic') return 9;
     const min = mode().id === 'max4' ? 16 : 13;
-    const max = mode().id === 'max4' ? 21 : 21;
+    const max = 21;
     return min + Math.floor(Math.random() * (max - min + 1));
   }
   function base() { return mode().max + 1; }
@@ -155,6 +183,8 @@
 
   function newRound(keepMode = true) {
     const m = mode();
+    roundToken += 1;
+    moving = false;
     stones = m.setup ? Number(el.setupCount.value) : randStart();
     initial = stones;
     history = [{ who: 'start', left: stones, take: 0 }];
@@ -165,47 +195,72 @@
     foxState = 'idle';
     if (!keepMode) save.mode = m.id;
     if (!waitingChoice && !m.setup && isPit(stones)) turn = 'fox';
+    setMoveMessage(turn === 'fox' ? 'foxStarts' : m.setup ? 'rabbitStarts' : 'startMove');
     render();
-    if (turn === 'fox') setTimeout(foxMove, 650);
+    if (turn === 'fox') {
+      const token = roundToken;
+      setTimeout(() => foxMove(token), 550);
+    }
   }
 
   function setMode(i) {
     modeIndex = i;
     save.mode = mode().id;
     persist();
+    el.modePicker.open = false;
     newRound(false);
+    window.cool?.track('change-stone-rule', { mode: mode().id });
   }
 
   function legalTake(n) { return n >= 1 && n <= mode().max && n <= stones; }
 
   function humanMove(n) {
-    if (over || waitingChoice || (turn !== 'human' && turn !== 'rabbit') || !legalTake(n)) return;
+    if (over || moving || waitingChoice || (turn !== 'human' && turn !== 'rabbit') || !legalTake(n)) return;
     const wasGlasses = el.glasses.checked;
-    animateTake(n, turn);
     const actor = turn;
-    stones -= n;
-    history.push({ who: actor, take: n, left: stones });
-    if (actor === 'rabbit') {
-      const target = isPit(stones);
-      el.coach.textContent = target ? t('rabbitGood') : t('rabbitBad');
-    }
-    if (checkEnd(actor, wasGlasses)) return;
-    turn = 'fox';
-    foxState = 'think';
+    const token = roundToken;
+    moving = true;
+    setMoveMessage('taking', n);
+    previewPick(n);
+    animateTake(n, actor);
     render();
-    setTimeout(foxMove, 650);
+    window.cool?.stage('fox-stones-play');
+    window.cool?.track('take-stones', { actor, count: n, mode: mode().id });
+
+    setTimeout(() => {
+      if (token !== roundToken) return;
+      stones -= n;
+      history.push({ who: actor, take: n, left: stones });
+      setMoveMessage(actor === 'rabbit' ? 'rabbitTook' : 'youTook', n, stones);
+      moving = false;
+      if (checkEnd(actor, wasGlasses)) return;
+      turn = 'fox';
+      foxState = 'think';
+      render();
+      setTimeout(() => foxMove(token), 520);
+    }, 360);
   }
 
-  function foxMove() {
-    if (over || turn !== 'fox') return;
+  function foxMove(token = roundToken) {
+    if (token !== roundToken || over || moving || turn !== 'fox') return;
     const n = bestTake(stones);
+    moving = true;
+    setMoveMessage('foxTaking');
     animateTake(n, 'fox');
-    stones -= n;
-    history.push({ who: 'fox', take: n, left: stones });
-    if (checkEnd('fox', false)) return;
-    turn = mode().setup ? 'rabbit' : 'human';
-    foxState = 'idle';
     render();
+
+    setTimeout(() => {
+      if (token !== roundToken) return;
+      stones -= n;
+      history.push({ who: 'fox', take: n, left: stones });
+      setMoveMessage('foxTook', n, stones);
+      moving = false;
+      if (checkEnd('fox', false)) return;
+      turn = mode().setup ? 'rabbit' : 'human';
+      foxState = 'idle';
+      render();
+      window.cool?.track('fox-take-stones', { count: n, mode: mode().id });
+    }, 360);
   }
 
   function checkEnd(actor, usedGlasses) {
@@ -223,7 +278,12 @@
     save.noGlassesStreak = noGlassesStreak;
     persist();
     render();
-    setTimeout(showReplay, 650);
+    const token = roundToken;
+    setTimeout(() => { if (token === roundToken) showReplay(); }, 650);
+    if (humanWon) {
+      window.cool?.track('win-stone-round', { mode: mode().id, usedGlasses });
+      if (mode().id === 'classic') window.cool?.complete?.();
+    }
     if (glassesUnlocked && games === 3) setTimeout(() => { el.tip.textContent = t('unlocked'); }, 900);
     if (noGlassesStreak >= 3) setTimeout(showBadge, 1050);
     return true;
@@ -232,9 +292,9 @@
   function animateTake(n, actor) {
     const nodes = $$('.stone:not(.gone)').slice(-n);
     nodes.forEach((node, i) => {
+      node.classList.remove('pick');
       node.classList.add('fly');
-      node.style.animationDelay = `${i * 0.05}s`;
-      setTimeout(() => node.classList.add('gone'), 560 + i * 50);
+      node.style.animationDelay = `${i * 0.035}s`;
     });
     if (actor === 'fox') foxState = 'smug';
   }
@@ -245,46 +305,67 @@
   }
 
   function buildModes() {
-    el.modes.innerHTML = MODES.map((m, i) => `<button class="modeBtn ${i === modeIndex ? 'on' : ''}" type="button" data-mode="${i}">${t(m.title)}<br><small>${t(m.sub)}</small></button>`).join('');
-    el.modes.querySelectorAll('.modeBtn').forEach((b) => b.addEventListener('pointerdown', () => setMode(Number(b.dataset.mode))));
+    const current = mode();
+    el.modeSummary.textContent = t(current.title);
+    el.modes.innerHTML = MODES.map((m, i) => `<button class="modeBtn ${i === modeIndex ? 'on' : ''}" type="button" role="tab" aria-selected="${i === modeIndex}" data-mode="${i}">${t(m.title)}<small>${t(m.sub)}</small></button>`).join('');
+    el.modes.querySelectorAll('.modeBtn').forEach((b) => b.addEventListener('click', () => setMode(Number(b.dataset.mode))));
   }
 
   function renderStones() {
     const existing = el.stones.dataset.count;
     if (existing === String(stones) && el.stones.children.length) return;
     el.stones.dataset.count = String(stones);
-    el.stones.innerHTML = Array.from({ length: stones }, (_, i) => `<button class="stone" type="button" data-stone="${i}" aria-label="stone">${i % 5 === 0 ? '🪨' : ''}</button>`).join('');
-    el.stones.querySelectorAll('.stone').forEach((s) => s.addEventListener('pointerdown', () => {
-      const idx = Number(s.dataset.stone);
-      const take = Math.min(mode().max, stones - idx);
-      previewPick(take);
-    }));
+    el.stones.innerHTML = Array.from({ length: stones }, (_, i) => `<span class="stone" aria-hidden="true" style="--tilt:${(i % 5) - 2}deg"></span>`).join('');
   }
 
   function previewPick(n) {
-    if (over || turn === 'fox' || waitingChoice) return;
+    if (over || moving || turn === 'fox' || waitingChoice) return;
     $$('.stone').forEach((s) => s.classList.remove('pick'));
     $$('.stone').slice(-n).forEach((s) => s.classList.add('pick'));
+  }
+
+  function clearPreview() {
+    if (moving) return;
+    $$('.stone').forEach((s) => s.classList.remove('pick'));
+  }
+
+  function resultMessage() {
+    const m = mode();
+    if (lastWinner === 'human') {
+      if (m.setup) return t('rabbitWin');
+      return t(m.misere ? 'humanWinMisere' : 'humanWin');
+    }
+    return t(m.misere ? 'foxWinMisere' : 'foxWin');
   }
 
   function render() {
     if (!el.modeTitle) return;
     const m = mode();
     buildModes();
-    el.modeTitle.textContent = `${t(m.title)} · ${t(m.sub)}`;
+    el.modeTitle.textContent = t(m.title);
+    el.tip.textContent = t('modeRule')(m.max, m.misere);
     el.remaining.textContent = t('remain')(stones);
+    el.stones.setAttribute('aria-label', t('stonesLabel')(stones));
     el.turn.textContent = waitingChoice ? t('chooseFirst') : t(turn === 'fox' ? 'turnFox' : turn === 'rabbit' ? 'turnRabbit' : 'turnHuman');
     el.streak.textContent = t('streak')(noGlassesStreak);
+    el.quickRules.hidden = !rulesOpen;
+    el.ruleTake.textContent = t('ruleTake');
+    el.ruleFox.textContent = t('ruleFox');
+    el.ruleGoal.textContent = t(m.misere ? 'ruleLose' : 'ruleWin');
+    el.moveLog.textContent = moveMessageText();
     el.choice.hidden = !waitingChoice;
     el.setupBox.hidden = !m.setup;
     el.setupOut.textContent = el.setupCount.value;
     el.glasses.disabled = !glassesUnlocked;
+    el.replayBtn.disabled = history.length <= 1;
     const moodKey = foxState === 'think' ? 'foxThink' : foxState === 'smug' ? 'foxSmug' : foxState === 'sad' ? 'foxSad' : 'foxIdle';
     el.foxMood.textContent = t(moodKey);
     el.fox.className = `fox ${foxState}`;
-    const canTake = !over && !waitingChoice && turn !== 'fox';
+    const canTake = !over && !moving && !waitingChoice && turn !== 'fox';
     el.takes.forEach((btn) => {
       const n = Number(btn.dataset.take);
+      btn.textContent = t('takeButton')(n);
+      btn.setAttribute('aria-label', t('takeButton')(n));
       btn.hidden = n > m.max;
       btn.disabled = !canTake || n > stones;
       btn.classList.toggle('best', Boolean(canTake && el.glasses.checked && n === bestTake(stones) && !isPit(stones)));
@@ -292,14 +373,20 @@
     renderStones();
     const b = bestTake(stones);
     const pit = Math.max(0, stones - b);
-    el.coach.textContent = m.setup ? t('rabbitAsk') : (el.glasses.checked && canTake ? (isPit(stones) ? t('noBest') : t('bestTip')(b, pit)) : t('takeTip')(1, m.max));
-    if (over) el.coach.textContent = lastWinner === 'human' ? (m.setup ? t('rabbitWin') : t('humanWin')) : t('foxWin');
+    if (over) el.coach.textContent = resultMessage();
+    else if (moving) el.coach.textContent = moveMessageText();
+    else if (waitingChoice) el.coach.textContent = t('chooseFirst');
+    else if (turn === 'fox') el.coach.textContent = t('waitFox');
+    else if (m.setup) el.coach.textContent = t('rabbitAsk');
+    else if (games === 0 && history.length === 1) el.coach.textContent = t('firstTakeTip')(m.max, m.misere);
+    else if (el.glasses.checked && canTake) el.coach.textContent = isPit(stones) ? t('noBest') : t('bestTip')(b, pit);
+    else el.coach.textContent = t('takeTip')(m.max);
   }
 
   function showReplay() {
     el.resultEmoji.textContent = lastWinner === 'human' ? '🏆' : '🦊';
     el.resultTitle.textContent = t('replayTitle');
-    el.resultText.textContent = lastWinner === 'human' ? (mode().setup ? t('rabbitWin') : t('humanWin')) : t('foxWin');
+    el.resultText.textContent = resultMessage();
     buildNumberLine();
     el.replay.hidden = false;
   }
@@ -332,17 +419,39 @@
   function chooseFirst(who) {
     waitingChoice = false;
     turn = who;
+    setMoveMessage(who === 'fox' ? 'foxStarts' : 'startMove');
     render();
-    if (turn === 'fox') setTimeout(foxMove, 650);
+    if (turn === 'fox') {
+      const token = roundToken;
+      setTimeout(() => foxMove(token), 550);
+    }
   }
 
-  el.takes.forEach((b) => b.addEventListener('pointerdown', () => humanMove(Number(b.dataset.take))));
-  el.humanFirst.addEventListener('pointerdown', () => chooseFirst('human'));
-  el.foxFirst.addEventListener('pointerdown', () => chooseFirst('fox'));
-  el.newRound.addEventListener('pointerdown', () => newRound());
-  el.replayBtn.addEventListener('pointerdown', showReplay);
-  el.closeReplay.addEventListener('pointerdown', () => { el.replay.hidden = true; });
-  el.again.addEventListener('pointerdown', () => { el.replay.hidden = true; newRound(); });
+  el.takes.forEach((button) => {
+    const count = Number(button.dataset.take);
+    button.addEventListener('click', () => humanMove(count));
+    button.addEventListener('pointerenter', () => previewPick(count));
+    button.addEventListener('pointerleave', clearPreview);
+    button.addEventListener('focus', () => previewPick(count));
+    button.addEventListener('blur', clearPreview);
+  });
+  el.humanFirst.addEventListener('click', () => chooseFirst('human'));
+  el.foxFirst.addEventListener('click', () => chooseFirst('fox'));
+  el.newRound.addEventListener('click', () => newRound());
+  el.replayBtn.addEventListener('click', showReplay);
+  el.closeReplay.addEventListener('click', () => { el.replay.hidden = true; });
+  el.again.addEventListener('click', () => { el.replay.hidden = true; newRound(); });
+  el.dismissRules.addEventListener('click', () => {
+    rulesOpen = false;
+    save.rulesSeen = true;
+    persist();
+    render();
+    window.cool?.track('dismiss-how-to-play');
+  });
+  el.rulesBtn.addEventListener('click', () => {
+    rulesOpen = true;
+    render();
+  });
   el.glasses.addEventListener('change', render);
   el.setupCount.addEventListener('input', () => { el.setupOut.textContent = el.setupCount.value; if (mode().setup && over) newRound(); });
   addEventListener('resize', () => { cssVar('--ink'); render(); });

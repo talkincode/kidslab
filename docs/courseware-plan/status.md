@@ -1,6 +1,6 @@
 # KidsLab 计划状态清单
 
-最后核验：2026-07-21
+最后核验：2026-07-22
 
 事实来源：`src/*/course.json`、`docs/courseware-plan/*.md`、`README.md`、`AGENT.md`。本文件负责回答“哪些已完成、哪些未实现、后续 Agent 完成计划后要更新哪里”。
 
@@ -34,6 +34,7 @@ KidsLab 应该是一组孩子打开就想玩的交互课件，而不是题库或
 - 课件源码库：当前 `src/` 下有 48 个课件目录，其中小学规划内按 ID 直接完成 42 个。
 - 小学课件规划：`docs/courseware-plan/` 覆盖数学、编程、逻辑、科学 84 个小学目标课件。
 - 课件模板：`docs/courseware-template/` 提供双语、主题、静态独立课件起点。
+- 交互音效：已完成源码静态审计；47 个游戏中 25 个有音频实现、22 个无音频实现，改进优先级与逐课件清单见 `docs/courseware-audio-audit.md`。
 - 行为分析：`docs/analytics.md`、`scripts/track.js`、`cloudflare/analytics/` 提供可选埋点链路。
 
 ## 非目标（铁律）
@@ -202,6 +203,7 @@ Agent 每次完成计划项后必须同步更新：
 - 优先从未实现清单中选择 P1 或知识覆盖缺口明显的课件，保持数学、编程、逻辑、科学轮流上新。
 - 对 `plant-lab` 与 `plant-xray` 做一次命名和目标对齐，避免科学清单长期出现“已做但未勾”的歧义。
 - 为主站过滤、课件核心交互和构建发布补充可重复验收证据；当前主要依赖 `npm run build` 与人工走查。
+- 按 `docs/courseware-audio-audit.md` 的 P0 → P1 → P2 顺序补齐交互音效；先消除高频堆叠音源，再统一静音控制，最后分批覆盖无音频课件。
 - 初高中扩展课件应单独建立规划清单，不要混入小学 84 项状态。
 
 ## 完成的样子
@@ -211,6 +213,7 @@ Agent 每次完成计划项后必须同步更新：
 - `src/<id>/` 下有独立的 `course.json`、入口 HTML 和必要资源，且 `course.json.id` 与目录名一致。
 - 课件能完成核心玩法闭环，不只是静态展示或半成品交互。
 - zh/en 双语、深浅主题、移动端触屏、桌面端布局都按 `AGENT.md` 的质量规约检查过。
+- 核心交互音效、成功/错误/通关反馈和静音控制已按 `AGENT.md` 检查；纯观察型玩法没有错误状态时不强造失败音。
 - `npm run build` 通过，`courseware/<id>/` 和 `courseware/index.json` 已更新。
 - 本文件已从未实现移动到已完成，汇总计数同步更新。
 - README 内置课件列表、学科规划文档、验收矩阵在需要时同步更新。
@@ -232,7 +235,8 @@ Agent 每次完成计划项后必须同步更新：
 | 主站浏览与筛选 | 中 | 缺口 | 缺口 | 不适用：纯静态无角色 | 不适用：只读 UI | `assets/js/app.js`；需补 E2E 覆盖学段/年级/分类/搜索 |
 | 课件构建与 manifest 生成 | 中 | 部分：`npm run build` | 部分：`scripts/build.mjs` 校验非法 `course.json` | 不适用：本地构建无角色 | 部分：构建失败不应写入错误 manifest，需补回归验证 | `scripts/build.mjs`、`.github/workflows/deploy.yml` |
 | PWA 壳与课件离线缓存 | 高 | 已覆盖：manifest 合法性 + SW 激活预缓存 + cache-on-visit 角标 | 已覆盖：杀死服务器后离线回放已玩课件与主站壳 | 不适用：纯静态无角色 | 已覆盖：断网时 SW 缓存兜底，联网 network-first 自动恢复最新内容 | `tests/e2e/pwa.spec.js` |
-| 单个课件核心玩法 | 中 | 部分：搭配衣橱、找零售货机、格子大厦、巫师的罐子、惊喜鬼屋、变形旅馆与七巧板皮影戏完整闭环 | 部分：七课件均覆盖错误选择、重复搭配、错误找零、错误接线或错误放置后原地重试 | 不适用：纯静态无角色 | 部分：七课件支持重开与错误恢复，其余课件需逐项确认 | `tests/e2e/combo-closet.spec.js`、`tests/e2e/change-vending.spec.js`、`tests/e2e/grid-tower.spec.js`、`tests/e2e/wizard-jars.spec.js`、`tests/e2e/haunted-events.spec.js`、`tests/e2e/metamorph-hotel.spec.js`、`tests/e2e/tangram-theater.spec.js`；`AGENT.md` 提交前自检；其余课件需补 E2E 或交互烟测 |
+| 单个课件核心玩法 | 中 | 部分：搭配衣橱、找零售货机、格子大厦、巫师的罐子、惊喜鬼屋、变形旅馆、七巧板皮影戏与狐狸的石子完整闭环 | 部分：前七课件覆盖错误选择、重复搭配、错误找零、错误接线或错误放置后原地重试；狐狸的石子覆盖轮流拿取与必胜闭环 | 不适用：纯静态无角色 | 部分：八课件支持重开或状态恢复，其余课件需逐项确认 | `tests/e2e/combo-closet.spec.js`、`tests/e2e/change-vending.spec.js`、`tests/e2e/grid-tower.spec.js`、`tests/e2e/wizard-jars.spec.js`、`tests/e2e/haunted-events.spec.js`、`tests/e2e/metamorph-hotel.spec.js`、`tests/e2e/tangram-theater.spec.js`、`tests/e2e/fox-stones.spec.js`；`AGENT.md` 提交前自检；其余课件需补 E2E 或交互烟测 |
+| 课件交互音效 | 中 | 缺口：静态扫描仅确认 25/47 个游戏存在音频实现，未验证语义、响度和完整玩法覆盖 | 缺口：需验证错误/无效操作、AudioContext 失败和快速连续操作 | 不适用：纯静态无角色 | 缺口：需验证静音可关闭一次性与循环声音、页面隐藏后停止环境音 | `docs/courseware-audio-audit.md`；静态审计不能替代桌面/手机人工听测，现有 E2E 不验证实际出声 |
 | 双语、主题、移动端适配 | 中 | 缺口 | 缺口 | 不适用：纯静态无角色 | 不适用：偏好写入 localStorage，无远端状态 | `AGENT.md` 质量规约；需补 1280x800 与 375x667 验收证据 |
 | 行为分析埋点 | 中 | 缺口 | 缺口 | 不适用：无用户身份 | 缺口：endpoint 缺失时应空操作 | `docs/analytics.md`、`scripts/track.js`、`cloudflare/analytics/` |
 | GitHub Pages 发布 | 中 | 部分：workflow 运行 `npm run build` | 缺口 | 不适用：GitHub Actions 权限由仓库配置控制 | 缺口：发布失败回滚依赖 Pages 历史版本 | `.github/workflows/deploy.yml` |
