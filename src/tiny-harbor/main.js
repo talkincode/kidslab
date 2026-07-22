@@ -157,6 +157,7 @@
     canvas: document.getElementById('harborCanvas'),
     route: document.getElementById('route'),
     label: document.getElementById('stageLabel'),
+    waterMeter: document.getElementById('waterMeter'),
     waterline: document.getElementById('waterlineValue'),
     master: document.getElementById('harborMaster'),
     stepCount: document.getElementById('stepCount'),
@@ -329,7 +330,8 @@
     }
 
     const material = currentMaterial();
-    els.readout.innerHTML = t('materialReadout', state.materialResults.length, t('materials').length);
+    const testedCount = state.materialResults.length + (state.materialTested ? 1 : 0);
+    els.readout.innerHTML = t('materialReadout', testedCount, t('materials').length);
     els.controls.innerHTML = `
       <div class="material-card"><span class="emoji">${material.emoji}</span><span>${material.name}</span></div>
       ${button(t('predictFloat'), 'predict-float', `choice${state.prediction === 'float' || state.prediction === '浮' ? ' is-selected' : ''}`, state.materialTested)}
@@ -346,6 +348,7 @@
     els.stepCount.textContent = t('stepCounts')[index];
     els.title.textContent = t('titles')[index];
     els.text.textContent = t('descriptions')[index];
+    els.waterMeter.hidden = state.step === 'materials';
     renderRoute();
     renderControls();
     renderFeedback();
