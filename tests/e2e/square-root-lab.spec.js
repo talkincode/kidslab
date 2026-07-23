@@ -17,8 +17,9 @@ test.describe('square root builder', () => {
   test('calculates, simplifies, bounds, and recovers from invalid input', async ({ page }) => {
     await page.locator('#areaInput').fill('72');
     await page.getByRole('button', { name: '开始测量' }).click();
-    await expect(page.locator('#resultValue')).toHaveText('√72 = 6√2 ≈ 8.4853');
-    await expect(page.locator('#boundsText')).toHaveText('8² < 72 < 9²');
+    await expect(page.locator('#resultValue')).toHaveAttribute('aria-label', '√72 = 6√2 ≈ 8.4853');
+    await expect(page.locator('#resultValue').locator('msqrt')).toHaveCount(2);
+    await expect(page.locator('#boundsText')).toHaveAttribute('aria-label', '8² < 72 < 9²');
 
     await page.locator('#areaInput').fill('-4');
     await page.getByRole('button', { name: '开始测量' }).click();
@@ -26,8 +27,8 @@ test.describe('square root builder', () => {
 
     await page.locator('#areaInput').fill('49');
     await page.getByRole('button', { name: '开始测量' }).click();
-    await expect(page.locator('#resultValue')).toHaveText('√49 = 7');
-    await expect(page.locator('#sideEquation')).toHaveText('7 × 7 = 49');
+    await expect(page.locator('#resultValue')).toHaveAttribute('aria-label', '√49 = 7');
+    await expect(page.locator('#sideEquation')).toHaveAttribute('aria-label', '7 × 7 = 49');
   });
 
   test('allows a wrong answer retry and completes all five plans', async ({ page }) => {

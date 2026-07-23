@@ -4,6 +4,7 @@
 :root {
   --font-body: "Avenir Next Rounded", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
   --font-display: "Iowan Old Style", "Songti SC", "STSong", Georgia, serif;
+  --font-math: "STIX Two Math", "Cambria Math", "Times New Roman", serif;
   --radius-xl: 26px;
   --radius-lg: 18px;
   --radius-md: 13px;
@@ -76,6 +77,17 @@ body {
 
 button, input { font: inherit; }
 button { -webkit-tap-highlight-color: transparent; }
+.math-formula {
+  display: inline-block;
+  margin: 0 0.06em;
+  font-family: var(--font-math);
+  font-size: 1.02em;
+  line-height: 1;
+  vertical-align: -0.12em;
+}
+.math-formula msqrt { padding-top: 0.04em; }
+.result-value .math-formula, .equation-ribbon .math-formula { font-size: 1em; }
+.choice-btn .math-formula, .challenge-prompt .math-formula { font-size: 1.06em; }
 button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
 
 .bar {

@@ -98,6 +98,33 @@
     return rounded.toLocaleString(lang === 'zh' ? 'zh-CN' : 'en-US', { maximumFractionDigits: digits, useGrouping: false });
   }
 
+  function escapeHtml(value) {
+    return String(value).replace(/[&<>\"]/g, (character) => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;',
+    })[character]);
+  }
+
+  function radicalMath(coefficient, radicand) {
+    const label = `${coefficient || ''}√${radicand}`;
+    const coefficientNode = coefficient ? `<mn>${coefficient}</mn>` : '';
+    return `<math class="math-formula" aria-label="${escapeHtml(label)}"><mrow>${coefficientNode}<msqrt><mrow><mn>${radicand}</mn></mrow></msqrt></mrow></math>`;
+  }
+
+  function squareMath(base) {
+    return `<math class="math-formula" aria-label="${escapeHtml(`${base}²`)}"><msup><mn>${base}</mn><mn>2</mn></msup></math>`;
+  }
+
+  function mathifyText(value) {
+    return escapeHtml(value)
+      .replace(/(\d+)?√([\d.,]+|A)/g, (_, coefficient, radicand) => radicalMath(coefficient, radicand))
+      .replace(/([\d.,]+)²/g, (_, base) => squareMath(base));
+  }
+
+  function setFormula(element, value) {
+    element.innerHTML = mathifyText(value);
+    element.setAttribute('aria-label', value);
+  }
+
   function isExactRoot(area, root) {
     if (Number.isInteger(root)) return true;
     const shortRoot = Number(root.toFixed(8));
@@ -189,10 +216,10 @@
 
     $('#areaInput').value = String(area);
     $('#areaStamp').textContent = t('areaStamp', area);
-    $('#resultValue').textContent = resultExpression(area, root, exact);
-    $('#boundsText').textContent = exact ? t('boundsPerfect', root, area) : t('boundsBetween', lower, area, upper);
-    $('#sideEquation').textContent = t('equation', root, area, exact);
-    $('#insightText').textContent = exact ? t('insightPerfect', root, area) : t('insightBetween', area, lower, upper);
+    setFormula($('#resultValue'), resultExpression(area, root, exact));
+    setFormula($('#boundsText'), exact ? t('boundsPerfect', root, area) : t('boundsBetween', lower, area, upper));
+    setFormula($('#sideEquation'), t('equation', root, area, exact));
+    setFormula($('#insightText'), exact ? t('insightPerfect', root, area) : t('insightBetween', area, lower, upper));
     const feedback = $('#feedback');
     feedback.className = 'feedback is-success';
     feedback.textContent = area === 0 ? t('zero') : exact ? t('perfect', root) : t('approx', lower, upper);
@@ -245,6 +272,31 @@
       ctx.lineTo(x + Math.cos(direction - 0.55) * 8, y + Math.sin(direction - 0.55) * 8);
       ctx.closePath(); ctx.fill();
     }
+  }
+
+  function drawCanvasRadical(centerX, centerY, radicand, suffix, fontSize, color) {
+    ctx.save();
+    ctx.fillStyle = color;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = Math.max(1.3, fontSize * 0.075);
+    ctx.font = `700 ${fontSize}px "STIX Two Math", "Cambria Math", "Times New Roman", serif`;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    const radicalWidth = ctx.measureText('√').width;
+    const radicandWidth = ctx.measureText(radicand).width;
+    const suffixWidth = ctx.measureText(suffix).width;
+    const overlap = fontSize * 0.1;
+    const totalWidth = radicalWidth + radicandWidth + suffixWidth - overlap;
+    const startX = centerX - totalWidth / 2;
+    const radicandX = startX + radicalWidth - overlap;
+    ctx.fillText('√', startX, centerY);
+    ctx.fillText(radicand, radicandX, centerY);
+    ctx.beginPath();
+    ctx.moveTo(radicandX - fontSize * 0.03, centerY - fontSize * 0.52);
+    ctx.lineTo(radicandX + radicandWidth + fontSize * 0.04, centerY - fontSize * 0.52);
+    ctx.stroke();
+    ctx.fillText(suffix, radicandX + radicandWidth, centerY);
+    ctx.restore();
   }
 
   function drawSquare() {
@@ -302,15 +354,14 @@
     const lineColor = cssVar('--blueprint-line');
     drawArrow(x, y + size + 22, x + size, y + size + 22, lineColor);
     ctx.fillStyle = lineColor;
-    ctx.font = `800 ${width < 430 ? 14 : 16}px ${cssVar('--font-body') || 'sans-serif'}`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(`√${format(area)} ${exact ? '=' : '≈'} ${format(root, 4)}`, cx, y + size + 43);
+    drawCanvasRadical(cx, y + size + 43, format(area), ` ${exact ? '=' : '≈'} ${format(root, 4)}`, width < 430 ? 15 : 17, lineColor);
 
     ctx.save();
     ctx.translate(x - 27, cy);
     ctx.rotate(-Math.PI / 2);
-    ctx.fillText(`√A`, 0, 0);
+    drawCanvasRadical(0, 0, 'A', '', 16, lineColor);
     ctx.restore();
 
     ctx.fillStyle = cssVar('--ink-on-yellow');
@@ -351,7 +402,8 @@
     const challenge = CHALLENGES[challengeIndex];
     $('#levelBadge').textContent = t('level', challengeIndex + 1, CHALLENGES.length);
     $('#streak').textContent = `${'◆ '.repeat(challengeIndex)}${'◇ '.repeat(CHALLENGES.length - challengeIndex)}`.trim();
-    $('#challengePrompt').textContent = questionText.prompt;
+    $('#challengePrompt').innerHTML = mathifyText(questionText.prompt);
+    $('#challengePrompt').setAttribute('aria-label', questionText.prompt);
     $('#challengeFeedback').textContent = '';
     $('#challengeFeedback').className = 'challenge-feedback';
     $('#nextChallenge').hidden = true;
@@ -362,7 +414,8 @@
       const button = document.createElement('button');
       button.type = 'button';
       button.className = 'choice-btn';
-      button.textContent = choice;
+      button.innerHTML = mathifyText(choice);
+      button.setAttribute('aria-label', choice);
       button.dataset.choice = String(index);
       button.addEventListener('click', () => chooseAnswer(index, button));
       grid.appendChild(button);
@@ -418,6 +471,8 @@
     $('#themeBtn').textContent = theme === 'light' ? '🌙' : '☀️';
     $('#themeBtn').setAttribute('aria-label', t('theme'));
     $('.back-pill').setAttribute('aria-label', t('back'));
+    $('#drawingTitle').innerHTML = mathifyText(t('drawingTitle'));
+    $('#drawingTitle').setAttribute('aria-label', t('drawingTitle'));
     $('.mode-tabs').setAttribute('aria-label', t('modeLabel'));
     $('.quick-picks').setAttribute('aria-label', t('quickLabel'));
     canvas.setAttribute('aria-label', t('canvasLabel'));
