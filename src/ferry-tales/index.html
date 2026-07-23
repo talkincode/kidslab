@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>摆渡奇遇 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">⛵ <span data-t="title">摆渡奇遇</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="story card">
+      <div class="chapter-stamp">
+        <span data-t="chapter">河上故事</span>
+        <strong id="chapterNumber">01</strong>
+      </div>
+      <div class="story__copy">
+        <p class="eyebrow" id="eyebrow">第一章</p>
+        <h2 id="levelTitle">狼、羊和白菜</h2>
+        <p id="missionText">一次只能带一位乘客。别让危险搭档单独留在岸上。</p>
+      </div>
+      <nav class="chapters" id="chapterNav" aria-label="关卡"></nav>
+    </section>
+
+    <section class="workspace">
+      <section class="stage card" id="stage">
+        <div class="stage__hud">
+          <div class="status" id="status" role="status" aria-live="polite">先点一位乘客，再开船。</div>
+          <div class="trip-counter"><span data-t="trips">航行</span> <strong id="tripCount">0</strong></div>
+        </div>
+
+        <div class="river-scene" id="riverScene">
+          <div class="cloud cloud--one" aria-hidden="true"></div>
+          <div class="cloud cloud--two" aria-hidden="true"></div>
+          <section class="bank bank--left" aria-labelledby="leftTitle">
+            <h3 id="leftTitle"><span aria-hidden="true">🏡</span> <span data-t="startBank">故事岸</span></h3>
+            <div class="passengers" id="leftPassengers"></div>
+          </section>
+
+          <div class="river" aria-hidden="true">
+            <span class="ripple ripple--one"></span>
+            <span class="ripple ripple--two"></span>
+            <span class="ripple ripple--three"></span>
+          </div>
+
+          <section class="bank bank--right" aria-labelledby="rightTitle">
+            <h3 id="rightTitle"><span aria-hidden="true">🎪</span> <span data-t="goalBank">庆典岸</span></h3>
+            <div class="passengers" id="rightPassengers"></div>
+          </section>
+
+          <div class="boat-wrap" id="boat" aria-hidden="true">
+            <div class="boat-visual">
+              <span class="flag">◆</span>
+              <span class="mast"></span>
+              <span class="sail"></span>
+              <span class="cargo" id="boatCargo">➕</span>
+              <span class="hull"></span>
+            </div>
+          </div>
+          <div class="scene-reaction" id="sceneReaction" aria-hidden="true"></div>
+        </div>
+
+        <div class="controls">
+          <button class="btn btn--sail" id="sailBtn" type="button">扬帆去对岸</button>
+          <button class="btn btn--ghost" id="undoBtn" type="button"><span aria-hidden="true">↶</span> <span data-t="undo">退一步</span></button>
+          <button class="btn btn--ghost" id="restartBtn" type="button"><span aria-hidden="true">↺</span> <span data-t="restart">重开</span></button>
+          <button class="btn btn--hint" id="hintBtn" type="button"><span aria-hidden="true">💡</span> <span data-t="hint">轻提示</span></button>
+        </div>
+      </section>
+
+      <aside class="sidebar">
+        <section class="rules card">
+          <div class="panel-heading">
+            <span class="panel-icon" aria-hidden="true">⚠</span>
+            <div>
+              <p data-t="safetyCard">河岸守则</p>
+              <h3 id="ruleTitle">谁不能单独相处？</h3>
+            </div>
+          </div>
+          <div class="rule-list" id="ruleList"></div>
+        </section>
+        <section class="guide card">
+          <p class="guide__title" data-t="guideTitle">摆渡三步</p>
+          <ol>
+            <li><span>1</span><b data-t="guidePick">点船这边的一位乘客</b></li>
+            <li><span>2</span><b data-t="guideSail">扬帆，也可以空船返回</b></li>
+            <li><span>3</span><b data-t="guideSafe">每次都检查无人照看的岸</b></li>
+          </ol>
+        </section>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal" id="completeModal" hidden>
+    <section class="modal__card" role="dialog" aria-modal="true" aria-labelledby="completeTitle">
+      <div class="celebration" aria-hidden="true">✦ ⛵ ✦</div>
+      <p class="modal__kicker" id="completeKicker">第一章完成</p>
+      <h2 id="completeTitle">所有乘客都安全抵达！</h2>
+      <p id="completeText">有时候先返回一步，反而能把故事带向终点。</p>
+      <button class="btn btn--sail" id="nextBtn" type="button">翻到下一章</button>
+    </section>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

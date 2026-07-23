@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-23T15:22:36.795Z",
+  "generatedAt": "2026-07-23T15:47:13.937Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -2592,6 +2592,61 @@
         "游戏"
       ],
       "path": "courseware/tangram-theater/index.html"
+    },
+    {
+      "id": "ferry-tales",
+      "title": {
+        "zh": "摆渡奇遇",
+        "en": "Ferry Tales"
+      },
+      "description": {
+        "zh": "狼、羊、白菜都想过河，可有些乘客不能被单独留下。挑选船客、规划往返，让每一座河岸始终安全；走错时，小剧场会替你把时间倒回来。",
+        "en": "A wolf, a goat, and a cabbage all need to cross, but some passengers cannot be left alone together. Plan every outward and return trip, keep both banks safe, and let the story rewind when a crossing goes wrong."
+      },
+      "category": "logic",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g2",
+        "g3",
+        "g4"
+      ],
+      "tags": [
+        "推理",
+        "策略",
+        "益智游戏"
+      ],
+      "icon": "⛵",
+      "order": 76,
+      "badge": "new",
+      "keywords": [
+        "Reasoning",
+        "reasoning",
+        "演绎推理",
+        "deduction",
+        "排除法",
+        "elimination",
+        "逻辑网格",
+        "logic grid",
+        "逆向推理",
+        "backward reasoning",
+        "证据",
+        "evidence",
+        "inference",
+        "Strategy",
+        "strategy",
+        "博弈策略",
+        "game theory",
+        "尼姆游戏",
+        "nim",
+        "Puzzle Game",
+        "puzzle",
+        "game",
+        "益智",
+        "游戏"
+      ],
+      "path": "courseware/ferry-tales/index.html"
     }
   ]
 }
