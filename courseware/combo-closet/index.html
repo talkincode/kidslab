@@ -11,10 +11,118 @@
 <script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
 </head>
 <body>
+  <svg class="svg-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <clipPath id="clip-shirt">
+        <path d="M20 16 Q54 4 88 16 Q100 21 99 38 L95 66 Q93 81 78 81 L30 81 Q15 81 13 66 L9 38 Q8 21 20 16 Z" />
+      </clipPath>
+      <clipPath id="clip-party">
+        <path d="M44 6 L27 52 L61 52 Z" />
+      </clipPath>
+
+      <symbol id="sym-hat-straw" viewBox="0 0 88 64">
+        <path d="M22 48 a22 20 0 0 1 44 0 Z" fill="#ffd966" stroke="#43323d" stroke-width="3" stroke-linejoin="round" />
+        <rect x="24" y="38" width="40" height="9" rx="4.5" fill="#b8325e" stroke="#43323d" stroke-width="2.5" />
+        <ellipse cx="44" cy="49" rx="38" ry="9.5" fill="#ffd966" stroke="#43323d" stroke-width="3" />
+        <circle cx="31" cy="42" r="4.4" fill="#f3a4b6" stroke="#43323d" stroke-width="2.4" />
+        <circle cx="31" cy="42" r="1.5" fill="#ffd966" />
+      </symbol>
+
+      <symbol id="sym-hat-beret" viewBox="0 0 88 64">
+        <path d="M12 46 Q10 27 44 25 Q78 27 76 46 Q60 53 44 53 Q28 53 12 46 Z" fill="#73b9e6" stroke="#43323d" stroke-width="3" stroke-linejoin="round" />
+        <path d="M18 43 Q30 48 44 48 Q58 48 70 43" fill="none" stroke="#43323d" stroke-width="2.2" opacity="0.35" />
+        <path d="M40 25 Q40 16 44 15 Q48 16 48 25" fill="none" stroke="#43323d" stroke-width="3.5" stroke-linecap="round" />
+      </symbol>
+
+      <symbol id="sym-hat-party" viewBox="0 0 88 64">
+        <path d="M44 6 L27 52 L61 52 Z" fill="#b8325e" />
+        <g clip-path="url(#clip-party)">
+          <rect x="16" y="17" width="56" height="9" fill="#ffd966" transform="rotate(-7 44 21)" />
+          <rect x="16" y="34" width="56" height="9" fill="#79d8bd" transform="rotate(-7 44 38)" />
+        </g>
+        <path d="M44 6 L27 52 L61 52 Z" fill="none" stroke="#43323d" stroke-width="3" stroke-linejoin="round" />
+        <circle cx="44" cy="8" r="6" fill="#ffd966" stroke="#43323d" stroke-width="2.6" />
+      </symbol>
+
+      <symbol id="sym-hat-top" viewBox="0 0 88 64">
+        <rect x="26" y="8" width="36" height="42" rx="5" fill="#4a3d52" stroke="#43323d" stroke-width="3" />
+        <rect x="27.5" y="35" width="33" height="9" fill="#ffd966" stroke="#43323d" stroke-width="2.2" />
+        <ellipse cx="44" cy="51" rx="32" ry="7" fill="#4a3d52" stroke="#43323d" stroke-width="3" />
+      </symbol>
+
+      <symbol id="sym-hat-cloud" viewBox="0 0 88 64">
+        <g fill="#ffffff" stroke="#8fb7d8" stroke-width="3">
+          <circle cx="28" cy="44" r="12" />
+          <circle cx="62" cy="45" r="11" />
+          <circle cx="46" cy="36" r="15" />
+        </g>
+        <path d="M70 14 l2.2 4.6 4.8 0.7 -3.5 3.4 0.8 4.8 -4.3 -2.3 -4.3 2.3 0.8 -4.8 -3.5 -3.4 4.8 -0.7 Z" fill="#ffd966" stroke="#43323d" stroke-width="2" stroke-linejoin="round" />
+      </symbol>
+
+      <symbol id="sym-top-star" viewBox="0 0 108 86">
+        <path d="M20 16 Q54 4 88 16 Q100 21 99 38 L95 66 Q93 81 78 81 L30 81 Q15 81 13 66 L9 38 Q8 21 20 16 Z" fill="#79d8bd" stroke="#43323d" stroke-width="3.5" stroke-linejoin="round" />
+        <g clip-path="url(#clip-shirt)">
+          <path d="M54 32 L58.5 43.9 71.1 44.4 61.2 52.3 64.6 64.6 54 57.6 43.4 64.6 46.8 52.3 36.9 44.4 49.5 43.9 Z" fill="#fff8ec" stroke="#43323d" stroke-width="2.4" stroke-linejoin="round" />
+          <circle cx="26" cy="34" r="3" fill="#fff8ec" opacity="0.85" />
+          <circle cx="84" cy="30" r="3" fill="#fff8ec" opacity="0.85" />
+          <circle cx="80" cy="70" r="3" fill="#fff8ec" opacity="0.85" />
+          <circle cx="26" cy="66" r="3" fill="#fff8ec" opacity="0.85" />
+        </g>
+        <path d="M38 13 Q54 22 70 13 Q64 27 54 27 Q44 27 38 13 Z" fill="#fff8ec" stroke="#43323d" stroke-width="3" stroke-linejoin="round" />
+      </symbol>
+
+      <symbol id="sym-top-rainbow" viewBox="0 0 108 86">
+        <path d="M20 16 Q54 4 88 16 Q100 21 99 38 L95 66 Q93 81 78 81 L30 81 Q15 81 13 66 L9 38 Q8 21 20 16 Z" fill="#f3a4b6" />
+        <g clip-path="url(#clip-shirt)">
+          <rect x="0" y="30" width="108" height="17" fill="#ffd966" />
+          <rect x="0" y="47" width="108" height="17" fill="#79d8bd" />
+          <rect x="0" y="64" width="108" height="22" fill="#73b9e6" />
+        </g>
+        <path d="M20 16 Q54 4 88 16 Q100 21 99 38 L95 66 Q93 81 78 81 L30 81 Q15 81 13 66 L9 38 Q8 21 20 16 Z" fill="none" stroke="#43323d" stroke-width="3.5" stroke-linejoin="round" />
+        <path d="M38 13 Q54 22 70 13 Q64 27 54 27 Q44 27 38 13 Z" fill="#fff8ec" stroke="#43323d" stroke-width="3" stroke-linejoin="round" />
+      </symbol>
+
+      <symbol id="sym-top-flower" viewBox="0 0 108 86">
+        <path d="M20 16 Q54 4 88 16 Q100 21 99 38 L95 66 Q93 81 78 81 L30 81 Q15 81 13 66 L9 38 Q8 21 20 16 Z" fill="#f3a4b6" stroke="#43323d" stroke-width="3.5" stroke-linejoin="round" />
+        <g clip-path="url(#clip-shirt)">
+          <g fill="#fff8ec">
+            <circle cx="54" cy="37" r="7.5" />
+            <circle cx="64.5" cy="44.6" r="7.5" />
+            <circle cx="60.5" cy="57.4" r="7.5" />
+            <circle cx="47.5" cy="57.4" r="7.5" />
+            <circle cx="43.5" cy="44.6" r="7.5" />
+          </g>
+          <circle cx="54" cy="48" r="6" fill="#ffd966" stroke="#43323d" stroke-width="2.4" />
+          <circle cx="24" cy="32" r="2.8" fill="#fff8ec" opacity="0.8" />
+          <circle cx="86" cy="34" r="2.8" fill="#fff8ec" opacity="0.8" />
+          <circle cx="28" cy="68" r="2.8" fill="#fff8ec" opacity="0.8" />
+          <circle cx="82" cy="70" r="2.8" fill="#fff8ec" opacity="0.8" />
+        </g>
+        <path d="M38 13 Q54 22 70 13 Q64 27 54 27 Q44 27 38 13 Z" fill="#fff8ec" stroke="#43323d" stroke-width="3" stroke-linejoin="round" />
+      </symbol>
+
+      <symbol id="sym-top-dot" viewBox="0 0 108 86">
+        <path d="M20 16 Q54 4 88 16 Q100 21 99 38 L95 66 Q93 81 78 81 L30 81 Q15 81 13 66 L9 38 Q8 21 20 16 Z" fill="#ffd966" stroke="#43323d" stroke-width="3.5" stroke-linejoin="round" />
+        <g clip-path="url(#clip-shirt)">
+          <circle cx="30" cy="34" r="5" fill="#b8325e" />
+          <circle cx="58" cy="30" r="5" fill="#fff8ec" />
+          <circle cx="84" cy="38" r="5" fill="#b8325e" />
+          <circle cx="24" cy="58" r="5" fill="#fff8ec" />
+          <circle cx="52" cy="52" r="5" fill="#b8325e" />
+          <circle cx="78" cy="60" r="5" fill="#fff8ec" />
+          <circle cx="40" cy="72" r="5" fill="#fff8ec" />
+          <circle cx="66" cy="74" r="5" fill="#b8325e" />
+        </g>
+        <path d="M38 13 Q54 22 70 13 Q64 27 54 27 Q44 27 38 13 Z" fill="#fff8ec" stroke="#43323d" stroke-width="3" stroke-linejoin="round" />
+      </symbol>
+    </defs>
+  </svg>
+
   <header class="bar">
     <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
     <h1 class="bar__title">👕 <span data-t="title">搭配衣橱</span></h1>
     <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭音效" aria-pressed="false">🔊</button>
       <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
       <button class="pill" id="langBtn" type="button">EN</button>
     </div>
@@ -24,9 +132,9 @@
     <section class="hero">
       <div>
         <p class="eyebrow" data-t="eyebrow">羊驼造型工作室</p>
-        <p class="tip" id="tip" data-t="tip">帽子选一顶，上衣选一件，找齐所有不重样的搭配。</p>
+        <p class="tip" id="tip" data-t="tip">把帽子和上衣穿到小驼身上，拍齐所有不重样的搭配。</p>
       </div>
-      <div class="order-stamp" aria-hidden="true"><span>✿</span><b id="orderStamp">0 / 4</b></div>
+      <div class="order-stamp" aria-hidden="true"><span>🎞</span><b id="orderStamp">0 / 4</b></div>
     </section>
 
     <nav class="level-strip" id="levelStrip" aria-label="关卡"></nav>
@@ -36,41 +144,68 @@
         <div class="mission">
           <div>
             <p class="mission__label" data-t="mission">今日造型单</p>
-            <h2 id="missionTitle">让 2 × 2 棵搭配树开花</h2>
+            <h2 id="missionTitle">拍齐 2 × 2 = 4 套造型</h2>
           </div>
           <button class="icon-button" id="resetBtn" type="button" aria-label="重新开始">↻</button>
         </div>
 
         <div class="collect-game" id="collectGame">
-          <div class="alpaca-stage">
-            <div class="mirror-stars" aria-hidden="true">✦ · ✿ · ✦</div>
-            <div class="alpaca" aria-label="小羊驼模特">
-              <span class="alpaca__hat" id="alpacaHat">👒</span>
-              <span class="alpaca__head">🦙</span>
-              <span class="alpaca__top" id="alpacaTop">★</span>
-            </div>
+          <div class="alpaca-stage" id="alpacaStage">
+            <div class="stage-spot" aria-hidden="true"></div>
+            <svg class="alpaca-svg" id="alpacaSvg" viewBox="0 -16 220 316" role="img" aria-label="小羊驼模特">
+              <ellipse class="alpaca-shadow" cx="110" cy="288" rx="62" ry="8" />
+              <g class="alpaca-body-g">
+                <rect x="76" y="228" width="20" height="56" rx="10" fill="#efe0c8" stroke="#43323d" stroke-width="3" />
+                <rect x="124" y="228" width="20" height="56" rx="10" fill="#efe0c8" stroke="#43323d" stroke-width="3" />
+                <ellipse cx="110" cy="206" rx="60" ry="54" fill="#f7ecd9" stroke="#43323d" stroke-width="3.5" />
+                <rect x="90" y="92" width="40" height="100" rx="19" fill="#f7ecd9" stroke="#43323d" stroke-width="3.5" />
+                <rect class="wear-hint wear-hint--top" x="64" y="158" width="92" height="70" rx="26" />
+                <use id="alpacaTopUse" href="#sym-top-star" x="54" y="148" width="112" height="89" hidden />
+              </g>
+              <g class="alpaca-head-g" id="alpacaHead">
+                <path d="M87 46 Q76 22 90 19 Q100 17 99 40 Z" fill="#f7ecd9" stroke="#43323d" stroke-width="3" stroke-linejoin="round" />
+                <path d="M133 46 Q144 22 130 19 Q120 17 121 40 Z" fill="#f7ecd9" stroke="#43323d" stroke-width="3" stroke-linejoin="round" />
+                <circle cx="93" cy="46" r="14" fill="#f7ecd9" stroke="#43323d" stroke-width="3" />
+                <circle cx="127" cy="46" r="14" fill="#f7ecd9" stroke="#43323d" stroke-width="3" />
+                <circle cx="110" cy="40" r="17" fill="#f7ecd9" stroke="#43323d" stroke-width="3" />
+                <ellipse cx="110" cy="72" rx="31" ry="28" fill="#f7ecd9" stroke="#43323d" stroke-width="3.5" />
+                <ellipse cx="110" cy="84" rx="15" ry="11" fill="#fff8ec" />
+                <g class="alpaca-eyes">
+                  <circle cx="96" cy="68" r="4" fill="#43323d" />
+                  <circle cx="124" cy="68" r="4" fill="#43323d" />
+                  <circle cx="97.4" cy="66.6" r="1.3" fill="#fff" />
+                  <circle cx="125.4" cy="66.6" r="1.3" fill="#fff" />
+                </g>
+                <path d="M107 79 h6 l-3 4.4 Z" fill="#b8325e" />
+                <path class="alpaca-mouth" d="M105 88 q2.5 3.5 5 0 q2.5 3.5 5 0" fill="none" stroke="#43323d" stroke-width="2.4" stroke-linecap="round" />
+                <circle cx="86" cy="79" r="5" fill="#f3a4b6" opacity="0.55" />
+                <circle cx="134" cy="79" r="5" fill="#f3a4b6" opacity="0.55" />
+                <ellipse class="wear-hint wear-hint--hat" cx="110" cy="34" rx="36" ry="17" />
+                <use id="alpacaHatUse" href="#sym-hat-straw" x="62" y="-10" width="96" height="70" hidden />
+              </g>
+            </svg>
             <div class="runway" aria-hidden="true"></div>
+            <div class="camera-flash" id="cameraFlash" aria-hidden="true"></div>
           </div>
 
           <div class="wardrobe">
             <div class="rack">
-              <p class="rack__label" data-t="chooseHat">先选一顶帽子</p>
+              <p class="rack__label" data-t="hatRack">帽子架</p>
               <div class="choice-row" id="hatChoices"></div>
             </div>
             <div class="rack">
-              <p class="rack__label" data-t="chooseTop">再选一件上衣</p>
+              <p class="rack__label" data-t="topRack">上衣架</p>
               <div class="choice-row" id="topChoices"></div>
             </div>
-            <button class="dress-button" id="dressBtn" type="button" data-t="dress">✨ 穿上这套</button>
+            <p class="drag-tip" data-t="dragTip">点一点或拖过去，给小驼穿上</p>
           </div>
         </div>
 
         <div class="stock-game" id="stockGame" hidden>
-          <div class="delivery-scene" aria-hidden="true">
-            <div class="awning">FASHION 12</div>
-            <div class="delivery-box delivery-box--hat">🎩<b id="hatBoxCount">2</b></div>
-            <div class="delivery-box delivery-box--top">👕<b id="topBoxCount">2</b></div>
-            <div class="flashbulbs">✦ ✦ ✦</div>
+          <div class="order-board">
+            <div class="neon-target" data-t="targetSign">🎯 目标 12 套</div>
+            <div class="order-grid" id="orderGrid" role="img"></div>
+            <div class="order-count" id="orderCount">2 × 2 = 4 套</div>
           </div>
           <div class="stock-controls">
             <div class="stock-picker">
@@ -82,6 +217,7 @@
               <div class="number-row" id="topStock"></div>
             </div>
             <button class="dress-button" id="orderBtn" type="button" data-t="order">📦 提交进货单</button>
+            <p class="drag-tip" data-t="orderTip">两张不一样的进货单都盖章，就完成大订单！</p>
           </div>
         </div>
       </section>
@@ -89,10 +225,10 @@
       <aside class="result-card card">
         <div class="stylist">
           <span class="stylist__face" id="stylistFace" aria-hidden="true">🦙</span>
-          <p id="feedback" aria-live="polite">先从衣架上选一顶帽子和一件上衣吧！</p>
+          <p id="feedback" aria-live="polite">先给小驼戴上一顶帽子吧！</p>
         </div>
 
-        <section class="combo-tree" id="comboTree" aria-label="搭配树"></section>
+        <section class="combo-tree" id="comboTree" aria-label="搭配树照片墙"></section>
         <div class="formula" id="formula" aria-live="polite">2 顶帽子 × 2 件上衣 = 4 套</div>
 
         <button class="hint-button" id="hintBtn" type="button" data-t="hint">💡 给我一点提示</button>
@@ -102,9 +238,10 @@
 
   <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
     <div class="modal__card">
-      <div class="celebration" id="celebration" aria-hidden="true">🌳</div>
-      <p class="modal__kicker" data-t="showReady">时装秀准备就绪</p>
-      <h2 id="modalTitle">四套搭配都开花啦！</h2>
+      <div class="modal-confetti" id="modalConfetti" aria-hidden="true"></div>
+      <div class="celebration" id="celebration" aria-hidden="true">📸</div>
+      <p class="modal__kicker" data-t="showReady">时装秀战报</p>
+      <h2 id="modalTitle">四套造型全部上墙！</h2>
       <p id="modalText"></p>
       <button class="next-button" id="nextBtn" type="button">下一张造型单</button>
     </div>
