@@ -28,6 +28,8 @@
     "植物": { "en": "Plants", "kind": "knowledge", "aliases": ["plants", "生长", "growth"] },
     "光合作用": { "en": "Photosynthesis", "kind": "knowledge", "aliases": ["photosynthesis"] },
     "生态": { "en": "Ecology", "kind": "knowledge", "aliases": ["ecology", "biology", "生物"] },
+    "光学": { "en": "Optics", "kind": "knowledge", "aliases": ["optics", "光线", "ray", "rays", "几何光学", "geometric optics"] },
+    "透镜": { "en": "Lenses", "kind": "knowledge", "aliases": ["lens", "lenses", "凸透镜", "convex lens", "焦距", "focal length", "物距", "像距", "成像"] },
     "单摆": { "en": "Pendulum", "kind": "knowledge", "aliases": ["pendulum", "周期", "period", "振动", "oscillation"] },
     "重力": { "en": "Gravity", "kind": "knowledge", "aliases": ["gravity"] },
     "月球": { "en": "The Moon", "kind": "knowledge", "aliases": ["moon", "lunar"] },

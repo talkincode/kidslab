@@ -6,7 +6,7 @@ const manifest = JSON.parse(
 );
 
 // 依赖 three.js/WebGL 的重课件，CI 软件渲染下需要更长超时
-const HEAVY_WEBGL_COURSES = new Set(['plant-lab', 'magic-cube']);
+const HEAVY_WEBGL_COURSES = new Set(['plant-lab', 'magic-cube', 'optics-lab']);
 
 function observeFailures(page) {
   const failures = [];
@@ -595,6 +595,23 @@ test.describe('courseware manifest', () => {
       await page.reload();
       await page.waitForTimeout(200);
       await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+      if (course.id === 'optics-lab') {
+        await page.locator('#objectDistance').fill('30');
+        await page.locator('#focalLength').fill('10');
+        await expect(page.locator('#imageDistanceValue')).toHaveText('15.0 cm');
+        await page.getByRole('button', { name: '让屏幕自动对焦' }).click();
+        await expect(page.locator('#focusStatus')).toContainText('清晰倒像');
+        await page.getByRole('button', { name: '放大镜' }).click();
+        await expect(page.locator('#modeBadge')).toHaveText('虚像');
+        await expect(page.locator('#focusStatus')).toContainText('屏幕接不到');
+        const topView = page.getByRole('button', { name: '俯视' });
+        await topView.click();
+        await expect(topView).toHaveAttribute('aria-pressed', 'true');
+        const haze = page.locator('#hazeBtn');
+        await expect(haze).toHaveAttribute('aria-label', '关闭微雾显光');
+        await haze.click();
+        await expect(haze).toHaveAttribute('aria-pressed', 'false');
+      }
       await expectHealthyPage(page, failures);
     });
   }

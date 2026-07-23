@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description" content="可调参数、可多角度观察的 Three.js 凸透镜成像实验室。" />
+  <meta name="color-scheme" content="light dark" />
+  <title>光学实验室 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <div class="app">
+    <header class="bar">
+      <a class="pill back" href="../../index.html">← <span data-t="back">返回平台</span></a>
+      <div class="brand">
+        <span class="brand__mark" aria-hidden="true">◉</span>
+        <div>
+          <h1 data-t="title">光学实验室</h1>
+          <p data-t="subtitle">把看不见的成像规律，变成一条条看得见的光线</p>
+        </div>
+      </div>
+      <div class="bar__actions">
+        <button class="pill icon-pill" id="soundBtn" type="button" aria-pressed="false">🔊</button>
+        <button class="pill icon-pill" id="themeBtn" type="button" aria-label="切换主题">☀️</button>
+        <button class="pill lang" id="langBtn" type="button">EN</button>
+      </div>
+    </header>
+
+    <main class="lab">
+      <section class="viewport" aria-label="3D 光学实验场景">
+        <canvas id="scene"></canvas>
+        <div class="loading" id="loading">
+          <span class="loading__lens"></span>
+          <b data-t="loading">正在点亮光具座…</b>
+        </div>
+        <div class="nogl" id="nogl" hidden>
+          <strong data-t="noglTitle">这台设备暂时不能显示 3D 光路</strong>
+          <span data-t="noglText">请换用支持 WebGL 的现代浏览器。</span>
+        </div>
+
+        <div class="scene-heading">
+          <span class="eyebrow">OPTICS / 01</span>
+          <strong id="modeBadge">实像 · REAL</strong>
+          <span id="sceneHint" data-t="sceneHint">拖动环视 · 滚轮或双指缩放</span>
+        </div>
+
+        <div class="view-dock" role="group" aria-label="观察视角">
+          <button class="view-btn is-active" type="button" data-view="path" aria-pressed="true">
+            <span aria-hidden="true">◇</span><span data-t="viewPath">光路</span>
+          </button>
+          <button class="view-btn" type="button" data-view="top" aria-pressed="false">
+            <span aria-hidden="true">⌁</span><span data-t="viewTop">俯视</span>
+          </button>
+          <button class="view-btn" type="button" data-view="lens" aria-pressed="false">
+            <span aria-hidden="true">◎</span><span data-t="viewLens">看透镜</span>
+          </button>
+          <button class="view-btn" id="autoOrbitBtn" type="button" aria-pressed="false">
+            <span aria-hidden="true">↻</span><span data-t="autoOrbit">自动环绕</span>
+          </button>
+        </div>
+
+        <div class="focus-toast" id="focusToast" role="status" hidden></div>
+      </section>
+
+      <aside class="console" id="console">
+        <button class="sheet-handle" id="sheetHandle" type="button" aria-expanded="true">
+          <span></span><b data-t="parameters">实验参数</b>
+        </button>
+
+        <div class="console__body">
+          <section class="presets" aria-label="实验预设">
+            <button class="preset is-active" type="button" data-preset="clear">
+              <span>01</span><b data-t="presetClear">清晰倒像</b>
+            </button>
+            <button class="preset" type="button" data-preset="projector">
+              <span>02</span><b data-t="presetProjector">放大投影</b>
+            </button>
+            <button class="preset" type="button" data-preset="magnifier">
+              <span>03</span><b data-t="presetMagnifier">放大镜</b>
+            </button>
+          </section>
+
+          <p class="scale-note" data-t="scaleNote">现实比例：1.5 m 光具座 · Ø 5 cm 透镜 · 12 × 12 cm 光屏（微雾用于显现光路）</p>
+
+          <button class="focus-button" id="focusBtn" type="button">
+            <span aria-hidden="true">⌖</span>
+            <span><b data-t="autoFocus">让屏幕自动对焦</b><small data-t="autoFocusHint">把屏幕移到理论像距</small></span>
+          </button>
+
+          <section class="controls">
+            <label class="control">
+              <span><b data-t="objectDistance">物距 u</b><output id="objectDistanceValue">40.0 cm</output></span>
+              <input id="objectDistance" type="range" min="8" max="60" step="0.5" value="40" />
+            </label>
+            <label class="control">
+              <span><b data-t="focalLength">焦距 f</b><output id="focalLengthValue">12.0 cm</output></span>
+              <input id="focalLength" type="range" min="8" max="20" step="0.5" value="12" />
+            </label>
+            <label class="control control--screen">
+              <span><b data-t="screenDistance">屏距 s</b><output id="screenDistanceValue">17.0 cm</output></span>
+              <input id="screenDistance" type="range" min="8" max="80" step="0.5" value="17" />
+            </label>
+            <label class="control">
+              <span><b data-t="objectHeight">物高 h</b><output id="objectHeightValue">5.0 cm</output></span>
+              <input id="objectHeight" type="range" min="2" max="8" step="0.5" value="5" />
+            </label>
+            <label class="control">
+              <span><b data-t="rayCount">示踪光束</b><output id="rayCountValue">9</output></span>
+              <input id="rayCount" type="range" min="3" max="15" step="2" value="9" />
+            </label>
+            <button class="haze-toggle is-active" id="hazeBtn" type="button" aria-pressed="true">
+              <span><b data-t="hazeTitle">微雾显光</b><small data-t="hazeHint">模拟实验箱中的少量散射介质</small></span>
+              <i aria-hidden="true"></i>
+            </button>
+          </section>
+
+          <section class="readouts" aria-live="polite">
+            <div>
+              <span data-t="imageDistance">像距 v</span>
+              <strong id="imageDistanceValue">17.1 cm</strong>
+            </div>
+            <div>
+              <span data-t="magnification">放大率 m</span>
+              <strong id="magnificationValue">−0.43×</strong>
+            </div>
+            <div>
+              <span data-t="imageType">像的性质</span>
+              <strong id="imageTypeValue">倒立 · 缩小</strong>
+            </div>
+            <div>
+              <span data-t="screenError">屏幕偏差</span>
+              <strong id="screenErrorValue">0.1 cm</strong>
+            </div>
+          </section>
+
+          <div class="formula">
+            <span>1/f = 1/u + 1/v</span>
+            <b id="focusStatus">屏幕接住了清晰倒像</b>
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

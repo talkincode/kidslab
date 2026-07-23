@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-22T18:10:22.997Z",
+  "generatedAt": "2026-07-23T13:50:52.731Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -31,6 +31,10 @@
     },
     "光合作用": {
       "en": "Photosynthesis",
+      "kind": "knowledge"
+    },
+    "光学": {
+      "en": "Optics",
       "kind": "knowledge"
     },
     "函数": {
@@ -235,6 +239,10 @@
     },
     "运算": {
       "en": "Arithmetic",
+      "kind": "knowledge"
+    },
+    "透镜": {
+      "en": "Lenses",
       "kind": "knowledge"
     },
     "递归": {
@@ -1213,6 +1221,66 @@
         "模拟"
       ],
       "path": "courseware/pendulum-lab/index.html"
+    },
+    {
+      "id": "optics-lab",
+      "title": {
+        "zh": "光学实验室",
+        "en": "Optics Lab"
+      },
+      "description": {
+        "zh": "在可环视的 3D 光具座上调节物距、焦距和屏距，观察凸透镜形成实像、虚像与清晰投影的变化。",
+        "en": "Adjust object distance, focal length, and screen position on an orbitable 3D optical bench to explore real images, virtual images, and sharp projection."
+      },
+      "category": "physics",
+      "levels": [
+        "junior",
+        "senior"
+      ],
+      "grades": [
+        "g8",
+        "g9",
+        "g10",
+        "g11"
+      ],
+      "tags": [
+        "光学",
+        "透镜",
+        "3D",
+        "实验"
+      ],
+      "icon": "🔬",
+      "badge": "new",
+      "order": 35,
+      "keywords": [
+        "Optics",
+        "optics",
+        "光线",
+        "ray",
+        "rays",
+        "几何光学",
+        "geometric optics",
+        "Lenses",
+        "lens",
+        "lenses",
+        "凸透镜",
+        "convex lens",
+        "焦距",
+        "focal length",
+        "物距",
+        "像距",
+        "成像",
+        "3D",
+        "3d",
+        "三维",
+        "three.js",
+        "Experiment",
+        "experiment",
+        "simulation",
+        "lab",
+        "模拟"
+      ],
+      "path": "courseware/optics-lab/index.html"
     },
     {
       "id": "ph-lab",

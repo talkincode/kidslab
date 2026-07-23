@@ -1,0 +1,31 @@
+{
+  "id": "optics-lab",
+  "title": {
+    "zh": "光学实验室",
+    "en": "Optics Lab"
+  },
+  "description": {
+    "zh": "在可环视的 3D 光具座上调节物距、焦距和屏距，观察凸透镜形成实像、虚像与清晰投影的变化。",
+    "en": "Adjust object distance, focal length, and screen position on an orbitable 3D optical bench to explore real images, virtual images, and sharp projection."
+  },
+  "category": "physics",
+  "levels": [
+    "junior",
+    "senior"
+  ],
+  "grades": [
+    "g8",
+    "g9",
+    "g10",
+    "g11"
+  ],
+  "tags": [
+    "光学",
+    "透镜",
+    "3D",
+    "实验"
+  ],
+  "icon": "🔬",
+  "badge": "new",
+  "order": 35
+}
