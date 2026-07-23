@@ -1,0 +1,18 @@
+{
+  "id": "angle-golf",
+  "title": {
+    "zh": "角度高尔夫",
+    "en": "Angle Golf"
+  },
+  "description": {
+    "zh": "不用拖动瞄准线，直接报出角度击球：从 0° 直推、锐角穿门，一路打到三墙反弹的几何神仙球。",
+    "en": "Call the angle instead of dragging an aim line: master a 0° putt, thread an acute-angle gate, then finish with a three-bank geometry trick shot."
+  },
+  "category": "math",
+  "levels": ["primary"],
+  "grades": ["g4"],
+  "tags": ["平面图形", "实验", "益智游戏"],
+  "icon": "⛳",
+  "order": 24,
+  "badge": "new"
+}

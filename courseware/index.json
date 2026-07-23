@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-23T15:47:13.937Z",
+  "generatedAt": "2026-07-23T19:19:02.747Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -1030,6 +1030,49 @@
         "作息"
       ],
       "path": "courseware/clock-town/index.html"
+    },
+    {
+      "id": "angle-golf",
+      "title": {
+        "zh": "角度高尔夫",
+        "en": "Angle Golf"
+      },
+      "description": {
+        "zh": "不用拖动瞄准线，直接报出角度击球：从 0° 直推、锐角穿门，一路打到三墙反弹的几何神仙球。",
+        "en": "Call the angle instead of dragging an aim line: master a 0° putt, thread an acute-angle gate, then finish with a three-bank geometry trick shot."
+      },
+      "category": "math",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g4"
+      ],
+      "tags": [
+        "平面图形",
+        "实验",
+        "益智游戏"
+      ],
+      "icon": "⛳",
+      "order": 24,
+      "badge": "new",
+      "keywords": [
+        "2D Shapes",
+        "2d shapes",
+        "长方形",
+        "rectangle",
+        "Experiment",
+        "experiment",
+        "simulation",
+        "lab",
+        "模拟",
+        "Puzzle Game",
+        "puzzle",
+        "game",
+        "益智",
+        "游戏"
+      ],
+      "path": "courseware/angle-golf/index.html"
     },
     {
       "id": "carry-factory",

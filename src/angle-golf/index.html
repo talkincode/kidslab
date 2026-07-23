@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>角度高尔夫 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">⛳ <span data-t="title">角度高尔夫</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="course">
+    <section class="mission card">
+      <div class="hole-stamp">
+        <span data-t="hole">球洞</span>
+        <strong id="holeNumber">01</strong>
+      </div>
+      <div class="mission__copy">
+        <p class="eyebrow" id="holeKicker">热身果岭</p>
+        <h2 id="holeTitle">0° 直推</h2>
+        <p id="holeMission">水平向右就是 0°。报出角度，让球沿基准线进洞。</p>
+      </div>
+      <nav class="hole-nav" id="holeNav" aria-label="球洞"></nav>
+    </section>
+
+    <section class="workspace">
+      <section class="stage card">
+        <div class="stage__hud">
+          <p class="status" id="status" role="status" aria-live="polite">输入角度，再挥杆！</p>
+          <div class="strokes"><span data-t="strokes">杆数</span> <strong id="strokeCount">0</strong></div>
+        </div>
+        <div class="canvas-shell" id="canvasShell">
+          <canvas id="courseCanvas" aria-label="迷你高尔夫球道"></canvas>
+          <div class="result-burst" id="resultBurst" aria-hidden="true"></div>
+        </div>
+      </section>
+
+      <aside class="console card">
+        <div class="angle-panel">
+          <div class="angle-panel__heading">
+            <div>
+              <p data-t="callAngle">报角瞄准</p>
+              <strong id="angleType">0° 基准线</strong>
+            </div>
+            <span class="tiny-protractor" aria-hidden="true">◜</span>
+          </div>
+          <div class="angle-input">
+            <button id="minusBtn" type="button" aria-label="减小 1 度">−</button>
+            <label>
+              <span data-t="angleLabel">角度</span>
+              <span class="input-wrap"><input id="angleInput" type="number" inputmode="numeric" min="0" max="180" step="1" value="0" /><b>°</b></span>
+            </label>
+            <button id="plusBtn" type="button" aria-label="增加 1 度">＋</button>
+          </div>
+          <div class="quick-angles" aria-label="快捷角度">
+            <button type="button" data-angle="0">0°</button>
+            <button type="button" data-angle="30">30°</button>
+            <button type="button" data-angle="45">45°</button>
+            <button type="button" data-angle="60">60°</button>
+            <button type="button" data-angle="90">90°</button>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn--shoot" id="shootBtn" type="button"><span aria-hidden="true">🏌️</span> <span id="shootLabel">挥杆</span></button>
+          <button class="btn btn--hint" id="hintBtn" type="button"><span aria-hidden="true">💡</span> <span data-t="hint">轻提示</span></button>
+          <button class="btn btn--ghost" id="restartBtn" type="button"><span aria-hidden="true">↺</span> <span data-t="restart">重打本洞</span></button>
+        </div>
+
+        <ol class="guide">
+          <li><span>1</span><b data-t="guideRead">看量角器的 0° 基准线</b></li>
+          <li><span>2</span><b data-t="guideCall">输入你判断的角度</b></li>
+          <li><span>3</span><b data-t="guideWatch">挥杆，沿轨迹修正</b></li>
+        </ol>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal" id="completeModal" hidden>
+    <section class="modal__card" role="dialog" aria-modal="true" aria-labelledby="completeTitle">
+      <div class="trophy" aria-hidden="true">🏆</div>
+      <p data-t="finalKicker">角度大师赛完成</p>
+      <h2 id="completeTitle" data-t="finalTitle">三墙神仙球！</h2>
+      <p data-t="finalText">你用数字瞄准，还看见了每次反弹里相等的入射角与反射角。</p>
+      <button class="btn btn--shoot" id="playAgainBtn" type="button" data-t="playAgain">再打一轮</button>
+    </section>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

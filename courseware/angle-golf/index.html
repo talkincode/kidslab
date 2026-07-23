@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>角度高尔夫 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<script>(()=>{"use strict";const g=window,r=g.cool||{};if(r.sdkVersion)return;try{document.documentElement.style.touchAction="manipulation"}catch{}const w="angle-golf",b=location.pathname.split("/").filter(Boolean),E=b.at(-1)||"",A=E.includes(".")?b.at(-2):E,f=w.startsWith("__")?A:w,l={get(t,n=null){try{const e=localStorage.getItem(t);return e===null?n:e}catch{return n}},set(t,n){try{return localStorage.setItem(t,n),!0}catch{return!1}},remove(t){try{return localStorage.removeItem(t),!0}catch{return!1}}},d=new Set,S=new Set(["zh","en"]),I=new Set(["light","dark"]),C=(navigator.language||"").toLowerCase().startsWith("zh")?"zh":"en";let m="light";try{m=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch{}let s=l.get("kidslab.lang",C),c=l.get("kidslab.theme",m);S.has(s)||(s=C),I.has(c)||(c=m);function p(){document.documentElement.lang=s==="zh"?"zh-CN":"en",document.documentElement.dataset.theme=c}function T(t,n){const e={kind:t,value:n};for(const o of[...d])o(e);g.dispatchEvent(new CustomEvent(`${t}change`,{detail:{[t]:n}}))}const z={get lang(){return s},get theme(){return c},setLang(t){if(!S.has(t))throw new RangeError(`Unsupported language: ${t}`);t!==s&&(s=t,l.set("kidslab.lang",t),p(),T("lang",t))},setTheme(t){if(!I.has(t))throw new RangeError(`Unsupported theme: ${t}`);t!==c&&(c=t,l.set("kidslab.theme",t),p(),T("theme",t))},toggleLang(){this.setLang(s==="zh"?"en":"zh")},toggleTheme(){this.setTheme(c==="light"?"dark":"light")},subscribe(t){if(typeof t!="function")throw new TypeError("Preference listener must be a function");return d.add(t),()=>d.delete(t)}};function D(t,n={}){if(!t||typeof t!="object")throw new TypeError("Messages must be an object");const e=n.root||document;if(!e.querySelectorAll&&!e.matches)throw new TypeError("i18n root must be a Document or Element");function o(a,...h){const i=t[s]?.[a]??t.zh?.[a]??t.en?.[a];return typeof i=="function"?i(...h):i??a}function y(a="lang"){const h=[];e.matches?.("[data-t]")&&h.push(e),e.querySelectorAll&&h.push(...e.querySelectorAll("[data-t]"));for(const i of h){const L=o(i.dataset.t);typeof L=="string"&&(i.textContent=L)}n.onChange?.({kind:a,lang:s,theme:c,t:o})}const $=z.subscribe(({kind:a})=>{a==="lang"?y("lang"):n.onChange?.({kind:a,lang:s,theme:c,t:o})});return y("init"),{t:o,render:y,destroy:$}}const u=f?`kidslab.progress.${f}`:"";function _(){if(!u)return null;try{const t=JSON.parse(l.get(u,"null"));return!t||!["played","completed"].includes(t.status)?null:t}catch{return null}}function k(t,n){if(!u)return null;const e=_()||{},o={status:e.status==="completed"?"completed":t,stage:n||e.stage||"",updatedAt:Date.now()};return e.status===o.status&&e.stage===o.stage?e:(l.set(u,JSON.stringify(o)),o)}const P={get:_,clear(){return u?l.remove(u):!1}};r.sdkVersion=2,r.courseId=f,r.storage=l,r.preferences=z,r.bindI18n=D,r.progress=P,typeof r.track!="function"&&(r.track=()=>{}),r.stage=t=>{typeof t!="string"||!t||k("played",t.slice(0,48))},r.complete=()=>k("completed"),g.cool=r,p()})();
+</script>
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">⛳ <span data-t="title">角度高尔夫</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="course">
+    <section class="mission card">
+      <div class="hole-stamp">
+        <span data-t="hole">球洞</span>
+        <strong id="holeNumber">01</strong>
+      </div>
+      <div class="mission__copy">
+        <p class="eyebrow" id="holeKicker">热身果岭</p>
+        <h2 id="holeTitle">0° 直推</h2>
+        <p id="holeMission">水平向右就是 0°。报出角度，让球沿基准线进洞。</p>
+      </div>
+      <nav class="hole-nav" id="holeNav" aria-label="球洞"></nav>
+    </section>
+
+    <section class="workspace">
+      <section class="stage card">
+        <div class="stage__hud">
+          <p class="status" id="status" role="status" aria-live="polite">输入角度，再挥杆！</p>
+          <div class="strokes"><span data-t="strokes">杆数</span> <strong id="strokeCount">0</strong></div>
+        </div>
+        <div class="canvas-shell" id="canvasShell">
+          <canvas id="courseCanvas" aria-label="迷你高尔夫球道"></canvas>
+          <div class="result-burst" id="resultBurst" aria-hidden="true"></div>
+        </div>
+      </section>
+
+      <aside class="console card">
+        <div class="angle-panel">
+          <div class="angle-panel__heading">
+            <div>
+              <p data-t="callAngle">报角瞄准</p>
+              <strong id="angleType">0° 基准线</strong>
+            </div>
+            <span class="tiny-protractor" aria-hidden="true">◜</span>
+          </div>
+          <div class="angle-input">
+            <button id="minusBtn" type="button" aria-label="减小 1 度">−</button>
+            <label>
+              <span data-t="angleLabel">角度</span>
+              <span class="input-wrap"><input id="angleInput" type="number" inputmode="numeric" min="0" max="180" step="1" value="0" /><b>°</b></span>
+            </label>
+            <button id="plusBtn" type="button" aria-label="增加 1 度">＋</button>
+          </div>
+          <div class="quick-angles" aria-label="快捷角度">
+            <button type="button" data-angle="0">0°</button>
+            <button type="button" data-angle="30">30°</button>
+            <button type="button" data-angle="45">45°</button>
+            <button type="button" data-angle="60">60°</button>
+            <button type="button" data-angle="90">90°</button>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn--shoot" id="shootBtn" type="button"><span aria-hidden="true">🏌️</span> <span id="shootLabel">挥杆</span></button>
+          <button class="btn btn--hint" id="hintBtn" type="button"><span aria-hidden="true">💡</span> <span data-t="hint">轻提示</span></button>
+          <button class="btn btn--ghost" id="restartBtn" type="button"><span aria-hidden="true">↺</span> <span data-t="restart">重打本洞</span></button>
+        </div>
+
+        <ol class="guide">
+          <li><span>1</span><b data-t="guideRead">看量角器的 0° 基准线</b></li>
+          <li><span>2</span><b data-t="guideCall">输入你判断的角度</b></li>
+          <li><span>3</span><b data-t="guideWatch">挥杆，沿轨迹修正</b></li>
+        </ol>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal" id="completeModal" hidden>
+    <section class="modal__card" role="dialog" aria-modal="true" aria-labelledby="completeTitle">
+      <div class="trophy" aria-hidden="true">🏆</div>
+      <p data-t="finalKicker">角度大师赛完成</p>
+      <h2 id="completeTitle" data-t="finalTitle">三墙神仙球！</h2>
+      <p data-t="finalText">你用数字瞄准，还看见了每次反弹里相等的入射角与反射角。</p>
+      <button class="btn btn--shoot" id="playAgainBtn" type="button" data-t="playAgain">再打一轮</button>
+    </section>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

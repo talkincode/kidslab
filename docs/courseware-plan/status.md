@@ -1,6 +1,6 @@
 # KidsLab 计划状态清单
 
-最后核验：2026-07-23
+最后核验：2026-07-24
 
 事实来源：`src/*/course.json`、`docs/courseware-plan/*.md`、`README.md`、`AGENT.md`。本文件负责回答“哪些已完成、哪些未实现、后续 Agent 完成计划后要更新哪里”。
 
@@ -31,10 +31,10 @@ KidsLab 应该是一组孩子打开就想玩的交互课件，而不是题库或
 
 - 主站课程浏览：`index.html`、`assets/js/app.js` 支持学段、年级、分类、搜索、双语、主题、强调色与置顶课件。
 - 静态构建发布：`scripts/build.mjs` 校验 `course.json`、压缩资源、生成 `courseware/index.json`；GitHub Pages workflow 在 `main` 推送后构建发布。
-- 课件源码库：当前 `src/` 下有 53 个课件目录，其中小学规划内按 ID 直接完成 45 个。
+- 课件源码库：当前 `src/` 下有 54 个课件目录，其中小学规划内按 ID 直接完成 46 个。
 - 小学课件规划：`docs/courseware-plan/` 覆盖数学、编程、逻辑、科学 84 个小学目标课件。
 - 课件模板：`docs/courseware-template/` 提供双语、主题、静态独立课件起点。
-- 交互音效：审计基线 49 个游戏中 27 个有音频实现；新增 `function-kitchen` 已按当前规范实现音效与静音控制，存量改进优先级见 `docs/courseware-audio-audit.md`。
+- 交互音效：审计基线 49 个游戏中 27 个有音频实现；新增 `function-kitchen` 与 `angle-golf` 已按当前规范实现音效与静音控制，存量改进优先级见 `docs/courseware-audio-audit.md`。
 - 行为分析：`docs/analytics.md`、`scripts/track.js`、`cloudflare/analytics/` 提供可选埋点链路。
 
 ## 非目标（铁律）
@@ -67,11 +67,11 @@ Agent 每次完成计划项后必须同步更新：
 
 | 学科 | 目标数 | 已完成（按规划 ID） | 未实现 | 备注 |
 | --- | ---: | ---: | ---: | --- |
-| 数学 | 32 | 16 | 16 | P0 已完成 |
+| 数学 | 32 | 17 | 15 | P0 已完成 |
 | 编程 | 15 | 9 | 6 | P0 已完成 |
 | 逻辑 | 15 | 8 | 7 | P0 已完成；`magic-cube` 为规划外补充 |
 | 科学 | 22 | 12 | 10 | `plant-lab` 可能对应 `plant-xray`，但 ID/标题未对齐 |
-| 合计 | 84 | 45 | 39 | 另有 8 个规划外已上线课件 |
+| 合计 | 84 | 46 | 38 | 另有 8 个规划外已上线课件 |
 
 ## 已完成（规划内）
 
@@ -93,6 +93,7 @@ Agent 每次完成计划项后必须同步更新：
 - [x] 滚轮乐园 `rolling-park`
 - [x] 冰淇淋几何 `icecream-geometry`
 - [x] 格子大厦 `grid-tower`
+- [x] 角度高尔夫 `angle-golf`
 
 ### 编程
 
@@ -136,7 +137,6 @@ Agent 每次完成计划项后必须同步更新：
 
 ### 数学
 
-- [ ] 角度高尔夫 `angle-golf`
 - [ ] 墨迹怪物 `inkblot-monsters`
 - [ ] 分数节拍屋 `fraction-beats`
 - [ ] 煎饼老板 `pancake-boss`
@@ -237,7 +237,7 @@ Agent 每次完成计划项后必须同步更新：
 | 主站浏览与筛选 | 中 | 缺口 | 缺口 | 不适用：纯静态无角色 | 不适用：只读 UI | `assets/js/app.js`；需补 E2E 覆盖学段/年级/分类/搜索 |
 | 课件构建与 manifest 生成 | 中 | 部分：`npm run build` | 部分：`scripts/build.mjs` 校验非法 `course.json` | 不适用：本地构建无角色 | 部分：构建失败不应写入错误 manifest，需补回归验证 | `scripts/build.mjs`、`.github/workflows/deploy.yml` |
 | PWA 壳与课件离线缓存 | 高 | 已覆盖：manifest 合法性 + SW 激活预缓存 + cache-on-visit 角标 | 已覆盖：杀死服务器后离线回放已玩课件与主站壳 | 不适用：纯静态无角色 | 已覆盖：断网时 SW 缓存兜底，联网 network-first 自动恢复最新内容 | `tests/e2e/pwa.spec.js` |
-| 单个课件核心玩法 | 中 | 部分：搭配衣橱、找零售货机、格子大厦、巫师的罐子、惊喜鬼屋、变形旅馆、七巧板皮影戏、狐狸的石子、摆渡奇遇、平方根建筑师、小小港湾、函数厨房与光学实验室完整闭环 | 部分：前七课件覆盖错误选择、重复搭配、错误找零、错误接线或错误放置后原地重试；狐狸的石子覆盖轮流拿取与必胜闭环；摆渡奇遇覆盖危险搭档违规、自动回退、撤销和重开后的状态恢复；平方根建筑师覆盖负数输入和错答恢复；小小港湾覆盖超载进水、泥球下沉和错误预测后的原地恢复；函数厨房覆盖错误步骤、复制爆单和参数传错后的原地恢复；光学实验室覆盖实像对焦与虚像无法投屏状态 | 不适用：纯静态无角色 | 部分：十三课件支持重开、状态恢复或无损调参，其余课件需逐项确认 | `tests/e2e/combo-closet.spec.js`、`tests/e2e/change-vending.spec.js`、`tests/e2e/grid-tower.spec.js`、`tests/e2e/wizard-jars.spec.js`、`tests/e2e/haunted-events.spec.js`、`tests/e2e/metamorph-hotel.spec.js`、`tests/e2e/tangram-theater.spec.js`、`tests/e2e/fox-stones.spec.js`、`tests/e2e/ferry-tales.spec.js`、`tests/e2e/square-root-lab.spec.js`、`tests/e2e/tiny-harbor.spec.js`、`tests/e2e/function-kitchen.spec.js`、`tests/e2e/smoke.spec.js`（光学实验室）；`AGENT.md` 提交前自检；其余课件需补 E2E 或交互烟测 |
+| 单个课件核心玩法 | 中 | 部分：搭配衣橱、找零售货机、格子大厦、巫师的罐子、惊喜鬼屋、变形旅馆、七巧板皮影戏、狐狸的石子、摆渡奇遇、平方根建筑师、小小港湾、函数厨房、角度高尔夫与光学实验室完整闭环 | 部分：前七课件覆盖错误选择、重复搭配、错误找零、错误接线或错误放置后原地重试；狐狸的石子覆盖轮流拿取与必胜闭环；摆渡奇遇覆盖危险搭档违规、自动回退、撤销和重开后的状态恢复；平方根建筑师覆盖负数输入和错答恢复；小小港湾覆盖超载进水、泥球下沉和错误预测后的原地恢复；函数厨房覆盖错误步骤、复制爆单和参数传错后的原地恢复；角度高尔夫覆盖报角偏差、轨迹反馈和原地重试；光学实验室覆盖实像对焦与虚像无法投屏状态 | 不适用：纯静态无角色 | 部分：十四课件支持重开、状态恢复或无损调参，其余课件需逐项确认 | `tests/e2e/combo-closet.spec.js`、`tests/e2e/change-vending.spec.js`、`tests/e2e/grid-tower.spec.js`、`tests/e2e/wizard-jars.spec.js`、`tests/e2e/haunted-events.spec.js`、`tests/e2e/metamorph-hotel.spec.js`、`tests/e2e/tangram-theater.spec.js`、`tests/e2e/fox-stones.spec.js`、`tests/e2e/ferry-tales.spec.js`、`tests/e2e/square-root-lab.spec.js`、`tests/e2e/tiny-harbor.spec.js`、`tests/e2e/function-kitchen.spec.js`、`tests/e2e/angle-golf.spec.js`、`tests/e2e/smoke.spec.js`（光学实验室）；`AGENT.md` 提交前自检；其余课件需补 E2E 或交互烟测 |
 | 课件交互音效 | 中 | 缺口：静态扫描仅确认 27/49 个游戏存在音频实现，未验证语义、响度和完整玩法覆盖 | 缺口：需验证错误/无效操作、AudioContext 失败和快速连续操作 | 不适用：纯静态无角色 | 缺口：需验证静音可关闭一次性与循环声音、页面隐藏后停止环境音 | `docs/courseware-audio-audit.md`；静态审计不能替代桌面/手机人工听测，现有 E2E 不验证实际出声 |
 | 双语、主题、移动端适配 | 中 | 缺口 | 缺口 | 不适用：纯静态无角色 | 不适用：偏好写入 localStorage，无远端状态 | `AGENT.md` 质量规约；需补 1280x800 与 375x667 验收证据 |
 | 行为分析埋点 | 中 | 缺口 | 缺口 | 不适用：无用户身份 | 缺口：endpoint 缺失时应空操作 | `docs/analytics.md`、`scripts/track.js`、`cloudflare/analytics/` |
