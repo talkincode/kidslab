@@ -5,8 +5,8 @@
     "en": "Grid Tower"
   },
   "description": {
-    "zh": "把 23×14 的大厦拆成四块施工区：20×10、20×4、3×10、3×4。算完局部房间再合并总数，用能亲手盖起来的面积模型理解多位数乘法与乘除互逆。",
-    "en": "Split a 23×14 tower into four build zones: 20×10, 20×4, 3×10 and 3×4. Solve each area, combine the rooms, and use a buildable area model to understand multi-digit multiplication and inverse division."
+    "zh": "把 23×14 的大厦拆成四块彩色施工区，算对一块就看它满墙窗户逐格亮起；通关还有竖式 X 光揭秘每一行来自哪块楼。最后化身拆迁队，一层层炸掉 312 间房，亲手拆出除法。",
+    "en": "Split a 23×14 tower into four colour-coded build zones and watch every window light up as you solve each block, then see a long-multiplication X-ray map each line to a zone. Finally join the demolition crew and blast 312 rooms floor by floor to uncover division."
   },
   "category": "math",
   "levels": [

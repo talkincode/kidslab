@@ -12,6 +12,7 @@
     <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
     <h1 class="bar__title">🏗️ <span data-t="title">格子大厦</span></h1>
     <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭音效" aria-pressed="false">🔊</button>
       <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
       <button class="pill" id="langBtn" type="button">EN</button>
     </div>
@@ -51,8 +52,9 @@
           <span class="foreman__face" id="foremanFace" aria-hidden="true">👷</span>
           <p id="feedback" aria-live="polite">先点亮一块施工区！</p>
         </div>
+        <button class="demolish-button" id="demolishBtn" type="button" data-t="demolishBtn" hidden>🧨 拆一层</button>
         <div class="question" id="question">
-          <p class="question__label" data-t="chooseZone">选中施工区后，在这里报数</p>
+          <p class="question__label" id="questionLabel" data-t="chooseZone">选中施工区后，在这里报数</p>
           <strong id="questionText">10 × 6 = ?</strong>
         </div>
         <div class="answer-grid" id="answerGrid"></div>
@@ -63,9 +65,11 @@
 
   <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
     <div class="modal__card">
+      <div class="modal-confetti" id="modalConfetti" aria-hidden="true"></div>
       <div class="celebration" id="celebration" aria-hidden="true">🏙️</div>
       <p class="modal__kicker" data-t="inspection">验收通过</p>
       <h2 id="modalTitle">第一栋楼封顶！</h2>
+      <div class="xray" id="modalXray" aria-hidden="true"></div>
       <p id="modalText"></p>
       <button class="btn" id="nextBtn" type="button">下一张施工图</button>
     </div>
