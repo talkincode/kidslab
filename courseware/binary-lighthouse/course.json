@@ -1,0 +1,18 @@
+{
+  "id": "binary-lighthouse",
+  "title": {
+    "zh": "二进制灯塔",
+    "en": "Binary Lighthouse"
+  },
+  "description": {
+    "zh": "值守五盏只有亮与灭的海岛信号灯，用 16、8、4、2、1 的位值发送数字、解读来船灯语，再把 SOS 编成秘密信号。",
+    "en": "Run five island signal lamps with only on and off states. Use place values 16, 8, 4, 2, and 1 to send numbers, decode ships, and encode SOS."
+  },
+  "category": "programming",
+  "levels": ["primary"],
+  "grades": ["g4", "g5", "g6"],
+  "tags": ["二进制", "编程启蒙"],
+  "icon": "🗼",
+  "order": 57,
+  "badge": "new"
+}

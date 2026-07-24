@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>🗼 二进制灯塔 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🗼 <span data-t="title">二进制灯塔</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭音效" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="brief">
+      <div>
+        <p class="eyebrow" data-t="eyebrow">今晚的灯塔值班</p>
+        <p class="tip" id="tip">点灯凑出港口要的数字。亮灯记作 1，灭灯记作 0。</p>
+      </div>
+      <div class="range-chip">
+        <span data-t="rangeLabel">5 盏灯</span>
+        <strong>0—31</strong>
+      </div>
+    </section>
+
+    <nav class="level-strip" id="levelStrip" aria-label="关卡"></nav>
+
+    <section class="game-shell">
+      <section class="lighthouse-card" aria-labelledby="missionTitle">
+        <div class="card-heading">
+          <div>
+            <p class="section-label" id="watchLabel">第一班 · 发出航标</p>
+            <h2 id="missionTitle">用灯光发送数字 19</h2>
+          </div>
+          <button class="round-button" id="hintBtn" type="button" aria-label="提示">💡</button>
+        </div>
+
+        <div class="lighthouse-stage" id="lighthouseStage">
+          <div class="stars" aria-hidden="true"></div>
+          <div class="cloud cloud--one" aria-hidden="true"></div>
+          <div class="cloud cloud--two" aria-hidden="true"></div>
+          <div class="beam" id="beam" aria-hidden="true"></div>
+          <div class="moon" aria-hidden="true"></div>
+          <div class="ship" id="ship" aria-hidden="true">
+            <i></i><i></i><i></i>
+            <span>⚓</span>
+          </div>
+          <div class="sea" aria-hidden="true"><i></i><i></i><i></i></div>
+          <div class="island" aria-hidden="true"></div>
+          <div class="tower" aria-hidden="true">
+            <span class="tower__roof"></span>
+            <span class="tower__room"></span>
+            <span class="tower__body"></span>
+          </div>
+
+          <div class="signal-console">
+            <div class="signal-console__header">
+              <span data-t="placeValues">每盏灯的位值</span>
+              <code id="binaryReadout">00000</code>
+            </div>
+            <div class="lamp-bank" id="lampBank" aria-label="二进制信号灯"></div>
+          </div>
+
+          <div class="feedback" id="feedback" role="status" aria-live="polite">
+            先点亮 16，再想想还差几。
+          </div>
+        </div>
+      </section>
+
+      <aside class="control-card">
+        <div class="card-heading">
+          <div>
+            <p class="section-label" data-t="controlLabel">港务控制台</p>
+            <h2 id="controlTitle">把位值加起来</h2>
+          </div>
+          <button class="round-button round-button--reset" id="resetBtn" type="button" aria-label="重新开始">↻</button>
+        </div>
+
+        <div class="control-workspace" id="controlWorkspace"></div>
+
+        <div class="equation-board">
+          <span data-t="litSum">亮灯合计</span>
+          <strong id="sumReadout">0</strong>
+          <code id="equation">0 = 0</code>
+        </div>
+
+        <button class="primary-button" id="actionBtn" type="button">
+          <span aria-hidden="true">⚡</span>
+          <span id="actionLabel">发送灯语</span>
+        </button>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+    <section class="modal-card">
+      <div class="modal-magic" id="modalMagic" aria-hidden="true">🗼✨</div>
+      <p class="modal-kicker" data-t="watchPassed">值班任务完成</p>
+      <h2 id="modalTitle">货船收到 19！</h2>
+      <p id="modalText"></p>
+      <button class="primary-button" id="nextBtn" type="button">下一班</button>
+    </section>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

@@ -52,6 +52,7 @@
     "营养": { "en": "Nutrition", "kind": "knowledge", "aliases": ["nutrition"] },
     "观察": { "en": "Observation", "kind": "knowledge", "aliases": ["observation", "五感", "five senses", "特征"] },
     "编程启蒙": { "en": "Coding Basics", "kind": "knowledge", "aliases": ["coding basics", "coding", "编程"] },
+    "二进制": { "en": "Binary", "kind": "knowledge", "aliases": ["binary", "bits", "bit", "base 2", "位", "信息编码", "data representation"] },
     "顺序执行": { "en": "Sequencing", "kind": "knowledge", "aliases": ["sequencing", "指令", "instructions"] },
     "循环": { "en": "Loops", "kind": "knowledge", "aliases": ["loop", "loops", "嵌套循环", "nested loops"] },
     "条件判断": { "en": "Conditionals", "kind": "knowledge", "aliases": ["conditionals", "if-else", "if else", "逻辑运算", "boolean logic"] },

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-24T09:29:37.853Z",
+  "generatedAt": "2026-07-24T15:06:45.484Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -15,6 +15,10 @@
     },
     "事件驱动": {
       "en": "Event-Driven Programming",
+      "kind": "knowledge"
+    },
+    "二进制": {
+      "en": "Binary",
       "kind": "knowledge"
     },
     "人体": {
@@ -1728,6 +1732,48 @@
         "编程"
       ],
       "path": "courseware/haunted-events/index.html"
+    },
+    {
+      "id": "binary-lighthouse",
+      "title": {
+        "zh": "二进制灯塔",
+        "en": "Binary Lighthouse"
+      },
+      "description": {
+        "zh": "值守五盏只有亮与灭的海岛信号灯，用 16、8、4、2、1 的位值发送数字、解读来船灯语，再把 SOS 编成秘密信号。",
+        "en": "Run five island signal lamps with only on and off states. Use place values 16, 8, 4, 2, and 1 to send numbers, decode ships, and encode SOS."
+      },
+      "category": "programming",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g4",
+        "g5",
+        "g6"
+      ],
+      "tags": [
+        "二进制",
+        "编程启蒙"
+      ],
+      "icon": "🗼",
+      "order": 57,
+      "badge": "new",
+      "keywords": [
+        "Binary",
+        "binary",
+        "bits",
+        "bit",
+        "base 2",
+        "位",
+        "信息编码",
+        "data representation",
+        "Coding Basics",
+        "coding basics",
+        "coding",
+        "编程"
+      ],
+      "path": "courseware/binary-lighthouse/index.html"
     },
     {
       "id": "tiny-harbor",
