@@ -97,6 +97,55 @@ test('触屏可接线、打开抽屉并放置新元件', async ({ page, isMobile
   await expect(page.locator('#muteBtn')).toHaveAttribute('aria-pressed', 'true');
 });
 
+test('触屏可用明确的拖动画布工具平移视图', async ({ page, isMobile }) => {
+  test.skip(!isMobile, '移动项目覆盖单指画布平移');
+
+  const panButton = page.locator('#panBtn');
+  await expect(panButton).toBeVisible();
+  await panButton.tap();
+  await expect(panButton).toHaveAttribute('aria-pressed', 'true');
+
+  await page.locator('#resetViewBtn').click();
+  await expect.poll(() => page.evaluate(() =>
+    localStorage.getItem('kidslab.electricLab.autosave'))).not.toBeNull();
+  const before = await page.evaluate(() => JSON.parse(
+    localStorage.getItem('kidslab.electricLab.autosave'),
+  ).viewport.x);
+  const box = await page.locator('#stage').boundingBox();
+  const start = { x: box.x + box.width * .55, y: box.y + box.height * .72 };
+  const end = { x: start.x + 72, y: start.y - 24 };
+  await page.locator('#stage').dispatchEvent('pointerdown', {
+    pointerId: 7,
+    pointerType: 'touch',
+    button: 0,
+    buttons: 1,
+    clientX: start.x,
+    clientY: start.y,
+  });
+  await page.locator('#stage').dispatchEvent('pointermove', {
+    pointerId: 7,
+    pointerType: 'touch',
+    button: 0,
+    buttons: 1,
+    clientX: end.x,
+    clientY: end.y,
+  });
+  await page.locator('#stage').dispatchEvent('pointerup', {
+    pointerId: 7,
+    pointerType: 'touch',
+    button: 0,
+    buttons: 0,
+    clientX: end.x,
+    clientY: end.y,
+  });
+
+  await expect.poll(() => page.evaluate(() => JSON.parse(
+    localStorage.getItem('kidslab.electricLab.autosave'),
+  ).viewport.x)).toBeLessThan(before - 100);
+  await panButton.tap();
+  await expect(panButton).toHaveAttribute('aria-pressed', 'false');
+});
+
 test('长按菜单和多选编辑可恢复', async ({ page, isMobile }) => {
   test.skip(isMobile, '桌面覆盖长按菜单、框外多选和编辑历史');
 

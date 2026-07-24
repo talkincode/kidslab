@@ -408,6 +408,7 @@ button:focus-visible, input:focus-visible, canvas:focus-visible {
   touch-action: none;
   cursor: crosshair;
 }
+#stage.is-pan-tool { cursor: grab; }
 #stage.is-panning { cursor: grabbing; }
 #stage.is-wiring { cursor: cell; }
 #stage.is-dragging { cursor: move; }

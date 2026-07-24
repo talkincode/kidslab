@@ -51,6 +51,7 @@ const I18N = {
     save: '保存',
     load: '加载',
     resetView: '复位视图',
+    panCanvas: '拖动画布',
     current: '电流',
     data: '数据',
     sound: '声音',
@@ -90,6 +91,7 @@ const I18N = {
     selectedCount: (count) => `已选 ${count} 项`,
     placed: (name) => `${name} 已放好，端口上的亮圈可以接线。`,
     wired: '啪嗒！导线接好了。',
+    panHint: '拖动任意位置来移动画布，再点一次手掌退出。',
     duplicateWire: '这两个端口已经连过了。',
     selfWire: '导线不能接回同一个端口。',
     wireCancelled: '接线已取消。',
@@ -186,6 +188,7 @@ const I18N = {
     save: 'Save',
     load: 'Load',
     resetView: 'Reset view',
+    panCanvas: 'Pan canvas',
     current: 'Current',
     data: 'Data',
     sound: 'Sound',
@@ -225,6 +228,7 @@ const I18N = {
     selectedCount: (count) => `${count} selected`,
     placed: (name) => `${name} is ready. Wire the glowing port rings.`,
     wired: 'Snap! The wire is connected.',
+    panHint: 'Drag anywhere to move the canvas. Tap the hand again to exit.',
     duplicateWire: 'Those two ports are already connected.',
     selfWire: 'A wire cannot return to the exact same port.',
     wireCancelled: 'Wiring cancelled.',
@@ -385,6 +389,7 @@ const autosavedCircuit = loadAutosave();
 let circuit = autosavedCircuit || createStarterCircuit();
 let analysis = simulateCircuit(circuit, { deltaMs: 0 }).analysis;
 let selectedTool = null;
+let panMode = false;
 let selectedComponents = new Set();
 let selectedWires = new Set();
 let interaction = null;
@@ -550,17 +555,21 @@ function buildToolbox() {
     button.innerHTML = `<span aria-hidden="true">${definition.icon}</span><b>${definition.label[lang]}</b><small>${type.toUpperCase()}</small>`;
     button.addEventListener('click', () => {
       ensureAudio();
+      panMode = false;
       selectedTool = selectedTool === type ? null : type;
       pendingWire = null;
       if (selectedTool) showToast(t('selectedTool')(definition.label[lang]));
       buildToolbox();
+      updateToolbar();
       updateCanvasCursor();
     });
     button.addEventListener('dragstart', (event) => {
       event.dataTransfer.effectAllowed = 'copy';
       event.dataTransfer.setData('application/x-electric-component', type);
+      panMode = false;
       selectedTool = type;
       buildToolbox();
+      updateToolbar();
     });
     dom.componentList.appendChild(button);
   }
@@ -605,6 +614,7 @@ function updateToolbar() {
   $('#runBtn').querySelector('span').textContent = settings.running ? '▶' : 'Ⅱ';
   $('#runBtn').querySelector('b').textContent = settings.running ? t('run') : t('pause');
   setToggle($('#powerBtn'), settings.powered);
+  setToggle($('#panBtn'), panMode);
   setToggle($('#currentBtn'), settings.showCurrent);
   setToggle($('#dataBtn'), settings.showData);
   setToggle($('#muteBtn'), settings.muted);
@@ -1210,6 +1220,7 @@ function setZoom(nextZoom, anchor = { x: canvasSize.width / 2, y: canvasSize.hei
 }
 
 function updateCanvasCursor() {
+  dom.stage.classList.toggle('is-pan-tool', panMode);
   dom.stage.classList.toggle('is-panning', interaction?.kind === 'pan' || Boolean(pinch));
   dom.stage.classList.toggle('is-wiring', interaction?.kind === 'wire' || Boolean(pendingWire));
   dom.stage.classList.toggle('is-dragging', interaction?.kind === 'component' && interaction.moved);
@@ -1262,7 +1273,7 @@ function onPointerDown(event) {
   if (activePointers.size > 1) return;
 
   hoverWorld = point;
-  const panGesture = event.button === 1 || event.button === 2 || event.altKey || spaceDown;
+  const panGesture = panMode || event.button === 1 || event.button === 2 || event.altKey || spaceDown;
   if (panGesture) {
     interaction = {
       kind: 'pan',
@@ -2064,6 +2075,18 @@ function bindControls() {
   });
   $('#undoBtn').addEventListener('click', undo);
   $('#redoBtn').addEventListener('click', redo);
+  $('#panBtn').addEventListener('click', () => {
+    panMode = !panMode;
+    if (panMode) {
+      selectedTool = null;
+      pendingWire = null;
+      hoverPort = null;
+      buildToolbox();
+      showToast(t('panHint'));
+    }
+    updateToolbar();
+    updateCanvasCursor();
+  });
   $('#copyBtn').addEventListener('click', copySelection);
   $('#deleteBtn').addEventListener('click', deleteSelection);
   $('#rotateBtn').addEventListener('click', rotateSelection);
@@ -2211,9 +2234,11 @@ function bindControls() {
     } else if (event.key === 'Escape') {
       pendingWire = null;
       selectedTool = null;
+      panMode = false;
       hideContextMenu();
       closePanels();
       buildToolbox();
+      updateToolbar();
       updateCanvasCursor();
     }
   });
