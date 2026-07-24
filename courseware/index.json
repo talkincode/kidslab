@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-24T05:42:40.905Z",
+  "generatedAt": "2026-07-24T09:29:37.853Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -1996,12 +1996,12 @@
     {
       "id": "electric-mouse",
       "title": {
-        "zh": "电工鼠小镇",
-        "en": "Electric Mouse Town"
+        "zh": "电工鼠实验室",
+        "en": "Electric Mouse Lab"
       },
       "description": {
-        "zh": "老鼠小镇大停电！接电池、开关、灯泡组成回路，看电流粒子在导线里奔跑。串联一户烧全街黑，改成并联各亮各的；勺子能当导线吗？橡皮鸭呢？全靠你试！",
-        "en": "Blackout in Mouse Town! Wire batteries, switches and bulbs into circuits and watch current particles race through the wires. Series makes the whole street go dark together — rewire in parallel! Can a spoon be a wire? A rubber duck? Try it!"
+        "zh": "在开放实验台自由放置电池、灯泡、电机、开关和保护器件，搭建串联、并联与混合电路；实时观察电压、电流、功率和亮度，制造并修复断路、短路，还能保存自己的夜光小镇。",
+        "en": "Freely place batteries, lamps, motors, switches, junctions, and protection devices. Build series, parallel, or mixed circuits; observe live voltage, current, power, and brightness; create and repair faults; then save your glowing town."
       },
       "category": "science",
       "levels": [

@@ -1,100 +1,250 @@
 <!doctype html>
-<html lang="zh-CN" data-theme="light">
+<html lang="zh-CN" data-theme="dark">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>🐭 电工鼠小镇 · KidsLab</title>
-  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg" />
+  <meta name="description" content="自由搭建、实时观察、制造故障并保存作品的儿童电路实验室。" />
+  <meta name="color-scheme" content="light dark" />
+  <title>电工鼠实验室 · KidsLab</title>
   <link rel="stylesheet" href="style.css" />
   <script>
-    /* 防闪烁：进 body 前先定好主题与语言（与主站同一套 localStorage 键） */
     (() => {
       try {
-        const t = localStorage.getItem('kidslab.theme')
+        const theme = localStorage.getItem('kidslab.theme')
           || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-        document.documentElement.dataset.theme = t;
-        const l = localStorage.getItem('kidslab.lang')
-          || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
-        document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
-      } catch { /* 隐私模式下静默降级 */ }
+        const lang = localStorage.getItem('kidslab.lang')
+          || (navigator.language?.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+      } catch {
+        document.documentElement.dataset.theme = 'dark';
+      }
     })();
   </script>
+<link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
 <script>(()=>{"use strict";const g=window,r=g.cool||{};if(r.sdkVersion)return;try{document.documentElement.style.touchAction="manipulation"}catch{}const w="electric-mouse",b=location.pathname.split("/").filter(Boolean),E=b.at(-1)||"",A=E.includes(".")?b.at(-2):E,f=w.startsWith("__")?A:w,l={get(t,n=null){try{const e=localStorage.getItem(t);return e===null?n:e}catch{return n}},set(t,n){try{return localStorage.setItem(t,n),!0}catch{return!1}},remove(t){try{return localStorage.removeItem(t),!0}catch{return!1}}},d=new Set,S=new Set(["zh","en"]),I=new Set(["light","dark"]),C=(navigator.language||"").toLowerCase().startsWith("zh")?"zh":"en";let m="light";try{m=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch{}let s=l.get("kidslab.lang",C),c=l.get("kidslab.theme",m);S.has(s)||(s=C),I.has(c)||(c=m);function p(){document.documentElement.lang=s==="zh"?"zh-CN":"en",document.documentElement.dataset.theme=c}function T(t,n){const e={kind:t,value:n};for(const o of[...d])o(e);g.dispatchEvent(new CustomEvent(`${t}change`,{detail:{[t]:n}}))}const z={get lang(){return s},get theme(){return c},setLang(t){if(!S.has(t))throw new RangeError(`Unsupported language: ${t}`);t!==s&&(s=t,l.set("kidslab.lang",t),p(),T("lang",t))},setTheme(t){if(!I.has(t))throw new RangeError(`Unsupported theme: ${t}`);t!==c&&(c=t,l.set("kidslab.theme",t),p(),T("theme",t))},toggleLang(){this.setLang(s==="zh"?"en":"zh")},toggleTheme(){this.setTheme(c==="light"?"dark":"light")},subscribe(t){if(typeof t!="function")throw new TypeError("Preference listener must be a function");return d.add(t),()=>d.delete(t)}};function D(t,n={}){if(!t||typeof t!="object")throw new TypeError("Messages must be an object");const e=n.root||document;if(!e.querySelectorAll&&!e.matches)throw new TypeError("i18n root must be a Document or Element");function o(a,...h){const i=t[s]?.[a]??t.zh?.[a]??t.en?.[a];return typeof i=="function"?i(...h):i??a}function y(a="lang"){const h=[];e.matches?.("[data-t]")&&h.push(e),e.querySelectorAll&&h.push(...e.querySelectorAll("[data-t]"));for(const i of h){const L=o(i.dataset.t);typeof L=="string"&&(i.textContent=L)}n.onChange?.({kind:a,lang:s,theme:c,t:o})}const $=z.subscribe(({kind:a})=>{a==="lang"?y("lang"):n.onChange?.({kind:a,lang:s,theme:c,t:o})});return y("init"),{t:o,render:y,destroy:$}}const u=f?`kidslab.progress.${f}`:"";function _(){if(!u)return null;try{const t=JSON.parse(l.get(u,"null"));return!t||!["played","completed"].includes(t.status)?null:t}catch{return null}}function k(t,n){if(!u)return null;const e=_()||{},o={status:e.status==="completed"?"completed":t,stage:n||e.stage||"",updatedAt:Date.now()};return e.status===o.status&&e.stage===o.stage?e:(l.set(u,JSON.stringify(o)),o)}const P={get:_,clear(){return u?l.remove(u):!1}};r.sdkVersion=2,r.courseId=f,r.storage=l,r.preferences=z,r.bindI18n=D,r.progress=P,typeof r.track!="function"&&(r.track=()=>{}),r.stage=t=>{typeof t!="string"||!t||k("played",t.slice(0,48))},r.complete=()=>k("completed"),g.cool=r,p()})();
 </script>
 <script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
 </head>
 <body>
-  <header class="bar">
-    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
-    <h1 class="bar__title">🐭 <span data-t="title">电工鼠小镇</span></h1>
-    <div class="bar__actions">
-      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
-      <button class="pill" id="langBtn" type="button">EN</button>
-    </div>
-  </header>
-
-  <main class="wrap">
-    <section class="hero card">
-      <div>
-        <p class="eyebrow" data-t="eyebrow">科学课件 · 电路侦探任务</p>
-        <p class="tip" id="tip" data-t="tip0">拖元件、点端子接线，让小镇重新亮起来。</p>
+  <div class="app">
+    <header class="topbar">
+      <a class="icon-button back-button" href="../../index.html" data-t-title="back" aria-label="返回平台">
+        <span aria-hidden="true">←</span>
+      </a>
+      <div class="brand">
+        <span class="brand__mouse" aria-hidden="true">🐭</span>
+        <div>
+          <p class="brand__eyebrow">ELECTRIC MOUSE / OPEN LAB</p>
+          <h1 data-t="title">电工鼠实验室</h1>
+        </div>
       </div>
-      <div class="hero__meter" aria-live="polite">
-        <span id="mouseMood">🐭</span>
-        <b id="statusText" data-t="statusOpen">断电中</b>
+      <label class="project-name">
+        <span class="sr-only" data-t="projectName">作品名称</span>
+        <input id="projectName" type="text" maxlength="36" value="我的夜光小镇" />
+      </label>
+      <div class="topbar__actions">
+        <button class="icon-button" id="toolboxToggle" type="button" aria-controls="toolboxPanel" aria-expanded="false" data-t-title="toolbox">
+          <span aria-hidden="true">🧰</span>
+        </button>
+        <button class="icon-button" id="inspectorToggle" type="button" aria-controls="inspectorPanel" aria-expanded="false" data-t-title="observe">
+          <span aria-hidden="true">📟</span>
+        </button>
+        <button class="icon-button" id="themeBtn" type="button" data-t-title="theme" aria-label="切换主题">
+          <span aria-hidden="true">☀️</span>
+        </button>
+        <button class="language-button" id="langBtn" type="button">EN</button>
       </div>
-    </section>
+    </header>
 
-    <section class="game-shell">
-      <aside class="panel toolbox" aria-label="toolbox">
-        <p class="panel__label" data-t="toolbox">工具箱</p>
-        <div class="tool-grid" id="toolbox"></div>
-        <p class="mini" data-t="toolHint">点工具再点板上放置；点空心端子○再点另一个端子接线。按住元件中间可拖动，点一下开关切换，双击灯泡拧下/装回。</p>
+    <nav class="toolbar" aria-label="实验室工具栏">
+      <div class="toolbar__group toolbar__group--power">
+        <button class="tool-action is-active" id="runBtn" type="button" aria-pressed="true">
+          <span aria-hidden="true">▶</span><b data-t="run">运行</b>
+        </button>
+        <button class="tool-action is-active" id="powerBtn" type="button" aria-pressed="true">
+          <span aria-hidden="true">⚡</span><b data-t="power">总电源</b>
+        </button>
+      </div>
+      <div class="toolbar__group">
+        <button class="tool-action" id="undoBtn" type="button" disabled>
+          <span aria-hidden="true">↶</span><b data-t="undo">撤销</b>
+        </button>
+        <button class="tool-action" id="redoBtn" type="button" disabled>
+          <span aria-hidden="true">↷</span><b data-t="redo">重做</b>
+        </button>
+        <button class="tool-action" id="copyBtn" type="button">
+          <span aria-hidden="true">⧉</span><b data-t="copy">复制</b>
+        </button>
+        <button class="tool-action tool-action--danger" id="deleteBtn" type="button">
+          <span aria-hidden="true">⌫</span><b data-t="delete">删除</b>
+        </button>
+      </div>
+      <div class="toolbar__group">
+        <button class="tool-action" id="clearBtn" type="button">
+          <span aria-hidden="true">✦</span><b data-t="clear">清空</b>
+        </button>
+        <button class="tool-action" id="saveBtn" type="button">
+          <span aria-hidden="true">▣</span><b data-t="save">保存</b>
+        </button>
+        <button class="tool-action" id="loadBtn" type="button">
+          <span aria-hidden="true">▤</span><b data-t="load">加载</b>
+        </button>
+        <button class="tool-action" id="resetViewBtn" type="button">
+          <span aria-hidden="true">⌖</span><b data-t="resetView">复位视图</b>
+        </button>
+      </div>
+      <div class="toolbar__group toolbar__group--view">
+        <button class="tool-action is-active" id="currentBtn" type="button" aria-pressed="true">
+          <span aria-hidden="true">•••</span><b data-t="current">电流</b>
+        </button>
+        <button class="tool-action is-active" id="dataBtn" type="button" aria-pressed="true">
+          <span aria-hidden="true">V·A</span><b data-t="data">数据</b>
+        </button>
+        <button class="tool-action" id="muteBtn" type="button" aria-pressed="false" data-t-title="sound" aria-label="声音">
+          <span aria-hidden="true">🔊</span><b data-t="sound">声音</b>
+        </button>
+      </div>
+    </nav>
+
+    <main class="workspace">
+      <aside class="side-panel toolbox-panel" id="toolboxPanel" aria-label="元件工具箱">
+        <div class="panel-heading">
+          <div>
+            <span class="panel-index">01 / PARTS</span>
+            <h2 data-t="toolbox">元件工具箱</h2>
+          </div>
+          <button class="panel-close" type="button" data-close-panel="toolboxPanel" aria-label="关闭">×</button>
+        </div>
+        <p class="panel-note" data-t="toolboxHint">拖进画布，或点元件后再点画布。数量不限。</p>
+        <div class="component-list" id="componentList"></div>
+        <div class="toolbox-tip">
+          <span aria-hidden="true">✦</span>
+          <p data-t="freeTip">没有标准答案。先大胆接，再观察发生了什么。</p>
+        </div>
       </aside>
 
-      <section class="board-card card">
-        <div class="hud">
-          <div class="hud__story">
-            <p class="panel__label" id="levelKicker">任务 1 / 10</p>
-            <h2 id="levelTitle">点亮第一盏灯</h2>
-            <p id="levelBrief">把电池和灯泡接成完整回路。</p>
+      <section class="stage-panel" aria-label="电路实验画布">
+        <div class="stage-heading">
+          <div class="live-state" id="liveState" data-status="open">
+            <i aria-hidden="true"></i>
+            <span data-t="openCircuit">等待接线</span>
           </div>
-          <div class="hud__buttons">
-            <button class="btn" id="testBtn" type="button" data-t="test">通电测试 ⚡</button>
-            <button class="btn btn--ghost" id="resetBtn" type="button" data-t="reset">重置</button>
-            <button class="btn btn--ghost" id="deleteBtn" type="button" data-t="delete">删除选中</button>
-            <button class="btn" id="nextBtn" type="button" data-t="next" disabled>下一关 →</button>
+          <p id="liveSummary">0 个元件 · 0 条导线</p>
+          <div class="zoom-readout" aria-label="缩放">
+            <button id="zoomOutBtn" type="button" aria-label="缩小">−</button>
+            <output id="zoomValue">100%</output>
+            <button id="zoomInBtn" type="button" aria-label="放大">+</button>
           </div>
         </div>
-        <canvas id="stage" aria-label="Electric circuit board"></canvas>
+        <div class="canvas-wrap" id="canvasWrap">
+          <canvas id="stage" tabindex="0" aria-label="电工鼠开放电路画布"></canvas>
+          <div class="first-guide" id="firstGuide">
+            <button id="dismissGuide" type="button" aria-label="关闭">×</button>
+            <strong data-t="guideTitle">三步点亮小镇</strong>
+            <span data-t="guideSteps">放元件 → 连端口 → 合开关</span>
+          </div>
+          <div class="selection-count" id="selectionCount" hidden></div>
+          <div class="context-menu" id="contextMenu" role="menu" hidden>
+            <button type="button" data-context-action="toggle"><span aria-hidden="true">◉</span><b data-t="operate">操作</b></button>
+            <button type="button" data-context-action="rotate"><span aria-hidden="true">↻</span><b data-t="rotate">旋转</b></button>
+            <button type="button" data-context-action="copy"><span aria-hidden="true">⧉</span><b data-t="copy">复制</b></button>
+            <button type="button" data-context-action="delete"><span aria-hidden="true">⌫</span><b data-t="delete">删除</b></button>
+          </div>
+          <div class="canvas-toast" id="toast" role="status" hidden></div>
+        </div>
+        <div class="stage-footer">
+          <span><kbd>Shift</kbd> <span data-t="multiSelect">多选</span></span>
+          <span><kbd>Space</kbd> + <span data-t="drag">拖动</span> <span data-t="pan">平移</span></span>
+          <span><span aria-hidden="true">☝</span> <span data-t="longPress">长按有菜单</span></span>
+          <span class="autosave-state" id="autosaveState" data-t="autosaved">已自动保存</span>
+        </div>
       </section>
 
-      <aside class="panel notebook">
-        <p class="panel__label" data-t="notebook">电工鼠笔记</p>
-        <div class="bubble" id="coachBubble">先放电池和灯泡，再把四个端子连起来。</div>
-        <div class="dex">
-          <div><b data-t="conductors">会导电</b><ul id="goodDex"></ul></div>
-          <div><b data-t="insulators">不导电</b><ul id="badDex"></ul></div>
+      <aside class="side-panel inspector-panel" id="inspectorPanel" aria-label="观察面板">
+        <div class="panel-heading">
+          <div>
+            <span class="panel-index">02 / METER</span>
+            <h2 data-t="observe">观察面板</h2>
+          </div>
+          <button class="panel-close" type="button" data-close-panel="inspectorPanel" aria-label="关闭">×</button>
         </div>
-        <div class="legend">
-          <span><i class="dot dot--on"></i><span data-t="legendOn">通路</span></span>
-          <span><i class="dot dot--gap"></i><span data-t="legendGap">断路</span></span>
-          <span><i class="dot dot--short"></i><span data-t="legendShort">短路</span></span>
-        </div>
-      </aside>
-    </section>
-  </main>
 
-  <div class="toast" id="toast" hidden></div>
-  <div class="win" id="win" hidden>
-    <div class="win__card">
-      <p class="win__emoji" id="winEmoji">🏅</p>
-      <h2 id="winTitle">电工鼠盖章通过！</h2>
-      <p id="winDesc">小镇又亮了一户。</p>
-      <button class="btn" id="winNext" type="button" data-t="next">下一关 →</button>
+        <section class="meter-card" aria-live="polite">
+          <div class="meter-card__hero">
+            <span id="meterIcon" aria-hidden="true">🌙</span>
+            <div>
+              <small data-t="circuitState">电路状态</small>
+              <strong id="meterState">等待接线</strong>
+            </div>
+          </div>
+          <div class="meter-grid">
+            <div><span data-t="sourceVoltage">电源电压</span><b id="sourceVoltage">0.00 V</b></div>
+            <div><span data-t="totalCurrent">总电流</span><b id="totalCurrent">0.00 A</b></div>
+            <div><span data-t="activeLoads">工作负载</span><b id="activeLoads">0</b></div>
+            <div><span data-t="faultCount">故障</span><b id="faultCount">0</b></div>
+          </div>
+        </section>
+
+        <section class="fault-card" id="faultCard">
+          <div class="section-title">
+            <span aria-hidden="true">⚠</span>
+            <h3 data-t="diagnosis">电工鼠诊断</h3>
+          </div>
+          <p id="faultText" data-t="diagnosisIdle">接线后，这里会解释通路、断路和保护动作。</p>
+        </section>
+
+        <section class="selection-card">
+          <div class="section-title">
+            <span aria-hidden="true">⌁</span>
+            <h3 data-t="selectedPart">选中的元件</h3>
+          </div>
+          <div id="emptySelection" class="empty-selection">
+            <span aria-hidden="true">☝</span>
+            <p data-t="selectHint">点一个元件查看电压、电流和可调属性。</p>
+          </div>
+          <div id="selectionInspector" hidden>
+            <div class="selected-heading">
+              <span id="selectedIcon" aria-hidden="true">💡</span>
+              <div><strong id="selectedName">灯泡</strong><small id="selectedStatus">关闭</small></div>
+            </div>
+            <div class="selected-readings">
+              <span>V <b id="selectedVoltage">0.00 V</b></span>
+              <span>A <b id="selectedCurrent">0.00 A</b></span>
+              <span>W <b id="selectedPower">0.00 W</b></span>
+            </div>
+            <div class="property-fields" id="propertyFields"></div>
+            <div class="selection-actions">
+              <button id="componentActionBtn" type="button"><span aria-hidden="true">◉</span><b data-t="operate">操作</b></button>
+              <button id="rotateBtn" type="button"><span aria-hidden="true">↻</span><b data-t="rotate">旋转</b></button>
+              <button id="duplicateBtn" type="button"><span aria-hidden="true">⧉</span><b data-t="copy">复制</b></button>
+              <button id="removeBtn" type="button"><span aria-hidden="true">⌫</span><b data-t="delete">删除</b></button>
+            </div>
+          </div>
+        </section>
+      </aside>
+    </main>
+
+    <footer class="statusbar">
+      <span class="statusbar__mouse" id="mouseCoach" aria-live="polite">🐭 把端口连成一个完整的圈，电流才有路可走。</span>
+      <span class="statusbar__mode"><i></i><b data-t="freeMode">自由实验模式</b></span>
+    </footer>
+  </div>
+
+  <div class="panel-scrim" id="panelScrim" hidden></div>
+
+  <div class="confirm-dialog" id="clearDialog" role="dialog" aria-modal="true" aria-labelledby="clearTitle" hidden>
+    <div>
+      <span class="dialog-icon" aria-hidden="true">🧹</span>
+      <h2 id="clearTitle" data-t="clearTitle">清空整张实验台？</h2>
+      <p data-t="clearText">元件和导线都会移走，但你可以马上撤销。</p>
+      <div>
+        <button class="dialog-cancel" id="cancelClearBtn" type="button" data-t="cancel">取消</button>
+        <button class="dialog-confirm" id="confirmClearBtn" type="button" data-t="clear">清空</button>
+      </div>
     </div>
   </div>
 
-  <script src="main.js"></script>
+  <script type="module" src="main.js"></script>
 </body>
 </html>

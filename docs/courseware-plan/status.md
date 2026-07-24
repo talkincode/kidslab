@@ -129,7 +129,7 @@ Agent 每次完成计划项后必须同步更新：
 - [x] 分子迪斯科 `molecule-disco`
 - [x] 消化道漂流记 `body-rafting`
 - [x] 月相狼历 `wolf-calendar`
-- [x] 电工鼠小镇 `electric-mouse`
+- [x] 电工鼠实验室 `electric-mouse`
 - [x] 地球调度员 `earth-dj`
 - [x] 星海水手 `star-sailor`
 
@@ -237,6 +237,7 @@ Agent 每次完成计划项后必须同步更新：
 | 主站浏览与筛选 | 中 | 缺口 | 缺口 | 不适用：纯静态无角色 | 不适用：只读 UI | `assets/js/app.js`；需补 E2E 覆盖学段/年级/分类/搜索 |
 | 课件构建与 manifest 生成 | 中 | 部分：`npm run build` | 部分：`scripts/build.mjs` 校验非法 `course.json` | 不适用：本地构建无角色 | 部分：构建失败不应写入错误 manifest，需补回归验证 | `scripts/build.mjs`、`.github/workflows/deploy.yml` |
 | PWA 壳与课件离线缓存 | 高 | 已覆盖：manifest 合法性 + SW 激活预缓存 + cache-on-visit 角标 | 已覆盖：杀死服务器后离线回放已玩课件与主站壳 | 不适用：纯静态无角色 | 已覆盖：断网时 SW 缓存兜底，联网 network-first 自动恢复最新内容 | `tests/e2e/pwa.spec.js` |
+| 电工鼠开放电路实验室 | 高 | 已覆盖：桌面与触屏完成端口接线、合闸点亮、实时电流读数和触屏放置 | 已覆盖：制造短路并显示故障 | 不适用：纯静态无角色 | 已覆盖：撤销短路恢复通路；保存后清空并加载恢复作品 | `tests/e2e/electric-mouse.spec.js`；`tests/unit/electric-lab.test.mjs` |
 | 单个课件核心玩法 | 中 | 部分：搭配衣橱、找零售货机、格子大厦、巫师的罐子、惊喜鬼屋、变形旅馆、七巧板皮影戏、狐狸的石子、摆渡奇遇、平方根建筑师、小小港湾、函数厨房、角度高尔夫与光学实验室完整闭环 | 部分：前七课件覆盖错误选择、重复搭配、错误找零、错误接线或错误放置后原地重试；狐狸的石子覆盖轮流拿取与必胜闭环；摆渡奇遇覆盖危险搭档违规、自动回退、撤销和重开后的状态恢复；平方根建筑师覆盖负数输入和错答恢复；小小港湾覆盖超载进水、泥球下沉和错误预测后的原地恢复；函数厨房覆盖错误步骤、复制爆单和参数传错后的原地恢复；角度高尔夫覆盖报角偏差、轨迹反馈和原地重试；光学实验室覆盖实像对焦与虚像无法投屏状态 | 不适用：纯静态无角色 | 部分：十四课件支持重开、状态恢复或无损调参，其余课件需逐项确认 | `tests/e2e/combo-closet.spec.js`、`tests/e2e/change-vending.spec.js`、`tests/e2e/grid-tower.spec.js`、`tests/e2e/wizard-jars.spec.js`、`tests/e2e/haunted-events.spec.js`、`tests/e2e/metamorph-hotel.spec.js`、`tests/e2e/tangram-theater.spec.js`、`tests/e2e/fox-stones.spec.js`、`tests/e2e/ferry-tales.spec.js`、`tests/e2e/square-root-lab.spec.js`、`tests/e2e/tiny-harbor.spec.js`、`tests/e2e/function-kitchen.spec.js`、`tests/e2e/angle-golf.spec.js`、`tests/e2e/smoke.spec.js`（光学实验室）；`AGENT.md` 提交前自检；其余课件需补 E2E 或交互烟测 |
 | 课件交互音效 | 中 | 缺口：静态扫描仅确认 27/49 个游戏存在音频实现，未验证语义、响度和完整玩法覆盖 | 缺口：需验证错误/无效操作、AudioContext 失败和快速连续操作 | 不适用：纯静态无角色 | 缺口：需验证静音可关闭一次性与循环声音、页面隐藏后停止环境音 | `docs/courseware-audio-audit.md`；静态审计不能替代桌面/手机人工听测，现有 E2E 不验证实际出声 |
 | 双语、主题、移动端适配 | 中 | 缺口 | 缺口 | 不适用：纯静态无角色 | 不适用：偏好写入 localStorage，无远端状态 | `AGENT.md` 质量规约；需补 1280x800 与 375x667 验收证据 |

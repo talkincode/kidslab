@@ -1,1471 +1,2267 @@
-/* ============================================================
-   🐭 电工鼠小镇 · KidsLab 双语/主题模板
-   —— 「语言 & 主题」段落是平台约定，整段复制、按需加 key，勿改机制
-   ============================================================ */
-(() => {
-  'use strict';
+import {
+  COMPONENT_CATALOG,
+  addComponent,
+  cloneCircuitDocument,
+  componentById,
+  connectPorts,
+  createCircuitDocument,
+  removeComponents,
+  removeWires,
+  touchDocument,
+} from './circuit-model.js';
+import { simulateCircuit } from './circuit-simulator.js';
+import {
+  AUTOSAVE_KEY,
+  SAVED_CIRCUIT_KEY,
+  loadCircuit,
+  saveCircuit,
+} from './circuit-storage.js';
 
-  /* ================= 语言 & 主题 · Language & Theme ================= */
-  const I18N = {
-    zh: {
-      doc: '🐭 电工鼠小镇 · KidsLab',
-      back: '返回平台',
-      title: '电工鼠小镇',
-      eyebrow: '科学课件 · 电路侦探任务',
-      tip0: '拖元件、点端子接线，让小镇重新亮起来。',
-      toolbox: '工具箱', toolHint: '点工具再点板上放置；点空心端子○再点另一个端子接线。按住元件中间可拖动，点一下开关切换，双击灯泡拧下/装回。',
-      notebook: '电工鼠笔记', conductors: '会导电', insulators: '不导电',
-      legendOn: '通路', legendGap: '断路', legendShort: '短路',
-      test: '通电测试 ⚡', reset: '重置', delete: '删除选中', next: '下一关 →',
-      statusOpen: '断电中', statusOn: '灯亮了！', statusDim: '有点暗', statusShort: '短路警报', statusWon: '任务完成',
-      onTag: '合', offTag: '断', dimTag: '偏暗', gapHere: '缺口在这里', gapMany: '把亮圈圈用导线连起来',
-      fixedWire: '这条教学线固定，不能剪。', fixedPart: '这个教学元件固定，留着观察吧。',
-      levelKicker: (a, b) => `任务 ${a} / ${b}`,
-      sandboxKicker: '自由沙盒',
-      coachStart: '欢迎来到老鼠小镇！先放电池和灯泡，再把端子连成一个圈。',
-      coachWire: '端子变成星星啦！再点另一个端子，导线就会啪嗒接上。',
-      coachDelete: '已剪掉。现实里剪线前要先断电，电工鼠给你点赞。',
-      coachOpen: '这里像小桥断开，电流跑不过去。找找没接上的端子。',
-      coachOn: '看！金色电流粒子沿着闭合回路奔跑。',
-      coachDim: '串联灯泡要分享同一份能量，所以每盏都会变暗。',
-      coachShort: '呲啦！电流走了捷径，绕开灯泡就是短路。剪掉红色捷径线！',
-      coachShortWire: '这根新线让电流抄了近路！已帮你选中，点「删除选中」剪掉，再找灯泡两头的空心端子○重新接。',
-      coachParallel: '并联像每户有自己的小路，一户坏了也不挡别人回家。',
-      coachBroken: '灯泡被拧下了：它所在的路断开。再双击可装回。',
-      coachSpdt: '双控开关像岔路，两个开关拨到同一条线，楼道灯就亮。',
-      coachOnMiss: (hint) => `灯亮啦，但任务还差一步：${hint}`,
-      toastTool: (name) => `已选中：${name}。去接线板点一下放置。`,
-      toastSameComp: '导线的两头要接在两个不同的零件上哦。',
-      toastNeedBattery: '先放一节电池，电工鼠才有能量源。',
-      toastWin: '电工鼠盖章通过！',
-      toastMagic: '魔法时刻：全镇灯火通明！镇长鼠颁发并联奖章！',
-      toastNoWire: '点一个端子开始拉线，或选择元件放置。',
-      winTitle: '电工鼠盖章通过！',
-      winDesc: (n) => `第 ${n} 个委托完成，小镇更亮了一点。`,
-      finalWin: '沙盒已解锁：你是真正的电路设计师！',
-      dexEmpty: '还没记录',
-      compBattery: '电池', compLamp: '灯泡', compSwitch: '开关', compWire: '导线', compSpoon: '铁勺', compWood: '木棍', compDuck: '橡皮鸭', compPencil: '铅笔芯', compKey: '钥匙', compYarn: '毛线', compSpdt: '双控开关',
-      levelNames: [
-        '点亮第一盏灯', '加开关控制', '找断点', '导体实验室', '短路事故现场',
-        '两灯串联', '串改并：老鼠街抗议', '开关逻辑', '楼道双控开关之谜', '自由沙盒',
-      ],
-      levelBriefs: [
-        '把电池和灯泡接成完整回路，让第一户鼠屋亮灯。',
-        '点一下开关试试：合上才亮，打开就灭。',
-        '这户人家的线少了一段，找到缺口并补上。',
-        '把杂物接进断口：铁勺会亮，橡皮鸭不会，铅笔芯微亮；记录图鉴。',
-        '红色捷径线造成短路，点它再按删除剪掉，让灯泡正常发光。',
-        '补上中间缺的导线，把两盏灯串成一串，看它们一起变暗；双击灯泡可拧下。',
-        '四户串联太脆弱！剪掉旧线改成并联，让每户独立全亮。',
-        '点一下总开关，同时点亮两盏灯，体会干路与支路。',
-        '两个双控开关控制一盏楼道灯，点任意一个都能改变通断。',
-        '无限元件自由搭建，实时判定通路、断路和短路。',
-      ],
-      passHints: [
-        '目标：至少一盏灯全亮。', '目标：开关闭合后灯亮。', '目标：补好缺口。', '目标：图鉴里同时有导体和绝缘体，并让灯亮。', '目标：没有短路且灯亮。',
-        '目标：两盏灯都亮但偏暗。', '目标：四盏灯都全亮。', '目标：一个总开关点亮两盏灯。', '目标：楼道双控灯亮。', '目标：搭出任意安全亮灯电路。',
-      ],
-      /* ✏️ 静态文案 key…；动态文案用函数：score: (n) => `得分 ${n}` */
+const WORLD = { width: 1600, height: 1000, townHeight: 190 };
+const GRID = 20;
+const MAX_HISTORY = 80;
+const TOOL_ORDER = [
+  'battery',
+  'batteryBox',
+  'lamp',
+  'motor',
+  'buzzer',
+  'switch',
+  'spdt',
+  'button',
+  'breaker',
+  'fuse',
+  'junction',
+];
+
+const I18N = {
+  zh: {
+    back: '返回平台',
+    title: '电工鼠实验室',
+    projectName: '作品名称',
+    theme: '切换主题',
+    run: '运行',
+    pause: '暂停',
+    power: '总电源',
+    undo: '撤销',
+    redo: '重做',
+    copy: '复制',
+    delete: '删除',
+    clear: '清空',
+    save: '保存',
+    load: '加载',
+    resetView: '复位视图',
+    current: '电流',
+    data: '数据',
+    sound: '声音',
+    toolbox: '元件工具箱',
+    toolboxHint: '拖进画布，或点元件后再点画布。数量不限。',
+    freeTip: '没有标准答案。先大胆接，再观察发生了什么。',
+    observe: '观察面板',
+    openCircuit: '等待接线',
+    activeCircuit: '电路工作中',
+    shortCircuit: '短路警报',
+    powerOff: '总电源已断开',
+    paused: '仿真已暂停',
+    guideTitle: '三步点亮小镇',
+    guideSteps: '放元件 → 连端口 → 合开关',
+    operate: '操作',
+    rotate: '旋转',
+    multiSelect: '多选',
+    drag: '拖动',
+    pan: '平移',
+    longPress: '长按有菜单',
+    autosaved: '已自动保存',
+    saving: '正在保存…',
+    circuitState: '电路状态',
+    sourceVoltage: '电源电压',
+    totalCurrent: '总电流',
+    activeLoads: '工作负载',
+    faultCount: '故障',
+    diagnosis: '电工鼠诊断',
+    diagnosisIdle: '接线后，这里会解释通路、断路和保护动作。',
+    selectedPart: '选中的元件',
+    selectHint: '点一个元件查看电压、电流和可调属性。',
+    freeMode: '自由实验模式',
+    clearTitle: '清空整张实验台？',
+    clearText: '元件和导线都会移走，但你可以马上撤销。',
+    cancel: '取消',
+    partsSummary: (components, wires) => `${components} 个元件 · ${wires} 条导线`,
+    selectedCount: (count) => `已选 ${count} 项`,
+    placed: (name) => `${name} 已放好，端口上的亮圈可以接线。`,
+    wired: '啪嗒！导线接好了。',
+    duplicateWire: '这两个端口已经连过了。',
+    selfWire: '导线不能接回同一个端口。',
+    wireCancelled: '接线已取消。',
+    selectedTool: (name) => `已拿起 ${name}，点实验台放置；再点工具可收回。`,
+    saved: '作品已保存到这台设备。',
+    loaded: '作品已加载，可以继续编辑。',
+    noSave: '还没有手动保存的作品。',
+    saveFailed: '保存失败：浏览器没有提供可用空间。',
+    loadFailed: '加载失败：存档格式无法读取。',
+    cleared: '实验台已清空，可以撤销。',
+    copied: '已复制选中元件和它们之间的导线。',
+    nothingSelected: '先选一个或多个元件。',
+    breakerReset: '总开关已复位。',
+    fuseReplaced: '换上了新的保险丝。',
+    batteryReset: '电池保护已复位。',
+    lampRemoved: '灯泡被拧下，这条支路断开了。',
+    lampInstalled: '灯泡重新装好了。',
+    shortCoach: '短路！电流走了几乎没有阻力的近路。先断电，再找红色线路。',
+    activeCoach: '金色粒子正在跑。点元件查看每一处的电压、电流和功率。',
+    openCoach: '电路还没有形成完整回路。找找没有接上的端口或打开的开关。',
+    offCoach: '总电源断开后，整张实验台都安全地停下了。',
+    pausedCoach: '时间暂停了；继续运行后，保险丝和保护器才会继续升温。',
+    shortDiagnosis: '电流过大，电池正在过载。红色线路是需要检查的近路。',
+    overloadDiagnosis: '电流超过额定值，保护器件正在积累热量。',
+    openDiagnosis: '没有持续电流：可能是断口、打开的开关，或被拧下的灯泡。',
+    activeDiagnosis: '这是通路。不同支路会按电阻分配电流，灯泡亮度随功率连续变化。',
+    offDiagnosis: '总电源关闭，所有支路电流为零。',
+    protectedDiagnosis: '电池进入保护状态。排除短路后，选中电池并点“操作”复位。',
+    fuseDiagnosis: '保险丝已经熔断并变成开路。选中它后可以换新。',
+    breakerDiagnosis: '总开关因过流跳闸。排除故障后可以手动复位。',
+    firstLight: '小镇亮起来了！这不是通关，只是你的第一个可工作的设计。',
+    invalidNumber: '请输入范围内的数字。',
+    status: {
+      normal: '正常',
+      overload: '过载',
+      protected: '保护',
+      off: '关闭',
+      bright: '明亮',
+      dim: '偏暗',
+      overvoltage: '过压',
+      damaged: '损坏',
+      removed: '已拧下',
+      running: '转动',
+      slow: '低速',
+      stopped: '停止',
+      sounding: '发声',
+      silent: '安静',
+      open: '断开',
+      closed: '闭合',
+      throwA: '通路 1',
+      throwB: '通路 2',
+      pressed: '按下',
+      heating: '发热',
+      tripped: '跳闸',
+      blown: '熔断',
+      idle: '待机',
     },
-    en: {
-      doc: '🐭 Electric Mouse Town · KidsLab',
-      back: 'Back to platform',
-      title: 'Electric Mouse Town',
-      eyebrow: 'Science courseware · Circuit detective missions',
-      tip0: 'Drag parts, tap terminals, and bring Mouse Town back to light.',
-      toolbox: 'Toolbox', toolHint: 'Pick a tool, then tap the board. Tap a hollow terminal ○, then another, to wire. Drag parts by the middle; tap switches to flip; double-tap bulbs to unscrew.',
-      notebook: 'Mouse electrician notes', conductors: 'Conducts', insulators: 'Insulates',
-      legendOn: 'closed', legendGap: 'open', legendShort: 'short',
-      test: 'Power test ⚡', reset: 'Reset', delete: 'Delete selected', next: 'Next →',
-      statusOpen: 'open circuit', statusOn: 'lights on!', statusDim: 'a little dim', statusShort: 'short alert', statusWon: 'mission done',
-      onTag: 'ON', offTag: 'OFF', dimTag: 'dim', gapHere: 'gap here', gapMany: 'wire up the glowing rings',
-      fixedWire: 'This teaching wire is fixed.', fixedPart: 'This teaching part is fixed for the mission.',
-      levelKicker: (a, b) => `Mission ${a} / ${b}`,
-      sandboxKicker: 'Free sandbox',
-      coachStart: 'Welcome to Mouse Town! Place a battery and bulb, then wire the terminals into a loop.',
-      coachWire: 'The terminal is sparkling! Tap another terminal to snap a wire in place.',
-      coachDelete: 'Snipped. In real life: power off first — Electric Mouse approves.',
-      coachOpen: 'There is a broken bridge here. Current cannot cross until the gap is connected.',
-      coachOn: 'Look! Golden current particles are racing around the closed circuit.',
-      coachDim: 'Series bulbs share one energy path, so each bulb gets dimmer.',
-      coachShort: 'Bzzzt! Current took a shortcut around the bulbs. Cut the red bypass wire!',
-      coachShortWire: "That new wire made a shortcut! It's selected now — press Delete, then use the bulb's hollow terminals ○.",
-      coachParallel: 'Parallel branches give every house its own path; one failure will not block the rest.',
-      coachBroken: 'The bulb was removed: that branch is open. Double-tap to restore it.',
-      coachSpdt: 'Two-way switches are little forks. Match both switches to the same traveler and the hall light turns on.',
-      coachOnMiss: (hint) => `The lamp is on, but the mission needs one more step: ${hint}`,
-      toastTool: (name) => `Selected: ${name}. Tap the board to place it.`,
-      toastSameComp: 'A wire needs two different parts, one for each end.',
-      toastNeedBattery: 'Place a battery first: Mouse Town needs a source.',
-      toastWin: 'Electric Mouse approved!',
-      toastMagic: 'Magic moment: the whole town lights up! Mayor Mouse awards the Parallel Medal!',
-      toastNoWire: 'Tap a terminal to start a wire, or pick a part to place.',
-      winTitle: 'Electric Mouse approved!',
-      winDesc: (n) => `Mission ${n} complete. Mouse Town is brighter.`,
-      finalWin: 'Sandbox unlocked: you are a real circuit designer!',
-      dexEmpty: 'No notes yet',
-      compBattery: 'Battery', compLamp: 'Bulb', compSwitch: 'Switch', compWire: 'Wire', compSpoon: 'Spoon', compWood: 'Wood stick', compDuck: 'Rubber duck', compPencil: 'Pencil lead', compKey: 'Key', compYarn: 'Yarn', compSpdt: 'Two-way switch',
-      levelNames: [
-        'Light the first bulb', 'Add a control switch', 'Find the gap', 'Conductor lab', 'Short-circuit scene',
-        'Two bulbs in series', 'Series to parallel: Mouse Street protest', 'Switch logic', 'Two-way hallway switch', 'Free sandbox',
-      ],
-      levelBriefs: [
-        'Wire a battery and bulb into a complete loop.',
-        'Tap the switch and see: closed is on, open is off.',
-        'This home is missing one wire. Find and bridge the gap.',
-        'Test objects in the gap: spoon lights, duck does not, pencil lead glows weakly; record the notebook.',
-        'The red shortcut is a short. Tap it, press delete, then power the bulb normally.',
-        'Add the missing middle wire to chain two bulbs in series and watch both dim; double-tap a bulb to remove it.',
-        'Four homes in series are fragile! Cut old wires and rewire in parallel so all shine independently.',
-        'Tap the main switch to power two bulbs at once — trunk and branches.',
-        'Two two-way switches control one hall light. Tapping either one flips it.',
-        'Unlimited parts. Build freely while the simulator checks open, closed and short circuits.',
-      ],
-      passHints: [
-        'Goal: at least one bright bulb.', 'Goal: bulb lights when the switch is closed.', 'Goal: repair the gap.', 'Goal: log both a conductor and an insulator, then light the bulb.', 'Goal: no short, and the bulb lights.', 'Goal: two bulbs are on but dim.',
-        'Goal: four bulbs glow bright.', 'Goal: one main switch lights two bulbs.', 'Goal: the two-way hall lamp is on.', 'Goal: make any safe lit circuit.',
-      ],
+    props: {
+      voltage: '电压',
+      internalResistance: '内阻',
+      maxCurrent: '最大电流',
+      capacity: '剩余电量',
+      cells: '电池节数',
+      ratedVoltage: '额定电压',
+      resistance: '等效电阻',
+      ratedCurrent: '额定电流',
+      tripHeat: '动作热量',
     },
-  };
+    actions: {
+      close: '合上',
+      open: '断开',
+      changePath: '切换线路',
+      removeLamp: '拧下灯泡',
+      installLamp: '装回灯泡',
+      press: '按一下',
+      reset: '复位',
+      replace: '换新',
+      inspect: '检查',
+    },
+  },
+  en: {
+    back: 'Back to platform',
+    title: 'Electric Mouse Lab',
+    projectName: 'Project name',
+    theme: 'Switch theme',
+    run: 'Run',
+    pause: 'Pause',
+    power: 'Main power',
+    undo: 'Undo',
+    redo: 'Redo',
+    copy: 'Copy',
+    delete: 'Delete',
+    clear: 'Clear',
+    save: 'Save',
+    load: 'Load',
+    resetView: 'Reset view',
+    current: 'Current',
+    data: 'Data',
+    sound: 'Sound',
+    toolbox: 'Parts toolbox',
+    toolboxHint: 'Drag a part in, or pick one and tap the board. No quantity limit.',
+    freeTip: 'There is no single answer. Build boldly, then watch what happens.',
+    observe: 'Observation panel',
+    openCircuit: 'Waiting for a circuit',
+    activeCircuit: 'Circuit running',
+    shortCircuit: 'Short-circuit alert',
+    powerOff: 'Main power off',
+    paused: 'Simulation paused',
+    guideTitle: 'Light the town in three moves',
+    guideSteps: 'Place parts → wire ports → close a switch',
+    operate: 'Operate',
+    rotate: 'Rotate',
+    multiSelect: 'multi-select',
+    drag: 'drag',
+    pan: 'pan',
+    longPress: 'long-press for menu',
+    autosaved: 'Autosaved',
+    saving: 'Saving…',
+    circuitState: 'Circuit state',
+    sourceVoltage: 'Source voltage',
+    totalCurrent: 'Total current',
+    activeLoads: 'Active loads',
+    faultCount: 'Faults',
+    diagnosis: 'Mouse diagnosis',
+    diagnosisIdle: 'Wire something up and this panel will explain paths, gaps, and protection.',
+    selectedPart: 'Selected part',
+    selectHint: 'Tap a part to inspect its voltage, current, and adjustable properties.',
+    freeMode: 'Free experiment mode',
+    clearTitle: 'Clear the whole workbench?',
+    clearText: 'Every part and wire will move away, but Undo can bring them back.',
+    cancel: 'Cancel',
+    partsSummary: (components, wires) => `${components} parts · ${wires} wires`,
+    selectedCount: (count) => `${count} selected`,
+    placed: (name) => `${name} is ready. Wire the glowing port rings.`,
+    wired: 'Snap! The wire is connected.',
+    duplicateWire: 'Those two ports are already connected.',
+    selfWire: 'A wire cannot return to the exact same port.',
+    wireCancelled: 'Wiring cancelled.',
+    selectedTool: (name) => `${name} picked up. Tap the board to place it; tap the tool again to put it back.`,
+    saved: 'Project saved on this device.',
+    loaded: 'Project loaded. Keep building!',
+    noSave: 'There is no manually saved project yet.',
+    saveFailed: 'Save failed: the browser did not provide usable storage.',
+    loadFailed: 'Load failed: the saved document could not be read.',
+    cleared: 'Workbench cleared. You can undo this.',
+    copied: 'Copied the selected parts and the wires between them.',
+    nothingSelected: 'Select one or more parts first.',
+    breakerReset: 'Breaker reset.',
+    fuseReplaced: 'A fresh fuse is installed.',
+    batteryReset: 'Battery protection reset.',
+    lampRemoved: 'The bulb is unscrewed, so this branch is open.',
+    lampInstalled: 'The bulb is installed again.',
+    shortCoach: 'Short circuit! Current found an almost resistance-free shortcut. Power off and inspect red wires.',
+    activeCoach: 'Golden particles are moving. Tap a part to inspect voltage, current, and power.',
+    openCoach: 'The path is not complete yet. Look for free ports, open switches, or a removed bulb.',
+    offCoach: 'Main power is off, so the whole bench is safely still.',
+    pausedCoach: 'Time is paused. Fuses and protectors will continue heating only after Run.',
+    shortDiagnosis: 'Current is too high and the battery is overloaded. Inspect the red shortcut.',
+    overloadDiagnosis: 'Current is above a rating, so a protection device is accumulating heat.',
+    openDiagnosis: 'No sustained current: there may be a gap, an open switch, or a removed bulb.',
+    activeDiagnosis: 'This is a closed path. Branch current follows resistance, and bulb brightness changes continuously with power.',
+    offDiagnosis: 'Main power is off, so every branch current is zero.',
+    protectedDiagnosis: 'Battery protection is active. Remove the short, select the battery, then press Operate to reset.',
+    fuseDiagnosis: 'The fuse has melted into an open circuit. Select it to install a fresh one.',
+    breakerDiagnosis: 'The breaker tripped on excess current. Remove the fault, then reset it manually.',
+    firstLight: 'The town is glowing! This is not a finish line—just your first working design.',
+    invalidNumber: 'Enter a number inside the allowed range.',
+    status: {
+      normal: 'normal',
+      overload: 'overload',
+      protected: 'protected',
+      off: 'off',
+      bright: 'bright',
+      dim: 'dim',
+      overvoltage: 'overvoltage',
+      damaged: 'damaged',
+      removed: 'removed',
+      running: 'running',
+      slow: 'slow',
+      stopped: 'stopped',
+      sounding: 'sounding',
+      silent: 'silent',
+      open: 'open',
+      closed: 'closed',
+      throwA: 'path 1',
+      throwB: 'path 2',
+      pressed: 'pressed',
+      heating: 'heating',
+      tripped: 'tripped',
+      blown: 'blown',
+      idle: 'idle',
+    },
+    props: {
+      voltage: 'Voltage',
+      internalResistance: 'Internal resistance',
+      maxCurrent: 'Maximum current',
+      capacity: 'Charge remaining',
+      cells: 'Cell count',
+      ratedVoltage: 'Rated voltage',
+      resistance: 'Resistance',
+      ratedCurrent: 'Rated current',
+      tripHeat: 'Trip heat',
+    },
+    actions: {
+      close: 'Close',
+      open: 'Open',
+      changePath: 'Change path',
+      removeLamp: 'Unscrew bulb',
+      installLamp: 'Install bulb',
+      press: 'Press',
+      reset: 'Reset',
+      replace: 'Replace',
+      inspect: 'Inspect',
+    },
+  },
+};
 
-  const LS = { lang: 'kidslab.lang', theme: 'kidslab.theme' };
-  const store = {
-    get: (k) => { try { return localStorage.getItem(k); } catch { return null; } },
-    set: (k, v) => { try { localStorage.setItem(k, v); } catch { /* 忽略 */ } },
-  };
+const PROPERTY_FIELDS = {
+  battery: [
+    ['voltage', 'V', 1.5, 24, 0.5],
+    ['internalResistance', 'Ω', 0.05, 5, 0.05],
+    ['maxCurrent', 'A', 0.5, 20, 0.5],
+    ['capacity', '%', 0, 100, 1],
+  ],
+  batteryBox: [
+    ['voltage', 'V', 1.5, 24, 0.5],
+    ['cells', '', 1, 12, 1],
+    ['internalResistance', 'Ω', 0.05, 5, 0.05],
+    ['maxCurrent', 'A', 0.5, 20, 0.5],
+  ],
+  lamp: [['ratedVoltage', 'V', 1.5, 24, 0.5], ['resistance', 'Ω', 1, 100, 1]],
+  motor: [['ratedVoltage', 'V', 1.5, 24, 0.5], ['resistance', 'Ω', 1, 100, 1]],
+  buzzer: [['ratedVoltage', 'V', 1.5, 24, 0.5], ['resistance', 'Ω', 1, 100, 1]],
+  breaker: [['ratedCurrent', 'A', 0.2, 20, 0.1], ['tripHeat', '', 0.2, 5, 0.1]],
+  fuse: [['ratedCurrent', 'A', 0.1, 20, 0.1], ['tripHeat', '', 0.2, 5, 0.1]],
+};
 
-  let lang = store.get(LS.lang) || (navigator.language?.startsWith('zh') ? 'zh' : 'en');
-  if (!I18N[lang]) lang = 'zh';
-  let theme = store.get(LS.theme)
-    || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-  if (theme !== 'light' && theme !== 'dark') theme = 'light';
+const $ = (selector) => document.querySelector(selector);
+const dom = {
+  stage: $('#stage'),
+  canvasWrap: $('#canvasWrap'),
+  componentList: $('#componentList'),
+  projectName: $('#projectName'),
+  liveState: $('#liveState'),
+  liveSummary: $('#liveSummary'),
+  meterIcon: $('#meterIcon'),
+  meterState: $('#meterState'),
+  sourceVoltage: $('#sourceVoltage'),
+  totalCurrent: $('#totalCurrent'),
+  activeLoads: $('#activeLoads'),
+  faultCount: $('#faultCount'),
+  faultCard: $('#faultCard'),
+  faultText: $('#faultText'),
+  emptySelection: $('#emptySelection'),
+  selectionInspector: $('#selectionInspector'),
+  selectedIcon: $('#selectedIcon'),
+  selectedName: $('#selectedName'),
+  selectedStatus: $('#selectedStatus'),
+  selectedVoltage: $('#selectedVoltage'),
+  selectedCurrent: $('#selectedCurrent'),
+  selectedPower: $('#selectedPower'),
+  propertyFields: $('#propertyFields'),
+  componentActionBtn: $('#componentActionBtn'),
+  selectionCount: $('#selectionCount'),
+  contextMenu: $('#contextMenu'),
+  toast: $('#toast'),
+  zoomValue: $('#zoomValue'),
+  autosaveState: $('#autosaveState'),
+  mouseCoach: $('#mouseCoach'),
+  clearDialog: $('#clearDialog'),
+  panelScrim: $('#panelScrim'),
+};
+const ctx = dom.stage.getContext('2d');
 
-  /** 取当前语言文案；函数型 key 直接返回函数供调用方传参 */
-  const t = (key) => I18N[lang][key] ?? I18N.zh[key] ?? key;
-  /* 主题色缓存：每帧读 getComputedStyle 太贵，只在主题切换时刷新一次 */
-  const PALETTE_KEYS = [
-    '--font', '--sky-top', '--sky-bottom', '--paper', '--paper-2', '--card',
-    '--ink', '--ink-on-accent', '--ink-soft', '--ink-faint', '--line', '--line-strong',
-    '--accent', '--accent-2', '--ok', '--danger', '--spark', '--smoke', '--town', '--window-off',
-    '--c-physics', '--c-chemistry',
-  ];
-  const palette = {};
-  function refreshPalette() {
-    const cs = getComputedStyle(document.documentElement);
-    for (const k of PALETTE_KEYS) palette[k] = cs.getPropertyValue(k).trim();
+let lang = readPreference('kidslab.lang')
+  || (navigator.language?.startsWith('zh') ? 'zh' : 'en');
+if (!I18N[lang]) lang = 'zh';
+let theme = readPreference('kidslab.theme')
+  || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+if (!['light', 'dark'].includes(theme)) theme = 'dark';
+
+let settings = {
+  running: true,
+  powered: true,
+  showCurrent: true,
+  showData: true,
+  muted: false,
+  guideDismissed: false,
+  ...readJsonPreference('kidslab.electricLab.settings'),
+};
+
+const autosavedCircuit = loadAutosave();
+let circuit = autosavedCircuit || createStarterCircuit();
+let analysis = simulateCircuit(circuit, { deltaMs: 0 }).analysis;
+let selectedTool = null;
+let selectedComponents = new Set();
+let selectedWires = new Set();
+let interaction = null;
+let pendingWire = null;
+let hoverWorld = null;
+let hoverPort = null;
+let history = [];
+let future = [];
+let activePointers = new Map();
+let pinch = null;
+let spaceDown = false;
+let clipboard = null;
+let autosaveTimer = 0;
+let toastTimer = 0;
+let longPressTimer = 0;
+let lastFrame = 0;
+let previousSummary = '';
+let previousProtection = protectionSignature(circuit);
+let audioContext = null;
+let lastBuzzerAt = 0;
+let firstLightCelebrated = false;
+let canvasSize = { width: 1, height: 1, dpr: 1 };
+let initialCanvasSized = false;
+
+function t(key) {
+  return I18N[lang][key] ?? I18N.zh[key] ?? key;
+}
+
+function readPreference(key) {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
   }
-  /** 读取 CSS 主题变量（Canvas/three.js 取色必须走这里，勿硬编码） */
-  const cssVar = (name) => palette[name] || getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
 
-  const langBtn = document.getElementById('langBtn');
-  const themeBtn = document.getElementById('themeBtn');
+function readJsonPreference(key) {
+  const value = readPreference(key);
+  if (!value) return {};
+  try {
+    const parsed = JSON.parse(value);
+    return parsed && typeof parsed === 'object' ? parsed : {};
+  } catch {
+    return {};
+  }
+}
 
-  function applyLang() {
-    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
-    document.title = t('doc');
-    document.querySelectorAll('[data-t]').forEach((n) => {
-      const v = I18N[lang][n.dataset.t];
-      if (typeof v === 'string') n.textContent = v;
+function writePreference(key, value) {
+  try {
+    localStorage.setItem(key, value);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function loadAutosave() {
+  try {
+    return loadCircuit(localStorage, AUTOSAVE_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function createStarterCircuit() {
+  const document = createCircuitDocument({ name: lang === 'zh' ? '我的夜光小镇' : 'My glowing town' });
+  document.viewport = { x: 800, y: 540, zoom: 0.72 };
+  addComponent(document, 'battery', { position: { x: 430, y: 540 } });
+  addComponent(document, 'switch', { position: { x: 690, y: 540 } });
+  addComponent(document, 'lamp', { position: { x: 980, y: 440 } });
+  addComponent(document, 'junction', { position: { x: 980, y: 660 } });
+  return document;
+}
+
+function persistSettings() {
+  writePreference('kidslab.electricLab.settings', JSON.stringify(settings));
+}
+
+function scheduleAutosave() {
+  clearTimeout(autosaveTimer);
+  dom.autosaveState.textContent = t('saving');
+  autosaveTimer = setTimeout(() => {
+    try {
+      saveCircuit(localStorage, circuit, AUTOSAVE_KEY);
+      dom.autosaveState.textContent = t('autosaved');
+    } catch {
+      dom.autosaveState.textContent = t('saveFailed');
+    }
+  }, 240);
+}
+
+function commitSnapshot(before) {
+  history.push(before);
+  if (history.length > MAX_HISTORY) history.shift();
+  future = [];
+  touchDocument(circuit);
+  scheduleAutosave();
+  updateToolbar();
+}
+
+function mutate(mutator, message) {
+  const before = cloneCircuitDocument(circuit);
+  mutator(circuit);
+  commitSnapshot(before);
+  simulateNow(0);
+  if (message) showToast(message);
+}
+
+function undo() {
+  const previous = history.pop();
+  if (!previous) return;
+  future.push(cloneCircuitDocument(circuit));
+  circuit = previous;
+  clearSelection();
+  pendingWire = null;
+  simulateNow(0);
+  scheduleAutosave();
+  updateToolbar();
+}
+
+function redo() {
+  const next = future.pop();
+  if (!next) return;
+  history.push(cloneCircuitDocument(circuit));
+  circuit = next;
+  clearSelection();
+  pendingWire = null;
+  simulateNow(0);
+  scheduleAutosave();
+  updateToolbar();
+}
+
+function showToast(message) {
+  clearTimeout(toastTimer);
+  dom.toast.textContent = message;
+  dom.toast.hidden = false;
+  dom.toast.style.animation = 'none';
+  void dom.toast.offsetWidth;
+  dom.toast.style.animation = '';
+  toastTimer = setTimeout(() => {
+    dom.toast.hidden = true;
+  }, 2550);
+}
+
+function componentName(component) {
+  return COMPONENT_CATALOG[component.type].label[lang];
+}
+
+function statusName(status) {
+  return t('status')[status] || status || t('status').idle;
+}
+
+function buildToolbox() {
+  dom.componentList.innerHTML = '';
+  for (const type of TOOL_ORDER) {
+    const definition = COMPONENT_CATALOG[type];
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = `component-tool${selectedTool === type ? ' is-selected' : ''}`;
+    button.draggable = true;
+    button.dataset.componentType = type;
+    button.setAttribute('aria-pressed', String(selectedTool === type));
+    button.innerHTML = `<span aria-hidden="true">${definition.icon}</span><b>${definition.label[lang]}</b><small>${type.toUpperCase()}</small>`;
+    button.addEventListener('click', () => {
+      ensureAudio();
+      selectedTool = selectedTool === type ? null : type;
+      pendingWire = null;
+      if (selectedTool) showToast(t('selectedTool')(definition.label[lang]));
+      buildToolbox();
+      updateCanvasCursor();
     });
-    if (langBtn) langBtn.textContent = lang === 'zh' ? 'EN' : '中';
-    buildToolbox();
-    updateUi();
-    render(); // 语言切换后重绘动态文案
+    button.addEventListener('dragstart', (event) => {
+      event.dataTransfer.effectAllowed = 'copy';
+      event.dataTransfer.setData('application/x-electric-component', type);
+      selectedTool = type;
+      buildToolbox();
+    });
+    dom.componentList.appendChild(button);
   }
+}
 
-  function applyTheme() {
-    document.documentElement.dataset.theme = theme;
-    if (themeBtn) themeBtn.textContent = theme === 'light' ? '🌙' : '☀️';
-    refreshPalette();
-    /* Canvas / three.js 课件监听该事件重取 cssVar 配色 */
-    dispatchEvent(new CustomEvent('themechange', { detail: { theme } }));
-    render();
-  }
-
-  langBtn?.addEventListener('click', () => {
-    lang = lang === 'zh' ? 'en' : 'zh';
-    store.set(LS.lang, lang);
-    applyLang();
+function applyLanguage() {
+  document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+  document.title = `${t('title')} · KidsLab`;
+  document.querySelectorAll('[data-t]').forEach((element) => {
+    const value = t(element.dataset.t);
+    if (typeof value === 'string') element.textContent = value;
   });
-  themeBtn?.addEventListener('click', () => {
-    theme = theme === 'light' ? 'dark' : 'light';
-    store.set(LS.theme, theme);
-    applyTheme();
+  document.querySelectorAll('[data-t-title]').forEach((element) => {
+    const value = t(element.dataset.tTitle);
+    if (typeof value === 'string') {
+      element.title = value;
+      element.setAttribute('aria-label', value);
+    }
   });
+  $('#langBtn').textContent = lang === 'zh' ? 'EN' : '中';
+  delete dom.propertyFields.dataset.componentId;
+  delete dom.propertyFields.dataset.lang;
+  buildToolbox();
+  updateAllUi();
+}
 
-  /* ======================= 🐭 游戏区 · Game ======================= */
-  const $ = (s) => document.querySelector(s);
-  const canvas = $('#stage');
-  const ctx = canvas.getContext('2d');
-  const toolbox = $('#toolbox');
-  const toastEl = $('#toast');
-  const coachBubble = $('#coachBubble');
-  const statusText = $('#statusText');
-  const mouseMood = $('#mouseMood');
-  const levelKicker = $('#levelKicker');
-  const levelTitle = $('#levelTitle');
-  const levelBrief = $('#levelBrief');
-  const nextBtn = $('#nextBtn');
-  const win = $('#win');
-  const winTitle = $('#winTitle');
-  const winDesc = $('#winDesc');
-  const winEmoji = $('#winEmoji');
-  const goodDex = $('#goodDex');
-  const badDex = $('#badDex');
-  const testBtn = $('#testBtn');
-  const resetBtn = $('#resetBtn');
-  const deleteBtn = $('#deleteBtn');
-  const winNext = $('#winNext');
+function applyTheme() {
+  document.documentElement.dataset.theme = theme;
+  $('#themeBtn').firstElementChild.textContent = theme === 'dark' ? '☀️' : '🌙';
+  writePreference('kidslab.theme', theme);
+}
 
-  const GRID = 34;
-  const HIT_R = 22;
-  /* 元件本体内：离端子小圆点这么近才算“点端子”，其余是拖动/开关（防止端子吞掉整个元件） */
-  const TERM_GRAB = 24;
-  /* 固定逻辑坐标系：所有关卡布局都按这个尺寸设计，渲染时等比缩放适配画布 */
-  const BOARD = { w: 880, h: 560 };
-  const SKY_H = 176;
-  const TYPES = {
-    battery: { key: 'compBattery', icon: '🔋', w: 92, h: 54 },
-    lamp: { key: 'compLamp', icon: '💡', w: 84, h: 66 },
-    switch: { key: 'compSwitch', icon: '🔘', w: 92, h: 58 },
-    wire: { key: 'compWire', icon: '〰️', isWire: true },
-    spoon: { key: 'compSpoon', icon: '🥄', w: 86, h: 50, conductivity: 1, item: true },
-    wood: { key: 'compWood', icon: '🪵', w: 86, h: 50, conductivity: 0, item: true },
-    duck: { key: 'compDuck', icon: '🦆', w: 86, h: 50, conductivity: 0, item: true },
-    pencil: { key: 'compPencil', icon: '✏️', w: 86, h: 50, conductivity: 0.36, item: true },
-    key: { key: 'compKey', icon: '🔑', w: 86, h: 50, conductivity: 1, item: true },
-    yarn: { key: 'compYarn', icon: '🧶', w: 86, h: 50, conductivity: 0, item: true },
-    spdt: { key: 'compSpdt', icon: '↔️', w: 96, h: 70, spdt: true },
+function setToggle(button, active) {
+  button.classList.toggle('is-active', active);
+  button.setAttribute('aria-pressed', String(active));
+}
+
+function updateToolbar() {
+  $('#undoBtn').disabled = history.length === 0;
+  $('#redoBtn').disabled = future.length === 0;
+  setToggle($('#runBtn'), settings.running);
+  $('#runBtn').querySelector('span').textContent = settings.running ? '▶' : 'Ⅱ';
+  $('#runBtn').querySelector('b').textContent = settings.running ? t('run') : t('pause');
+  setToggle($('#powerBtn'), settings.powered);
+  setToggle($('#currentBtn'), settings.showCurrent);
+  setToggle($('#dataBtn'), settings.showData);
+  setToggle($('#muteBtn'), settings.muted);
+  $('#muteBtn').querySelector('span').textContent = settings.muted ? '🔇' : '🔊';
+}
+
+function protectionSignature(document) {
+  return document.components
+    .filter((component) => ['battery', 'batteryBox', 'fuse', 'breaker'].includes(component.type))
+    .map((component) => `${component.id}:${component.state.status}:${component.state.blown || false}:${component.state.tripped || false}`)
+    .join('|');
+}
+
+function findProtectionState(document) {
+  return {
+    protectedPart: document.components.find((component) => component.state.status === 'protected'),
+    blownFuse: document.components.find((component) => component.type === 'fuse' && component.state.blown),
+    trippedBreaker: document.components.find((component) => component.type === 'breaker' && component.state.tripped),
+    heating: document.components.find((component) => (
+      component.state.status === 'heating' || component.state.status === 'overload'
+    )),
   };
+}
 
-  const TOOL_ORDER = ['battery', 'lamp', 'switch', 'wire', 'spoon', 'wood', 'duck', 'pencil', 'key', 'yarn', 'spdt'];
-  const state = {
-    level: 0,
-    comps: [],
-    wires: [],
-    selectedTool: 'wire',
-    selected: null,
-    wireStart: null,
-    drag: null,
-    pointer: null,
-    lastTap: { id: '', at: 0 },
-    idSeq: 1,
-    solved: null,
-    passed: false,
-    celebrated: false,
-    magicDone: false,
-    dex: { good: {}, bad: {} },
-    fireworks: [],
-    smoke: [],
-    lastTime: 0,
-    tick: 0,
-    audio: null,
-    soundReady: false,
-    view: { scale: 1, ox: 0, oy: 0, dpr: 1, cssW: BOARD.w, cssH: BOARD.h, ui: 1 },
-  };
+function simulateNow(deltaMs) {
+  const previousDocument = circuit;
+  const result = simulateCircuit(circuit, {
+    deltaMs: settings.running ? deltaMs : 0,
+    powered: settings.powered && settings.running,
+  });
+  circuit = result.document;
+  analysis = result.analysis;
 
-  const LEVELS = [
-    { tools: ['battery', 'lamp', 'wire'], setup: levelOne, goal: goalBrightOne },
-    { tools: ['battery', 'lamp', 'switch', 'wire'], setup: levelTwo, goal: goalSwitch },
-    { tools: ['wire'], setup: levelThree, goal: goalBrightOne },
-    { tools: ['wire', 'spoon', 'wood', 'duck', 'pencil', 'key', 'yarn'], setup: levelFour, goal: goalLab },
-    { tools: ['wire'], setup: levelFive, goal: goalNoShortBright },
-    { tools: ['battery', 'lamp', 'wire'], setup: levelSix, goal: goalSeriesDim },
-    { tools: ['wire'], setup: levelSeven, goal: goalParallelStreet, magic: true },
-    { tools: ['battery', 'lamp', 'switch', 'wire'], setup: levelEight, goal: goalMainSwitch },
-    { tools: ['wire', 'spdt'], setup: levelNine, goal: goalSpdt },
-    { tools: TOOL_ORDER, setup: levelTen, goal: goalSandbox },
-  ];
-
-  function tr(arrKey, i) { return t(arrKey)[i]; }
-  function nameOf(type) { return t(TYPES[type].key); }
-  function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
-  function dist(a, b, c, d) { return Math.hypot(a - c, b - d); }
-  function snap(v) { return Math.round(v / GRID) * GRID; }
-  function now() { return performance.now(); }
-
-  function makeId(prefix) {
-    const id = `${prefix}${state.idSeq}`;
-    state.idSeq += 1;
-    return id;
+  const nextProtection = protectionSignature(circuit);
+  if (nextProtection !== previousProtection) {
+    previousProtection = nextProtection;
+    scheduleAutosave();
+    const { protectedPart, blownFuse, trippedBreaker } = findProtectionState(circuit);
+    if (protectedPart) showToast(t('protectedDiagnosis'));
+    else if (blownFuse) showToast(t('fuseDiagnosis'));
+    else if (trippedBreaker) showToast(t('breakerDiagnosis'));
   }
 
-  function clampToBoard(c) {
-    c.x = clamp(c.x, c.w / 2 + 6, BOARD.w - c.w / 2 - 6);
-    c.y = clamp(c.y, SKY_H + c.h / 2 + 8, BOARD.h - c.h / 2 - 8);
-  }
-
-  function addComp(type, x, y, opts = {}) {
-    const spec = TYPES[type];
-    const c = {
-      id: opts.id || makeId(type[0]),
-      type,
-      x: snap(x), y: snap(y),
-      w: spec.w || 80, h: spec.h || 50,
-      closed: opts.closed ?? false,
-      broken: opts.broken ?? false,
-      throwTo: opts.throwTo ?? 1,
-      fixed: !!opts.fixed,
-      label: opts.label || '',
-    };
-    clampToBoard(c);
-    state.comps.push(c);
-    return c;
-  }
-
-  function termCount(c) { return c.type === 'spdt' ? 3 : 2; }
-  function termId(c, i) { return `${c.id}:${i}`; }
-  function compById(id) { return state.comps.find((c) => c.id === id); }
-  function parseTerm(id) {
-    const [cid, idx] = id.split(':');
-    return { comp: compById(cid), idx: Number(idx) };
-  }
-
-  function termPos(c, i) {
-    if (c.type === 'spdt') {
-      if (i === 0) return { x: c.x - c.w / 2 + 4, y: c.y };
-      if (i === 1) return { x: c.x + c.w / 2 - 4, y: c.y - c.h / 4 };
-      return { x: c.x + c.w / 2 - 4, y: c.y + c.h / 4 };
+  if (analysis.summary.status !== previousSummary) {
+    if (analysis.summary.status === 'short') {
+      showToast(t('shortCoach'));
+      playTone(92, .18, 'sawtooth', .055);
+      window.cool?.track?.('short_circuit');
+    } else if (analysis.summary.status === 'active' && previousSummary) {
+      playSuccess();
+      if (!firstLightCelebrated) {
+        firstLightCelebrated = true;
+        showToast(t('firstLight'));
+        window.cool?.complete?.();
+      }
     }
-    return i === 0
-      ? { x: c.x - c.w / 2 + 2, y: c.y }
-      : { x: c.x + c.w / 2 - 2, y: c.y };
+    previousSummary = analysis.summary.status;
   }
 
-  function addWire(a, b, opts = {}) {
-    if (!a || !b || a === b) return null;
-    /* 同一个零件的两端不许互连：那是给自己“短接”，不是电路 */
-    if (a.split(':')[0] === b.split(':')[0]) return null;
-    const existing = state.wires.find((w) => (w.a === a && w.b === b) || (w.a === b && w.b === a));
-    if (existing) return existing;
-    const w = { id: opts.id || makeId('w'), a, b, fixed: !!opts.fixed, cut: false };
-    state.wires.push(w);
-    return w;
-  }
-
-  function wireBetween(c1, i1, c2, i2, opts = {}) {
-    return addWire(termId(c1, i1), termId(c2, i2), opts);
-  }
-
-  function clearBoard() {
-    state.comps = [];
-    state.wires = [];
-    state.selected = null;
-    state.wireStart = null;
-    state.drag = null;
-    state.idSeq = 1;
-    state.passed = false;
-    state.celebrated = false;
-    state.magicDone = false;
-    state.fireworks = [];
-    state.smoke = [];
-    state.dex = state.level === 3 ? state.dex : { good: {}, bad: {} };
-  }
-
-  function loadLevel(i) {
-    state.level = clamp(i, 0, LEVELS.length - 1);
-    clearBoard();
-    LEVELS[state.level].setup();
-    state.selectedTool = LEVELS[state.level].tools.includes('wire') ? 'wire' : LEVELS[state.level].tools[0];
-    win.hidden = true;
-    setCoach(state.level === 0 ? t('coachStart') : `${tr('levelBriefs', state.level)} ${tr('passHints', state.level)}`);
-    buildToolbox();
-    evaluate(true);
-    render();
-  }
-
-  function buildToolbox() {
-    toolbox.innerHTML = '';
-    const allowed = LEVELS[state.level].tools;
-    for (const type of TOOL_ORDER) {
-      if (!allowed.includes(type)) continue;
-      const spec = TYPES[type];
-      const btn = document.createElement('button');
-      btn.className = `tool${state.selectedTool === type ? ' is-on' : ''}`;
-      btn.type = 'button';
-      btn.dataset.type = type;
-      btn.innerHTML = `<i>${spec.icon}</i>${nameOf(type)}`;
-      btn.addEventListener('pointerdown', (ev) => {
-        ev.preventDefault();
-        resumeAudio();
-        state.selectedTool = type;
-        state.wireStart = null;
-        state.selected = null;
-        toast(t('toastTool')(nameOf(type)));
-        buildToolbox();
-        render();
-      });
-      toolbox.appendChild(btn);
+  if (settings.running && settings.powered && !settings.muted) {
+    const sounding = circuit.components.find((component) => (
+      component.type === 'buzzer' && analysis.components[component.id]?.status === 'sounding'
+    ));
+    if (sounding && performance.now() - lastBuzzerAt > 850) {
+      lastBuzzerAt = performance.now();
+      playTone(720, .08, 'square', .025);
     }
   }
 
-  function levelOne() {
-    addComp('battery', 250, 400, { fixed: true });
-    addComp('lamp', 560, 400);
+  if (previousDocument !== circuit) updateAllUi();
+}
+
+function updateAllUi() {
+  dom.projectName.value = circuit.name;
+  updateToolbar();
+  updateStatus();
+  updateSelectionUi();
+  dom.zoomValue.textContent = `${Math.round(circuit.viewport.zoom * 100)}%`;
+}
+
+function updateStatus() {
+  let key = 'openCircuit';
+  let icon = '🌙';
+  let coach = t('openCoach');
+  let diagnosis = t('openDiagnosis');
+  let status = analysis.summary.status;
+  if (!settings.powered) {
+    key = 'powerOff';
+    icon = '🔌';
+    coach = t('offCoach');
+    diagnosis = t('offDiagnosis');
+    status = 'off';
+  } else if (!settings.running) {
+    key = 'paused';
+    icon = '⏸️';
+    coach = t('pausedCoach');
+    diagnosis = t('pausedCoach');
+    status = 'off';
+  } else if (analysis.summary.status === 'short') {
+    key = 'shortCircuit';
+    icon = '⚡';
+    coach = t('shortCoach');
+    diagnosis = t('shortDiagnosis');
+  } else if (analysis.summary.status === 'active') {
+    key = 'activeCircuit';
+    icon = '💡';
+    coach = t('activeCoach');
+    diagnosis = t('activeDiagnosis');
   }
 
-  function levelTwo() {
-    const b = addComp('battery', 230, 400, { fixed: true });
-    const s = addComp('switch', 420, 325, { closed: false });
-    const l = addComp('lamp', 620, 400);
-    wireBetween(b, 1, s, 0, { fixed: true });
-    wireBetween(s, 1, l, 1, { fixed: true });
-    wireBetween(l, 0, b, 0, { fixed: true });
+  const {
+    protectedPart,
+    blownFuse,
+    trippedBreaker,
+    heating,
+  } = findProtectionState(circuit);
+  if (protectedPart) diagnosis = t('protectedDiagnosis');
+  else if (blownFuse) diagnosis = t('fuseDiagnosis');
+  else if (trippedBreaker) diagnosis = t('breakerDiagnosis');
+  else if (heating) diagnosis = t('overloadDiagnosis');
+
+  dom.liveState.dataset.status = status;
+  dom.liveState.querySelector('span').textContent = t(key);
+  dom.liveSummary.textContent = t('partsSummary')(circuit.components.length, circuit.wires.length);
+  dom.meterIcon.textContent = icon;
+  dom.meterState.textContent = t(key);
+  dom.sourceVoltage.textContent = formatValue(analysis.summary.sourceVoltage, 'V');
+  dom.totalCurrent.textContent = formatValue(analysis.summary.totalCurrent, 'A');
+  dom.activeLoads.textContent = String(analysis.summary.activeLoads);
+  const faultCount = analysis.summary.faults.length
+    + circuit.components.filter((component) => ['protected', 'blown', 'tripped'].includes(component.state.status)).length;
+  dom.faultCount.textContent = String(faultCount);
+  dom.faultCard.classList.toggle('has-fault', faultCount > 0);
+  dom.faultText.textContent = diagnosis;
+  dom.mouseCoach.textContent = `🐭 ${coach}`;
+}
+
+function formatValue(value, unit) {
+  const safe = Number.isFinite(value) ? value : 0;
+  const digits = Math.abs(safe) >= 10 ? 1 : 2;
+  return `${safe.toFixed(digits)} ${unit}`;
+}
+
+function updateSelectionUi() {
+  const count = selectedComponents.size + selectedWires.size;
+  dom.selectionCount.hidden = count < 2;
+  if (count >= 2) dom.selectionCount.textContent = t('selectedCount')(count);
+  const onlyComponent = selectedComponents.size === 1 && selectedWires.size === 0
+    ? componentById(circuit, [...selectedComponents][0])
+    : null;
+  dom.emptySelection.hidden = Boolean(onlyComponent);
+  dom.selectionInspector.hidden = !onlyComponent;
+  if (!onlyComponent) return;
+
+  const definition = COMPONENT_CATALOG[onlyComponent.type];
+  const meter = analysis.components[onlyComponent.id] || {};
+  dom.selectedIcon.textContent = definition.icon;
+  dom.selectedName.textContent = definition.label[lang];
+  dom.selectedStatus.textContent = statusName(meter.status || onlyComponent.state.status);
+  dom.selectedVoltage.textContent = formatValue(meter.voltage, 'V');
+  dom.selectedCurrent.textContent = formatValue(meter.current, 'A');
+  dom.selectedPower.textContent = formatValue(meter.power, 'W');
+  if (dom.propertyFields.dataset.componentId !== onlyComponent.id
+    || dom.propertyFields.dataset.lang !== lang) {
+    buildPropertyFields(onlyComponent);
   }
+  updateComponentAction(onlyComponent);
+}
 
-  function levelThree() {
-    const b = addComp('battery', 230, 395, { fixed: true });
-    const l = addComp('lamp', 590, 395, { fixed: true });
-    wireBetween(b, 1, l, 1, { fixed: true });
-  }
-
-  function levelFour() {
-    const b = addComp('battery', 210, 400, { fixed: true });
-    const l = addComp('lamp', 630, 400, { fixed: true });
-    wireBetween(b, 1, l, 1, { fixed: true });
-    state.wireStart = termId(b, 0);
-  }
-
-  function levelFive() {
-    const b = addComp('battery', 220, 440, { fixed: true });
-    const l = addComp('lamp', 590, 360, { fixed: true });
-    wireBetween(b, 1, l, 1, { fixed: true });
-    wireBetween(l, 0, b, 0, { fixed: true });
-    /* 红色捷径：从电池+直通灯泡另一端，绕开灯丝 → 短路 */
-    wireBetween(b, 1, l, 0, { id: 'short-wire' });
-  }
-
-  function levelSix() {
-    const b = addComp('battery', 210, 405, { fixed: true });
-    const l1 = addComp('lamp', 445, 335);
-    const l2 = addComp('lamp', 625, 445);
-    wireBetween(b, 1, l1, 1, { fixed: true });
-    wireBetween(l2, 0, b, 0, { fixed: true });
-  }
-
-  function levelSeven() {
-    const b = addComp('battery', 160, 440, { fixed: true });
-    const lamps = [290, 420, 550, 680].map((x, i) => addComp('lamp', x, 360 + (i % 2) * 92, { fixed: true, label: `${i + 1}` }));
-    wireBetween(b, 1, lamps[0], 1);
-    wireBetween(lamps[0], 0, lamps[1], 1);
-    wireBetween(lamps[1], 0, lamps[2], 1);
-    wireBetween(lamps[2], 0, lamps[3], 1);
-    wireBetween(lamps[3], 0, b, 0);
-  }
-
-  function levelEight() {
-    const b = addComp('battery', 180, 430, { fixed: true });
-    const s = addComp('switch', 355, 430, { closed: false });
-    const l1 = addComp('lamp', 570, 345);
-    const l2 = addComp('lamp', 570, 500);
-    wireBetween(b, 1, s, 0, { fixed: true });
-    wireBetween(s, 1, l1, 1, { fixed: true });
-    wireBetween(s, 1, l2, 1, { fixed: true });
-    wireBetween(l1, 0, b, 0, { fixed: true });
-    wireBetween(l2, 0, b, 0, { fixed: true });
-  }
-
-  function levelNine() {
-    const b = addComp('battery', 160, 430, { fixed: true });
-    const a = addComp('spdt', 340, 430, { throwTo: 1 });
-    const d = addComp('spdt', 570, 430, { throwTo: 2 });
-    const l = addComp('lamp', 750, 360, { fixed: true });
-    wireBetween(b, 1, a, 0, { fixed: true });
-    wireBetween(a, 1, d, 1, { fixed: true });
-    wireBetween(a, 2, d, 2, { fixed: true });
-    wireBetween(d, 0, l, 1, { fixed: true });
-    wireBetween(l, 0, b, 0, { fixed: true });
-  }
-
-  function levelTen() {
-    addComp('battery', 190, 420, { fixed: true });
-    addComp('lamp', 520, 420);
-  }
-
-  function componentEdges(c) {
-    const edges = [];
-    if (c.type === 'lamp') {
-      if (!c.broken) edges.push({ a: termId(c, 0), b: termId(c, 1), kind: 'lamp', comp: c, lamp: c.id, conductivity: 1 });
-    } else if (c.type === 'switch') {
-      if (c.closed) edges.push({ a: termId(c, 0), b: termId(c, 1), kind: 'switch', comp: c, conductivity: 1 });
-    } else if (TYPES[c.type].item) {
-      const conductivity = TYPES[c.type].conductivity;
-      if (conductivity > 0) edges.push({ a: termId(c, 0), b: termId(c, 1), kind: 'item', comp: c, item: c.type, conductivity });
-    } else if (c.type === 'spdt') {
-      edges.push({ a: termId(c, 0), b: termId(c, c.throwTo), kind: 'spdt', comp: c, conductivity: 1 });
-    }
-    return edges;
-  }
-
-  function battery() { return state.comps.find((c) => c.type === 'battery'); }
-
-  function buildGraph() {
-    const edges = [];
-    for (const w of state.wires) {
-      if (!w.cut) edges.push({ a: w.a, b: w.b, kind: 'wire', wire: w, conductivity: 1 });
-    }
-    for (const c of state.comps) edges.push(...componentEdges(c));
-    const adj = new Map();
-    for (const e of edges) {
-      if (!adj.has(e.a)) adj.set(e.a, []);
-      if (!adj.has(e.b)) adj.set(e.b, []);
-      adj.get(e.a).push({ to: e.b, edge: e });
-      adj.get(e.b).push({ to: e.a, edge: e });
-    }
-    return { edges, adj };
-  }
-
-  function enumeratePaths(adj, start, end, maxDepth = 28) {
-    const paths = [];
-    const seenKey = new Set();
-    function dfs(node, visited, edgePath) {
-      if (edgePath.length > maxDepth || paths.length > 80) return;
-      if (node === end) {
-        const key = edgePath.map((e) => e.kind + (e.wire?.id || e.comp?.id || '')).sort().join('|');
-        if (!seenKey.has(key)) {
-          seenKey.add(key);
-          paths.push([...edgePath]);
-        }
+function buildPropertyFields(component) {
+  dom.propertyFields.innerHTML = '';
+  dom.propertyFields.dataset.componentId = component.id;
+  dom.propertyFields.dataset.lang = lang;
+  for (const [property, unit, min, max, step] of PROPERTY_FIELDS[component.type] || []) {
+    const row = document.createElement('div');
+    row.className = 'property-field';
+    const label = document.createElement('label');
+    label.htmlFor = `prop-${property}`;
+    label.textContent = `${t('props')[property]}${unit ? ` (${unit})` : ''}`;
+    const input = document.createElement('input');
+    input.id = `prop-${property}`;
+    input.type = 'number';
+    input.min = String(min);
+    input.max = String(max);
+    input.step = String(step);
+    input.value = String(component.properties[property]);
+    input.addEventListener('change', () => {
+      const value = Number(input.value);
+      if (!Number.isFinite(value) || value < min || value > max) {
+        input.value = String(component.properties[property]);
+        showToast(t('invalidNumber'));
         return;
       }
-      const list = adj.get(node) || [];
-      for (const { to, edge } of list) {
-        if (visited.has(to)) continue;
-        visited.add(to);
-        edgePath.push(edge);
-        dfs(to, visited, edgePath);
-        edgePath.pop();
-        visited.delete(to);
-      }
-    }
-    dfs(start, new Set([start]), []);
-    return paths;
-  }
-
-  function openTerms(adj) {
-    const terms = [];
-    for (const c of state.comps) {
-      for (let i = 0; i < termCount(c); i++) {
-        const id = termId(c, i);
-        if ((adj.get(id) || []).length === 0) terms.push(id);
-      }
-    }
-    return terms;
-  }
-
-  function evaluate(silent = false) {
-    const b = battery();
-    if (!b) {
-      state.solved = { status: 'open', paths: [], short: false, lamps: {}, activeWires: new Set(), shortWires: new Set(), activeComps: new Set(), gap: null, gaps: [], itemEdges: [] };
-      if (!silent) setCoach(t('toastNeedBattery'));
-      return state.solved;
-    }
-    const { adj } = buildGraph();
-    for (const c of state.comps) {
-      if (!TYPES[c.type]?.item) continue;
-      /* 接线只观察得出“不导电”（接上灯也不亮）；“会导电”要等电流真的流过才记入图鉴 */
-      const linked = (tid) => (adj.get(tid) || []).some((n) => n.edge.comp !== c);
-      if (TYPES[c.type].conductivity === 0 && linked(termId(c, 0)) && linked(termId(c, 1))) {
-        noteItem(c.type, false);
-      }
-    }
-    const paths = enumeratePaths(adj, termId(b, 1), termId(b, 0));
-    const shortPaths = paths.filter((p) => p.every((e) => e.kind !== 'lamp'));
-    const lampPaths = paths.filter((p) => p.some((e) => e.kind === 'lamp'));
-    const short = shortPaths.length > 0;
-    const lamps = {};
-    const activeWires = new Set();
-    const shortWires = new Set();
-    const activeComps = new Set();
-    const itemEdges = [];
-    for (const c of state.comps) if (c.type === 'lamp') lamps[c.id] = 0;
-    const chosen = short ? shortPaths : lampPaths;
-    for (const p of chosen) {
-      let lampCount = 0;
-      let conductivity = 1;
-      for (const e of p) {
-        if (e.comp && !short) activeComps.add(e.comp.id);
-        if (e.kind === 'lamp') lampCount += 1;
-        if (e.kind === 'item') {
-          conductivity = Math.min(conductivity, e.conductivity);
-          itemEdges.push(e);
-        }
-      }
-      for (const e of p) {
-        if (e.kind === 'wire') (short ? shortWires : activeWires).add(e.wire.id);
-        if (!short && e.kind === 'lamp') lamps[e.lamp] = Math.max(lamps[e.lamp] || 0, conductivity / Math.max(1, lampCount));
-      }
-    }
-    for (const e of itemEdges) noteItem(e.item, e.conductivity > 0);
-    const lit = Object.values(lamps).filter((v) => v > 0.08);
-    const status = short ? 'short' : lit.length ? (lit.some((v) => v < 0.75) ? 'dim' : 'on') : 'open';
-    const gaps = status === 'open' ? openTerms(adj) : [];
-    state.solved = { status, paths, short, lamps, activeWires, shortWires, activeComps, gap: gaps[0] || null, gaps, itemEdges };
-    state.passed = LEVELS[state.level].goal(state.solved);
-    if (!state.passed) state.celebrated = false;
-    if (state.passed && LEVELS[state.level].magic && !state.magicDone) magicMoment();
-    if (!silent) reactToStatus(status);
-    /* 玩家操作后刚达成目标 → 稍等片刻让孩子看到电流，再自动庆祝 */
-    if (!silent && state.passed && !state.celebrated) {
-      state.celebrated = true;
-      const lvl = state.level;
-      setTimeout(() => { if (state.passed && state.level === lvl) passLevel(); }, 800);
-    }
-    updateUi();
-    return state.solved;
-  }
-
-  function noteItem(type, good) {
-    if (!TYPES[type]?.item) return;
-    const bucket = good ? state.dex.good : state.dex.bad;
-    bucket[type] = true;
-  }
-
-  function reactToStatus(status) {
-    if (status === 'short') { setCoach(t('coachShort')); sfx.short(); burstSmoke(); }
-    else if (status === 'on') {
-      if (!state.passed) setCoach(t('coachOnMiss')(tr('passHints', state.level)));
-      else setCoach(state.level === 6 ? t('coachParallel') : t('coachOn'));
-      sfx.light();
-    }
-    else if (status === 'dim') { setCoach(t('coachDim')); sfx.tick(); }
-    else { setCoach(t('coachOpen')); }
-  }
-
-  function goalBrightOne(sol) { return !sol.short && Object.values(sol.lamps).some((v) => v > 0.72); }
-  /* 开关要真的“管着”亮灯回路（在通电路径上且闭合），绕过开关直连不算完成任务 */
-  function inCircuitSwitchClosed(sol) {
-    return state.comps.some((c) => c.type === 'switch' && c.closed && sol.activeComps?.has(c.id));
-  }
-  function goalSwitch(sol) { return goalBrightOne(sol) && inCircuitSwitchClosed(sol); }
-  function goalLab(sol) {
-    /* 点亮回路里要有会导电的实验材料，并且至少验证过一种不导电的材料 */
-    return goalBrightOne(sol)
-      && sol.itemEdges?.some((e) => e.conductivity > 0)
-      && Object.keys(state.dex.bad).length > 0;
-  }
-  function goalNoShortBright(sol) { return !sol.short && Object.values(sol.lamps).some((v) => v > 0.72); }
-  function goalSeriesDim(sol) {
-    const lit = Object.values(sol.lamps).filter((v) => v > 0.25 && v < 0.72);
-    return !sol.short && lit.length >= 2;
-  }
-  function goalParallelStreet(sol) {
-    const bright = Object.values(sol.lamps).filter((v) => v >= 0.75);
-    return !sol.short && bright.length >= 4;
-  }
-  function goalMainSwitch(sol) {
-    const lit = Object.values(sol.lamps).filter((v) => v > 0.72);
-    return !sol.short && lit.length >= 2 && inCircuitSwitchClosed(sol);
-  }
-  function goalSpdt(sol) {
-    const spdts = state.comps.filter((c) => c.type === 'spdt');
-    return !sol.short && Object.values(sol.lamps).some((v) => v > 0.72)
-      && spdts.length >= 2 && spdts.every((c) => sol.activeComps?.has(c.id));
-  }
-  function goalSandbox(sol) { return goalBrightOne(sol); }
-
-  function updateUi() {
-    levelKicker.textContent = state.level === 9 ? t('sandboxKicker') : t('levelKicker')(state.level + 1, LEVELS.length);
-    levelTitle.textContent = tr('levelNames', state.level);
-    levelBrief.textContent = `${tr('levelBriefs', state.level)} ${tr('passHints', state.level)}`;
-    const sol = state.solved;
-    const key = state.passed ? 'statusWon' : sol?.status === 'short' ? 'statusShort' : sol?.status === 'on' ? 'statusOn' : sol?.status === 'dim' ? 'statusDim' : 'statusOpen';
-    statusText.textContent = t(key);
-    mouseMood.textContent = sol?.status === 'short' ? '🐭⚡' : state.passed ? '🐭🏅' : sol?.status === 'on' ? '🐭💡' : sol?.status === 'dim' ? '🐭🔎' : '🐭🌑';
-    nextBtn.disabled = !state.passed || state.level >= LEVELS.length - 1;
-    renderDex();
-  }
-
-  function renderDex() {
-    const fill = (el, obj) => {
-      el.innerHTML = '';
-      const keys = Object.keys(obj);
-      if (!keys.length) {
-        const li = document.createElement('li');
-        li.textContent = t('dexEmpty');
-        el.appendChild(li);
-        return;
-      }
-      keys.forEach((k) => {
-        const li = document.createElement('li');
-        li.textContent = `${TYPES[k].icon} ${nameOf(k)}`;
-        el.appendChild(li);
+      mutate((document) => {
+        componentById(document, component.id).properties[property] = value;
       });
-    };
-    fill(goodDex, state.dex.good);
-    fill(badDex, state.dex.bad);
+    });
+    row.append(label, input);
+    dom.propertyFields.appendChild(row);
   }
+}
 
-  function setCoach(msg) {
-    coachBubble.textContent = msg;
-    coachBubble.classList.remove('pop');
-    void coachBubble.offsetWidth;
-    coachBubble.classList.add('pop');
+function actionForComponent(component) {
+  switch (component.type) {
+    case 'switch':
+      return { label: component.state.closed ? t('actions').open : t('actions').close, run: () => {
+        component.state.closed = !component.state.closed;
+      } };
+    case 'spdt':
+      return { label: t('actions').changePath, run: () => {
+        component.state.throw = component.state.throw === 'b' ? 'a' : 'b';
+      } };
+    case 'button':
+      return { label: t('actions').press, asyncRun: () => pressButton(component.id) };
+    case 'breaker':
+      if (component.state.tripped) {
+        return { label: t('actions').reset, message: t('breakerReset'), run: () => {
+          component.state.tripped = false;
+          component.state.closed = true;
+          component.state.overloadHeat = 0;
+          component.state.status = 'normal';
+        } };
+      }
+      return { label: component.state.closed ? t('actions').open : t('actions').close, run: () => {
+        component.state.closed = !component.state.closed;
+      } };
+    case 'fuse':
+      return { label: component.state.blown ? t('actions').replace : t('actions').inspect, message: component.state.blown ? t('fuseReplaced') : null, run: () => {
+        if (component.state.blown) {
+          component.state.blown = false;
+          component.state.heat = 0;
+          component.state.status = 'normal';
+        }
+      } };
+    case 'battery':
+    case 'batteryBox':
+      return { label: component.state.status === 'protected' ? t('actions').reset : t('actions').inspect, message: component.state.status === 'protected' ? t('batteryReset') : null, run: () => {
+        if (component.state.status === 'protected') {
+          component.state.status = 'normal';
+          component.state.overloadHeat = 0;
+        }
+      } };
+    case 'lamp':
+      return { label: component.state.removed ? t('actions').installLamp : t('actions').removeLamp, message: component.state.removed ? t('lampInstalled') : t('lampRemoved'), run: () => {
+        component.state.removed = !component.state.removed;
+      } };
+    default:
+      return { label: t('actions').inspect, run: () => {} };
   }
+}
 
-  function toast(msg) {
-    toastEl.textContent = msg;
-    toastEl.hidden = false;
-    toastEl.classList.remove('show');
-    void toastEl.offsetWidth;
-    toastEl.classList.add('show');
-    clearTimeout(toastEl._timer);
-    toastEl._timer = setTimeout(() => { toastEl.hidden = true; }, 2300);
+function updateComponentAction(component) {
+  const action = actionForComponent(component);
+  dom.componentActionBtn.querySelector('b').textContent = action.label;
+}
+
+function operateSelectedComponent() {
+  if (selectedComponents.size !== 1 || selectedWires.size) {
+    showToast(t('nothingSelected'));
+    return;
   }
+  const id = [...selectedComponents][0];
+  const component = componentById(circuit, id);
+  const action = actionForComponent(component);
+  if (action.asyncRun) {
+    action.asyncRun();
+    return;
+  }
+  mutate((document) => {
+    actionForComponent(componentById(document, id)).run();
+  }, action.message);
+  playClick();
+}
 
-  function passLevel(showModal = true) {
-    if (!state.passed) return;
-    if (showModal) {
-      win.hidden = false;
-      winTitle.textContent = state.level === LEVELS.length - 1 ? t('finalWin') : t('winTitle');
-      winDesc.textContent = t('winDesc')(state.level + 1);
-      winEmoji.textContent = state.level === 6 ? '🏅🎆' : state.level === 9 ? '🧰✨' : '🐭🏅';
-      confetti(28);
-      sfx.win();
+function pressButton(id) {
+  const component = componentById(circuit, id);
+  if (!component || component.type !== 'button') return;
+  component.state.pressed = true;
+  simulateNow(0);
+  playClick();
+  setTimeout(() => {
+    const current = componentById(circuit, id);
+    if (!current) return;
+    current.state.pressed = false;
+    simulateNow(0);
+  }, 420);
+}
+
+function clearSelection() {
+  selectedComponents.clear();
+  selectedWires.clear();
+  updateSelectionUi();
+}
+
+function selectOnlyComponent(id) {
+  selectedComponents = new Set([id]);
+  selectedWires.clear();
+  updateSelectionUi();
+}
+
+function selectOnlyWire(id) {
+  selectedComponents.clear();
+  selectedWires = new Set([id]);
+  updateSelectionUi();
+}
+
+function deleteSelection() {
+  if (!selectedComponents.size && !selectedWires.size) {
+    showToast(t('nothingSelected'));
+    return;
+  }
+  const componentIds = [...selectedComponents];
+  const wireIds = [...selectedWires];
+  mutate((document) => {
+    removeComponents(document, componentIds);
+    removeWires(document, wireIds);
+  });
+  clearSelection();
+  playTone(150, .06, 'square', .035);
+}
+
+function rotateSelection() {
+  if (!selectedComponents.size) {
+    showToast(t('nothingSelected'));
+    return;
+  }
+  mutate((document) => {
+    for (const id of selectedComponents) {
+      const component = componentById(document, id);
+      if (component) component.rotation = (component.rotation + 90) % 360;
     }
-  }
+  });
+  playClick();
+}
 
-  function magicMoment() {
-    state.magicDone = true;
-    toast(t('toastMagic'));
-    setCoach(t('coachParallel'));
-    confetti(70);
-    for (let i = 0; i < 36; i++) {
-      state.fireworks.push({ x: Math.random(), y: Math.random() * 0.36, r: 0, life: 1, hue: Math.random() });
-    }
-    sfx.win();
+function copySelection() {
+  if (!selectedComponents.size) {
+    showToast(t('nothingSelected'));
+    return;
   }
-
-  function confetti(n) {
-    const colors = ['var(--accent)', 'var(--accent-2)', 'var(--ok)', 'var(--c-physics)', 'var(--c-chemistry)'];
-    for (let i = 0; i < n; i++) {
-      const p = document.createElement('i');
-      p.className = 'confetti';
-      p.style.left = `${Math.random() * 100}vw`;
-      p.style.background = colors[i % colors.length];
-      p.style.animationDuration = `${1.5 + Math.random() * 1.8}s`;
-      p.style.transform = `rotate(${Math.random() * 180}deg)`;
-      document.body.appendChild(p);
-      setTimeout(() => p.remove(), 3600);
-    }
-  }
-
-  function resumeAudio() {
-    if (state.soundReady) return;
-    try {
-      state.audio = state.audio || new (window.AudioContext || window.webkitAudioContext)();
-      state.audio.resume?.();
-      state.soundReady = true;
-    } catch { /* sound unavailable */ }
-  }
-
-  function tone(freq, dur = 0.12, type = 'sine', gain = 0.08, delay = 0) {
-    if (!state.soundReady || !state.audio) return;
-    try {
-      const a = state.audio;
-      const at = a.currentTime + delay;
-      const osc = a.createOscillator();
-      const g = a.createGain();
-      osc.type = type;
-      osc.frequency.value = freq;
-      g.gain.setValueAtTime(gain, at);
-      g.gain.exponentialRampToValueAtTime(0.001, at + dur);
-      osc.connect(g).connect(a.destination);
-      osc.start(at);
-      osc.stop(at + dur + 0.03);
-    } catch { /* ignore */ }
-  }
-
-  const sfx = {
-    tick: () => tone(420, 0.05, 'square', 0.045),
-    click: () => { tone(220, 0.05, 'square', 0.05); tone(440, 0.04, 'triangle', 0.035, 0.04); },
-    light: () => [660, 990, 1320].forEach((f, i) => tone(f, 0.1, 'triangle', 0.08, i * 0.055)),
-    short: () => { tone(90, 0.22, 'sawtooth', 0.08); tone(63, 0.18, 'square', 0.04, 0.05); },
-    win: () => [523, 659, 784, 1047, 1319].forEach((f, i) => tone(f, 0.16, 'triangle', 0.08, i * 0.08)),
+  clipboard = {
+    components: circuit.components
+      .filter((component) => selectedComponents.has(component.id))
+      .map((component) => cloneCircuitDocument(component)),
+    wires: circuit.wires
+      .filter((wire) => selectedComponents.has(wire.from.componentId) && selectedComponents.has(wire.to.componentId))
+      .map((wire) => cloneCircuitDocument(wire)),
   };
+  pasteClipboard();
+}
 
-  /* 指针 → 逻辑坐标：先转 CSS 像素，再去掉居中偏移、除以缩放（修复 retina 错位） */
-  function eventPoint(ev) {
-    const r = canvas.getBoundingClientRect();
-    const { scale, ox, oy } = state.view;
-    return { x: (ev.clientX - r.left - ox) / scale, y: (ev.clientY - r.top - oy) / scale };
+function pasteClipboard() {
+  if (!clipboard?.components.length) {
+    showToast(t('nothingSelected'));
+    return;
   }
+  const newIds = new Set();
+  mutate((document) => {
+    const mapping = new Map();
+    for (const source of clipboard.components) {
+      const copy = addComponent(document, source.type, {
+        position: { x: source.position.x + 56, y: source.position.y + 56 },
+        rotation: source.rotation,
+        properties: cloneCircuitDocument(source.properties),
+        state: cloneCircuitDocument(source.state),
+      });
+      mapping.set(source.id, copy.id);
+      newIds.add(copy.id);
+    }
+    for (const wire of clipboard.wires) {
+      connectPorts(
+        document,
+        { componentId: mapping.get(wire.from.componentId), portId: wire.from.portId },
+        { componentId: mapping.get(wire.to.componentId), portId: wire.to.portId },
+      );
+    }
+  }, t('copied'));
+  selectedComponents = newIds;
+  selectedWires.clear();
+  updateSelectionUi();
+  playClick();
+}
 
-  /* 缩放后仍保证手指命中区：容差按 1/scale 放大，但设下限防止小屏端子命中圈吞掉整个元件 */
-  function hitTol(base) { return base / Math.max(0.55, Math.min(1, state.view.scale)); }
+function addPart(type, point) {
+  const snapped = snapPoint(point);
+  let createdId = '';
+  mutate((document) => {
+    const component = addComponent(document, type, {
+      position: clampComponentPosition(type, snapped),
+    });
+    createdId = component.id;
+  }, t('placed')(COMPONENT_CATALOG[type].label[lang]));
+  selectOnlyComponent(createdId);
+  playClick();
+  window.cool?.track?.('place_component', { type });
+}
 
-  function hitTerminal(p) {
-    const r = hitTol(HIT_R);
-    for (let ci = state.comps.length - 1; ci >= 0; ci--) {
-      const c = state.comps[ci];
-      for (let i = 0; i < termCount(c); i++) {
-        const q = termPos(c, i);
-        if (dist(p.x, p.y, q.x, q.y) <= r) return { comp: c, idx: i, id: termId(c, i), p: q };
+function connectEndpoints(from, to) {
+  if (from.componentId === to.componentId && from.portId === to.portId) {
+    showToast(t('selfWire'));
+    return;
+  }
+  const count = circuit.wires.length;
+  mutate((document) => {
+    connectPorts(document, from, to);
+  });
+  showToast(circuit.wires.length === count ? t('duplicateWire') : t('wired'));
+  if (circuit.wires.length !== count) {
+    playClick();
+    window.cool?.track?.('connect_wire');
+  }
+}
+
+function snapPoint(point) {
+  return {
+    x: Math.round(point.x / GRID) * GRID,
+    y: Math.round(point.y / GRID) * GRID,
+  };
+}
+
+function clampComponentPosition(type, point) {
+  const size = COMPONENT_CATALOG[type].size;
+  return {
+    x: clamp(point.x, size.width / 2 + 30, WORLD.width - size.width / 2 - 30),
+    y: clamp(point.y, WORLD.townHeight + size.height / 2 + 30, WORLD.height - size.height / 2 - 30),
+  };
+}
+
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
+}
+
+function rotatePoint(point, angleDegrees) {
+  const angle = angleDegrees * Math.PI / 180;
+  const cos = Math.cos(angle);
+  const sin = Math.sin(angle);
+  return { x: point.x * cos - point.y * sin, y: point.x * sin + point.y * cos };
+}
+
+function portPosition(component, portId) {
+  const port = component.ports.find((item) => item.id === portId);
+  if (!port) return null;
+  const rotated = rotatePoint(port.localPosition, component.rotation);
+  return { x: component.position.x + rotated.x, y: component.position.y + rotated.y };
+}
+
+function endpointPosition(endpoint) {
+  const component = componentById(circuit, endpoint.componentId);
+  return component ? portPosition(component, endpoint.portId) : null;
+}
+
+function screenPoint(event) {
+  const rect = dom.stage.getBoundingClientRect();
+  return { x: event.clientX - rect.left, y: event.clientY - rect.top };
+}
+
+function worldPointFromScreen(point) {
+  return {
+    x: (point.x - canvasSize.width / 2) / circuit.viewport.zoom + circuit.viewport.x,
+    y: (point.y - canvasSize.height / 2) / circuit.viewport.zoom + circuit.viewport.y,
+  };
+}
+
+function worldPoint(event) {
+  return worldPointFromScreen(screenPoint(event));
+}
+
+function worldToScreen(point) {
+  return {
+    x: (point.x - circuit.viewport.x) * circuit.viewport.zoom + canvasSize.width / 2,
+    y: (point.y - circuit.viewport.y) * circuit.viewport.zoom + canvasSize.height / 2,
+  };
+}
+
+function hitPort(point, excludeEndpoint = null) {
+  const radius = 24 / circuit.viewport.zoom;
+  let best = null;
+  for (let componentIndex = circuit.components.length - 1; componentIndex >= 0; componentIndex -= 1) {
+    const component = circuit.components[componentIndex];
+    for (const port of component.ports) {
+      const endpoint = { componentId: component.id, portId: port.id };
+      if (excludeEndpoint && endpoint.componentId === excludeEndpoint.componentId && endpoint.portId === excludeEndpoint.portId) continue;
+      const position = portPosition(component, port.id);
+      const distance = Math.hypot(point.x - position.x, point.y - position.y);
+      if (distance <= radius && (!best || distance < best.distance)) {
+        best = { component, port, endpoint, position, distance };
       }
     }
-    return null;
   }
+  return best;
+}
 
-  function nearestTerm(c, p) {
-    let best = null;
-    for (let i = 0; i < termCount(c); i++) {
-      const q = termPos(c, i);
-      const d = dist(p.x, p.y, q.x, q.y);
-      if (!best || d < best.d) best = { comp: c, idx: i, id: termId(c, i), p: q, d };
+function hitComponent(point) {
+  for (let index = circuit.components.length - 1; index >= 0; index -= 1) {
+    const component = circuit.components[index];
+    const size = COMPONENT_CATALOG[component.type].size;
+    const local = rotatePoint({
+      x: point.x - component.position.x,
+      y: point.y - component.position.y,
+    }, -component.rotation);
+    if (Math.abs(local.x) <= size.width / 2 + 8 && Math.abs(local.y) <= size.height / 2 + 8) {
+      return component;
     }
-    return best;
   }
+  return null;
+}
 
-  function hitComp(p) {
-    for (let i = state.comps.length - 1; i >= 0; i--) {
-      const c = state.comps[i];
-      if (Math.abs(p.x - c.x) <= c.w / 2 + 8 && Math.abs(p.y - c.y) <= c.h / 2 + 10) return c;
+function shouldUsePort(point, portHit, componentHit) {
+  if (!portHit) return false;
+  if (!componentHit || componentHit.id !== portHit.component.id) return true;
+  const local = rotatePoint({
+    x: point.x - componentHit.position.x,
+    y: point.y - componentHit.position.y,
+  }, -componentHit.rotation);
+  const port = portHit.port.localPosition;
+  const lengthSquared = port.x * port.x + port.y * port.y || 1;
+  const projection = (local.x * port.x + local.y * port.y) / lengthSquared;
+  return projection > .42;
+}
+
+function wireCurve(wire) {
+  const start = endpointPosition(wire.from);
+  const end = endpointPosition(wire.to);
+  if (!start || !end) return null;
+  const direction = end.x >= start.x ? 1 : -1;
+  const bend = Math.max(60, Math.min(240, Math.abs(end.x - start.x) * .48 + Math.abs(end.y - start.y) * .16));
+  return {
+    start,
+    controlA: { x: start.x + bend * direction, y: start.y },
+    controlB: { x: end.x - bend * direction, y: end.y },
+    end,
+  };
+}
+
+function bezierPoint(curve, amount) {
+  const remaining = 1 - amount;
+  return {
+    x: remaining ** 3 * curve.start.x
+      + 3 * remaining ** 2 * amount * curve.controlA.x
+      + 3 * remaining * amount ** 2 * curve.controlB.x
+      + amount ** 3 * curve.end.x,
+    y: remaining ** 3 * curve.start.y
+      + 3 * remaining ** 2 * amount * curve.controlA.y
+      + 3 * remaining * amount ** 2 * curve.controlB.y
+      + amount ** 3 * curve.end.y,
+  };
+}
+
+function distanceToSegment(point, start, end) {
+  const dx = end.x - start.x;
+  const dy = end.y - start.y;
+  const length = dx * dx + dy * dy || 1;
+  const amount = clamp(((point.x - start.x) * dx + (point.y - start.y) * dy) / length, 0, 1);
+  return Math.hypot(point.x - (start.x + amount * dx), point.y - (start.y + amount * dy));
+}
+
+function hitWire(point) {
+  const tolerance = 14 / circuit.viewport.zoom;
+  let best = null;
+  for (const wire of circuit.wires) {
+    const curve = wireCurve(wire);
+    if (!curve) continue;
+    let previous = curve.start;
+    for (let index = 1; index <= 24; index += 1) {
+      const next = bezierPoint(curve, index / 24);
+      const distance = distanceToSegment(point, previous, next);
+      if (distance < tolerance && (!best || distance < best.distance)) best = { wire, distance };
+      previous = next;
     }
-    return null;
+  }
+  return best;
+}
+
+function resizeCanvas() {
+  const rect = dom.stage.getBoundingClientRect();
+  const dpr = clamp(devicePixelRatio || 1, 1, 2);
+  canvasSize = { width: Math.max(1, rect.width), height: Math.max(1, rect.height), dpr };
+  dom.stage.width = Math.round(canvasSize.width * dpr);
+  dom.stage.height = Math.round(canvasSize.height * dpr);
+  if (!circuit.viewport.zoom || circuit.viewport.zoom <= 0) {
+    resetView();
+  } else if (!initialCanvasSized && !autosavedCircuit && canvasSize.width < 620) {
+    circuit.viewport = { x: 730, y: 535, zoom: .48 };
+  }
+  initialCanvasSized = true;
+}
+
+function resetView() {
+  const fit = Math.min(canvasSize.width / WORLD.width, canvasSize.height / (WORLD.height - 80));
+  circuit.viewport = { x: WORLD.width / 2, y: WORLD.height / 2 + 35, zoom: clamp(fit * .96, .25, 1.4) };
+  dom.zoomValue.textContent = `${Math.round(circuit.viewport.zoom * 100)}%`;
+  scheduleAutosave();
+}
+
+function setZoom(nextZoom, anchor = { x: canvasSize.width / 2, y: canvasSize.height / 2 }) {
+  const before = worldPointFromScreen(anchor);
+  const zoom = clamp(nextZoom, .25, 2.5);
+  circuit.viewport.zoom = zoom;
+  circuit.viewport.x = before.x - (anchor.x - canvasSize.width / 2) / zoom;
+  circuit.viewport.y = before.y - (anchor.y - canvasSize.height / 2) / zoom;
+  dom.zoomValue.textContent = `${Math.round(zoom * 100)}%`;
+  scheduleAutosave();
+}
+
+function updateCanvasCursor() {
+  dom.stage.classList.toggle('is-panning', interaction?.kind === 'pan' || Boolean(pinch));
+  dom.stage.classList.toggle('is-wiring', interaction?.kind === 'wire' || Boolean(pendingWire));
+  dom.stage.classList.toggle('is-dragging', interaction?.kind === 'component' && interaction.moved);
+}
+
+function beginPinch() {
+  if (activePointers.size < 2) return;
+  const [first, second] = [...activePointers.values()];
+  const midpoint = { x: (first.x + second.x) / 2, y: (first.y + second.y) / 2 };
+  pinch = {
+    distance: Math.hypot(second.x - first.x, second.y - first.y),
+    zoom: circuit.viewport.zoom,
+    world: worldPointFromScreen(midpoint),
+  };
+  clearTimeout(longPressTimer);
+  if (interaction?.kind === 'button') releaseMomentaryButton(interaction.componentId);
+  interaction = null;
+  pendingWire = null;
+  updateCanvasCursor();
+}
+
+function updatePinch() {
+  if (!pinch || activePointers.size < 2) return;
+  const [first, second] = [...activePointers.values()];
+  const midpoint = { x: (first.x + second.x) / 2, y: (first.y + second.y) / 2 };
+  const distance = Math.hypot(second.x - first.x, second.y - first.y);
+  const zoom = clamp(pinch.zoom * distance / Math.max(1, pinch.distance), .25, 2.5);
+  circuit.viewport.zoom = zoom;
+  circuit.viewport.x = pinch.world.x - (midpoint.x - canvasSize.width / 2) / zoom;
+  circuit.viewport.y = pinch.world.y - (midpoint.y - canvasSize.height / 2) / zoom;
+  dom.zoomValue.textContent = `${Math.round(zoom * 100)}%`;
+}
+
+function onPointerDown(event) {
+  ensureAudio();
+  hideContextMenu();
+  dom.stage.focus({ preventScroll: true });
+  const screen = screenPoint(event);
+  const point = worldPointFromScreen(screen);
+  activePointers.set(event.pointerId, screen);
+  try {
+    dom.stage.setPointerCapture(event.pointerId);
+  } catch {
+    // Pointer capture may be unavailable for synthetic accessibility events.
+  }
+  if (activePointers.size === 2) {
+    beginPinch();
+    return;
+  }
+  if (activePointers.size > 1) return;
+
+  hoverWorld = point;
+  const panGesture = event.button === 1 || event.button === 2 || event.altKey || spaceDown;
+  if (panGesture) {
+    interaction = {
+      kind: 'pan',
+      startScreen: screen,
+      viewport: { ...circuit.viewport },
+    };
+    updateCanvasCursor();
+    return;
   }
 
-  function pointToSegment(px, py, ax, ay, bx, by) {
-    const dx = bx - ax, dy = by - ay;
-    const len = dx * dx + dy * dy || 1;
-    const u = clamp(((px - ax) * dx + (py - ay) * dy) / len, 0, 1);
-    const x = ax + u * dx, y = ay + u * dy;
-    return Math.hypot(px - x, py - y);
-  }
-
-  /* 导线画成自然下垂的弧线（二次贝塞尔），不再横穿元件本体 */
-  function wireCtrl(a, b) {
-    const len = Math.hypot(b.x - a.x, b.y - a.y);
-    const sag = Math.min(46, 10 + len * 0.12);
-    return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 + sag * 2 };
-  }
-
-  function wirePoint(a, b, u) {
-    const cp = wireCtrl(a, b);
-    const v = 1 - u;
-    return { x: v * v * a.x + 2 * v * u * cp.x + u * u * b.x, y: v * v * a.y + 2 * v * u * cp.y + u * u * b.y };
-  }
-
-  function hitWire(p) {
-    const tol = hitTol(13);
-    let best = null;
-    for (let i = 0; i < state.wires.length; i++) {
-      const w = state.wires[i];
-      const a = termPoint(w.a), b = termPoint(w.b);
-      if (!a || !b) continue;
-      let prev = a;
-      for (let s = 1; s <= 14; s++) {
-        const q = wirePoint(a, b, s / 14);
-        const d = pointToSegment(p.x, p.y, prev.x, prev.y, q.x, q.y);
-        if (d <= tol && (!best || d < best.d)) best = { wire: w, d };
-        prev = q;
-      }
-    }
-    return best;
-  }
-
-  function termPoint(id) {
-    const { comp, idx } = parseTerm(id);
-    return comp ? termPos(comp, idx) : null;
-  }
-
-  function placeSelected(p) {
-    const type = state.selectedTool;
-    if (type === 'wire') {
-      toast(t('toastNoWire'));
+  const portHit = hitPort(point);
+  const component = hitComponent(point);
+  if (shouldUsePort(point, portHit, component)) {
+    if (pendingWire) {
+      connectEndpoints(pendingWire.from, portHit.endpoint);
+      pendingWire = null;
+      hoverPort = null;
+      updateCanvasCursor();
       return;
     }
-    const c = addComp(type, p.x, p.y, { closed: type === 'switch' ? false : undefined });
-    state.selected = { kind: 'comp', id: c.id };
-    sfx.click();
-    evaluate(true);
+    interaction = {
+      kind: 'wire',
+      from: portHit.endpoint,
+      startScreen: screen,
+      current: point,
+      moved: false,
+    };
+    hoverPort = portHit;
+    updateCanvasCursor();
+    return;
   }
 
-  function connectTerminal(hit) {
-    if (!state.wireStart) {
-      state.wireStart = hit.id;
-      setCoach(t('coachWire'));
-      sfx.tick();
-    } else if (state.wireStart !== hit.id) {
-      if (state.wireStart.split(':')[0] === hit.id.split(':')[0]) {
-        toast(t('toastSameComp'));
-        sfx.tick();
-        state.wireStart = null;
-        return;
-      }
-      const w = addWire(state.wireStart, hit.id);
-      state.wireStart = null;
-      sfx.click();
-      const sol = evaluate();
-      /* 新接的线直接造成短路 → 自动选中并教孩子删掉重接 */
-      if (w && sol?.short && sol.shortWires?.has(w.id)) {
-        state.selected = { kind: 'wire', id: w.id };
-        setCoach(t('coachShortWire'));
-      }
+  if (component) {
+    if (event.shiftKey) {
+      if (selectedComponents.has(component.id)) selectedComponents.delete(component.id);
+      else selectedComponents.add(component.id);
+      selectedWires.clear();
+    } else if (!selectedComponents.has(component.id)) {
+      selectOnlyComponent(component.id);
+    }
+    const positions = new Map([...selectedComponents].map((id) => {
+      const item = componentById(circuit, id);
+      return [id, { ...item.position }];
+    }));
+    const before = cloneCircuitDocument(circuit);
+    interaction = {
+      kind: 'component',
+      componentId: component.id,
+      startWorld: point,
+      startScreen: screen,
+      positions,
+      before,
+      moved: false,
+      longPressed: false,
+      momentary: component.type === 'button',
+    };
+    if (component.type === 'button') {
+      component.state.pressed = true;
+      simulateNow(0);
+    }
+    clearTimeout(longPressTimer);
+    longPressTimer = setTimeout(() => {
+      if (!interaction || interaction.kind !== 'component' || interaction.moved) return;
+      interaction.longPressed = true;
+      showContextMenu(screen, component.id);
+      if (interaction.momentary) releaseMomentaryButton(component.id);
+      navigator.vibrate?.(18);
+    }, 560);
+    updateSelectionUi();
+    return;
+  }
+
+  const wireHit = hitWire(point);
+  if (wireHit) {
+    if (event.shiftKey) {
+      if (selectedWires.has(wireHit.wire.id)) selectedWires.delete(wireHit.wire.id);
+      else selectedWires.add(wireHit.wire.id);
     } else {
-      state.wireStart = null;
+      selectOnlyWire(wireHit.wire.id);
     }
+    updateSelectionUi();
+    return;
   }
 
-  function toggleComp(c) {
-    if (c.type === 'switch') {
-      c.closed = !c.closed;
-      sfx.click();
-      evaluate();
-    } else if (c.type === 'spdt') {
-      c.throwTo = c.throwTo === 1 ? 2 : 1;
-      setCoach(t('coachSpdt'));
-      sfx.click();
-      evaluate();
-    } else if (c.type === 'lamp') {
-      c.broken = !c.broken;
-      setCoach(t('coachBroken'));
-      sfx.click();
-      evaluate();
-    }
+  if (pendingWire) {
+    pendingWire = null;
+    hoverPort = null;
+    showToast(t('wireCancelled'));
+    updateCanvasCursor();
+    return;
   }
 
-  function onPointerDown(ev) {
-    resumeAudio();
-    canvas.setPointerCapture(ev.pointerId);
-    const p = eventPoint(ev);
-    state.pointer = p;
-    const c = hitComp(p);
-    const inCore = c && Math.abs(p.x - c.x) <= c.w / 2 && Math.abs(p.y - c.y) <= c.h / 2;
-    /* 拉线中：点元件本体 = 接它最近的端子（孩子瞄准灯泡即可，不必点中小圆点） */
-    if (state.wireStart) {
-      const term = c ? nearestTerm(c, p) : hitTerminal(p);
-      if (term) {
-        state.selected = { kind: 'term', id: term.id };
-        connectTerminal(term);
-        render();
-        return;
-      }
-      state.wireStart = null; /* 点空白处取消拉线 */
+  if (selectedTool) {
+    addPart(selectedTool, point);
+    return;
+  }
+
+  interaction = {
+    kind: 'marquee',
+    startWorld: point,
+    current: point,
+    append: event.shiftKey,
+  };
+  if (!event.shiftKey) clearSelection();
+}
+
+function onPointerMove(event) {
+  const screen = screenPoint(event);
+  const point = worldPointFromScreen(screen);
+  hoverWorld = point;
+  if (activePointers.has(event.pointerId)) activePointers.set(event.pointerId, screen);
+  if (pinch) {
+    updatePinch();
+    return;
+  }
+  hoverPort = (interaction?.kind === 'wire' || pendingWire)
+    ? hitPort(point, interaction?.from || pendingWire?.from)
+    : null;
+  if (!interaction) return;
+
+  const movedDistance = Math.hypot(
+    screen.x - (interaction.startScreen?.x ?? screen.x),
+    screen.y - (interaction.startScreen?.y ?? screen.y),
+  );
+  if (movedDistance > 7) clearTimeout(longPressTimer);
+
+  if (interaction.kind === 'wire') {
+    interaction.current = point;
+    interaction.moved ||= movedDistance > 6;
+  } else if (interaction.kind === 'component') {
+    if (movedDistance <= 5 && !interaction.moved) return;
+    if (!interaction.moved && interaction.momentary) releaseMomentaryButton(interaction.componentId);
+    interaction.moved = true;
+    const delta = {
+      x: point.x - interaction.startWorld.x,
+      y: point.y - interaction.startWorld.y,
+    };
+    for (const [id, start] of interaction.positions) {
+      const component = componentById(circuit, id);
+      if (!component) continue;
+      component.position = clampComponentPosition(component.type, snapPoint({
+        x: start.x + delta.x,
+        y: start.y + delta.y,
+      }));
     }
-    /* 命中仲裁：本体内离端子圆点很近才算接线，其余是拖动/开关；空地上按 端子→导线→元件→放置 */
-    if (inCore) {
-      const term = nearestTerm(c, p);
-      if (term && term.d <= TERM_GRAB) {
-        state.selected = { kind: 'term', id: term.id };
-        connectTerminal(term);
-        render();
-        return;
-      }
-      state.selected = { kind: 'comp', id: c.id };
-      state.drag = { id: c.id, ox: p.x - c.x, oy: p.y - c.y, moved: false, warned: false };
-      render();
+    updateCanvasCursor();
+  } else if (interaction.kind === 'pan') {
+    circuit.viewport.x = interaction.viewport.x - (screen.x - interaction.startScreen.x) / circuit.viewport.zoom;
+    circuit.viewport.y = interaction.viewport.y - (screen.y - interaction.startScreen.y) / circuit.viewport.zoom;
+  } else if (interaction.kind === 'marquee') {
+    interaction.current = point;
+  }
+}
+
+function onPointerUp(event) {
+  const screen = screenPoint(event);
+  const point = worldPointFromScreen(screen);
+  activePointers.delete(event.pointerId);
+  try {
+    dom.stage.releasePointerCapture(event.pointerId);
+  } catch {
+    // Release can fail after the browser has already cancelled capture.
+  }
+  if (pinch) {
+    if (activePointers.size < 2) {
+      pinch = null;
+      scheduleAutosave();
+      updateCanvasCursor();
+    }
+    return;
+  }
+
+  clearTimeout(longPressTimer);
+  const currentInteraction = interaction;
+  interaction = null;
+  if (!currentInteraction) {
+    updateCanvasCursor();
+    return;
+  }
+
+  if (currentInteraction.kind === 'wire') {
+    const target = hitPort(point, currentInteraction.from);
+    if (target) {
+      connectEndpoints(currentInteraction.from, target.endpoint);
+      pendingWire = null;
+    } else if (!currentInteraction.moved) {
+      pendingWire = { from: currentInteraction.from };
+    } else {
+      pendingWire = null;
+      showToast(t('wireCancelled'));
+    }
+    hoverPort = null;
+  } else if (currentInteraction.kind === 'component') {
+    const component = componentById(circuit, currentInteraction.componentId);
+    if (currentInteraction.momentary) releaseMomentaryButton(currentInteraction.componentId);
+    if (currentInteraction.longPressed) {
+      updateCanvasCursor();
       return;
     }
-    /* 空地仲裁：端子和导线都在附近时，选离手指更近的（端子有 8px 偏心，接线优先） */
-    const term = hitTerminal(p);
-    const wireHit = hitWire(p);
-    if (term && (!wireHit || dist(p.x, p.y, term.p.x, term.p.y) <= wireHit.d + 8)) {
-      state.selected = { kind: 'term', id: term.id };
-      connectTerminal(term);
-      render();
-      return;
+    if (currentInteraction.moved) {
+      commitSnapshot(currentInteraction.before);
+      simulateNow(0);
+    } else if (component && ['switch', 'spdt', 'breaker'].includes(component.type)) {
+      const action = actionForComponent(component);
+      mutate((document) => actionForComponent(componentById(document, component.id)).run(), action.message);
+      playClick();
     }
-    if (wireHit) {
-      state.selected = { kind: 'wire', id: wireHit.wire.id };
-      render();
-      return;
-    }
-    if (c) {
-      state.selected = { kind: 'comp', id: c.id };
-      state.drag = { id: c.id, ox: p.x - c.x, oy: p.y - c.y, moved: false, warned: false };
-      render();
-      return;
-    }
-    state.selected = null;
-    state.wireStart = null;
-    placeSelected(p);
-    render();
-  }
-
-  function onPointerMove(ev) {
-    const p = eventPoint(ev);
-    state.pointer = p;
-    if (!state.drag) return;
-    const c = compById(state.drag.id);
-    if (!c) return;
-    if (c.fixed) {
-      /* 教学元件拖不动：位移明显时提示一次，孩子不再以为拖动坏了 */
-      const pull = Math.hypot(p.x - c.x - state.drag.ox, p.y - c.y - state.drag.oy);
-      if (pull > 14 && !state.drag.warned) {
-        state.drag.warned = true;
-        toast(t('fixedPart'));
-      }
-      return;
-    }
-    const before = { x: c.x, y: c.y };
-    c.x = snap(p.x - state.drag.ox);
-    c.y = snap(p.y - state.drag.oy);
-    clampToBoard(c);
-    if (c.x !== before.x || c.y !== before.y) {
-      state.drag.moved = true;
-      evaluate(true);
-    }
-  }
-
-  function onPointerUp(ev) {
-    try { canvas.releasePointerCapture(ev.pointerId); } catch { /* ignore */ }
-    const d = state.drag;
-    state.drag = null;
-    if (d && !d.moved) {
-      /* 原地轻点：开关/双控单击即切换；灯泡双击拧下（防误触） */
-      const c = compById(d.id);
-      if (c) {
-        if (c.type === 'switch' || c.type === 'spdt') {
-          toggleComp(c);
-        } else if (c.type === 'lamp') {
-          if (state.lastTap.id === c.id && now() - state.lastTap.at < 360) {
-            toggleComp(c);
-            state.lastTap = { id: '', at: 0 };
-          } else {
-            state.lastTap = { id: c.id, at: now() };
-          }
-        }
-      }
-    } else if (d?.moved) {
-      evaluate(true);
-    }
-    render();
-  }
-
-  function deleteSelected() {
-    const sel = state.selected;
-    if (!sel) return;
-    if (sel.kind === 'wire') {
-      state.wires = state.wires.filter((w) => w.id !== sel.id || w.fixed);
-      if (state.wires.some((w) => w.id === sel.id && w.fixed)) toast(t('fixedWire'));
-      else setCoach(t('coachDelete'));
-    } else if (sel.kind === 'comp') {
-      const c = compById(sel.id);
-      if (c?.fixed) toast(t('fixedPart'));
-      else {
-        state.comps = state.comps.filter((x) => x.id !== sel.id);
-        state.wires = state.wires.filter((w) => !w.a.startsWith(`${sel.id}:`) && !w.b.startsWith(`${sel.id}:`));
+  } else if (currentInteraction.kind === 'marquee') {
+    const minX = Math.min(currentInteraction.startWorld.x, currentInteraction.current.x);
+    const maxX = Math.max(currentInteraction.startWorld.x, currentInteraction.current.x);
+    const minY = Math.min(currentInteraction.startWorld.y, currentInteraction.current.y);
+    const maxY = Math.max(currentInteraction.startWorld.y, currentInteraction.current.y);
+    if (!currentInteraction.append) clearSelection();
+    for (const component of circuit.components) {
+      if (component.position.x >= minX && component.position.x <= maxX
+        && component.position.y >= minY && component.position.y <= maxY) {
+        selectedComponents.add(component.id);
       }
     }
-    state.selected = null;
-    evaluate();
+    updateSelectionUi();
+  } else if (currentInteraction.kind === 'pan') {
+    scheduleAutosave();
   }
+  updateCanvasCursor();
+}
 
-  canvas.addEventListener('pointerdown', onPointerDown);
-  canvas.addEventListener('pointermove', onPointerMove);
-  canvas.addEventListener('pointerup', onPointerUp);
-  canvas.addEventListener('pointercancel', onPointerUp);
-  testBtn.addEventListener('click', () => { resumeAudio(); evaluate(); if (state.passed) passLevel(); render(); });
-  resetBtn.addEventListener('click', () => loadLevel(state.level));
-  deleteBtn.addEventListener('click', deleteSelected);
-  nextBtn.addEventListener('click', () => { if (state.passed) loadLevel(state.level + 1); });
-  winNext.addEventListener('click', () => { if (state.level < LEVELS.length - 1) loadLevel(state.level + 1); else win.hidden = true; });
-  win.addEventListener('click', (ev) => { if (ev.target === win) win.hidden = true; });
-  addEventListener('keydown', (ev) => {
-    if (ev.key === 'Delete' || ev.key === 'Backspace') deleteSelected();
-    if (ev.key === 'Escape') {
-      if (!win.hidden) { win.hidden = true; return; }
-      state.selected = null; state.wireStart = null; render();
-    }
-  });
-
-  function resize() {
-    const r = canvas.getBoundingClientRect();
-    const cssW = Math.max(280, r.width || BOARD.w);
-    const cssH = Math.max(200, r.height || BOARD.h);
-    const dpr = Math.max(1, Math.min(2.5, devicePixelRatio || 1));
-    canvas.width = Math.floor(cssW * dpr);
-    canvas.height = Math.floor(cssH * dpr);
-    const scale = Math.min(cssW / BOARD.w, cssH / BOARD.h);
-    const ox = (cssW - BOARD.w * scale) / 2;
-    const oy = (cssH - BOARD.h * scale) / 2;
-    /* ui：小屏时线宽/端子按比例加粗，保证可见可点 */
-    const ui = clamp(1 / scale, 1, 1.9);
-    state.view = { scale, ox, oy, dpr, cssW, cssH, ui };
-    render();
+function onPointerCancel(event) {
+  activePointers.delete(event.pointerId);
+  clearTimeout(longPressTimer);
+  if (interaction?.kind === 'button' || interaction?.momentary) {
+    releaseMomentaryButton(interaction.componentId);
   }
+  interaction = null;
+  pinch = null;
+  updateCanvasCursor();
+}
 
-  function drawRoundRect(x, y, w, h, r) {
+function releaseMomentaryButton(id) {
+  const component = componentById(circuit, id);
+  if (component?.type === 'button' && component.state.pressed) {
+    component.state.pressed = false;
+    simulateNow(0);
+  }
+}
+
+function onWheel(event) {
+  event.preventDefault();
+  const anchor = screenPoint(event);
+  setZoom(circuit.viewport.zoom * Math.exp(-event.deltaY * .0012), anchor);
+}
+
+function showContextMenu(screen, componentId) {
+  selectOnlyComponent(componentId);
+  dom.contextMenu.dataset.componentId = componentId;
+  dom.contextMenu.hidden = false;
+  const maxX = dom.canvasWrap.clientWidth - 200;
+  const maxY = dom.canvasWrap.clientHeight - 210;
+  dom.contextMenu.style.left = `${clamp(screen.x, 8, Math.max(8, maxX))}px`;
+  dom.contextMenu.style.top = `${clamp(screen.y, 8, Math.max(8, maxY))}px`;
+}
+
+function hideContextMenu() {
+  dom.contextMenu.hidden = true;
+  delete dom.contextMenu.dataset.componentId;
+}
+
+function openPanel(id) {
+  for (const panel of [$('#toolboxPanel'), $('#inspectorPanel')]) {
+    panel.classList.toggle('is-open', panel.id === id);
+  }
+  $('#toolboxToggle').setAttribute('aria-expanded', String(id === 'toolboxPanel'));
+  $('#inspectorToggle').setAttribute('aria-expanded', String(id === 'inspectorPanel'));
+  dom.panelScrim.hidden = false;
+}
+
+function closePanels() {
+  $('#toolboxPanel').classList.remove('is-open');
+  $('#inspectorPanel').classList.remove('is-open');
+  $('#toolboxToggle').setAttribute('aria-expanded', 'false');
+  $('#inspectorToggle').setAttribute('aria-expanded', 'false');
+  dom.panelScrim.hidden = true;
+}
+
+function ensureAudio() {
+  if (settings.muted || audioContext) return;
+  try {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    audioContext.resume?.();
+  } catch {
+    audioContext = null;
+  }
+}
+
+function playTone(frequency, duration = .08, type = 'triangle', gain = .035, delay = 0) {
+  if (settings.muted || !audioContext) return;
+  try {
+    const at = audioContext.currentTime + delay;
+    const oscillator = audioContext.createOscillator();
+    const envelope = audioContext.createGain();
+    oscillator.type = type;
+    oscillator.frequency.setValueAtTime(frequency, at);
+    envelope.gain.setValueAtTime(.001, at);
+    envelope.gain.exponentialRampToValueAtTime(gain, at + .012);
+    envelope.gain.exponentialRampToValueAtTime(.001, at + duration);
+    oscillator.connect(envelope).connect(audioContext.destination);
+    oscillator.start(at);
+    oscillator.stop(at + duration + .03);
+  } catch {
+    audioContext = null;
+  }
+}
+
+function playClick() {
+  playTone(260, .045, 'square', .025);
+  playTone(520, .05, 'triangle', .022, .035);
+}
+
+function playSuccess() {
+  [523, 659, 784].forEach((frequency, index) => playTone(frequency, .11, 'triangle', .035, index * .055));
+}
+
+function roundRect(context, x, y, width, height, radius) {
+  const safeRadius = Math.min(radius, width / 2, height / 2);
+  context.beginPath();
+  context.moveTo(x + safeRadius, y);
+  context.arcTo(x + width, y, x + width, y + height, safeRadius);
+  context.arcTo(x + width, y + height, x, y + height, safeRadius);
+  context.arcTo(x, y + height, x, y, safeRadius);
+  context.arcTo(x, y, x + width, y, safeRadius);
+  context.closePath();
+}
+
+function draw(timestamp) {
+  const { width, height, dpr } = canvasSize;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, width, height);
+  const background = ctx.createLinearGradient(0, 0, 0, height);
+  background.addColorStop(0, '#071633');
+  background.addColorStop(1, '#040b1c');
+  ctx.fillStyle = background;
+  ctx.fillRect(0, 0, width, height);
+
+  ctx.save();
+  ctx.translate(width / 2, height / 2);
+  ctx.scale(circuit.viewport.zoom, circuit.viewport.zoom);
+  ctx.translate(-circuit.viewport.x, -circuit.viewport.y);
+  drawWorkbench(timestamp);
+  drawWires(timestamp);
+  drawComponents(timestamp);
+  drawWireDraft();
+  drawMarquee();
+  ctx.restore();
+}
+
+function drawWorkbench(timestamp) {
+  const sky = ctx.createLinearGradient(0, 0, 0, WORLD.townHeight + 30);
+  sky.addColorStop(0, '#081431');
+  sky.addColorStop(.62, '#172d5d');
+  sky.addColorStop(1, '#3b386d');
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, WORLD.width, WORLD.townHeight + 30);
+
+  for (let index = 0; index < 48; index += 1) {
+    const x = (index * 137 + 41) % WORLD.width;
+    const y = 18 + (index * 47) % 108;
+    const pulse = .48 + Math.sin(timestamp * .0014 + index) * .18;
+    ctx.globalAlpha = pulse;
+    ctx.fillStyle = index % 7 === 0 ? '#ffd64d' : '#c8dcff';
     ctx.beginPath();
-    ctx.moveTo(x + r, y);
-    ctx.arcTo(x + w, y, x + w, y + h, r);
-    ctx.arcTo(x + w, y + h, x, y + h, r);
-    ctx.arcTo(x, y + h, x, y, r);
-    ctx.arcTo(x, y, x + w, y, r);
-    ctx.closePath();
+    ctx.arc(x, y, index % 7 === 0 ? 2.2 : 1.3, 0, Math.PI * 2);
+    ctx.fill();
   }
+  ctx.globalAlpha = 1;
 
-  function fillTextCenter(txt, x, y, size = 22, weight = 900) {
-    ctx.font = `${weight} ${size}px ${cssVar('--font')}`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(txt, x, y);
+  drawTown();
+  const bench = ctx.createLinearGradient(0, WORLD.townHeight, 0, WORLD.height);
+  bench.addColorStop(0, '#0d2857');
+  bench.addColorStop(1, '#081a3d');
+  ctx.fillStyle = bench;
+  ctx.fillRect(0, WORLD.townHeight, WORLD.width, WORLD.height - WORLD.townHeight);
+
+  ctx.strokeStyle = 'rgba(107, 154, 221, .13)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  for (let x = 0; x <= WORLD.width; x += 40) {
+    ctx.moveTo(x, WORLD.townHeight);
+    ctx.lineTo(x, WORLD.height);
   }
+  for (let y = WORLD.townHeight; y <= WORLD.height; y += 40) {
+    ctx.moveTo(0, y);
+    ctx.lineTo(WORLD.width, y);
+  }
+  ctx.stroke();
 
-  function drawStageBg(b) {
-    const bw = b.x1 - b.x0;
-    const grd = ctx.createLinearGradient(0, b.y0, 0, SKY_H);
-    grd.addColorStop(0, cssVar('--sky-top'));
-    grd.addColorStop(1, cssVar('--sky-bottom'));
-    ctx.fillStyle = grd;
-    ctx.fillRect(b.x0, b.y0, bw, SKY_H - b.y0);
-    drawStars(b, SKY_H);
-    drawTown(b, SKY_H);
-    ctx.fillStyle = cssVar('--paper-2');
-    ctx.fillRect(b.x0, SKY_H - 6, bw, b.y1 - SKY_H + 6);
-    ctx.strokeStyle = cssVar('--line');
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    for (let x = Math.floor(b.x0 / GRID) * GRID; x < b.x1; x += GRID) {
-      ctx.moveTo(x, SKY_H); ctx.lineTo(x, b.y1);
-    }
-    for (let y = SKY_H; y < b.y1; y += GRID) {
-      ctx.moveTo(b.x0, y); ctx.lineTo(b.x1, y);
-    }
+  ctx.strokeStyle = 'rgba(101, 217, 237, .22)';
+  ctx.lineWidth = 2;
+  roundRect(ctx, 18, WORLD.townHeight + 16, WORLD.width - 36, WORLD.height - WORLD.townHeight - 34, 28);
+  ctx.stroke();
+  ctx.fillStyle = 'rgba(101, 217, 237, .45)';
+  ctx.font = '800 13px "Baloo Lab", sans-serif';
+  ctx.letterSpacing = '1px';
+  ctx.fillText('MOUSE TOWN POWER BENCH · OPEN CIRCUIT AREA', 48, WORLD.townHeight + 48);
+}
+
+function drawTown() {
+  const lamps = circuit.components.filter((component) => component.type === 'lamp');
+  for (let index = 0; index < 11; index += 1) {
+    const width = 112;
+    const x = 35 + index * 142;
+    const height = 58 + (index % 3) * 13;
+    const y = WORLD.townHeight - height;
+    const lamp = lamps[index % Math.max(1, lamps.length)];
+    const brightness = lamp ? analysis.components[lamp.id]?.brightness || 0 : 0;
+    ctx.fillStyle = '#263f6f';
+    ctx.strokeStyle = '#061126';
+    ctx.lineWidth = 4;
+    roundRect(ctx, x, y, width, height + 8, 11);
+    ctx.fill();
     ctx.stroke();
-  }
-
-  function drawStars(b, skyH) {
-    const bw = Math.max(200, b.x1 - b.x0);
-    ctx.fillStyle = cssVar('--spark');
-    for (let i = 0; i < 34; i++) {
-      const x = b.x0 + ((i * 97 + 31) % bw);
-      const y = b.y0 + 18 + ((i * 41) % Math.max(70, skyH - b.y0 - 45));
-      const r = i % 5 === 0 ? 2.2 : 1.2;
-      ctx.globalAlpha = 0.3 + ((i % 7) / 10);
-      ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(x - 7, y + 7);
+    ctx.lineTo(x + width / 2, y - 34);
+    ctx.lineTo(x + width + 7, y + 7);
+    ctx.closePath();
+    ctx.fillStyle = index % 2 ? '#d33f76' : '#f15b88';
+    ctx.fill();
+    ctx.stroke();
+    for (let windowIndex = 0; windowIndex < 2; windowIndex += 1) {
+      ctx.fillStyle = brightness > .02 ? '#ffe36c' : '#172748';
+      ctx.globalAlpha = brightness > .02 ? .42 + brightness * .58 : 1;
+      roundRect(ctx, x + 18 + windowIndex * 54, y + 22, 25, 24, 5);
+      ctx.fill();
+      ctx.stroke();
     }
     ctx.globalAlpha = 1;
-    ctx.font = '28px serif';
-    ctx.fillText('🌙', b.x1 - 62, b.y0 + 44);
   }
+  ctx.fillStyle = '#ffd64d';
+  ctx.font = '34px serif';
+  ctx.fillText(analysis.summary.status === 'short' ? '🐭⚡' : analysis.summary.status === 'active' ? '🐭💡' : '🐭🔦', 60, 72);
+}
 
-  function drawTown(b, skyH) {
-    const lamps = state.comps.filter((c) => c.type === 'lamp');
-    const brightness = lamps.map((c) => state.solved?.lamps?.[c.id] || 0);
-    const houses = state.level === 6 ? 7 : 5;
-    const baseY = skyH - 8;
-    const span = b.x1 - b.x0 - 80;
-    for (let i = 0; i < houses; i++) {
-      const x = b.x0 + 34 + i * (span / houses);
-      const bw = Math.min(92, (span - 40) / houses);
-      const bh = 45 + (i % 2) * 16;
-      const lit = brightness[i % Math.max(1, brightness.length)] || (state.magicDone ? 1 : 0);
-      ctx.fillStyle = cssVar('--town');
-      ctx.strokeStyle = cssVar('--line-strong');
-      ctx.lineWidth = 2.5;
-      drawRoundRect(x, baseY - bh, bw, bh, 9);
-      ctx.fill(); ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(x - 5, baseY - bh + 5); ctx.lineTo(x + bw / 2, baseY - bh - 27); ctx.lineTo(x + bw + 5, baseY - bh + 5); ctx.closePath();
-      ctx.fillStyle = cssVar('--accent'); ctx.fill(); ctx.stroke();
-      ctx.fillStyle = lit > 0 ? cssVar('--spark') : cssVar('--window-off');
-      ctx.globalAlpha = lit > 0 ? 0.45 + lit * 0.55 : 1;
-      drawRoundRect(x + 14, baseY - bh + 17, 19, 20, 4); ctx.fill(); ctx.stroke();
-      drawRoundRect(x + bw - 34, baseY - bh + 17, 19, 20, 4); ctx.fill(); ctx.stroke();
-      ctx.globalAlpha = 1;
-      if (state.level === 6 && !state.magicDone && i > 1) {
-        ctx.font = '18px serif';
-        ctx.fillText('😾', x + bw / 2 - 9, baseY - bh - 35);
-      }
-    }
-    ctx.font = '24px serif';
-    ctx.fillText(state.solved?.status === 'short' ? '🐭⚡' : state.passed ? '🐭🏅' : '🐭🔦', b.x0 + 16, baseY - 18);
-  }
+function drawWires(timestamp) {
+  for (const wire of circuit.wires) {
+    const curve = wireCurve(wire);
+    if (!curve) continue;
+    const meter = analysis.wires[wire.id] || { active: false, current: 0, potential: 0 };
+    const selected = selectedWires.has(wire.id);
+    const short = analysis.summary.status === 'short' && meter.active;
+    const source = Math.max(.1, analysis.summary.sourceVoltage);
+    let color = '#4b6187';
+    if (short) color = '#ff525d';
+    else if (meter.active && meter.potential > source * .48) color = '#ffd64d';
+    else if (meter.active) color = '#65d9ed';
 
-  function drawWires() {
-    const ui = state.view.ui;
-    for (const w of state.wires) {
-      const a = termPoint(w.a), b = termPoint(w.b);
-      if (!a || !b) continue;
-      const active = state.solved?.activeWires?.has(w.id);
-      const short = state.solved?.shortWires?.has(w.id);
-      const sel = isSelected('wire', w.id);
-      const cp = wireCtrl(a, b);
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      ctx.strokeStyle = short ? cssVar('--danger') : active ? cssVar('--spark') : cssVar('--ink');
-      ctx.lineWidth = ((short ? 9 : active ? 7 : 5) + (sel ? 2 : 0)) * ui;
-      ctx.globalAlpha = w.fixed && !active && !short ? 0.72 : 1;
-      ctx.beginPath();
-      ctx.moveTo(a.x, a.y);
-      ctx.quadraticCurveTo(cp.x, cp.y, b.x, b.y);
-      ctx.stroke();
-      ctx.globalAlpha = 1;
-      ctx.strokeStyle = sel ? cssVar('--accent') : cssVar('--line-strong');
-      ctx.lineWidth = (sel ? 3 : 2) * ui;
-      if (sel) ctx.setLineDash([7, 7]);
-      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.quadraticCurveTo(cp.x, cp.y, b.x, b.y); ctx.stroke();
-      ctx.setLineDash([]);
-      if (short) drawSmokeAlong(a, b);
-      if (active) drawParticles(a, b, 5);
-    }
-  }
-
-  function drawParticles(a, b, count) {
-    for (let i = 0; i < count; i++) {
-      const u = ((state.tick * 0.0018 + i / count) % 1);
-      const q = wirePoint(a, b, u);
-      ctx.fillStyle = cssVar('--spark');
-      ctx.strokeStyle = cssVar('--line-strong');
-      ctx.lineWidth = 1.5;
-      ctx.beginPath(); ctx.arc(q.x, q.y, 5.5 * state.view.ui, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-    }
-  }
-
-  function drawSmokeAlong(a, b) {
-    for (let i = 0; i < 3; i++) {
-      const u = ((state.tick * 0.0007 + i * 0.31) % 1);
-      const q = wirePoint(a, b, u);
-      const y = q.y - 10 - Math.sin(state.tick * 0.006 + i) * 8;
-      ctx.fillStyle = cssVar('--smoke');
-      ctx.globalAlpha = 0.35;
-      ctx.beginPath(); ctx.arc(q.x, y, 9 + i * 2, 0, Math.PI * 2); ctx.fill();
-      ctx.globalAlpha = 1;
-    }
-  }
-
-  function drawComponents() {
-    const used = new Set();
-    for (const w of state.wires) { used.add(w.a); used.add(w.b); }
-    for (const c of state.comps) drawComponent(c);
-    for (const c of state.comps) drawTerminals(c, used);
-    if (state.wireStart) {
-      const p = termPoint(state.wireStart);
-      if (p && state.pointer) {
-        ctx.setLineDash([8, 8]);
-        ctx.strokeStyle = cssVar('--accent');
-        ctx.lineWidth = 4 * state.view.ui;
-        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(state.pointer.x, state.pointer.y); ctx.stroke();
-        ctx.setLineDash([]);
-      }
-    }
-  }
-
-  function isSelected(kind, id) { return state.selected?.kind === kind && state.selected.id === id; }
-
-  function drawComponent(c) {
-    const spec = TYPES[c.type];
-    const x = c.x - c.w / 2, y = c.y - c.h / 2;
-    const lit = c.type === 'lamp' ? (state.solved?.lamps?.[c.id] || 0) : 0;
-    ctx.save();
-    if (isSelected('comp', c.id)) {
-      ctx.translate(0, -3);
-      ctx.shadowColor = cssVar('--accent');
-      ctx.shadowBlur = 15;
-    }
-    ctx.fillStyle = c.type === 'battery' ? cssVar('--accent-2') : c.type === 'lamp' && lit > 0 ? cssVar('--spark') : cssVar('--card');
-    ctx.strokeStyle = cssVar('--line-strong');
-    ctx.lineWidth = 3;
-    drawRoundRect(x, y, c.w, c.h, 16);
-    ctx.fill(); ctx.stroke();
-    ctx.shadowBlur = 0;
-    if (c.type === 'lamp') drawLamp(c, lit);
-    else if (c.type === 'battery') drawBattery(c);
-    else if (c.type === 'switch') drawSwitch(c);
-    else if (c.type === 'spdt') drawSpdt(c);
-    else drawItem(c, spec);
-    if (c.label) {
-      ctx.fillStyle = cssVar('--ink');
-      fillTextCenter(c.label, c.x, y - 12, 13, 900);
-    }
-    ctx.restore();
-  }
-
-  function drawBattery(c) {
-    ctx.fillStyle = cssVar('--ink-on-accent');
-    fillTextCenter('−', c.x - 24, c.y, 22, 900);
-    fillTextCenter('+', c.x + 24, c.y, 22, 900);
-    ctx.fillStyle = cssVar('--card');
-    drawRoundRect(c.x - 9, c.y - 20, 18, 40, 5); ctx.fill(); ctx.stroke();
-    fillTextCenter('🔋', c.x, c.y - 2, 25, 900);
-  }
-
-  function drawLamp(c, lit) {
-    const pulse = lit > 0 ? 1 + Math.sin(state.tick * 0.008) * 0.08 : 1;
-    ctx.save();
-    ctx.translate(c.x, c.y - 2);
-    ctx.scale(pulse, pulse);
-    if (lit > 0) {
-      ctx.globalAlpha = 0.25 + lit * 0.3;
-      ctx.fillStyle = cssVar('--spark');
-      ctx.beginPath(); ctx.arc(0, 0, 35 + lit * 18, 0, Math.PI * 2); ctx.fill();
-      ctx.globalAlpha = 1;
-    }
-    fillTextCenter(c.broken ? '💔' : '💡', 0, 0, 31, 900);
-    ctx.restore();
-    if (lit > 0 && lit < 0.75) {
-      ctx.fillStyle = cssVar('--ink-soft');
-      fillTextCenter(t('dimTag'), c.x, c.y + c.h / 2 - 8, 11 * state.view.ui, 900);
-    }
-  }
-
-  function drawSwitch(c) {
-    ctx.strokeStyle = cssVar('--line-strong');
-    ctx.lineWidth = 5;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = selected ? '#ff5d8f' : '#030817';
+    ctx.lineWidth = selected ? 13 : 11;
     ctx.beginPath();
-    ctx.moveTo(c.x - 26, c.y + 12);
-    ctx.lineTo(c.x + (c.closed ? 24 : 10), c.y + (c.closed ? 12 : -14));
+    ctx.moveTo(curve.start.x, curve.start.y);
+    ctx.bezierCurveTo(curve.controlA.x, curve.controlA.y, curve.controlB.x, curve.controlB.y, curve.end.x, curve.end.y);
     ctx.stroke();
-    ctx.fillStyle = c.closed ? cssVar('--ok') : cssVar('--danger');
-    ctx.beginPath(); ctx.arc(c.x - 26, c.y + 12, 7, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-    ctx.beginPath(); ctx.arc(c.x + 26, c.y + 12, 7, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-    fillTextCenter(c.closed ? t('onTag') : t('offTag'), c.x, c.y - 15, 12 * state.view.ui, 900);
-  }
-
-  function drawSpdt(c) {
-    ctx.strokeStyle = cssVar('--line-strong');
-    ctx.lineWidth = 4;
-    const p0 = termPos(c, 0), p1 = termPos(c, 1), p2 = termPos(c, 2);
-    const target = c.throwTo === 1 ? p1 : p2;
-    ctx.beginPath(); ctx.moveTo(p0.x + 12, p0.y); ctx.lineTo(target.x - 12, target.y); ctx.stroke();
-    ctx.fillStyle = cssVar('--accent-2');
-    fillTextCenter('↔️', c.x, c.y, 25, 900);
-  }
-
-  function drawItem(c, spec) {
-    fillTextCenter(spec.icon, c.x, c.y - 3, 28, 900);
-    const cond = spec.conductivity;
-    ctx.fillStyle = cond > 0.7 ? cssVar('--ok') : cond > 0 ? cssVar('--accent-2') : cssVar('--ink-faint');
-    drawRoundRect(c.x - 25, c.y + c.h / 2 - 14, 50, 10, 5);
-    ctx.fill(); ctx.stroke();
-  }
-
-  function drawTerminals(c, used) {
-    const ui = state.view.ui;
-    for (let i = 0; i < termCount(c); i++) {
-      const id = termId(c, i);
-      const p = termPos(c, i);
-      const selected = state.wireStart === id || isSelected('term', id);
-      const plugged = used?.has(id);
-      /* 空端子=空心（可接线），已接端子=实心；拉线时空端子轻轻呼吸引导孩子 */
-      const wiring = !!state.wireStart && !selected && !plugged;
-      ctx.fillStyle = selected ? cssVar('--accent') : plugged ? cssVar('--line-strong') : cssVar('--card');
-      ctx.strokeStyle = selected ? cssVar('--line-strong') : plugged ? cssVar('--line-strong') : cssVar('--accent-2');
-      ctx.lineWidth = (selected ? 4 : 3) * ui;
-      const r = (selected ? 12 : wiring ? 10.5 + Math.sin(state.tick * 0.008 + p.x) * 1.5 : 9) * ui;
-      ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-      if (selected) {
-        ctx.fillStyle = cssVar('--spark');
-        fillTextCenter('✦', p.x, p.y - 24 * ui, 16 * ui, 900);
-      }
-    }
-  }
-
-  function drawGapHint() {
-    const sol = state.solved;
-    const gaps = sol?.gaps?.length ? sol.gaps : sol?.gap ? [sol.gap] : [];
-    if (!gaps.length) return;
-    const ui = state.view.ui;
-    ctx.save();
-    ctx.setLineDash([7, 7]);
-    ctx.strokeStyle = cssVar('--danger');
-    ctx.lineWidth = 4 * ui;
-    const r = (26 + Math.sin(state.tick * 0.006) * 4) * ui;
-    const pts = [];
-    for (const id of gaps.slice(0, 6)) {
-      const p = termPoint(id);
-      if (!p) continue;
-      pts.push(p);
-      ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI * 2); ctx.stroke();
-    }
+    ctx.strokeStyle = color;
+    ctx.lineWidth = short ? 7 : meter.active ? 6 : 5;
+    if (!meter.active) ctx.setLineDash([12, 7]);
+    ctx.beginPath();
+    ctx.moveTo(curve.start.x, curve.start.y);
+    ctx.bezierCurveTo(curve.controlA.x, curve.controlA.y, curve.controlB.x, curve.controlB.y, curve.end.x, curve.end.y);
+    ctx.stroke();
     ctx.setLineDash([]);
-    if (pts.length) {
-      const p = pts[0];
-      ctx.fillStyle = cssVar('--danger');
-      const labelX = clamp(p.x + 58, 70, BOARD.w - 70);
-      fillTextCenter(t(pts.length > 1 ? 'gapMany' : 'gapHere'), labelX, p.y - 28 - 6 * ui, 13 * ui, 900);
-    }
-    ctx.restore();
-  }
 
-  function drawFireworks(b) {
-    state.fireworks = state.fireworks.filter((f) => f.life > 0);
-    const bw = b.x1 - b.x0, bh = b.y1 - b.y0;
-    for (const f of state.fireworks) {
-      f.r += 1.8;
-      f.life -= 0.012;
-      const x = b.x0 + f.x * bw, y = b.y0 + f.y * bh;
-      ctx.globalAlpha = Math.max(0, f.life);
-      ctx.strokeStyle = f.hue < 0.33 ? cssVar('--accent') : f.hue < 0.66 ? cssVar('--accent-2') : cssVar('--ok');
-      ctx.lineWidth = 3;
-      for (let i = 0; i < 10; i++) {
-        const a = (Math.PI * 2 * i) / 10;
+    if (short) drawWireSmoke(curve, timestamp);
+    if (settings.showCurrent && settings.running && settings.powered && meter.active) {
+      const count = clamp(Math.ceil(meter.current * 1.5), 2, 7);
+      for (let index = 0; index < count; index += 1) {
+        const progress = (timestamp * (.00015 + Math.min(meter.current, 8) * .000035) + index / count) % 1;
+        const amount = meter.direction < 0 ? 1 - progress : progress;
+        const point = bezierPoint(curve, amount);
+        ctx.fillStyle = short ? '#fff2f0' : '#fff3a8';
+        ctx.strokeStyle = short ? '#ff303a' : '#8f6411';
+        ctx.lineWidth = 1.5;
         ctx.beginPath();
-        ctx.moveTo(x + Math.cos(a) * f.r * 0.4, y + Math.sin(a) * f.r * 0.4);
-        ctx.lineTo(x + Math.cos(a) * f.r, y + Math.sin(a) * f.r);
+        ctx.arc(point.x, point.y, 5.2, 0, Math.PI * 2);
+        ctx.fill();
         ctx.stroke();
       }
-      ctx.globalAlpha = 1;
     }
   }
+}
 
-  function burstSmoke() {
-    const sol = state.solved;
-    if (!sol) return;
-    for (const id of sol.shortWires || []) {
-      const w = state.wires.find((wire) => wire.id === id);
-      if (!w) continue;
-      const a = termPoint(w.a), b = termPoint(w.b);
-      if (a && b) {
-        const m = wirePoint(a, b, 0.5);
-        state.smoke.push({ x: m.x, y: m.y, life: 1 });
+function drawWireSmoke(curve, timestamp) {
+  for (let index = 0; index < 4; index += 1) {
+    const amount = .22 + index * .17;
+    const point = bezierPoint(curve, amount);
+    const float = ((timestamp * .025 + index * 13) % 34);
+    ctx.globalAlpha = .34 * (1 - float / 42);
+    ctx.fillStyle = '#b7b4c4';
+    ctx.beginPath();
+    ctx.arc(point.x + Math.sin(index + timestamp * .003) * 8, point.y - 10 - float, 7 + float * .28, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+}
+
+function drawComponents(timestamp) {
+  const connectedPorts = new Set(circuit.wires.flatMap((wire) => [
+    `${wire.from.componentId}:${wire.from.portId}`,
+    `${wire.to.componentId}:${wire.to.portId}`,
+  ]));
+  for (const component of circuit.components) drawComponent(component, timestamp);
+  for (const component of circuit.components) drawPorts(component, connectedPorts, timestamp);
+}
+
+function drawComponent(component, timestamp) {
+  const definition = COMPONENT_CATALOG[component.type];
+  const size = definition.size;
+  const meter = analysis.components[component.id] || {};
+  const selected = selectedComponents.has(component.id);
+  const fault = ['overload', 'protected', 'overvoltage', 'heating', 'tripped', 'blown'].includes(meter.status || component.state.status);
+  if (component.type === 'lamp' && meter.brightness > .01) {
+    const glow = ctx.createRadialGradient(component.position.x, component.position.y, 12, component.position.x, component.position.y, 90);
+    glow.addColorStop(0, `rgba(255, 224, 91, ${.34 + meter.brightness * .28})`);
+    glow.addColorStop(1, 'rgba(255, 214, 77, 0)');
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.arc(component.position.x, component.position.y, 90, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  ctx.save();
+  ctx.translate(component.position.x, component.position.y);
+  ctx.rotate(component.rotation * Math.PI / 180);
+  if (selected) {
+    ctx.shadowColor = '#65d9ed';
+    ctx.shadowBlur = 22;
+  } else if (fault) {
+    ctx.shadowColor = '#ff5b5f';
+    ctx.shadowBlur = 20;
+  }
+  ctx.fillStyle = component.type === 'battery' || component.type === 'batteryBox'
+    ? '#ffd64d'
+    : component.type === 'lamp' && meter.brightness > .02 ? '#fff0a6' : '#fff3c4';
+  ctx.strokeStyle = fault ? '#ff4c58' : selected ? '#65d9ed' : '#09152e';
+  ctx.lineWidth = selected || fault ? 5 : 4;
+  roundRect(ctx, -size.width / 2, -size.height / 2, size.width, size.height, 18);
+  ctx.fill();
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+
+  drawComponentFace(component, meter, timestamp, size);
+  ctx.restore();
+
+  if (settings.showData && (meter.current > .0005 || selected)) {
+    drawDataTag(component, meter);
+  }
+}
+
+function drawComponentFace(component, meter, timestamp, size) {
+  ctx.fillStyle = '#132348';
+  ctx.strokeStyle = '#132348';
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  if (component.type === 'battery' || component.type === 'batteryBox') {
+    ctx.font = '900 22px "Baloo Lab", sans-serif';
+    ctx.fillText('−', -34, 2);
+    ctx.fillText('+', 34, 2);
+    ctx.fillStyle = '#fff7d8';
+    roundRect(ctx, -14, -25, 28, 50, 6);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = '#132348';
+    ctx.font = '20px serif';
+    ctx.fillText(component.type === 'batteryBox' ? '▥' : '🔋', 0, 0);
+  } else if (component.type === 'lamp') {
+    const pulse = meter.brightness > .02 ? 1 + Math.sin(timestamp * .008) * .035 : 1;
+    ctx.save();
+    ctx.scale(pulse, pulse);
+    ctx.font = '35px serif';
+    ctx.fillText(component.state.removed ? '◌' : component.state.damaged ? '💔' : '💡', 0, -4);
+    ctx.restore();
+  } else if (component.type === 'motor') {
+    ctx.save();
+    ctx.rotate(timestamp * .004 * (meter.speed || 0));
+    ctx.lineWidth = 5;
+    for (let index = 0; index < 6; index += 1) {
+      ctx.rotate(Math.PI / 3);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(25, 0);
+      ctx.stroke();
+    }
+    ctx.beginPath();
+    ctx.arc(0, 0, 11, 0, Math.PI * 2);
+    ctx.fillStyle = '#ff5d8f';
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+  } else if (component.type === 'buzzer') {
+    ctx.font = '32px serif';
+    ctx.fillText('📣', -4, 0);
+    if (meter.status === 'sounding') {
+      ctx.strokeStyle = '#ff5d8f';
+      ctx.lineWidth = 3;
+      for (let index = 0; index < 2; index += 1) {
+        ctx.beginPath();
+        ctx.arc(25, 0, 10 + index * 10, -.75, .75);
+        ctx.stroke();
       }
     }
+  } else if (component.type === 'switch') {
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.arc(-28, 14, 7, 0, Math.PI * 2);
+    ctx.moveTo(-22, 10);
+    ctx.lineTo(27, component.state.closed ? 14 : -17);
+    ctx.stroke();
+    ctx.fillStyle = component.state.closed ? '#0c9f73' : '#d73d63';
+    ctx.font = '900 13px "Baloo Lab", sans-serif';
+    ctx.fillText(component.state.closed ? 'ON' : 'OFF', 0, -20);
+  } else if (component.type === 'spdt') {
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(-34, 0);
+    ctx.lineTo(29, component.state.throw === 'b' ? 23 : -23);
+    ctx.stroke();
+    ctx.fillStyle = '#d93771';
+    ctx.font = '900 15px "Baloo Lab", sans-serif';
+    ctx.fillText(component.state.throw === 'b' ? '2' : '1', 0, 0);
+  } else if (component.type === 'button') {
+    ctx.fillStyle = component.state.pressed ? '#b62652' : '#ff5d8f';
+    ctx.strokeStyle = '#132348';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.ellipse(0, component.state.pressed ? 6 : -5, 25, 18, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = '#132348';
+    ctx.fillRect(-5, component.state.pressed ? 16 : 8, 10, 12);
+  } else if (component.type === 'breaker') {
+    ctx.fillStyle = component.state.tripped ? '#ff5b5f' : component.state.closed ? '#4de2a8' : '#c6cad4';
+    roundRect(ctx, -29, -22, 58, 44, 10);
+    ctx.fill();
+    ctx.stroke();
+    ctx.strokeStyle = '#132348';
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.moveTo(-15, component.state.closed ? 11 : -12);
+    ctx.lineTo(17, component.state.closed ? -11 : 12);
+    ctx.stroke();
+  } else if (component.type === 'fuse') {
+    ctx.fillStyle = '#d9f4f6';
+    roundRect(ctx, -34, -17, 68, 34, 15);
+    ctx.fill();
+    ctx.stroke();
+    ctx.strokeStyle = component.state.blown ? '#ff5b5f' : component.state.status === 'heating' ? '#ff9d48' : '#d93771';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(-24, 0);
+    if (component.state.blown) {
+      ctx.lineTo(-6, 0);
+      ctx.moveTo(7, 0);
+      ctx.lineTo(24, 0);
+    } else {
+      ctx.bezierCurveTo(-12, -12, 12, 12, 24, 0);
+    }
+    ctx.stroke();
+  } else if (component.type === 'junction') {
+    ctx.fillStyle = '#ff5d8f';
+    ctx.beginPath();
+    ctx.arc(0, 0, 17, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = '#fff3c4';
+    ctx.font = '900 24px "Baloo Lab", sans-serif';
+    ctx.fillText('✣', 0, 0);
   }
 
-  function drawLooseSmoke() {
-    state.smoke = state.smoke.filter((s) => s.life > 0);
-    for (const s of state.smoke) {
-      s.life -= 0.02;
-      s.y -= 0.6;
-      ctx.globalAlpha = Math.max(0, s.life * 0.45);
-      ctx.fillStyle = cssVar('--smoke');
-      ctx.beginPath(); ctx.arc(s.x, s.y, 28 * (1 - s.life) + 8, 0, Math.PI * 2); ctx.fill();
+  if (!['junction', 'lamp'].includes(component.type)) {
+    ctx.fillStyle = '#132348';
+    ctx.font = '800 11px "Baloo Lab", "PingFang SC", sans-serif';
+    const label = COMPONENT_CATALOG[component.type].label[lang];
+    ctx.fillText(label, 0, size.height / 2 - 10);
+  }
+}
+
+function drawPorts(component, connectedPorts, timestamp) {
+  for (const port of component.ports) {
+    const position = portPosition(component, port.id);
+    const key = `${component.id}:${port.id}`;
+    const connected = connectedPorts.has(key);
+    const selected = pendingWire?.from.componentId === component.id && pendingWire?.from.portId === port.id
+      || interaction?.kind === 'wire'
+        && interaction.from.componentId === component.id
+        && interaction.from.portId === port.id;
+    const hovered = hoverPort?.endpoint.componentId === component.id && hoverPort?.endpoint.portId === port.id;
+    const wiring = Boolean(pendingWire || interaction?.kind === 'wire');
+    const pulse = wiring && !connected ? Math.sin(timestamp * .008 + position.x) * 1.8 : 0;
+    ctx.fillStyle = selected ? '#ff5d8f' : hovered ? '#65d9ed' : connected ? '#132348' : '#fff3c4';
+    ctx.strokeStyle = selected ? '#fff3c4' : hovered ? '#07142f' : connected ? '#65d9ed' : '#ffd64d';
+    ctx.lineWidth = hovered || selected ? 5 : 4;
+    ctx.beginPath();
+    ctx.arc(position.x, position.y, (hovered ? 13 : 10) + pulse, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    if (wiring && !selected && !connected) {
+      ctx.globalAlpha = .24;
+      ctx.strokeStyle = '#65d9ed';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(position.x, position.y, 19 + pulse, 0, Math.PI * 2);
+      ctx.stroke();
       ctx.globalAlpha = 1;
     }
   }
+}
 
-  /** 每帧/每次状态变化的统一渲染入口（语言、主题切换都会调用） */
-  function render() {
-    if (!ctx || !canvas) return;
-    const { scale, ox, oy, dpr, cssW, cssH } = state.view;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.clearRect(0, 0, cssW, cssH);
-    /* 逻辑坐标系：等比缩放 + 居中 */
-    ctx.setTransform(dpr * scale, 0, 0, dpr * scale, dpr * ox, dpr * oy);
-    const b = {
-      x0: -ox / scale, y0: -oy / scale,
-      x1: (cssW - ox) / scale, y1: (cssH - oy) / scale,
-    };
-    drawStageBg(b);
-    drawWires();
-    drawComponents();
-    drawGapHint();
-    drawLooseSmoke();
-    drawFireworks(b);
-  }
+function drawDataTag(component, meter) {
+  const width = 112;
+  const x = component.position.x - width / 2;
+  const y = component.position.y - COMPONENT_CATALOG[component.type].size.height / 2 - 39;
+  ctx.fillStyle = 'rgba(5, 16, 39, .9)';
+  ctx.strokeStyle = selectedComponents.has(component.id) ? '#65d9ed' : 'rgba(101, 217, 237, .36)';
+  ctx.lineWidth = 2;
+  roundRect(ctx, x, y, width, 28, 9);
+  ctx.fill();
+  ctx.stroke();
+  ctx.fillStyle = '#eef5ff';
+  ctx.font = '800 12px "Baloo Lab", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(`${Number(meter.voltage || 0).toFixed(1)}V · ${Number(meter.current || 0).toFixed(2)}A`, component.position.x, y + 14);
+}
 
-  function animate(ts) {
-    state.tick = ts;
-    if (!state.lastTime || ts - state.lastTime > 33) {
-      state.lastTime = ts;
-      render();
+function drawWireDraft() {
+  const draft = interaction?.kind === 'wire' ? interaction : pendingWire;
+  if (!draft) return;
+  const start = endpointPosition(draft.from);
+  const end = hoverPort?.position || interaction?.current || hoverWorld;
+  if (!start || !end) return;
+  ctx.strokeStyle = hoverPort ? '#65d9ed' : '#ff5d8f';
+  ctx.lineWidth = 5;
+  ctx.setLineDash([11, 8]);
+  ctx.beginPath();
+  ctx.moveTo(start.x, start.y);
+  const direction = end.x >= start.x ? 1 : -1;
+  const bend = Math.max(55, Math.abs(end.x - start.x) * .45);
+  ctx.bezierCurveTo(start.x + bend * direction, start.y, end.x - bend * direction, end.y, end.x, end.y);
+  ctx.stroke();
+  ctx.setLineDash([]);
+}
+
+function drawMarquee() {
+  if (interaction?.kind !== 'marquee') return;
+  const x = Math.min(interaction.startWorld.x, interaction.current.x);
+  const y = Math.min(interaction.startWorld.y, interaction.current.y);
+  const width = Math.abs(interaction.current.x - interaction.startWorld.x);
+  const height = Math.abs(interaction.current.y - interaction.startWorld.y);
+  ctx.fillStyle = 'rgba(101, 217, 237, .1)';
+  ctx.strokeStyle = '#65d9ed';
+  ctx.lineWidth = 2 / circuit.viewport.zoom;
+  ctx.setLineDash([8 / circuit.viewport.zoom, 6 / circuit.viewport.zoom]);
+  ctx.fillRect(x, y, width, height);
+  ctx.strokeRect(x, y, width, height);
+  ctx.setLineDash([]);
+}
+
+function bindControls() {
+  dom.stage.addEventListener('pointerdown', onPointerDown);
+  dom.stage.addEventListener('pointermove', onPointerMove);
+  dom.stage.addEventListener('pointerup', onPointerUp);
+  dom.stage.addEventListener('pointercancel', onPointerCancel);
+  dom.stage.addEventListener('wheel', onWheel, { passive: false });
+  dom.stage.addEventListener('contextmenu', (event) => event.preventDefault());
+  dom.stage.addEventListener('dragover', (event) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'copy';
+  });
+  dom.stage.addEventListener('drop', (event) => {
+    event.preventDefault();
+    const type = event.dataTransfer.getData('application/x-electric-component');
+    if (COMPONENT_CATALOG[type]) addPart(type, worldPoint(event));
+  });
+
+  $('#runBtn').addEventListener('click', () => {
+    settings.running = !settings.running;
+    persistSettings();
+    simulateNow(0);
+    updateToolbar();
+  });
+  $('#powerBtn').addEventListener('click', () => {
+    ensureAudio();
+    settings.powered = !settings.powered;
+    persistSettings();
+    simulateNow(0);
+    playClick();
+  });
+  $('#undoBtn').addEventListener('click', undo);
+  $('#redoBtn').addEventListener('click', redo);
+  $('#copyBtn').addEventListener('click', copySelection);
+  $('#deleteBtn').addEventListener('click', deleteSelection);
+  $('#rotateBtn').addEventListener('click', rotateSelection);
+  $('#duplicateBtn').addEventListener('click', copySelection);
+  $('#removeBtn').addEventListener('click', deleteSelection);
+  dom.componentActionBtn.addEventListener('click', operateSelectedComponent);
+  $('#clearBtn').addEventListener('click', () => {
+    dom.clearDialog.hidden = false;
+    $('#cancelClearBtn').focus();
+  });
+  $('#cancelClearBtn').addEventListener('click', () => {
+    dom.clearDialog.hidden = true;
+  });
+  $('#confirmClearBtn').addEventListener('click', () => {
+    dom.clearDialog.hidden = true;
+    mutate((document) => {
+      document.components = [];
+      document.wires = [];
+    }, t('cleared'));
+    clearSelection();
+  });
+  dom.clearDialog.addEventListener('click', (event) => {
+    if (event.target === dom.clearDialog) dom.clearDialog.hidden = true;
+  });
+
+  $('#saveBtn').addEventListener('click', () => {
+    try {
+      saveCircuit(localStorage, circuit, SAVED_CIRCUIT_KEY);
+      showToast(t('saved'));
+      window.cool?.track?.('save_circuit');
+      playSuccess();
+    } catch {
+      showToast(t('saveFailed'));
     }
-    requestAnimationFrame(animate);
-  }
+  });
+  $('#loadBtn').addEventListener('click', () => {
+    try {
+      const loaded = loadCircuit(localStorage, SAVED_CIRCUIT_KEY);
+      if (!loaded) {
+        showToast(t('noSave'));
+        return;
+      }
+      history.push(cloneCircuitDocument(circuit));
+      future = [];
+      circuit = loaded;
+      clearSelection();
+      simulateNow(0);
+      scheduleAutosave();
+      showToast(t('loaded'));
+      window.cool?.track?.('load_circuit');
+    } catch {
+      showToast(t('loadFailed'));
+    }
+  });
+  $('#resetViewBtn').addEventListener('click', resetView);
+  $('#zoomInBtn').addEventListener('click', () => setZoom(circuit.viewport.zoom * 1.15));
+  $('#zoomOutBtn').addEventListener('click', () => setZoom(circuit.viewport.zoom / 1.15));
+  $('#currentBtn').addEventListener('click', () => {
+    settings.showCurrent = !settings.showCurrent;
+    persistSettings();
+    updateToolbar();
+  });
+  $('#dataBtn').addEventListener('click', () => {
+    settings.showData = !settings.showData;
+    persistSettings();
+    updateToolbar();
+  });
+  $('#muteBtn').addEventListener('click', () => {
+    settings.muted = !settings.muted;
+    if (!settings.muted) {
+      ensureAudio();
+      playClick();
+    }
+    persistSettings();
+    updateToolbar();
+  });
+  $('#themeBtn').addEventListener('click', () => {
+    theme = theme === 'dark' ? 'light' : 'dark';
+    applyTheme();
+  });
+  $('#langBtn').addEventListener('click', () => {
+    lang = lang === 'zh' ? 'en' : 'zh';
+    writePreference('kidslab.lang', lang);
+    applyLanguage();
+  });
+  dom.projectName.addEventListener('change', () => {
+    const name = dom.projectName.value.trim();
+    if (!name || name === circuit.name) {
+      dom.projectName.value = circuit.name;
+      return;
+    }
+    mutate((document) => {
+      document.name = name;
+    });
+  });
+  $('#dismissGuide').addEventListener('click', () => {
+    settings.guideDismissed = true;
+    $('#firstGuide').hidden = true;
+    persistSettings();
+  });
 
-  addEventListener('resize', resize);
-  addEventListener('themechange', () => { refreshPalette(); render(); });
-  /* 布局尺寸变化（含首帧、字体加载、容器折行）随时重算视口 */
-  if (typeof ResizeObserver !== 'undefined') {
-    try { new ResizeObserver(() => resize()).observe(canvas); } catch { /* 老浏览器降级到 window resize */ }
-  }
+  $('#toolboxToggle').addEventListener('click', () => openPanel('toolboxPanel'));
+  $('#inspectorToggle').addEventListener('click', () => openPanel('inspectorPanel'));
+  dom.panelScrim.addEventListener('click', closePanels);
+  document.querySelectorAll('[data-close-panel]').forEach((button) => {
+    button.addEventListener('click', closePanels);
+  });
 
-  /* ============================ 启动 ============================ */
-  applyTheme();
-  applyLang();
-  loadLevel(0);
-  resize();
+  dom.contextMenu.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-context-action]');
+    if (!button) return;
+    const action = button.dataset.contextAction;
+    hideContextMenu();
+    if (action === 'toggle') operateSelectedComponent();
+    else if (action === 'rotate') rotateSelection();
+    else if (action === 'copy') copySelection();
+    else if (action === 'delete') deleteSelection();
+  });
+
+  addEventListener('keydown', (event) => {
+    if (event.target.matches('input')) return;
+    if (event.code === 'Space') {
+      spaceDown = true;
+      event.preventDefault();
+    }
+    const command = event.metaKey || event.ctrlKey;
+    if (command && event.key.toLowerCase() === 'z') {
+      event.preventDefault();
+      if (event.shiftKey) redo();
+      else undo();
+    } else if (command && event.key.toLowerCase() === 'y') {
+      event.preventDefault();
+      redo();
+    } else if (command && event.key.toLowerCase() === 'c') {
+      event.preventDefault();
+      copySelection();
+    } else if (command && event.key.toLowerCase() === 'v') {
+      event.preventDefault();
+      pasteClipboard();
+    } else if (event.key === 'Delete' || event.key === 'Backspace') {
+      event.preventDefault();
+      deleteSelection();
+    } else if (event.key.toLowerCase() === 'r') {
+      rotateSelection();
+    } else if (event.key === 'Escape') {
+      pendingWire = null;
+      selectedTool = null;
+      hideContextMenu();
+      closePanels();
+      buildToolbox();
+      updateCanvasCursor();
+    }
+  });
+  addEventListener('keyup', (event) => {
+    if (event.code === 'Space') spaceDown = false;
+  });
+  addEventListener('blur', () => {
+    spaceDown = false;
+    for (const component of circuit.components) {
+      if (component.type === 'button') component.state.pressed = false;
+    }
+  });
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden && audioContext?.state === 'running') audioContext.suspend?.();
+  });
+}
+
+function animate(timestamp) {
+  if (!lastFrame || timestamp - lastFrame >= 1000 / 60) {
+    lastFrame = timestamp;
+    draw(timestamp);
+  }
   requestAnimationFrame(animate);
-})();
+}
+
+function startSimulationClock() {
+  setInterval(() => {
+    if (settings.running) simulateNow(100);
+  }, 100);
+}
+
+function initialize() {
+  document.documentElement.dataset.theme = theme;
+  $('#firstGuide').hidden = settings.guideDismissed;
+  applyTheme();
+  buildToolbox();
+  bindControls();
+  resizeCanvas();
+  if (typeof ResizeObserver === 'function') {
+    new ResizeObserver(resizeCanvas).observe(dom.canvasWrap);
+  } else {
+    addEventListener('resize', resizeCanvas);
+  }
+  applyLanguage();
+  simulateNow(0);
+  startSimulationClock();
+  requestAnimationFrame(animate);
+  window.cool?.stage?.('free-lab');
+}
+
+initialize();
