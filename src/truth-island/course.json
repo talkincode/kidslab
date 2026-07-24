@@ -1,0 +1,18 @@
+{
+  "id": "truth-island",
+  "title": {
+    "zh": "真话岛",
+    "en": "Truth Island"
+  },
+  "description": {
+    "zh": "给真假村民贴身份徽章，拆开“与、或、非”的线索，最后问出让两位守卫都指向错误道路的神问题。",
+    "en": "Badge truth-tellers and liars, unpack AND, OR, and NOT clues, then ask the legendary question that makes either guard point to the wrong road."
+  },
+  "category": "logic",
+  "levels": ["primary"],
+  "grades": ["g3", "g4", "g5"],
+  "tags": ["推理", "益智游戏"],
+  "icon": "🏝️",
+  "order": 77,
+  "badge": "new"
+}

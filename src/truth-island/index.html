@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>🏝️ 真话岛 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🏝️ <span data-t="title">真话岛</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭音效" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="brief">
+      <div>
+        <p class="eyebrow" data-t="eyebrow">侦探航海日志</p>
+        <p class="tip" id="tip">听清每句话，再让身份和线索彼此对得上。</p>
+      </div>
+      <div class="case-chip"><span data-t="caseLabel">案件</span><strong id="caseNumber">01</strong></div>
+    </section>
+
+    <nav class="level-strip" id="levelStrip" aria-label="关卡"></nav>
+
+    <section class="game-shell">
+      <section class="island-card" aria-labelledby="missionTitle">
+        <div class="card-heading">
+          <div>
+            <p class="section-label" id="chapterLabel">第一案 · 双族徽章</p>
+            <h2 id="missionTitle">谁只说真话？</h2>
+          </div>
+          <button class="round-button" id="hintBtn" type="button" aria-label="提示">💡</button>
+        </div>
+
+        <div class="island-scene" id="islandScene">
+          <div class="sun" aria-hidden="true"></div>
+          <div class="cloud cloud--one" aria-hidden="true"></div>
+          <div class="cloud cloud--two" aria-hidden="true"></div>
+          <div class="sea" aria-hidden="true"><i></i><i></i><i></i></div>
+          <div class="island" aria-hidden="true">
+            <span class="palm palm--one">🌴</span>
+            <span class="palm palm--two">🌴</span>
+            <span class="hut hut--one"></span>
+            <span class="hut hut--two"></span>
+          </div>
+          <div class="path path--left" id="leftPath" aria-hidden="true"><span>◀</span></div>
+          <div class="path path--right" id="rightPath" aria-hidden="true"><span>▶</span></div>
+          <div class="gate" id="moonGate" aria-hidden="true"><span>☾</span></div>
+          <div class="treasure" id="treasure" aria-hidden="true">✨<span>▰</span></div>
+
+          <article class="villager villager--mia" id="miaVillager">
+            <div class="speech" id="miaSpeech"></div>
+            <div class="portrait portrait--mia" aria-hidden="true"><span>●</span></div>
+            <strong id="miaName">米娅</strong>
+            <small class="badge-slot" id="miaBadge">?</small>
+            <span class="point-arrow" aria-hidden="true">➜</span>
+          </article>
+          <article class="villager villager--noah" id="noahVillager">
+            <div class="speech" id="noahSpeech"></div>
+            <div class="portrait portrait--noah" aria-hidden="true"><span>◆</span></div>
+            <strong id="noahName">诺亚</strong>
+            <small class="badge-slot" id="noahBadge">?</small>
+            <span class="point-arrow" aria-hidden="true">➜</span>
+          </article>
+
+          <div class="status" id="status" role="status" aria-live="polite">
+            给两位村民贴上身份徽章，再检查两句话。
+          </div>
+        </div>
+      </section>
+
+      <aside class="detective-card">
+        <div class="card-heading">
+          <div>
+            <p class="section-label" data-t="notebook">推理手账</p>
+            <h2 id="panelTitle">身份排除</h2>
+          </div>
+          <button class="round-button round-button--reset" id="resetBtn" type="button" aria-label="重开本关">↻</button>
+        </div>
+        <div class="workspace" id="workspace"></div>
+        <div class="logic-key" id="logicKey"></div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+    <section class="modal-card">
+      <div class="modal-magic" id="modalMagic" aria-hidden="true">🏝️✨</div>
+      <p class="modal-kicker" data-t="caseSolved">案件破解</p>
+      <h2 id="modalTitle"></h2>
+      <p id="modalText"></p>
+      <button class="primary-button" id="nextBtn" type="button"></button>
+    </section>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
