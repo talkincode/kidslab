@@ -1,62 +1,162 @@
 <!doctype html>
-<html lang="zh-CN" data-theme="light">
+<html lang="zh-CN" data-theme="dark">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description" content="可换星球、可调摆长质量与阻力的 Three.js 3D 单摆实验室。" />
+  <meta name="color-scheme" content="light dark" />
   <title>单摆实验室 · KidsLab</title>
-  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg" />
   <link rel="stylesheet" href="style.css" />
   <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
 </head>
 <body>
-  <header class="bar">
-    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
-    <h1 class="bar__title">🪀 <span data-t="title">单摆实验室</span></h1>
-    <div class="bar__actions">
-      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
-      <button class="pill" id="langBtn" type="button">EN</button>
-    </div>
-  </header>
-
-  <main class="wrap">
-    <section class="panel stage-wrap">
-      <canvas id="stage"></canvas>
-      <p class="drag-hint" id="dragHint" data-t="dragHint">🖐 拖动摆球，松手开始摆动</p>
-    </section>
-
-    <aside class="panel side">
-      <section class="ctl">
-        <h2 data-t="planet">选择星球</h2>
-        <div class="planets" id="planets"></div>
-        <p class="model-note" data-t="modelNote">参考重力下的理想环境；公式适用于约 15° 以内的小摆角。</p>
-      </section>
-
-      <section class="ctl">
-        <label class="sl">
-          <span><span data-t="length">摆长 L</span> <b id="lenVal">1.5 m</b></span>
-          <input id="lenRange" type="range" min="0.4" max="3" step="0.05" value="1.5" />
-        </label>
-      </section>
-
-      <section class="readout">
-        <div class="ro">
-          <p class="ro__label" data-t="theory">小角近似周期 2π√(L/g)</p>
-          <p class="ro__val"><b id="tTheory">2.46</b> s</p>
+  <div class="app">
+    <header class="bar">
+      <a class="pill back" href="../../index.html">← <span data-t="back">返回平台</span></a>
+      <div class="brand">
+        <span class="brand__mark" aria-hidden="true">🪀</span>
+        <div>
+          <h1 data-t="title">单摆实验室</h1>
+          <p data-t="subtitle">拽起摆球，去四个星球测一测时间的节拍</p>
         </div>
-        <div class="ro">
-          <p class="ro__label" data-t="measured">仿真测得周期</p>
-          <p class="ro__val ro__val--m"><b id="tMeasured">—</b> s</p>
-        </div>
-      </section>
-      <p class="note" id="bigAngleNote" hidden data-t="bigAngle">💡 超过约 15° 时，仿真周期会比小角公式预测值更长。</p>
-
-      <div class="btns">
-        <button class="btn" id="playBtn" type="button">⏸ <span data-t="pause">暂停</span></button>
-        <button class="btn btn--ghost" id="resetBtn" type="button">↺ <span data-t="reset">重置</span></button>
       </div>
-    </aside>
-  </main>
+      <div class="bar__actions">
+        <button class="pill icon-pill" id="soundBtn" type="button" aria-pressed="false">🔊</button>
+        <button class="pill icon-pill" id="themeBtn" type="button" aria-label="切换主题">☀️</button>
+        <button class="pill lang" id="langBtn" type="button">EN</button>
+      </div>
+    </header>
 
-  <script src="main.js"></script>
+    <main class="lab">
+      <section class="viewport" aria-label="3D 单摆实验场景">
+        <canvas id="scene"></canvas>
+        <div class="loading" id="loading">
+          <span class="loading__bob"></span>
+          <b data-t="loading">正在架起摆架…</b>
+        </div>
+        <div class="nogl" id="nogl" hidden>
+          <strong data-t="noglTitle">这台设备暂时不能显示 3D 摆架</strong>
+          <span data-t="noglText">请换用支持 WebGL 的现代浏览器。</span>
+        </div>
+
+        <div class="scene-heading">
+          <span class="eyebrow">PENDULUM / 01</span>
+          <strong id="angleBadge">摆角 12°</strong>
+          <span id="sceneHint" data-t="sceneHint">🖐 拖住摆球拉开松手 · 拖空白处环视</span>
+        </div>
+
+        <div class="view-dock" role="group" aria-label="观察视角">
+          <button class="view-btn is-active" type="button" data-view="stage" aria-pressed="true">
+            <span aria-hidden="true">◇</span><span data-t="viewStage">舞台</span>
+          </button>
+          <button class="view-btn" type="button" data-view="front" aria-pressed="false">
+            <span aria-hidden="true">▭</span><span data-t="viewFront">正视</span>
+          </button>
+          <button class="view-btn" type="button" data-view="side" aria-pressed="false">
+            <span aria-hidden="true">◫</span><span data-t="viewSide">侧视</span>
+          </button>
+          <button class="view-btn" id="autoOrbitBtn" type="button" aria-pressed="false">
+            <span aria-hidden="true">↻</span><span data-t="autoOrbit">自动环绕</span>
+          </button>
+        </div>
+
+        <div class="motion-dock" role="group" aria-label="播放控制">
+          <button class="motion-btn" id="playBtn" type="button"><span class="motion-icon" aria-hidden="true">⏸</span> <span class="motion-label">暂停</span></button>
+          <button class="motion-btn" id="resetBtn" type="button">↺ <span data-t="reset">重置</span></button>
+          <div class="speed-chips" role="group" aria-label="时间流速">
+            <button class="speed-chip" type="button" data-speed="0.25">¼×</button>
+            <button class="speed-chip" type="button" data-speed="0.5">½×</button>
+            <button class="speed-chip is-active" type="button" data-speed="1" aria-pressed="true">1×</button>
+            <button class="speed-chip" type="button" data-speed="2">2×</button>
+          </div>
+        </div>
+
+        <div class="focus-toast" id="toast" role="status" hidden></div>
+      </section>
+
+      <aside class="console" id="console">
+        <button class="sheet-handle" id="sheetHandle" type="button" aria-expanded="true">
+          <span></span><b data-t="parameters">实验参数</b>
+        </button>
+
+        <div class="console__body">
+          <section class="planets" aria-label="选择星球" id="planetDock">
+            <button class="planet is-active" type="button" data-planet="earth" aria-pressed="true">
+              <span aria-hidden="true">🌍</span><b data-t="planetEarth">地球</b><small>9.81 m/s²</small>
+            </button>
+            <button class="planet" type="button" data-planet="moon" aria-pressed="false">
+              <span aria-hidden="true">🌙</span><b data-t="planetMoon">月球</b><small>1.62 m/s²</small>
+            </button>
+            <button class="planet" type="button" data-planet="mars" aria-pressed="false">
+              <span aria-hidden="true">🔴</span><b data-t="planetMars">火星</b><small>3.71 m/s²</small>
+            </button>
+            <button class="planet" type="button" data-planet="jupiter" aria-pressed="false">
+              <span aria-hidden="true">🟠</span><b data-t="planetJupiter">木星</b><small>24.79 m/s²</small>
+            </button>
+          </section>
+
+          <p class="scale-note" data-t="modelNote">参考重力下的理想摆：公式适用于约 15° 以内的小摆角；阻力是简化的线性模型。</p>
+
+          <section class="controls">
+            <label class="control">
+              <span><b data-t="length">摆长 L</b><output id="lengthValue">1.20 m</output></span>
+              <input id="length" type="range" min="0.3" max="2.5" step="0.05" value="1.2" />
+            </label>
+            <label class="control">
+              <span><b data-t="mass">摆球质量 m</b><output id="massValue">1.0 kg</output></span>
+              <input id="mass" type="range" min="0.5" max="5" step="0.1" value="1" />
+            </label>
+            <label class="control">
+              <span><b data-t="angle">初始摆角 θ₀</b><output id="angleValue">12°</output></span>
+              <input id="angle" type="range" min="3" max="80" step="1" value="12" />
+            </label>
+            <div class="control">
+              <span><b data-t="drag">空气阻力</b></span>
+              <div class="chip-row" role="group" aria-label="空气阻力" id="dragDock">
+                <button class="chip is-active" type="button" data-drag="none" aria-pressed="true" data-t="dragNone">无</button>
+                <button class="chip" type="button" data-drag="weak" aria-pressed="false" data-t="dragWeak">轻微</button>
+                <button class="chip" type="button" data-drag="strong" aria-pressed="false" data-t="dragStrong">很大</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="readouts" aria-live="polite">
+            <div>
+              <span data-t="theory">小角近似周期 2π√(L/g)</span>
+              <strong id="theoryValue">2.20 s</strong>
+            </div>
+            <div>
+              <span data-t="measured">仿真测得周期</span>
+              <strong id="measuredValue" class="is-measured">—</strong>
+            </div>
+            <div>
+              <span data-t="deviation">与公式的偏差</span>
+              <strong id="deviationValue">—</strong>
+            </div>
+            <div>
+              <span data-t="swings">已完成摆动</span>
+              <strong><span id="swingCount">0</span> <small data-t="swingUnit">次</small></strong>
+            </div>
+          </section>
+
+          <section class="energy" aria-label="能量分配">
+            <div class="energy__row">
+              <span data-t="kinetic">动能</span>
+              <div class="energy__bar"><i id="keBar" class="energy__fill energy__fill--ke"></i></div>
+            </div>
+            <div class="energy__row">
+              <span data-t="potential">势能</span>
+              <div class="energy__bar"><i id="peBar" class="energy__fill energy__fill--pe"></i></div>
+            </div>
+            <p class="energy__note" id="energyNote" data-t="energyIdeal">没有阻力时，动能和势能只会互相变身，总量不变。</p>
+          </section>
+
+          <p class="big-angle" id="bigAngleNote" hidden data-t="bigAngle">💡 摆角超过约 15°，真实周期会比公式算出的更长——试试看偏差有多大！</p>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script type="module" src="main.js"></script>
 </body>
 </html>

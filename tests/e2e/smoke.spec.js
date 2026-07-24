@@ -220,7 +220,7 @@ test.describe('high-risk knowledge models', () => {
 
     await expect(page.getByText('小角近似周期 2π√(L/g)')).toBeVisible();
     await expect(page.getByText('仿真测得周期')).toBeVisible();
-    await expect(page.getByText('参考重力下的理想环境；公式适用于约 15° 以内的小摆角。')).toBeVisible();
+    await expect(page.getByText('参考重力下的理想摆：公式适用于约 15° 以内的小摆角；阻力是简化的线性模型。')).toBeVisible();
   });
 
   test('pH lab exposes approximation limits and bleach safety', async ({ page }) => {

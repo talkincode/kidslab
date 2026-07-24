@@ -5,8 +5,8 @@
     "en": "Pendulum Lab"
   },
   "description": {
-    "zh": "拖动摆球放手，对比非线性仿真周期与小角近似公式 T≈2π√(L/g)，探索不同参考重力。",
-    "en": "Release the bob and compare the nonlinear simulated period with the small-angle approximation T≈2π√(L/g) under different reference gravities."
+    "zh": "在 3D 摆架上抓起摆球放手，调摆长、质量、摆角、阻力与时间流速，去四个星球对比仿真周期与 T≈2π√(L/g)。",
+    "en": "Grab the bob on a 3D rig, tune length, mass, angle, drag and time speed, and compare the simulated period with T≈2π√(L/g) on four planets."
   },
   "category": "physics",
   "levels": [
