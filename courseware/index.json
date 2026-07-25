@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-25T16:40:30.260Z",
+  "generatedAt": "2026-07-25T18:19:46.498Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -1817,6 +1817,48 @@
         "编程"
       ],
       "path": "courseware/binary-lighthouse/index.html"
+    },
+    {
+      "id": "pixel-post",
+      "title": {
+        "zh": "像素邮局",
+        "en": "Pixel Post Office"
+      },
+      "description": {
+        "zh": "在只能发送数字的像素邮局里复制 8×8 邮票、把 0 和 1 还原成图，再用行程长度编码压缩电报。",
+        "en": "Copy an 8×8 stamp at a post office that can only send digits, rebuild art from 0s and 1s, then compress telegrams with run-length encoding."
+      },
+      "category": "programming",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g3",
+        "g4",
+        "g5"
+      ],
+      "tags": [
+        "编程启蒙",
+        "二进制"
+      ],
+      "icon": "🖼️",
+      "order": 58,
+      "badge": "new",
+      "keywords": [
+        "Coding Basics",
+        "coding basics",
+        "coding",
+        "编程",
+        "Binary",
+        "binary",
+        "bits",
+        "bit",
+        "base 2",
+        "位",
+        "信息编码",
+        "data representation"
+      ],
+      "path": "courseware/pixel-post/index.html"
     },
     {
       "id": "tiny-harbor",

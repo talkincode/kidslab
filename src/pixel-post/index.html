@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>🖼️ 像素邮局 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🖼️ <span data-t="title">像素邮局</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭音效" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="brief">
+      <div>
+        <p class="eyebrow" data-t="eyebrow">今日特快：寄出一张图</p>
+        <p class="tip" id="tip">照着邮票点亮格子。每个小格就是一个像素。</p>
+      </div>
+      <div class="meter">
+        <span data-t="meterLabel">电报码</span>
+        <strong id="meterValue">64</strong>
+        <small id="meterUnit">格</small>
+      </div>
+    </section>
+
+    <nav class="level-strip" id="levelStrip" aria-label="关卡"></nav>
+
+    <section class="game-card">
+      <div class="card-heading">
+        <div>
+          <p class="section-label" id="shiftLabel">第一站 · 画面装箱</p>
+          <h2 id="missionTitle">复制爱心邮票</h2>
+        </div>
+        <div class="heading-actions">
+          <button class="round-button" id="hintBtn" type="button" aria-label="提示">💡</button>
+          <button class="round-button round-button--reset" id="resetBtn" type="button" aria-label="重新开始">↻</button>
+        </div>
+      </div>
+
+      <div class="sorting-floor">
+        <section class="dispatch-scene" id="dispatchScene" aria-label="发件台">
+          <div class="airmail-stripe" aria-hidden="true"></div>
+          <div class="scene-label" id="sceneLabel">原图邮票</div>
+          <div class="scene-content" id="sceneContent"></div>
+          <div class="cable" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+          <div class="mail-slot" aria-hidden="true">
+            <span>PIXEL POST</span>
+            <b>✦</b>
+          </div>
+        </section>
+
+        <section class="workbench" aria-labelledby="workTitle">
+          <div class="workbench__top">
+            <div>
+              <span class="workbench__kicker" data-t="workbench">你的发报台</span>
+              <h3 id="workTitle">点亮同样的格子</h3>
+            </div>
+            <span class="counter" id="counter">0 / 30</span>
+          </div>
+          <div class="workspace" id="workspace"></div>
+          <div class="feedback" id="feedback" role="status" aria-live="polite">
+            可以点，也可以按住手指划过格子。
+          </div>
+          <button class="primary-button" id="actionBtn" type="button">
+            <span aria-hidden="true">📮</span>
+            <span id="actionLabel">交给邮差</span>
+          </button>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+    <section class="modal-card">
+      <div class="modal-magic" id="modalMagic" aria-hidden="true">💌</div>
+      <p class="modal-kicker" data-t="shiftPassed">分拣任务完成</p>
+      <h2 id="modalTitle">邮票装进了 64 个格子！</h2>
+      <p id="modalText"></p>
+      <button class="primary-button" id="nextBtn" type="button">下一站</button>
+    </section>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
