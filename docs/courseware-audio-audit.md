@@ -4,15 +4,15 @@
 
 ## 结论
 
-当前 `src/` 下共有 50 个课件目录。排除非游戏欢迎页 `welcome` 后，49 个游戏课件的静态扫描结果如下：
+当前 `src/` 下共有 57 个课件目录。排除非游戏欢迎页 `welcome` 后，56 个游戏课件的静态扫描结果如下：
 
 | 状态 | 数量 | 说明 |
 | --- | ---: | --- |
 | P0：高频音源风险 | 1 | 已有音效，但触发方式可能在拖动或物理循环中连续创建音源，需优先修复 |
 | P1：已有音效但控制不完整 | 12 | 有核心音效，但没有用户可见的静音开关；其中 1 个还需优化连续输入音效 |
 | P2：完全没有音频实现 | 18 | 未发现真实音频 API，需要按核心玩法补齐交互、结果与通关反馈 |
-| 已有音效和静音控制，待回归 | 18 | 暂无明确源码缺口，但仍需按新规范人工听测 |
-| 合计 | 49 | 所有游戏课件均已归类 |
+| 已有音效和静音控制，待回归 | 25 | 暂无明确源码缺口，但仍需按新规范人工听测 |
+| 合计 | 56 | 所有游戏课件均已归类 |
 
 这是一轮**源码静态审计**，不是听感验收。它不能证明实际响度合适、移动端一定出声、成功/失败语义清楚，也不能证明每条完整玩法路径都有音效。
 
@@ -20,7 +20,7 @@
 
 - 扫描 `src/<id>/` 下的 HTML、JavaScript 和 ES Module 文件，排除 `vendor/`。
 - 只有出现 `AudioContext`、`webkitAudioContext`、`createOscillator()`、`createBufferSource()`、`new Audio()`、`<audio>` 或媒体 `.play()` 等真实发声实现，才计为“已有音频”。仅有 `sound`、`音效` 等文案不计入。
-- 对 31 个已有音频的游戏继续检查静音状态、可见控件，以及拖动、动画帧和物理循环中的高频触发点。
+- 对 38 个已有音频的游戏继续检查静音状态、可见控件，以及拖动、动画帧和物理循环中的高频触发点。
 - “有静音状态变量”不等于“有用户可见的静音开关”；例如 `shadow-theater` 和 `voxel-studio` 只有内部 `soundOn` 保护，没有可见控件。
 
 ## 完成标准
@@ -84,19 +84,25 @@
 
 ## 已有音效和静音控制：按新规范回归
 
-以下 18 个课件已找到音效实现和有效静音状态/控件，当前不列源码整改优先项：
+以下 25 个课件已找到音效实现和有效静音状态/控件，当前不列源码整改优先项：
 
 ```text
+angle-golf
+binary-lighthouse
 body-rafting
 bug-hospital
 carry-factory
 clock-town
 combo-closet
+ferry-tales
+function-kitchen
 grid-tower
 hundred-metro
+inkblot-monsters
 loop-band
 magic-cube
 mystery-box
+optics-lab
 pattern-caterpillar
 pendulum-lab
 plant-lab
@@ -104,6 +110,7 @@ solar-explorer
 square-root-lab
 sudoku-zoo
 tiny-harbor
+truth-island
 zoom-ten
 ```
 

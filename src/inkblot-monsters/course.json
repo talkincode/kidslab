@@ -1,0 +1,18 @@
+{
+  "id": "inkblot-monsters",
+  "title": {
+    "zh": "墨迹怪物",
+    "en": "Inkblot Monsters"
+  },
+  "description": {
+    "zh": "在半张纸上甩墨、对折，亲手孵出轴对称怪物；再补全镜像，揪出混进图鉴的冒牌货。",
+    "en": "Splash one half of the page, fold it into a line-symmetric monster, complete mirror points, and catch the impostor in the gallery."
+  },
+  "category": "math",
+  "levels": ["primary"],
+  "grades": ["g3", "g4"],
+  "tags": ["平面图形", "空间想象", "益智游戏"],
+  "icon": "🎨",
+  "order": 25,
+  "badge": "new"
+}
