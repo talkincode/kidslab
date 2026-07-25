@@ -1,100 +1,236 @@
 <!doctype html>
-<html lang="zh-CN" data-theme="light">
+<html lang="zh-CN" data-theme="dark">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#351225" />
   <title>消化道漂流记 · KidsLab</title>
   <link rel="stylesheet" href="style.css" />
   <script>
-    /* 防闪烁：进 body 前先定好主题与语言（与主站同一套 localStorage 键） */
     (() => {
       try {
-        const t = localStorage.getItem('kidslab.theme')
+        const theme = localStorage.getItem('kidslab.theme')
           || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-        document.documentElement.dataset.theme = t;
-        const l = localStorage.getItem('kidslab.lang')
-          || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
-        document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
-      } catch { /* 隐私模式下静默降级 */ }
+        const lang = localStorage.getItem('kidslab.lang')
+          || (navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+      } catch {}
     })();
   </script>
+  <script data-kidslab-sdk src="../../scripts/sdk/core.js"></script>
 </head>
 <body>
-  <header class="bar">
-    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
-    <h1 class="bar__title">🚣 <span data-t="title">消化道漂流记</span></h1>
-    <div class="bar__actions">
-      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
-      <button class="pill" id="langBtn" type="button">EN</button>
-    </div>
-  </header>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="topbar__button back-button" href="../../index.html">
+        <span aria-hidden="true">←</span>
+        <span class="back-label" data-t="back">返回星图</span>
+      </a>
 
-  <main class="wrap">
-    <section class="hero card">
-      <div>
-        <p class="eyebrow" data-t="eyebrow">人体消化系统 · 轨道漂流体验</p>
-        <h2 data-t="heroTitle">把自己缩小，坐上皮划艇随一口饭出发！</h2>
-        <p class="tip" id="tip" data-t="tip0">按住屏幕左/右半边或拖动，让小艇躲浪、收集营养金币。</p>
-      </div>
-      <div class="food-picker" role="group" aria-label="food">
-        <button class="food active" data-food="rice" type="button"><b>🍚</b><span data-t="foodRice">米饭</span></button>
-        <button class="food" data-food="candy" type="button"><b>🍬</b><span data-t="foodCandy">糖果</span></button>
-        <button class="food" data-food="fat" type="button"><b>🥓</b><span data-t="foodFat">肥肉</span></button>
-      </div>
-    </section>
-
-    <section class="play card" id="playCard">
-      <canvas id="scene" aria-label="Digestive rafting 3D scene"></canvas>
-      <div id="nogl" class="nogl" hidden data-t="nogl">你的浏览器暂不支持 WebGL，但消化道图鉴仍可学习。</div>
-
-      <div class="hud top-left">
-        <div class="organ" id="organName">口腔 / Mouth</div>
-        <div class="mission" id="missionText">连点咀嚼按钮 20 下</div>
-      </div>
-      <div class="hud top-right">
-        <button class="mini" id="steadyBtn" type="button" data-t="steady">稳一点</button>
-        <button class="mini" id="soundBtn" type="button" data-t="soundOn">声音开</button>
-      </div>
-      <div class="hud stats">
-        <span>🪙 <b id="coinCount">0</b></span>
-        <span>⭐ <b id="starCount">0</b>/18</span>
+      <div class="brand" aria-label="KidsLab">
+        <span class="brand__mark" aria-hidden="true">🚣</span>
+        <span class="brand__copy">
+          <small data-t="series">人体微缩探险 · 06</small>
+          <strong data-t="title">消化道漂流记</strong>
+        </span>
       </div>
 
-      <div class="labels" id="labels"></div>
-
-      <div class="map" id="map" aria-label="progress map">
-        <div class="map__line"></div>
-        <button class="map__dot active" data-seg="0" type="button">🦷</button>
-        <button class="map__dot" data-seg="1" type="button">〰️</button>
-        <button class="map__dot" data-seg="2" type="button">🧪</button>
-        <button class="map__dot" data-seg="3" type="button">🌸</button>
-        <button class="map__dot" data-seg="4" type="button">💧</button>
-        <button class="map__dot" data-seg="5" type="button">😆</button>
+      <div class="topbar__actions">
+        <button class="topbar__button codex-button" id="codexBtn" type="button" aria-haspopup="dialog" aria-expanded="false">
+          <span aria-hidden="true">◫</span>
+          <span data-t="codex">航行图鉴</span>
+          <b id="codexCount">0/6</b>
+        </button>
+        <button class="topbar__button icon-only" id="themeBtn" type="button" aria-label="切换主题">☀</button>
+        <button class="topbar__button lang-button" id="langBtn" type="button" aria-label="切换语言">EN</button>
       </div>
+    </header>
 
-      <div class="controls" id="controls">
-        <button class="btn" id="actionBtn" type="button" data-t="chewBtn">咀嚼！</button>
-        <button class="btn btn--ghost" id="startBtn" type="button" data-t="start">开始漂流</button>
-      </div>
-
-      <div class="toast" id="toast" hidden></div>
-      <div class="finish" id="finish" hidden>
-        <div class="finish__box">
-          <h2 id="finishTitle">漂流完成！</h2>
-          <p id="finishDesc"></p>
-          <button class="btn" id="restartBtn" type="button" data-t="restart">再漂一次</button>
+    <main class="voyage">
+      <section class="stage-shell is-idle" id="playCard" aria-label="消化道漂流场景">
+        <canvas id="scene" aria-label="消化道三维漂流场景"></canvas>
+        <div class="scene-wash" aria-hidden="true"></div>
+        <div class="scene-grain" aria-hidden="true"></div>
+        <div class="scene-depth" aria-hidden="true"></div>
+        <div class="nogl" id="nogl" hidden>
+          <strong data-t="noglTitle">这艘艇暂时下不了水</strong>
+          <span data-t="nogl">浏览器没有开启 WebGL，你仍可以打开航行图鉴学习。</span>
         </div>
-      </div>
-    </section>
 
-    <section class="codex card">
-      <div class="codex__head">
-        <h2 data-t="codexTitle">器官图鉴</h2>
-        <p data-t="codexHint">每穿过一段河道，就解锁一张知识卡。</p>
-      </div>
-      <div class="cards" id="codexCards"></div>
-    </section>
-  </main>
+        <div class="scene-toolbar">
+          <button class="glass-button" id="steadyBtn" type="button" aria-pressed="false">
+            <span aria-hidden="true">⌁</span>
+            <span data-t="steady">平稳镜头</span>
+          </button>
+          <button class="glass-button" id="soundBtn" type="button" aria-pressed="false">
+            <span id="soundIcon" aria-hidden="true">♪</span>
+            <span id="soundLabel" data-t="soundOn">声音开启</span>
+          </button>
+        </div>
+
+        <div class="location-panel">
+          <div class="location-panel__index" id="sectionIndex">1 / 6</div>
+          <div>
+            <span class="micro-label" data-t="nowAt">当前河段</span>
+            <strong id="organName">口腔</strong>
+          </div>
+        </div>
+
+        <div class="score-panel" aria-label="航行得分">
+          <div>
+            <span class="score-panel__icon coin-icon" aria-hidden="true">●</span>
+            <span class="score-panel__label" data-t="nutrients">营养</span>
+            <b id="coinCount">0</b>
+          </div>
+          <div>
+            <span class="score-panel__icon star-icon" aria-hidden="true">✦</span>
+            <span class="score-panel__label" data-t="stars">任务星</span>
+            <b><span id="starCount">0</span>/18</b>
+          </div>
+        </div>
+
+        <article class="mission-panel" id="missionPanel">
+          <div class="mission-panel__top">
+            <span class="micro-label" data-t="mission">本段任务</span>
+            <span class="mission-panel__badge" id="missionBadge">牙齿 + 唾液</span>
+            <b id="missionValue">0/10</b>
+          </div>
+          <h2 id="missionTitle">把食物嚼成小块</h2>
+          <p id="missionText">点击“咀嚼”，让牙齿和唾液一起开工。</p>
+          <div class="mission-panel__progress">
+            <div class="mission-meter" aria-hidden="true">
+              <span id="missionFill"></span>
+            </div>
+            <span class="mission-panel__status" id="missionStatus">进行中</span>
+          </div>
+        </article>
+
+        <div class="labels" id="labels" aria-hidden="true"></div>
+
+        <button class="steer-zone steer-zone--left" id="steerLeft" type="button" aria-label="向左划">
+          <span aria-hidden="true">‹</span>
+          <small data-t="steerLeft">向左划</small>
+        </button>
+        <button class="steer-zone steer-zone--right" id="steerRight" type="button" aria-label="向右划">
+          <span aria-hidden="true">›</span>
+          <small data-t="steerRight">向右划</small>
+        </button>
+
+        <div class="action-dock" id="controls">
+          <button class="action-button" id="actionBtn" type="button">
+            <span class="action-button__icon" id="actionIcon" aria-hidden="true">🦷</span>
+            <span data-t="chewBtn">咀嚼！</span>
+          </button>
+        </div>
+
+        <nav class="route-map" id="map" aria-label="消化道航线">
+          <div class="route-map__track" aria-hidden="true">
+            <span id="routeFill"></span>
+          </div>
+          <div class="route-map__stop is-active" data-seg="0">
+            <span>🦷</span><small data-t="mapMouth">口腔</small>
+          </div>
+          <div class="route-map__stop" data-seg="1">
+            <span>〰</span><small data-t="mapEsophagus">食道</small>
+          </div>
+          <div class="route-map__stop" data-seg="2">
+            <span>◉</span><small data-t="mapStomach">胃</small>
+          </div>
+          <div class="route-map__stop" data-seg="3">
+            <span>✣</span><small data-t="mapSmall">小肠</small>
+          </div>
+          <div class="route-map__stop" data-seg="4">
+            <span>◌</span><small data-t="mapLarge">大肠</small>
+          </div>
+          <div class="route-map__stop" data-seg="5">
+            <span>✓</span><small data-t="mapExit">终点</small>
+          </div>
+        </nav>
+
+        <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+        <div class="chapter-reveal" id="chapterReveal" role="status" aria-live="polite" hidden>
+          <span class="chapter-reveal__count" id="chapterCount">01 / 06</span>
+          <span class="chapter-reveal__icon" id="chapterIcon" aria-hidden="true">🦷</span>
+          <span class="chapter-reveal__copy">
+            <small data-t="entering">正在进入</small>
+            <strong id="chapterName">口腔</strong>
+            <i id="chapterClue">牙齿切碎，唾液接力</i>
+          </span>
+        </div>
+
+        <div class="launch" id="launch">
+          <div class="launch__panel">
+            <div class="launch__story">
+              <span class="launch__kicker" data-t="launchKicker">MICRO VOYAGE · 人体航线</span>
+              <h2 data-t="heroTitle">缩小到一粒芝麻大，跟着一口饭出发。</h2>
+              <p data-t="heroCopy">你会穿过六段消化道。完成器官任务，看看食物怎样变成身体能用的营养。</p>
+              <div class="launch__steps" aria-label="玩法说明">
+                <span><b aria-hidden="true">◈</b><i data-t="stepChoose">选择同行食物</i></span>
+                <span><b aria-hidden="true">✦</b><i data-t="stepAct">完成器官任务</i></span>
+                <span><b aria-hidden="true">↔</b><i data-t="stepSteer">左右划艇收营养</i></span>
+              </div>
+            </div>
+
+            <div class="cargo-card">
+              <div class="cargo-card__head">
+                <span class="micro-label" data-t="chooseFood">选择同行食物</span>
+                <span class="cargo-card__hint" data-t="chooseHint">每一种都会触发不同知识彩蛋</span>
+              </div>
+              <div class="food-picker" role="group" aria-label="选择食物">
+                <button class="food is-active" data-food="rice" type="button" aria-pressed="true">
+                  <span class="food__icon" aria-hidden="true">🍚</span>
+                  <span><b data-t="foodRice">米饭号</b><small data-t="foodRiceTag">淀粉先在口腔开工</small></span>
+                </button>
+                <button class="food" data-food="candy" type="button" aria-pressed="false">
+                  <span class="food__icon" aria-hidden="true">🍬</span>
+                  <span><b data-t="foodCandy">糖果号</b><small data-t="foodCandyTag">糖主要在小肠吸收</small></span>
+                </button>
+                <button class="food" data-food="fat" type="button" aria-pressed="false">
+                  <span class="food__icon" aria-hidden="true">🥑</span>
+                  <span><b data-t="foodFat">脂肪号</b><small data-t="foodFatTag">小肠入口遇见胆汁</small></span>
+                </button>
+              </div>
+              <p class="food-insight" id="foodInsight">米饭里的淀粉，会先在口腔遇见唾液淀粉酶。</p>
+              <button class="launch-button" id="startBtn" type="button" aria-busy="true" disabled>
+                <span data-t="start">登艇，开始漂流</span>
+                <b aria-hidden="true">→</b>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="finish" id="finish" role="dialog" aria-modal="true" aria-labelledby="finishTitle" hidden>
+          <div class="finish__box">
+            <span class="finish__seal" aria-hidden="true">✓</span>
+            <span class="micro-label" data-t="logComplete">航行日志已完成</span>
+            <h2 id="finishTitle">全程漂流完成！</h2>
+            <p id="finishDesc"></p>
+            <div class="finish__actions">
+              <button class="secondary-button" id="finishCodexBtn" type="button" data-t="openCodex" aria-haspopup="dialog">查看完整图鉴</button>
+              <button class="launch-button" id="restartBtn" type="button" data-t="restart">换种食物再来</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="drawer-layer" id="drawerLayer" hidden>
+    <button class="drawer-scrim" id="drawerScrim" type="button" aria-label="关闭图鉴"></button>
+    <aside class="codex-drawer" id="codexDrawer" role="dialog" aria-modal="true" aria-labelledby="codexTitle">
+      <header class="codex-drawer__head">
+        <div>
+          <span class="micro-label" data-t="fieldNotes">FIELD NOTES · 航行记录</span>
+          <h2 id="codexTitle" data-t="codexTitle">消化道图鉴</h2>
+          <p data-t="codexHint">每完成一段任务，就点亮一张器官记录。</p>
+        </div>
+        <button class="close-button" id="codexClose" type="button" aria-label="关闭图鉴">×</button>
+      </header>
+      <div class="codex-grid" id="codexCards"></div>
+    </aside>
+  </div>
 
   <script type="module" src="main.js"></script>
 </body>
