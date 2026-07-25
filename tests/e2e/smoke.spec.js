@@ -6,7 +6,7 @@ const manifest = JSON.parse(
 );
 
 // 依赖 three.js/WebGL 的重课件，CI 软件渲染下需要更长超时
-const HEAVY_WEBGL_COURSES = new Set(['plant-lab', 'magic-cube', 'optics-lab']);
+const HEAVY_WEBGL_COURSES = new Set(['plant-lab', 'magic-cube', 'optics-lab', 'solar-explorer']);
 
 function observeFailures(page) {
   const failures = [];
@@ -423,6 +423,7 @@ test.describe('SDK source-page pilots', () => {
 
   for (const path of pilots) {
     test(`${path} runs before build`, async ({ page }) => {
+      if (path.includes('/solar-explorer/')) test.slow();
       const failures = observeFailures(page);
       await page.addInitScript(() => {
         localStorage.setItem('kidslab.lang', 'zh');
