@@ -1,48 +1,193 @@
 <!doctype html>
-<html lang="zh-CN" data-theme="light">
+<html lang="zh-CN" data-theme="dark">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description" content="按 JPL 历表计算真实开普勒轨道的 3D 太阳系：切换参考系，看行星在银河里画出螺旋。" />
+  <meta name="color-scheme" content="light dark" />
   <title>太阳系漫游 · KidsLab</title>
-  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg" />
   <link rel="stylesheet" href="style.css" />
   <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
 </head>
 <body>
-  <header class="bar">
-    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
-    <h1 class="bar__title">🪐 <span data-t="title">太阳系漫游</span></h1>
-    <div class="bar__actions">
-      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
-      <button class="pill" id="langBtn" type="button">EN</button>
-    </div>
-  </header>
+  <div class="app">
+    <header class="bar">
+      <a class="pill back" href="../../index.html">←<span data-t="back">返回平台</span></a>
+      <div class="brand">
+        <span class="brand__mark" aria-hidden="true">🪐</span>
+        <div class="brand__text">
+          <h1 data-t="title">太阳系漫游</h1>
+          <p data-t="subtitle">真实轨道 · 太阳带着我们在银河里画螺旋</p>
+        </div>
+      </div>
+      <div class="bar__actions">
+        <button class="pill icon-pill" id="soundBtn" type="button" aria-pressed="true">🔊</button>
+        <button class="pill icon-pill" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+        <button class="pill lang" id="langBtn" type="button">EN</button>
+      </div>
+    </header>
 
-  <main class="stage-wrap">
-    <canvas id="space"></canvas>
+    <main class="lab">
+      <section class="viewport" aria-label="3D 太阳系场景">
+        <canvas id="scene"></canvas>
 
-    <div class="ctl-bar">
-      <label class="speed">
-        <span data-t="speed">时间流速</span>
-        <input id="speedRange" type="range" min="0" max="3" step="0.05" value="1.3" />
-        <b id="speedVal">×20</b>
-      </label>
-      <p class="tap-hint" data-t="tapHint">👆 点一颗行星看看它的秘密</p>
-    </div>
+        <div class="loading" id="loading">
+          <span class="loading__orbit" aria-hidden="true"><i></i></span>
+          <b data-t="loading">正在点亮太阳…</b>
+        </div>
+        <div class="nogl" id="nogl" hidden>
+          <strong data-t="noglTitle">这台设备暂时显示不了 3D 星空</strong>
+          <span data-t="noglText">请换用支持 WebGL 的现代浏览器再来一次。</span>
+        </div>
 
-    <aside class="info" id="infoCard" hidden>
-      <button class="info__close" id="infoClose" type="button" aria-label="close">✕</button>
-      <p class="info__emoji" id="infoEmoji">🌍</p>
-      <h2 id="infoName">地球</h2>
-      <dl>
-        <div><dt data-t="fDiameter">直径</dt><dd id="fDiameter"></dd></div>
-        <div><dt data-t="fDist">离太阳</dt><dd id="fDist"></dd></div>
-        <div><dt data-t="fYear">绕一圈</dt><dd id="fYear"></dd></div>
-      </dl>
-      <p class="info__fact" id="infoFact"></p>
-    </aside>
-  </main>
+        <div class="scene-heading">
+          <span class="eyebrow" id="frameTag">日心视角</span>
+          <strong id="dateBadge">—</strong>
+          <span class="scene-hint" id="sceneHint">🖐 拖动环视 · 点一颗行星看档案</span>
+        </div>
 
-  <script src="main.js"></script>
+        <div class="motion-dock" role="group" aria-label="时间控制">
+          <button class="motion-btn" id="reverseBtn" type="button" aria-pressed="false">
+            <span aria-hidden="true">⏪</span><span class="motion-label" data-t="reverse">倒放</span>
+          </button>
+          <button class="motion-btn motion-btn--primary" id="playBtn" type="button" aria-pressed="true">
+            <span class="motion-icon" id="playIcon" aria-hidden="true">⏸</span><span class="motion-label" id="playLabel">暂停</span>
+          </button>
+          <button class="motion-btn" id="todayBtn" type="button">
+            <span aria-hidden="true">↺</span><span class="motion-label" data-t="today">今天</span>
+          </button>
+        </div>
+
+        <div class="view-dock" role="group" aria-label="观察视角">
+          <button class="view-btn is-active" type="button" data-view="top" aria-pressed="true">
+            <span aria-hidden="true">◎</span><span data-t="viewTop">俯视</span>
+          </button>
+          <button class="view-btn" type="button" data-view="side" aria-pressed="false">
+            <span aria-hidden="true">▭</span><span data-t="viewSide">侧看</span>
+          </button>
+          <button class="view-btn" type="button" data-view="helix" aria-pressed="false">
+            <span aria-hidden="true">🌀</span><span data-t="viewHelix">螺旋</span>
+          </button>
+          <button class="view-btn" type="button" data-view="follow" aria-pressed="false">
+            <span aria-hidden="true">🎯</span><span data-t="viewFollow">跟随</span>
+          </button>
+        </div>
+
+        <p class="toast" id="toast" role="status" hidden></p>
+      </section>
+
+      <aside class="console" id="console">
+        <button class="sheet-handle" id="sheetHandle" type="button" aria-expanded="true">
+          <span aria-hidden="true"></span><b data-t="panel">控制台</b>
+        </button>
+
+        <div class="console__body" id="consoleBody">
+          <section class="dossier" aria-live="polite">
+            <header class="dossier__head">
+              <span class="dossier__emoji" id="bodyEmoji" aria-hidden="true">☀️</span>
+              <div class="dossier__id">
+                <h2 id="bodyName">太阳</h2>
+                <p id="bodyRole">太阳系的中心恒星</p>
+              </div>
+            </header>
+            <dl class="dossier__grid">
+              <div><dt data-t="fDiameter">直径</dt><dd id="fDiameter">—</dd></div>
+              <div><dt data-t="fDist">离太阳</dt><dd id="fDist">—</dd></div>
+              <div><dt data-t="fYear">公转一圈</dt><dd id="fYear">—</dd></div>
+              <div><dt data-t="fDay">自转一圈</dt><dd id="fDay">—</dd></div>
+              <div><dt data-t="fSpeed">绕日速度</dt><dd id="fSpeed">—</dd></div>
+              <div><dt data-t="fTilt">轨道倾角</dt><dd id="fTilt">—</dd></div>
+            </dl>
+            <div class="compare">
+              <span class="compare__label" data-t="compare">真实大小（地球 = 1）</span>
+              <div class="compare__bar"><i id="compareFill"></i></div>
+              <b id="compareText">—</b>
+            </div>
+            <p class="dossier__fact" id="bodyFact">—</p>
+          </section>
+
+          <section class="block">
+            <h3 class="block__title"><span aria-hidden="true">🌠</span><span data-t="frameTitle">太阳自己在动吗？</span></h3>
+            <div class="chip-row chip-row--3" role="group" aria-label="参考系" id="frameDock">
+              <button class="chip" type="button" data-frame="none" aria-pressed="false">
+                <b data-t="frameNone">课本视角</b><small data-t="frameNoneSub">太阳不动</small>
+              </button>
+              <button class="chip is-active" type="button" data-frame="local" aria-pressed="true">
+                <b data-t="frameLocal">邻居之间</b><small>18 km/s</small>
+              </button>
+              <button class="chip" type="button" data-frame="galaxy" aria-pressed="false">
+                <b data-t="frameGalaxy">绕银心</b><small>230 km/s</small>
+              </button>
+            </div>
+            <p class="block__note" id="frameNote">太阳带着我们朝武仙座飞，行星就被拉成了螺旋。</p>
+            <label class="control" id="pitchControl">
+              <span><b data-t="pitch">螺距缩放</b><output id="pitchValue">6%</output></span>
+              <input id="pitchRange" type="range" min="1" max="100" step="1" value="6" />
+              <small class="control__hint" id="pitchHint">真实螺距太长，压短才看得见螺旋。</small>
+            </label>
+          </section>
+
+          <section class="block">
+            <h3 class="block__title"><span aria-hidden="true">⏱</span><span data-t="timeTitle">时间流速</span></h3>
+            <label class="control">
+              <span><b data-t="speed">每秒走过</b><output id="speedValue">30 天</output></span>
+              <input id="speedRange" type="range" min="-1" max="3.7" step="0.05" value="1.48" />
+            </label>
+          </section>
+
+          <section class="block">
+            <h3 class="block__title"><span aria-hidden="true">🔭</span><span data-t="viewTitle">看的方式</span></h3>
+            <label class="control">
+              <span><b data-t="zoom">视野范围</b><output id="zoomValue">6 au</output></span>
+              <input id="zoomRange" type="range" min="-1.4" max="1.85" step="0.01" value="0.78" />
+            </label>
+            <label class="control">
+              <span><b data-t="magnify">行星放大</b><output id="magnifyValue">×1.0</output></span>
+              <input id="magnifyRange" type="range" min="0.4" max="3" step="0.1" value="1" />
+            </label>
+            <div class="control">
+              <span><b data-t="distance">距离标尺</b></span>
+              <div class="chip-row chip-row--2" role="group" aria-label="距离标尺" id="distanceDock">
+                <button class="chip is-active" type="button" data-distance="real" aria-pressed="true" data-t="distReal">真实比例</button>
+                <button class="chip" type="button" data-distance="compressed" aria-pressed="false" data-t="distComp">压缩视图</button>
+              </div>
+            </div>
+            <div class="control">
+              <span><b data-t="trail">运动轨迹</b></span>
+              <div class="chip-row chip-row--3" role="group" aria-label="运动轨迹" id="trailDock">
+                <button class="chip" type="button" data-trail="off" aria-pressed="false" data-t="trailOff">不画</button>
+                <button class="chip is-active" type="button" data-trail="short" aria-pressed="true" data-t="trailShort">短</button>
+                <button class="chip" type="button" data-trail="long" aria-pressed="false" data-t="trailLong">长</button>
+              </div>
+            </div>
+            <div class="toggle-row" role="group" aria-label="图层开关" id="layerDock">
+              <button class="toggle is-active" type="button" data-layer="orbits" aria-pressed="true">
+                <span aria-hidden="true">◯</span><span data-t="layerOrbits">轨道</span>
+              </button>
+              <button class="toggle is-active" type="button" data-layer="grid" aria-pressed="true">
+                <span aria-hidden="true">▦</span><span data-t="layerGrid">黄道面</span>
+              </button>
+              <button class="toggle is-active" type="button" data-layer="labels" aria-pressed="true">
+                <span aria-hidden="true">🏷</span><span data-t="layerLabels">名字</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="block">
+            <h3 class="block__title"><span aria-hidden="true">📊</span><span data-t="readTitle">仪表盘</span></h3>
+            <div class="readouts">
+              <div><span data-t="rTravel">太阳已飞过</span><strong id="rTravel">0 au</strong></div>
+              <div><span data-t="rPitch">真实螺距</span><strong id="rPitch">—</strong></div>
+              <div><span data-t="rTilt">前进方向与黄道面</span><strong id="rTilt">—</strong></div>
+              <div><span data-t="rFound">已探索行星</span><strong><span id="rFound">0</span> / 8</strong></div>
+            </div>
+            <p class="block__note block__note--myth" data-t="mythNote">⚠️ 网上有些“漩涡太阳系”动画把行星画成拖在太阳身后、轨道面垂直于前进方向。真实夹角约 60°，行星是斜着绕圈，没有被甩到后面。</p>
+          </section>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script type="module" src="main.js"></script>
 </body>
 </html>

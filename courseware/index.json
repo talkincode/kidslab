@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-25T13:43:24.461Z",
+  "generatedAt": "2026-07-25T14:49:38.380Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -1911,11 +1911,11 @@
       "id": "solar-explorer",
       "title": {
         "zh": "太阳系漫游",
-        "en": "Solar System Cruise"
+        "en": "Solar System Tour"
       },
       "description": {
-        "zh": "让八大行星在你眼前转起来！点一颗行星，看看它的一年有多长、藏着什么小秘密。",
-        "en": "Set the eight planets spinning! Tap any planet to see how long its year is and the secrets it keeps."
+        "zh": "用 JPL 轨道要素探索 3D 太阳系，切换参考系与多种视角，看太阳如何带着八大行星在银河中画出斜螺旋。",
+        "en": "Explore a 3D solar system built from JPL orbital elements, switch frames and viewpoints, and see the Sun carry all eight planets along a slanted helix."
       },
       "category": "science",
       "levels": [
@@ -1926,7 +1926,10 @@
       "tags": [
         "太阳系",
         "天文",
-        "宇宙"
+        "宇宙",
+        "重力",
+        "空间想象",
+        "3D"
       ],
       "icon": "🪐",
       "order": 60,
@@ -1945,7 +1948,17 @@
         "星空",
         "光年",
         "light year",
-        "宇宙尺度"
+        "宇宙尺度",
+        "Gravity",
+        "gravity",
+        "Spatial Reasoning",
+        "spatial reasoning",
+        "spatial",
+        "空间思维",
+        "3D",
+        "3d",
+        "三维",
+        "three.js"
       ],
       "path": "courseware/solar-explorer/index.html"
     },
