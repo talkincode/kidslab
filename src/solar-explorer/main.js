@@ -18,6 +18,7 @@ import {
   dateFromJulianDay,
   heliocentricState,
   heliocentricPosition,
+  sunBarycentricOffset,
   orbitalPeriodYears,
 } from './orbits.js';
 
@@ -46,8 +47,8 @@ const I18N = {
     fTilt: '轨道倾角',
     compare: '真实大小（地球 = 1）',
     frameTitle: '太阳自己在动吗？',
-    frameNone: '课本视角',
-    frameNoneSub: '太阳不动',
+    frameNone: '质心视角',
+    frameNoneSub: '太阳摆动',
     frameLocal: '邻居之间',
     frameGalaxy: '绕银心',
     pitch: '螺距缩放',
@@ -56,6 +57,7 @@ const I18N = {
     viewTitle: '看的方式',
     zoom: '视野范围',
     magnify: '行星放大',
+    parallax: '星空视差',
     distance: '距离标尺',
     distReal: '真实比例',
     distComp: '压缩视图',
@@ -70,6 +72,7 @@ const I18N = {
     rTravel: '太阳已飞过',
     rPitch: '真实螺距',
     rTilt: '前进方向与黄道面',
+    rWobble: '太阳偏离质心',
     rFound: '已探索行星',
     mythNote: '⚠️ 网上有些“漩涡太阳系”动画把行星画成拖在太阳身后、轨道面垂直于前进方向。真实夹角约 60°，行星是斜着绕圈，没有被甩到后面。',
 
@@ -81,14 +84,16 @@ const I18N = {
     soundOff: '打开音效',
     sunRole: '太阳系的中心恒星',
     planetRole: (n) => `离太阳第 ${n} 颗行星`,
-    frameTagNone: '课本视角 · 太阳不动',
+    frameTagNone: '质心参考系 · 太阳摆动',
     frameTagLocal: '邻居参考系 · 18 km/s',
     frameTagGalaxy: '银河参考系 · 230 km/s',
-    noteNone: '这是课本里的画法：把太阳钉住，行星画出闭合的椭圆。轨道形状是真的，但太阳其实没停下来过。',
+    noteNone: '去掉银河中的整体飞行后，太阳也没有静止。巨行星牵着它绕太阳系质心摆动，场上的 ✛ 才是这个参考系固定的原点。',
     noteLocal: '相对身边的恒星，太阳正以 18 km/s 朝武仙座方向飞，行星的轨迹被拉成了很扁的螺旋。',
     noteGalaxy: '太阳带着整个太阳系以约 230 km/s 绕银心转，约 2.4 亿年一圈；行星一边绕日一边被带着走，画出斜螺旋。',
     pitchHint: (real) => `真实螺距约 ${real}，比轨道大太多，压短了才看得见螺旋。`,
-    pitchHintNone: '先选一个会动的参考系，才有螺距可以压缩。',
+    pitchHintNone: '质心没有整体平移，因此没有长螺旋；太阳绕质心的摆动仍然保留。',
+    parallaxHint: '近、中、远星层经过深度增强，用反向位移提示太阳系前进；真实恒星远得多，视差不会这么明显。',
+    parallaxHintNone: '质心视角没有整体前进，星空不产生平移视差。',
     hintDefault: '🖐 拖动环视 · 点一颗行星看档案',
     hintFrame: '💡 试试切到「绕银心」，看看轨迹怎么变成螺旋',
     hintIdle: '💡 试试拖动画面换个角度，或者点一颗行星',
@@ -97,7 +102,7 @@ const I18N = {
     toastAll: '🎉 八颗行星全部探索完成！',
     toastFollow: (name) => `镜头跟住了 ${name}`,
     toastNeedPlanet: '先点一颗行星，再用「跟随」',
-    helixNeedsFrame: '课本视角里太阳不动，先切到「邻居之间」或「绕银心」',
+    helixNeedsFrame: '质心视角没有整体平移，先切到「邻居之间」或「绕银心」',
     toastLimitMax: '历表算到公元 3000 年就到头啦，先停一下',
     toastLimitMin: '历表最早算到公元前 3000 年，先停一下',
     dayUnit: (v) => `${v} 天`,
@@ -113,9 +118,10 @@ const I18N = {
     earthTimes: (v) => `地球的 ${v} 倍`,
     sunTimes: (v) => `地球的 ${v} 倍（远超图上长度）`,
     travelWithKm: (au, km) => `${au} au ≈ ${km} 亿 km`,
-    travelNone: '太阳被钉住了（0 au）',
-    pitchNone: '这个参考系里没有螺旋',
+    travelNone: '质心固定（0 au）',
+    pitchNone: '没有整体螺旋',
     pitchValue: (au, name) => `${name}：约 ${au} au / 圈`,
+    wobbleValue: (radii, km) => `${radii} 个太阳半径 · ${km} 万 km`,
     tiltValue: (deg) => `约 ${deg}°`,
     tiltNone: '—',
     sunName: '太阳',
@@ -142,8 +148,8 @@ const I18N = {
     fTilt: 'Orbit tilt',
     compare: 'True size (Earth = 1)',
     frameTitle: 'Is the Sun standing still?',
-    frameNone: 'Textbook',
-    frameNoneSub: 'Sun fixed',
+    frameNone: 'Barycenter',
+    frameNoneSub: 'Sun wobbles',
     frameLocal: 'Neighbours',
     frameGalaxy: 'Galaxy',
     pitch: 'Helix pitch',
@@ -152,6 +158,7 @@ const I18N = {
     viewTitle: 'How to look',
     zoom: 'Field of view',
     magnify: 'Planet zoom',
+    parallax: 'Star parallax',
     distance: 'Distance scale',
     distReal: 'True scale',
     distComp: 'Squeezed',
@@ -166,6 +173,7 @@ const I18N = {
     rTravel: 'Sun has travelled',
     rPitch: 'True helix pitch',
     rTilt: 'Heading vs ecliptic',
+    rWobble: 'Sun off the barycenter',
     rFound: 'Planets explored',
     mythNote: '⚠️ Those “vortex solar system” videos put the planets trailing behind the Sun with orbits at a right angle to its path. The real angle is about 60°, so the orbits lean — nothing gets left behind.',
 
@@ -177,14 +185,16 @@ const I18N = {
     soundOff: 'Unmute sound',
     sunRole: 'The star at the centre',
     planetRole: (n) => `Planet #${n} from the Sun`,
-    frameTagNone: 'Textbook frame · Sun fixed',
+    frameTagNone: 'Barycentric frame · Sun wobbles',
     frameTagLocal: 'Local frame · 18 km/s',
     frameTagGalaxy: 'Galactic frame · 230 km/s',
-    noteNone: 'This is the textbook picture: pin the Sun down and every planet closes a neat ellipse. The shapes are real — but the Sun never actually stopped.',
+    noteNone: 'Remove the galaxy-wide drift and the Sun still does not stand still. The giant planets pull it around the solar-system barycenter, marked by the fixed ✛.',
     noteLocal: 'Against the nearby stars the Sun drifts at 18 km/s towards Hercules, stretching each orbit into a very long helix.',
     noteGalaxy: 'The Sun carries us around the galactic centre at about 230 km/s, one lap every ~240 million years. Orbiting plus drifting equals a slanted helix.',
     pitchHint: (real) => `One true turn is about ${real} long — far wider than the orbits, so we squeeze it to see the coil.`,
-    pitchHintNone: 'Pick a moving frame first, then there is a helix to squeeze.',
+    pitchHintNone: 'The barycenter has no overall drift, so there is no long helix; the Sun’s wobble remains.',
+    parallaxHint: 'Enhanced near, middle, and far star depths move backwards to reveal forward travel; real stars are much farther away, so true parallax is subtler.',
+    parallaxHintNone: 'The barycentric frame has no overall travel, so the star field has no translation parallax.',
     hintDefault: '🖐 Drag to orbit · tap a planet for its file',
     hintFrame: '💡 Try the “Galaxy” frame and watch the trails coil up',
     hintIdle: '💡 Drag the sky for a new angle, or tap a planet',
@@ -193,7 +203,7 @@ const I18N = {
     toastAll: '🎉 All eight planets explored!',
     toastFollow: (name) => `Camera is locked on ${name}`,
     toastNeedPlanet: 'Tap a planet first, then use Follow',
-    helixNeedsFrame: 'The Sun is fixed in the textbook frame — try Neighbours or Galaxy',
+    helixNeedsFrame: 'The barycentric frame has no overall drift; try Neighbours or Galaxy',
     toastLimitMax: 'The ephemeris stops at year 3000 — pausing here',
     toastLimitMin: 'The ephemeris starts at 3000 BC — pausing here',
     dayUnit: (v) => `${v} days`,
@@ -209,9 +219,10 @@ const I18N = {
     earthTimes: (v) => `${v}× Earth`,
     sunTimes: (v) => `${v}× Earth (off the chart)`,
     travelWithKm: (au, km) => `${au} au ≈ ${km} billion km`,
-    travelNone: 'The Sun is pinned down (0 au)',
-    pitchNone: 'No helix in this frame',
+    travelNone: 'Barycenter fixed (0 au)',
+    pitchNone: 'No overall helix',
     pitchValue: (au, name) => `${name}: ~${au} au per loop`,
+    wobbleValue: (radii, km) => `${radii} solar radii · ${km}k km`,
     tiltValue: (deg) => `about ${deg}°`,
     tiltNone: '—',
     sunName: 'the Sun',
@@ -227,6 +238,7 @@ const JD_MIN = 625673.5;    /* 公元前 3000 年 */
 const JD_MAX = 2816787.5;   /* 公元 3000 年 */
 const TRAIL_POINTS = 168;
 const TRAIL_MAX_YEARS = 40;
+const WOBBLE_SAMPLES = 64;
 const BODIES = [SUN, ...PLANETS];
 const BODY_BY_ID = new Map(BODIES.map((b) => [b.id, b]));
 const REDUCED_MOTION = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
@@ -241,6 +253,7 @@ const state = {
   pitch: 0.06,
   distance: 'real',
   magnify: 1,
+  parallax: REDUCED_MOTION ? 0 : 0.55,
   viewAu: Math.pow(10, 0.78),
   trail: 'short',
   layers: { orbits: true, grid: true, labels: true },
@@ -268,8 +281,9 @@ for (const id of [
   'compareFill', 'compareText', 'bodyFact',
   'frameDock', 'frameNote', 'pitchControl', 'pitchRange', 'pitchValue', 'pitchHint',
   'speedRange', 'speedValue', 'zoomRange', 'zoomValue', 'magnifyRange', 'magnifyValue',
+  'parallaxControl', 'parallaxRange', 'parallaxValue', 'parallaxHint',
   'distanceDock', 'trailDock', 'layerDock',
-  'rTravel', 'rPitch', 'rTilt', 'rFound',
+  'rTravel', 'rPitch', 'rTilt', 'rWobble', 'rFound',
 ]) els[id] = $(id);
 
 let lang = window.cool?.preferences?.lang || 'zh';
@@ -388,15 +402,39 @@ function driftInfo() {
 }
 
 const _sunPos = new THREE.Vector3();
-function sunScenePosition(jd, out = _sunPos) {
+const _baryPos = new THREE.Vector3();
+const _wobble = new THREE.Vector3();
+
+/** 质心在场景里的位置：只被太阳的整体漂移带着走 */
+function barycenterScenePosition(jd, out = _baryPos) {
   const { auPerYear, dir } = driftInfo();
   const years = (jd - state.jdOrigin) / DAYS_PER_YEAR;
   return out.copy(dir).multiplyScalar(auPerYear * years * state.pitch * UNITS_PER_AU);
 }
 
+/**
+ * 太阳被画大了约 34 倍（√r 映射），所以摆动也按同一倍数放大，
+ * 这样「质心离太阳中心几个太阳半径」在屏幕上仍然是真的。
+ */
+function wobbleGain() {
+  return displayRadius(SUN) / ((SUN.radiusKm / AU_KM) * UNITS_PER_AU);
+}
+
+/** 太阳绕质心的摆动（场景单位），黄道坐标 → three 坐标 */
+function sunWobble(jd, out = _wobble) {
+  const p = sunBarycentricOffset(jd);
+  const k = UNITS_PER_AU * wobbleGain();
+  return out.set(p[0] * k, p[2] * k, -p[1] * k);
+}
+
+function sunScenePosition(jd, out = _sunPos) {
+  return out.copy(barycenterScenePosition(jd)).add(sunWobble(jd));
+}
+
 function displayRadius(body) {
   const base = SIZE_K * Math.sqrt(body.radiusKm);
-  const boost = body.id === 'sun' ? Math.min(state.magnify, 1.6) : state.magnify;
+  /* 「行星放大」只作用于行星；太阳保持不变，倍率效果才清楚。 */
+  const boost = body.id === 'sun' ? 1 : state.magnify;
   return base * boost;
 }
 
@@ -413,17 +451,19 @@ let gridGroup;
 let labelGroup;
 let trailGroup;
 let sunLight;
-let starField;
+let farStarField;
+const parallaxFields = [];
 let sunTrail;
 let sunArrow;
+let baryMarker;
 let glowSprite;
 let orbitsBuiltAt = -1e9;
 
 let palette;
 function themeColors() {
   return theme === 'light'
-    ? { orbit: 0x7a86a8, grid: 0xa6b0cc, label: '#132039', labelBg: 'rgba(255,255,255,.82)', fade: new THREE.Color(0xf2f5fb), ambient: 0.55, arrow: 0xd2691e }
-    : { orbit: 0x5f6f9c, grid: 0x3f4a72, label: '#eaf1ff', labelBg: 'rgba(9,14,30,.62)', fade: new THREE.Color(0x05070f), ambient: 0.16, arrow: 0xffb703 };
+    ? { orbit: 0x7a86a8, grid: 0xa6b0cc, label: '#132039', labelBg: 'rgba(255,255,255,.82)', fade: new THREE.Color(0xf2f5fb), ambient: 0.55, arrow: 0xd2691e, bary: 0x007f9f }
+    : { orbit: 0x5f6f9c, grid: 0x3f4a72, label: '#eaf1ff', labelBg: 'rgba(9,14,30,.62)', fade: new THREE.Color(0x05070f), ambient: 0.16, arrow: 0xffb703, bary: 0x7ce7ff };
 }
 
 /* --------- 程序化贴图 --------- */
@@ -585,6 +625,26 @@ function markerTexture() {
   return texture;
 }
 
+function crossTexture() {
+  const canvas = makeCanvas(64, 64);
+  const c = canvas.getContext('2d');
+  c.strokeStyle = 'rgba(255,255,255,.95)';
+  c.lineWidth = 4;
+  c.lineCap = 'round';
+  c.beginPath();
+  c.moveTo(32, 12); c.lineTo(32, 52);
+  c.moveTo(12, 32); c.lineTo(52, 32);
+  c.stroke();
+  c.lineWidth = 3;
+  c.strokeStyle = 'rgba(255,255,255,.55)';
+  c.beginPath();
+  c.arc(32, 32, 13, 0, Math.PI * 2);
+  c.stroke();
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  return texture;
+}
+
 function ringTexture(body) {
   const canvas = makeCanvas(128, 8);
   const c = canvas.getContext('2d');
@@ -653,9 +713,9 @@ function skyTexture() {
   return texture;
 }
 
-/** 恒星背景：贴在相机上的点云，银道面附近更密（银河的样子） */
-function makeStarfield() {
-  const count = 2800;
+/** 近似无限远的惯性天球：随相机平移但不随相机旋转，银道面附近更密。 */
+function makeFarStarfield() {
+  const count = 2400;
   const positions = new Float32Array(count * 3);
   const colors = new Float32Array(count * 3);
   const rand = prng(9182736);
@@ -698,6 +758,54 @@ function makeStarfield() {
     color: theme === 'light' ? 0x5a6a94 : 0xffffff,
     transparent: true, depthWrite: false, depthTest: false,
   }));
+  points.renderOrder = -1;
+  points.frustumCulled = false;
+  return points;
+}
+
+/**
+ * 有限深度的教学星层。base 保留每颗星的周期坐标，运行时只按太阳系
+ * 平移量反向滚动并循环包裹，因而不会随着时间飞出可视范围。
+ */
+function makeParallaxField({ count, seed, spread, motion, size, opacity }) {
+  const positions = new Float32Array(count * 3);
+  const base = new Float32Array(count * 3);
+  const colors = new Float32Array(count * 3);
+  const rand = prng(seed);
+
+  for (let i = 0; i < count; i += 1) {
+    let x = rand() - 0.5;
+    let y = rand() - 0.5;
+    let z = rand() - 0.5;
+    const radius = Math.hypot(x, y, z);
+    if (radius < 0.16) {
+      const k = 0.16 / Math.max(radius, 1e-4);
+      x *= k; y *= k; z *= k;
+    }
+    base[i * 3] = x;
+    base[i * 3 + 1] = y;
+    base[i * 3 + 2] = z;
+    const warm = rand();
+    const bright = 0.55 + rand() * 0.45;
+    colors[i * 3] = bright * (warm > 0.82 ? 1 : 0.82);
+    colors[i * 3 + 1] = bright * 0.9;
+    colors[i * 3 + 2] = bright * (warm > 0.82 ? 0.72 : 1);
+  }
+
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  const points = new THREE.Points(geometry, new THREE.PointsMaterial({
+    size,
+    sizeAttenuation: false,
+    vertexColors: true,
+    color: theme === 'light' ? 0x536386 : 0xffffff,
+    transparent: true,
+    opacity: theme === 'light' ? opacity * 0.62 : opacity,
+    depthWrite: false,
+    depthTest: false,
+  }));
+  points.userData = { base, spread, motion, size, opacity };
   points.renderOrder = -1;
   points.frustumCulled = false;
   return points;
@@ -749,8 +857,12 @@ function buildScene() {
   scene.background = skyTexture();
 
   camera = new THREE.PerspectiveCamera(45, 1, 0.05, 400000);
-  starField = makeStarfield();
-  camera.add(starField);
+  farStarField = makeFarStarfield();
+  parallaxFields.push(
+    makeParallaxField({ count: 150, seed: 78123, spread: 3.2, motion: 1, size: 2.6, opacity: 0.72 }),
+    makeParallaxField({ count: 380, seed: 456789, spread: 6.5, motion: 0.32, size: 1.55, opacity: 0.52 }),
+  );
+  scene.add(farStarField, ...parallaxFields);
   scene.add(camera);
 
   const colors = palette;
@@ -821,10 +933,10 @@ function buildScene() {
     const label = labelSprite(bodyName(planet), planet.accent);
     labelGroup.add(label);
 
-    /* 轨道线 */
+    /* 轨道线：虚线 + 低透明度，只当参考底稿，实线留给真正走过的轨迹 */
     const orbit = new THREE.Line(
       new THREE.BufferGeometry().setAttribute('position', new THREE.BufferAttribute(new Float32Array(3 * 257), 3)),
-      new THREE.LineBasicMaterial({ color: colors.orbit, transparent: true, opacity: 0.55 }),
+      new THREE.LineDashedMaterial({ color: colors.orbit, dashSize: 6, gapSize: 5, transparent: true, opacity: 0.4 }),
     );
     orbitGroup.add(orbit);
 
@@ -850,13 +962,20 @@ function buildScene() {
 
   buildGrid();
 
-  /* 太阳航迹 */
+  /* 太阳自己的航迹：绕质心的摆动 + 整体漂移，合起来就是它真实走过的路 */
   sunTrail = new THREE.Line(
-    new THREE.BufferGeometry().setAttribute('position', new THREE.BufferAttribute(new Float32Array(6), 3)),
+    new THREE.BufferGeometry().setAttribute('position', new THREE.BufferAttribute(new Float32Array(3 * WOBBLE_SAMPLES), 3)),
     new THREE.LineDashedMaterial({ color: colors.arrow, dashSize: 26, gapSize: 16, transparent: true, opacity: 0.75 }),
   );
   sunTrail.frustumCulled = false;
   scene.add(sunTrail);
+
+  /* 太阳系质心：太阳真正绕着转的那个点 */
+  baryMarker = new THREE.Sprite(new THREE.SpriteMaterial({
+    map: crossTexture(), color: colors.bary, transparent: true, opacity: 0.9, depthWrite: false, depthTest: false,
+  }));
+  baryMarker.frustumCulled = false;
+  scene.add(baryMarker);
 
   sunArrow = new THREE.Mesh(
     new THREE.ConeGeometry(0.6, 2.4, 16),
@@ -876,7 +995,10 @@ function buildGrid() {
   for (const material of materials) material.dispose();
   gridGroup.clear();
   const colors = palette;
-  const material = new THREE.LineBasicMaterial({ color: colors.grid, transparent: true, opacity: 0.3 });
+  /* 只留同心的距离圈，去掉放射状辐条：那 12 条直线是画面最吵的来源 */
+  const material = new THREE.LineDashedMaterial({
+    color: colors.grid, dashSize: 5, gapSize: 7, transparent: true, opacity: 0.22,
+  });
   const radii = [0.4, 1, 2, 5, 10, 20, 31];
   for (const rAu of radii) {
     const r = radialUnits(rAu);
@@ -885,18 +1007,9 @@ function buildGrid() {
       const a = (i / 128) * Math.PI * 2;
       points.push(new THREE.Vector3(Math.cos(a) * r, 0, Math.sin(a) * r));
     }
-    gridGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(points), material));
-  }
-  const outer = radialUnits(31);
-  for (let i = 0; i < 12; i += 1) {
-    const a = (i / 12) * Math.PI * 2;
-    gridGroup.add(new THREE.Line(
-      new THREE.BufferGeometry().setFromPoints([
-        new THREE.Vector3(0, 0, 0),
-        new THREE.Vector3(Math.cos(a) * outer, 0, Math.sin(a) * outer),
-      ]),
-      material,
-    ));
+    const ring = new THREE.Line(new THREE.BufferGeometry().setFromPoints(points), material);
+    ring.computeLineDistances();
+    gridGroup.add(ring);
   }
 }
 
@@ -914,8 +1027,26 @@ function buildOrbits() {
     }
     entry.orbit.geometry.attributes.position.needsUpdate = true;
     entry.orbit.geometry.computeBoundingSphere();
+    entry.orbit.computeLineDistances();
   }
   orbitsBuiltAt = state.jd;
+}
+
+/** 虚线段长跟着镜头远近走，无论缩放到哪一档都是同样疏密的点线 */
+function updateDashScale() {
+  const dash = camState.distance * 0.011;
+  for (const entry of bodyMap.values()) {
+    if (!entry.orbit) continue;
+    entry.orbit.material.dashSize = dash;
+    entry.orbit.material.gapSize = dash * 0.85;
+  }
+  const gridMaterial = gridGroup.children[0]?.material;
+  if (gridMaterial) {
+    gridMaterial.dashSize = dash * 0.8;
+    gridMaterial.gapSize = dash * 1.15;
+  }
+  sunTrail.material.dashSize = dash * 1.4;
+  sunTrail.material.gapSize = dash * 0.9;
 }
 
 function applyThemeToScene() {
@@ -923,8 +1054,12 @@ function applyThemeToScene() {
   const colors = palette;
   scene.background?.dispose?.();
   scene.background = skyTexture();
-  starField.material.color.setHex(theme === 'light' ? 0x5a6a94 : 0xffffff);
-  starField.material.size = theme === 'light' ? 1.4 : 1.7;
+  farStarField.material.color.setHex(theme === 'light' ? 0x5a6a94 : 0xffffff);
+  farStarField.material.size = theme === 'light' ? 1.4 : 1.7;
+  for (const field of parallaxFields) {
+    field.material.color.setHex(theme === 'light' ? 0x536386 : 0xffffff);
+    field.material.opacity = theme === 'light' ? field.userData.opacity * 0.62 : field.userData.opacity;
+  }
   scene.children.find((c) => c.isAmbientLight).intensity = colors.ambient;
   for (const entry of bodyMap.values()) {
     if (entry.orbit) entry.orbit.material.color.setHex(colors.orbit);
@@ -933,6 +1068,7 @@ function applyThemeToScene() {
   for (const line of gridGroup.children) line.material.color.setHex(colors.grid);
   sunTrail.material.color.setHex(colors.arrow);
   sunArrow.material.color.setHex(colors.arrow);
+  baryMarker.material.color.setHex(colors.bary);
   for (const planet of PLANETS) {
     const dot = bodyMap.get(planet.id).dot;
     dot.material.blending = theme === 'light' ? THREE.NormalBlending : THREE.AdditiveBlending;
@@ -952,12 +1088,55 @@ function trailSpanYears(entry) {
   return Math.min(entry.period * laps, TRAIL_MAX_YEARS);
 }
 
+/**
+ * 太阳绕质心的摆动由木星、土星主导，十几年才走一圈，所以拖尾按 64 个采样点插值。
+ * 否则每帧要为上千个拖尾点各解 8 次开普勒方程。
+ */
+const wobbleCache = { jd: NaN, spanDays: 0, samples: new Float64Array(WOBBLE_SAMPLES * 3) };
+
+function refreshWobbleCache(spanDays) {
+  wobbleCache.jd = state.jd;
+  wobbleCache.spanDays = spanDays;
+  for (let i = 0; i < WOBBLE_SAMPLES; i += 1) {
+    const jd = state.jd - (i / (WOBBLE_SAMPLES - 1)) * spanDays;
+    const p = sunBarycentricOffset(jd);
+    wobbleCache.samples[i * 3] = p[0];
+    wobbleCache.samples[i * 3 + 1] = p[2];
+    wobbleCache.samples[i * 3 + 2] = -p[1];
+  }
+}
+
+function sampleWobble(jd, out) {
+  const { spanDays, samples } = wobbleCache;
+  const k = UNITS_PER_AU * wobbleGain();
+  const f = spanDays > 0
+    ? clamp(((wobbleCache.jd - jd) / spanDays) * (WOBBLE_SAMPLES - 1), 0, WOBBLE_SAMPLES - 1)
+    : 0;
+  const i0 = Math.floor(f);
+  const i1 = Math.min(i0 + 1, WOBBLE_SAMPLES - 1);
+  const t = f - i0;
+  return out.set(
+    (samples[i0 * 3] + (samples[i1 * 3] - samples[i0 * 3]) * t) * k,
+    (samples[i0 * 3 + 1] + (samples[i1 * 3 + 1] - samples[i0 * 3 + 1]) * t) * k,
+    (samples[i0 * 3 + 2] + (samples[i1 * 3 + 2] - samples[i0 * 3 + 2]) * t) * k,
+  );
+}
+
 function updateTrails() {
   const visible = state.trail !== 'off';
   trailGroup.visible = visible;
+  sunTrail.visible = visible;
   if (!visible) return;
   const { auPerYear, dir } = driftInfo();
   const driftUnitsPerDay = (auPerYear / DAYS_PER_YEAR) * state.pitch * UNITS_PER_AU;
+
+  let maxSpanDays = 0;
+  for (const planet of PLANETS) {
+    maxSpanDays = Math.max(maxSpanDays, trailSpanYears(bodyMap.get(planet.id)) * DAYS_PER_YEAR);
+  }
+  refreshWobbleCache(maxSpanDays);
+  const sunSpanDays = (state.trail === 'long' ? 40 : 12) * DAYS_PER_YEAR;
+  updateSunTrail(dir, driftUnitsPerDay, sunSpanDays);
 
   for (const planet of PLANETS) {
     const entry = bodyMap.get(planet.id);
@@ -969,10 +1148,11 @@ function updateTrails() {
     for (let i = 0; i < TRAIL_POINTS; i += 1) {
       const jd = state.jd - i * step;
       toScene(heliocentricPosition(planet.id, jd), tmpVec);
+      sampleWobble(jd, tmpVec2);
       const drift = (jd - state.jdOrigin) * driftUnitsPerDay;
-      pos[i * 3] = tmpVec.x + dir.x * drift;
-      pos[i * 3 + 1] = tmpVec.y + dir.y * drift;
-      pos[i * 3 + 2] = tmpVec.z + dir.z * drift;
+      pos[i * 3] = tmpVec.x + tmpVec2.x + dir.x * drift;
+      pos[i * 3 + 1] = tmpVec.y + tmpVec2.y + dir.y * drift;
+      pos[i * 3 + 2] = tmpVec.z + tmpVec2.z + dir.z * drift;
       const fade = 1 - i / (TRAIL_POINTS - 1);
       tmpColor.copy(palette.fade).lerp(base, fade ** 0.7);
       col[i * 3] = tmpColor.r;
@@ -982,6 +1162,22 @@ function updateTrails() {
     entry.trail.geometry.attributes.position.needsUpdate = true;
     entry.trail.geometry.attributes.color.needsUpdate = true;
   }
+}
+
+/** 太阳走过的路：绕质心的小圈 + 整体漂移拉出来的长线 */
+function updateSunTrail(dir, driftUnitsPerDay, spanDays) {
+  const array = sunTrail.geometry.attributes.position.array;
+  for (let i = 0; i < WOBBLE_SAMPLES; i += 1) {
+    const jd = state.jd - (i / (WOBBLE_SAMPLES - 1)) * spanDays;
+    sampleWobble(jd, tmpVec);
+    const drift = (jd - state.jdOrigin) * driftUnitsPerDay;
+    array[i * 3] = tmpVec.x + dir.x * drift;
+    array[i * 3 + 1] = tmpVec.y + dir.y * drift;
+    array[i * 3 + 2] = tmpVec.z + dir.z * drift;
+  }
+  sunTrail.geometry.attributes.position.needsUpdate = true;
+  sunTrail.geometry.computeBoundingSphere();
+  sunTrail.computeLineDistances();
 }
 
 function updateBodies() {
@@ -1033,8 +1229,12 @@ function updateOverlays() {
   for (const entry of ordered) {
     if (entry.dot) {
       const selected = entry.body.id === state.selected;
+      /* 行星在屏幕上够大时就让标记点淡出，否则「行星放大」永远被这颗光点盖住 */
+      const pixels = displayRadius(entry.body) / screenScale(entry.position, 1);
+      const fade = clamp((5.5 - pixels) / 3.5, 0, 1);
       entry.dot.scale.setScalar(screenScale(entry.position, selected ? 30 : 18));
-      entry.dot.material.opacity = selected ? 1 : 0.82;
+      entry.dot.material.opacity = (selected ? 1 : 0.82) * fade;
+      entry.dot.visible = fade > 0.02;
     }
     if (!entry.label) continue;
     if (!state.layers.labels) { entry.label.visible = false; continue; }
@@ -1057,20 +1257,16 @@ function updateOverlays() {
     entry.label.position.y += displayRadius(entry.body) + scale * 1.1;
   }
 
-  /* 太阳航迹 + 前进箭头 */
+  /* 质心标记 + 前进箭头 */
   const { auPerYear, dir } = driftInfo();
+  const sunPos = bodyMap.get('sun').position;
+  const baryPos = barycenterScenePosition(state.jd);
+  baryMarker.position.copy(baryPos);
+  baryMarker.scale.setScalar(screenScale(baryPos, 22));
+
   const moving = auPerYear > 0;
-  sunTrail.visible = moving;
   sunArrow.visible = moving;
   if (moving) {
-    const sunPos = bodyMap.get('sun').position;
-    const back = tmpVec.copy(dir).multiplyScalar(-Math.max(camState.distance * 1.8, 600)).add(sunPos);
-    const array = sunTrail.geometry.attributes.position.array;
-    array[0] = back.x; array[1] = back.y; array[2] = back.z;
-    array[3] = sunPos.x; array[4] = sunPos.y; array[5] = sunPos.z;
-    sunTrail.geometry.attributes.position.needsUpdate = true;
-    sunTrail.computeLineDistances();
-
     const arrowScale = screenScale(sunPos, 7);
     const ahead = tmpVec2.copy(dir)
       .multiplyScalar(Math.max(displayRadius(SUN) * 2.6, arrowScale * 11))
@@ -1079,13 +1275,15 @@ function updateOverlays() {
     sunArrow.quaternion.setFromUnitVectors(UP, dir);
     sunArrow.scale.setScalar(arrowScale);
   }
+  updateDashScale();
 }
 
 function cameraTargetPosition(out) {
   if (state.view === 'follow' && state.selected !== 'sun') {
     return out.copy(bodyMap.get(state.selected).position);
   }
-  return out.copy(bodyMap.get('sun').position);
+  /* 对准质心而不是太阳，太阳绕质心的小圈才看得出来 */
+  return out.copy(barycenterScenePosition(state.jd));
 }
 
 function updateCamera(dt) {
@@ -1105,7 +1303,41 @@ function updateCamera(dt) {
   camera.far = camState.distance * 60 + 20000;
   camera.updateProjectionMatrix();
   camera.lookAt(target);
-  starField.scale.setScalar(camera.far * 0.35);
+}
+
+const tmpStarTravel = new THREE.Vector3();
+function wrapCentered(value, span) {
+  return ((value + span * 0.5) % span + span) % span - span * 0.5;
+}
+
+function updateStarfield() {
+  /* 无限远天球只跟随相机平移，不跟随相机旋转，因此环视时能看到不同星区。 */
+  farStarField.position.copy(camera.position);
+  farStarField.scale.setScalar(camera.far * 0.35);
+
+  const { mode, dir } = driftInfo();
+  const moving = mode.speedKmS > 0 && state.parallax > 0.001;
+  const speedCue = moving ? Math.sqrt(mode.speedKmS / 18.04) : 0;
+  const gain = state.parallax * 7.8 * speedCue;
+  const years = (state.jd - state.jdOrigin) / DAYS_PER_YEAR;
+  /* 视差有独立强度，不跟随“螺距缩放”，避免两只滑杆相互放大。 */
+  tmpStarTravel.copy(dir).multiplyScalar(years * UNITS_PER_AU);
+
+  for (const field of parallaxFields) {
+    field.visible = moving;
+    if (!moving) continue;
+    field.position.copy(camera.position);
+    const span = Math.max(240, camState.distance * field.userData.spread);
+    const shift = gain * field.userData.motion;
+    const { base } = field.userData;
+    const positions = field.geometry.attributes.position.array;
+    for (let i = 0; i < base.length; i += 3) {
+      positions[i] = wrapCentered(base[i] * span - tmpStarTravel.x * shift, span);
+      positions[i + 1] = wrapCentered(base[i + 1] * span - tmpStarTravel.y * shift, span);
+      positions[i + 2] = wrapCentered(base[i + 2] * span - tmpStarTravel.z * shift, span);
+    }
+    field.geometry.attributes.position.needsUpdate = true;
+  }
 }
 
 function advanceTime(dt) {
@@ -1135,6 +1367,7 @@ function frame() {
     updateTrails();
   }
   updateCamera(dt);
+  updateStarfield();
   updateOverlays();
   renderer.render(scene, camera);
 
@@ -1239,6 +1472,14 @@ function updateHud() {
     els.rPitch.textContent = t('pitchValue', nf(auPerYear * period, auPerYear * period < 100 ? 1 : 0), bodyName(ref));
     els.rTilt.textContent = t('tiltValue', nf(angleToEclipticDeg(mode.direction), 1));
   }
+
+  const offsetAu = Math.hypot(...sunBarycentricOffset(state.jd));
+  const offsetKm = offsetAu * AU_KM;
+  els.rWobble.textContent = t(
+    'wobbleValue',
+    nf(offsetKm / SUN.radiusKm, 2),
+    nf(offsetKm / (lang === 'zh' ? 1e4 : 1e3), 0),
+  );
   els.rFound.textContent = String(state.visited.size);
   updateDossier();
 }
@@ -1260,6 +1501,8 @@ function syncFrameUi() {
   } else {
     els.pitchHint.textContent = t('pitchHintNone');
   }
+  els.parallaxRange.disabled = !moving;
+  els.parallaxHint.textContent = t(moving ? 'parallaxHint' : 'parallaxHintNone');
 }
 
 function syncDockUi(dock, key, value) {
@@ -1598,6 +1841,14 @@ function bindUi() {
     markInteraction();
   });
 
+  els.parallaxRange.addEventListener('input', () => {
+    state.parallax = Number(els.parallaxRange.value) / 100;
+    els.parallaxValue.textContent = `${els.parallaxRange.value}%`;
+    sound.tick();
+    markInteraction();
+  });
+  els.parallaxRange.addEventListener('change', () => track('solar_parallax', { amount: state.parallax }));
+
 }
 
 function bindChromeUi() {
@@ -1657,6 +1908,8 @@ function syncLanguage() {
   els.speedValue.textContent = formatSpeed();
   els.zoomValue.textContent = formatViewAu(state.viewAu);
   els.magnifyValue.textContent = `×${nf(state.magnify, 1)}`;
+  els.parallaxRange.value = String(Math.round(state.parallax * 100));
+  els.parallaxValue.textContent = `${Math.round(state.parallax * 100)}%`;
   els.pitchValue.textContent = `${Math.round(state.pitch * 100)}%`;
   if (!interacted || state.visited.size === 0) els.sceneHint.textContent = t('hintDefault');
   syncFrameUi();

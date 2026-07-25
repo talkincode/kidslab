@@ -6,7 +6,7 @@
   <meta name="description" content="按 JPL 历表计算真实开普勒轨道的 3D 太阳系：切换参考系，看行星在银河里画出螺旋。" />
   <meta name="color-scheme" content="light dark" />
   <title>太阳系漫游 · KidsLab</title>
-  <link rel="stylesheet" href="style.css?v=8db221431f79" />
+  <link rel="stylesheet" href="style.css?v=55d2a955" />
   <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
 <script>(()=>{"use strict";const g=window,r=g.cool||{};if(r.sdkVersion)return;try{document.documentElement.style.touchAction="manipulation"}catch{}const w="solar-explorer",b=location.pathname.split("/").filter(Boolean),E=b.at(-1)||"",A=E.includes(".")?b.at(-2):E,f=w.startsWith("__")?A:w,l={get(t,n=null){try{const e=localStorage.getItem(t);return e===null?n:e}catch{return n}},set(t,n){try{return localStorage.setItem(t,n),!0}catch{return!1}},remove(t){try{return localStorage.removeItem(t),!0}catch{return!1}}},d=new Set,S=new Set(["zh","en"]),I=new Set(["light","dark"]),C=(navigator.language||"").toLowerCase().startsWith("zh")?"zh":"en";let m="light";try{m=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch{}let s=l.get("kidslab.lang",C),c=l.get("kidslab.theme",m);S.has(s)||(s=C),I.has(c)||(c=m);function p(){document.documentElement.lang=s==="zh"?"zh-CN":"en",document.documentElement.dataset.theme=c}function T(t,n){const e={kind:t,value:n};for(const o of[...d])o(e);g.dispatchEvent(new CustomEvent(`${t}change`,{detail:{[t]:n}}))}const z={get lang(){return s},get theme(){return c},setLang(t){if(!S.has(t))throw new RangeError(`Unsupported language: ${t}`);t!==s&&(s=t,l.set("kidslab.lang",t),p(),T("lang",t))},setTheme(t){if(!I.has(t))throw new RangeError(`Unsupported theme: ${t}`);t!==c&&(c=t,l.set("kidslab.theme",t),p(),T("theme",t))},toggleLang(){this.setLang(s==="zh"?"en":"zh")},toggleTheme(){this.setTheme(c==="light"?"dark":"light")},subscribe(t){if(typeof t!="function")throw new TypeError("Preference listener must be a function");return d.add(t),()=>d.delete(t)}};function D(t,n={}){if(!t||typeof t!="object")throw new TypeError("Messages must be an object");const e=n.root||document;if(!e.querySelectorAll&&!e.matches)throw new TypeError("i18n root must be a Document or Element");function o(a,...h){const i=t[s]?.[a]??t.zh?.[a]??t.en?.[a];return typeof i=="function"?i(...h):i??a}function y(a="lang"){const h=[];e.matches?.("[data-t]")&&h.push(e),e.querySelectorAll&&h.push(...e.querySelectorAll("[data-t]"));for(const i of h){const L=o(i.dataset.t);typeof L=="string"&&(i.textContent=L)}n.onChange?.({kind:a,lang:s,theme:c,t:o})}const $=z.subscribe(({kind:a})=>{a==="lang"?y("lang"):n.onChange?.({kind:a,lang:s,theme:c,t:o})});return y("init"),{t:o,render:y,destroy:$}}const u=f?`kidslab.progress.${f}`:"";function _(){if(!u)return null;try{const t=JSON.parse(l.get(u,"null"));return!t||!["played","completed"].includes(t.status)?null:t}catch{return null}}function k(t,n){if(!u)return null;const e=_()||{},o={status:e.status==="completed"?"completed":t,stage:n||e.stage||"",updatedAt:Date.now()};return e.status===o.status&&e.stage===o.stage?e:(l.set(u,JSON.stringify(o)),o)}const P={get:_,clear(){return u?l.remove(u):!1}};r.sdkVersion=2,r.courseId=f,r.storage=l,r.preferences=z,r.bindI18n=D,r.progress=P,typeof r.track!="function"&&(r.track=()=>{}),r.stage=t=>{typeof t!="string"||!t||k("played",t.slice(0,48))},r.complete=()=>k("completed"),g.cool=r,p()})();
 </script>
@@ -113,7 +113,7 @@
             <h3 class="block__title"><span aria-hidden="true">🌠</span><span data-t="frameTitle">太阳自己在动吗？</span></h3>
             <div class="chip-row chip-row--3" role="group" aria-label="参考系" id="frameDock">
               <button class="chip" type="button" data-frame="none" aria-pressed="false">
-                <b data-t="frameNone">课本视角</b><small data-t="frameNoneSub">太阳不动</small>
+                <b data-t="frameNone">质心视角</b><small data-t="frameNoneSub">太阳摆动</small>
               </button>
               <button class="chip is-active" type="button" data-frame="local" aria-pressed="true">
                 <b data-t="frameLocal">邻居之间</b><small>18 km/s</small>
@@ -146,7 +146,12 @@
             </label>
             <label class="control">
               <span><b data-t="magnify">行星放大</b><output id="magnifyValue">×1.0</output></span>
-              <input id="magnifyRange" type="range" min="0.4" max="3" step="0.1" value="1" />
+              <input id="magnifyRange" type="range" min="0.4" max="8" step="0.1" value="1" />
+            </label>
+            <label class="control" id="parallaxControl">
+              <span><b data-t="parallax">星空视差</b><output id="parallaxValue">55%</output></span>
+              <input id="parallaxRange" type="range" min="0" max="100" step="5" value="55" />
+              <small class="control__hint" id="parallaxHint">增强近、中、远星层的相对位移，用视差提示太阳系正在前进。</small>
             </label>
             <div class="control">
               <span><b data-t="distance">距离标尺</b></span>
@@ -182,7 +187,8 @@
               <div><span data-t="rTravel">太阳已飞过</span><strong id="rTravel">0 au</strong></div>
               <div><span data-t="rPitch">真实螺距</span><strong id="rPitch">—</strong></div>
               <div><span data-t="rTilt">前进方向与黄道面</span><strong id="rTilt">—</strong></div>
-              <div><span data-t="rFound">已探索行星</span><strong><span id="rFound">0</span> / 8</strong></div>
+              <div><span data-t="rWobble">太阳偏离质心</span><strong id="rWobble">—</strong></div>
+              <div class="readouts__wide"><span data-t="rFound">已探索行星</span><strong><span id="rFound">0</span> / 8</strong></div>
             </div>
             <p class="block__note block__note--myth" data-t="mythNote">⚠️ 网上有些“漩涡太阳系”动画把行星画成拖在太阳身后、轨道面垂直于前进方向。真实夹角约 60°，行星是斜着绕圈，没有被甩到后面。</p>
           </section>
@@ -191,6 +197,6 @@
     </main>
   </div>
 
-  <script type="module" src="main.js?v=b5b18d9873c2"></script>
+  <script type="module" src="main.js?v=73710158"></script>
 </body>
 </html>

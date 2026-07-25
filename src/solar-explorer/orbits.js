@@ -110,13 +110,29 @@ export const PLANETS = [
   },
 ];
 
+/**
+ * 太阳质量 ÷ 行星系质量（含卫星）。
+ * 来源：JPL SSD Astrodynamic Parameters（DE440 的 Sun/planet system mass ratio）。
+ * 只用于求太阳系质心，精度远够：质心位置由木星与土星主导。
+ */
+export const SUN_TO_PLANET_MASS_RATIO = {
+  mercury: 6023682.156,
+  venus: 408523.719,
+  earth: 328900.560,   /* 地月系整体 */
+  mars: 3098703.585,
+  jupiter: 1047.348625,
+  saturn: 3497.901768,
+  uranus: 22902.981614,
+  neptune: 19412.261454,
+};
+
 export const SUN = {
   id: 'sun', emoji: '☀️', color: 0xffb703, accent: '#ffb703',
   radiusKm: 695700, rotationDays: 25.38, tiltDeg: 7.25,
   name: { zh: '太阳', en: 'The Sun' },
   fact: {
-    zh: '太阳占了太阳系 99.86% 的质量，正是它的引力把八大行星拴在轨道上。',
-    en: 'The Sun holds 99.86% of the solar system’s mass; its gravity keeps all eight planets in orbit.',
+    zh: '太阳占了太阳系 99.86% 的质量，却没有稳坐正中心：单是木星就把太阳系质心拉到约 1.07 个太阳半径处，太阳其实一直绕着那个点画小圈。',
+    en: 'The Sun holds 99.86% of the solar system’s mass, yet it does not sit dead centre: Jupiter alone pulls the barycenter out to about 1.07 solar radii, so the Sun keeps circling that point.',
   },
 };
 
@@ -339,6 +355,32 @@ export function heliocentricPosition(planetId, julianDay) {
 export function orbitalPeriodYears(planetId, julianDay = J2000_JD) {
   const el = elementsAt(planetId, julianDay);
   return Math.sqrt(el.a ** 3);
+}
+
+/**
+ * 太阳相对太阳系质心的位移（au，J2000 黄道直角坐标）。
+ *
+ * 质心定义 B = Σ mⱼ rⱼ / Σ mⱼ。在日心坐标里太阳位于原点，于是
+ *   B_日心 = Σ μᵢ rᵢ / (1 + Σ μᵢ)，μᵢ = m行星 / m太阳
+ * 太阳相对质心的位置就是 −B_日心。
+ *
+ * 数量级：单是木星就把太阳拉出约 1.07 个太阳半径，巨行星连成一线时可接近 2 个太阳半径 —
+ * 也就是说质心常常落在太阳表面之外，太阳其实一直在绕着它画圈。
+ */
+export function sunBarycentricOffset(julianDay) {
+  let sum = [0, 0, 0];
+  let massSum = 0;
+  for (const planet of PLANETS) {
+    const mu = 1 / SUN_TO_PLANET_MASS_RATIO[planet.id];
+    sum = add(sum, scale(heliocentricPosition(planet.id, julianDay), mu));
+    massSum += mu;
+  }
+  return scale(sum, -1 / (1 + massSum));
+}
+
+/** 太阳偏离质心的距离，以太阳半径为单位 */
+export function sunOffsetInSolarRadii(julianDay) {
+  return (length(sunBarycentricOffset(julianDay)) * AU_KM) / SUN.radiusKm;
 }
 
 /** 维斯-维瓦方程校验用：v = √(GM(2/r − 1/a))，km/s */

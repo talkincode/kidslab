@@ -129,26 +129,20 @@ async function buildCourse(id, sdk, tracker) {
   const srcDir = path.join(SRC, id);
   const outDir = path.join(OUT, id);
   let saved = 0, total = 0;
+  let indexFile = null;
+  /* 课件页里引用的同目录资源 → 构建产物内容指纹，用于 cache-busting */
+  const fingerprints = new Map();
+
   for await (const file of walk(srcDir)) {
     const rel = path.relative(srcDir, file);
     if (rel === '.DS_Store' || rel.endsWith('.DS_Store')) continue;
     if (rel === 'facts.md') continue;
+    if (rel === 'index.html') { indexFile = file; continue; }
     const dest = path.join(outDir, rel);
     await mkdir(path.dirname(dest), { recursive: true });
     const ext = path.extname(file);
     const minifiable = (ext === '.js' || ext === '.mjs' || ext === '.css') && !file.endsWith('.min.js') && !file.endsWith('.min.css');
-    if (rel === 'index.html') {
-      const html = (await readFile(file, 'utf8')).replace(SDK_SOURCE_TAG_RE, '');
-      if (html.includes('data-kidslab-sdk')) throw new Error(`src/${id}: SDK 源码标签未能内联替换`);
-      const tags = [];
-      if (!/<link[^>]+rel=["'][^"']*icon/i.test(html)) tags.push(FAVICON_TAG);
-      tags.push(`<script>${sdk.replaceAll('__COURSE_ID__', () => id)}</script>`);
-      tags.push(STARMAP_BACK_TAG);
-      if (tracker) tags.push(`<script>${tracker.replaceAll('__COURSE_ID__', () => id)}</script>`);
-      const out = injectHead(html, tags);
-      await writeFile(dest, out);
-      total += Buffer.byteLength(out);
-    } else if (minifiable) {
+    if (minifiable) {
       const code = await readFile(file, 'utf8');
       const { code: min } = await transform(code, {
         loader: ext === '.css' ? 'css' : 'js',
@@ -158,12 +152,106 @@ async function buildCourse(id, sdk, tracker) {
       await writeFile(dest, min);
       saved += code.length - min.length;
       total += min.length;
+      fingerprints.set(rel.split(path.sep).join('/'), fingerprint(min));
     } else {
       await cp(file, dest);
-      total += (await stat(file)).size;
+      const size = (await stat(file)).size;
+      total += size;
+      if (['.js', '.mjs', '.css'].includes(ext)) {
+        fingerprints.set(rel.split(path.sep).join('/'), fingerprint(await readFile(dest)));
+      }
     }
   }
+
+  total += await bustModuleImports(outDir, fingerprints);
+
+  if (indexFile) {
+    const html = (await readFile(indexFile, 'utf8')).replace(SDK_SOURCE_TAG_RE, '');
+    if (html.includes('data-kidslab-sdk')) throw new Error(`src/${id}: SDK 源码标签未能内联替换`);
+    const tags = [];
+    if (!/<link[^>]+rel=["'][^"']*icon/i.test(html)) tags.push(FAVICON_TAG);
+    tags.push(`<script>${sdk.replaceAll('__COURSE_ID__', () => id)}</script>`);
+    tags.push(STARMAP_BACK_TAG);
+    if (tracker) tags.push(`<script>${tracker.replaceAll('__COURSE_ID__', () => id)}</script>`);
+    const out = bustCourseAssets(injectHead(html, tags), fingerprints);
+    await writeFile(path.join(outDir, 'index.html'), out);
+    total += Buffer.byteLength(out);
+  }
   return { total, saved };
+}
+
+const fingerprint = (content) => createHash('md5').update(content).digest('hex').slice(0, 8);
+
+/**
+ * 为 ES module 的本地依赖加版本。只给 index.html 的 main.js 加指纹还不够：
+ * 新 main.js 若命中旧 orbits.js，命名导入会直接失败。依赖优先稳定后再更新入口
+ * 指纹；无环模块图通常两三轮即可收敛。
+ */
+async function bustModuleImports(outDir, fingerprints) {
+  const modules = new Map();
+  for (const asset of fingerprints.keys()) {
+    if (!/\.(?:js|mjs)$/i.test(asset)) continue;
+    modules.set(asset, await readFile(path.join(outDir, asset), 'utf8'));
+  }
+  if (modules.size === 0) return 0;
+
+  const rewrite = (code, importer, pattern) => code.replace(pattern, (match, prefix, quote, specifier, suffix) => {
+    if (!specifier.startsWith('.')) return match;
+    const target = path.posix.normalize(path.posix.join(path.posix.dirname(importer), specifier));
+    const version = fingerprints.get(target);
+    return version ? `${prefix}${quote}${specifier}?v=${version}${suffix}` : match;
+  });
+  const rewriteAll = (code, importer) => {
+    const fromOrDynamic = /((?:\bfrom\s*|\bimport\s*\()\s*)(['"])([^'"?]+\.(?:js|mjs))(?:\?v=[0-9a-f]+)?(\2)/gi;
+    const sideEffect = /(\bimport\s*)(['"])([^'"?]+\.(?:js|mjs))(?:\?v=[0-9a-f]+)?(\2)/gi;
+    return rewrite(rewrite(code, importer, fromOrDynamic), importer, sideEffect);
+  };
+
+  let converged = false;
+  for (let pass = 0; pass <= modules.size; pass += 1) {
+    let changed = false;
+    const next = new Map();
+    const hashes = new Map();
+    for (const [asset, code] of modules) {
+      const rewritten = rewriteAll(code, asset);
+      const hash = fingerprint(rewritten);
+      next.set(asset, rewritten);
+      hashes.set(asset, hash);
+      if (hash !== fingerprints.get(asset)) changed = true;
+    }
+    for (const [asset, code] of next) modules.set(asset, code);
+    for (const [asset, hash] of hashes) fingerprints.set(asset, hash);
+    if (!changed) {
+      converged = true;
+      break;
+    }
+  }
+  if (!converged) throw new Error('ES module 版本指纹未收敛，请检查循环依赖');
+
+  let byteDelta = 0;
+  for (const [asset, code] of modules) {
+    const file = path.join(outDir, asset);
+    const before = await readFile(file, 'utf8');
+    if (before === code) continue;
+    await writeFile(file, code);
+    byteDelta += Buffer.byteLength(code) - Buffer.byteLength(before);
+  }
+  return byteDelta;
+}
+
+/**
+ * 给课件页里的 <link href> / <script src> 打上内容指纹。
+ * CDN 会把 CSS/JS 缓存数小时，改版后新 HTML 配旧脚本会直接把页面打崩，
+ * 指纹保证内容一变浏览器必然重新拉取。幂等：内容不变则产物一致。
+ */
+function bustCourseAssets(html, fingerprints) {
+  return html.replace(
+    /(<(?:link|script)\b[^>]*\b(?:href|src)=")([^"?#:]+\.(?:css|js|mjs))(?:\?v=[0-9a-f]+)?(")/gi,
+    (match, head, asset, tail) => {
+      const v = fingerprints.get(asset);
+      return v ? `${head}${asset}?v=${v}${tail}` : `${head}${asset}${tail}`;
+    },
+  );
 }
 
 async function main() {

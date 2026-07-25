@@ -447,6 +447,7 @@ test.describe('courseware manifest', () => {
       localStorage.setItem('kidslab.lang', 'zh');
       localStorage.setItem('kidslab.theme', 'light');
     });
+
     await page.goto(`/${manifest.courses[0].path}`);
 
     const result = await page.evaluate(() => {
@@ -616,4 +617,36 @@ test.describe('courseware manifest', () => {
       await expectHealthyPage(page, failures);
     });
   }
+});
+
+test.describe('solar explorer motion cues', () => {
+  test('stellar parallax follows moving frames and reduced-motion preference', async ({ page }) => {
+    test.slow();
+    const failures = observeFailures(page);
+    await page.addInitScript(() => {
+      localStorage.setItem('kidslab.lang', 'zh');
+      localStorage.setItem('kidslab.theme', 'dark');
+    });
+
+    await page.goto('/courseware/solar-explorer/index.html');
+    await expect(page.locator('#loading')).toBeHidden();
+    await expect(page.locator('#parallaxValue')).toHaveText('55%');
+    await expect(page.locator('#parallaxRange')).toBeEnabled();
+
+    await page.locator('#parallaxRange').fill('80');
+    await expect(page.locator('#parallaxValue')).toHaveText('80%');
+
+    await page.locator('[data-frame="none"]').click();
+    await expect(page.locator('#parallaxRange')).toBeDisabled();
+    await expect(page.locator('#parallaxHint')).toContainText('没有整体前进');
+
+    await page.locator('[data-frame="galaxy"]').click();
+    await expect(page.locator('#parallaxRange')).toBeEnabled();
+
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.reload();
+    await expect(page.locator('#loading')).toBeHidden();
+    await expect(page.locator('#parallaxValue')).toHaveText('0%');
+    await expectHealthyPage(page, failures);
+  });
 });

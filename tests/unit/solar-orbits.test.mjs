@@ -6,6 +6,8 @@ import {
   DRIFT_MODES,
   J2000_JD,
   PLANETS,
+  SUN,
+  SUN_TO_PLANET_MASS_RATIO,
   angleToEclipticDeg,
   dateFromJulianDay,
   elementsAt,
@@ -15,6 +17,8 @@ import {
   kmsToAuPerYear,
   orbitalPeriodYears,
   solveKepler,
+  sunBarycentricOffset,
+  sunOffsetInSolarRadii,
   visVivaSpeed,
   wrapDegrees,
 } from '../../src/solar-explorer/orbits.js';
@@ -163,4 +167,51 @@ test('轨道要素随时间缓慢进动，不会跳变', () => {
   assert.ok(Math.abs(after.a - before.a) < 0.001);
   assert.ok(Math.abs(after.inclination - before.inclination) < 0.02);
   assert.notEqual(after.perihelion, before.perihelion);
+});
+
+/* ---------------- 太阳系质心：太阳自己也在动 ---------------- */
+
+test('太阳绕质心摆动：偏移量在约 0.05–2.2 个太阳半径之间', () => {
+  let min = Infinity;
+  let max = 0;
+  /* 覆盖两个土星周期（约 59 年），足以扫过木土会合造成的极值 */
+  for (let day = 0; day < 21600; day += 60) {
+    const radii = sunOffsetInSolarRadii(J2000_JD + day);
+    min = Math.min(min, radii);
+    max = Math.max(max, radii);
+  }
+  assert.ok(max > 1.0, `质心至少一度跑到太阳表面之外，实测最大 ${max}`);
+  assert.ok(max < 2.2, `质心偏移不应超过约 2 个太阳半径，实测最大 ${max}`);
+  assert.ok(min < 1.0, `会合相位不同时质心应回到太阳体内，实测最小 ${min}`);
+  assert.ok(min > 0.05, `质心不会精确落在太阳中心，实测最小 ${min}`);
+});
+
+test('质心定义自洽：以质心为原点时总质量矩为零', () => {
+  const jd = J2000_JD + 4000;
+  const sun = sunBarycentricOffset(jd);
+  const moment = [0, 0, 0];
+  for (const planet of PLANETS) {
+    const mu = 1 / SUN_TO_PLANET_MASS_RATIO[planet.id];
+    const helio = heliocentricPosition(planet.id, jd);
+    for (let i = 0; i < 3; i += 1) moment[i] += mu * (helio[i] + sun[i]);
+  }
+  /* 太阳自身的质量矩（μ = 1）加上行星部分应互相抵消 */
+  for (let i = 0; i < 3; i += 1) moment[i] += sun[i];
+  assert.ok(norm(moment) < 1e-12, `总质量矩 ${norm(moment)} 应为零`);
+});
+
+test('木星主导质心：太阳被推向木星的反方向', () => {
+  for (const day of [0, 3000, 9000, 15000]) {
+    const jd = J2000_JD + day;
+    const sun = sunBarycentricOffset(jd);
+    const jupiter = heliocentricPosition('jupiter', jd);
+    const cosine = (sun[0] * jupiter[0] + sun[1] * jupiter[1] + sun[2] * jupiter[2]) / (norm(sun) * norm(jupiter));
+    assert.ok(cosine < -0.3, `第 ${day} 天：太阳应偏向木星反侧，实测 cos = ${cosine}`);
+  }
+});
+
+test('单木星极限：木星单独贡献约 1.07 个太阳半径', () => {
+  const mu = 1 / SUN_TO_PLANET_MASS_RATIO.jupiter;
+  const radii = ((mu / (1 + mu)) * 5.2044 * AU_KM) / SUN.radiusKm;
+  assert.ok(Math.abs(radii - 1.07) < 0.02, `日木质心 ${radii} 个太阳半径`);
 });

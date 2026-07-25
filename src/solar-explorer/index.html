@@ -6,7 +6,7 @@
   <meta name="description" content="按 JPL 历表计算真实开普勒轨道的 3D 太阳系：切换参考系，看行星在银河里画出螺旋。" />
   <meta name="color-scheme" content="light dark" />
   <title>太阳系漫游 · KidsLab</title>
-  <link rel="stylesheet" href="style.css?v=8db221431f79" />
+  <link rel="stylesheet" href="style.css" />
   <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
 </head>
 <body>
@@ -110,7 +110,7 @@
             <h3 class="block__title"><span aria-hidden="true">🌠</span><span data-t="frameTitle">太阳自己在动吗？</span></h3>
             <div class="chip-row chip-row--3" role="group" aria-label="参考系" id="frameDock">
               <button class="chip" type="button" data-frame="none" aria-pressed="false">
-                <b data-t="frameNone">课本视角</b><small data-t="frameNoneSub">太阳不动</small>
+                <b data-t="frameNone">质心视角</b><small data-t="frameNoneSub">太阳摆动</small>
               </button>
               <button class="chip is-active" type="button" data-frame="local" aria-pressed="true">
                 <b data-t="frameLocal">邻居之间</b><small>18 km/s</small>
@@ -143,7 +143,12 @@
             </label>
             <label class="control">
               <span><b data-t="magnify">行星放大</b><output id="magnifyValue">×1.0</output></span>
-              <input id="magnifyRange" type="range" min="0.4" max="3" step="0.1" value="1" />
+              <input id="magnifyRange" type="range" min="0.4" max="8" step="0.1" value="1" />
+            </label>
+            <label class="control" id="parallaxControl">
+              <span><b data-t="parallax">星空视差</b><output id="parallaxValue">55%</output></span>
+              <input id="parallaxRange" type="range" min="0" max="100" step="5" value="55" />
+              <small class="control__hint" id="parallaxHint">增强近、中、远星层的相对位移，用视差提示太阳系正在前进。</small>
             </label>
             <div class="control">
               <span><b data-t="distance">距离标尺</b></span>
@@ -179,7 +184,8 @@
               <div><span data-t="rTravel">太阳已飞过</span><strong id="rTravel">0 au</strong></div>
               <div><span data-t="rPitch">真实螺距</span><strong id="rPitch">—</strong></div>
               <div><span data-t="rTilt">前进方向与黄道面</span><strong id="rTilt">—</strong></div>
-              <div><span data-t="rFound">已探索行星</span><strong><span id="rFound">0</span> / 8</strong></div>
+              <div><span data-t="rWobble">太阳偏离质心</span><strong id="rWobble">—</strong></div>
+              <div class="readouts__wide"><span data-t="rFound">已探索行星</span><strong><span id="rFound">0</span> / 8</strong></div>
             </div>
             <p class="block__note block__note--myth" data-t="mythNote">⚠️ 网上有些“漩涡太阳系”动画把行星画成拖在太阳身后、轨道面垂直于前进方向。真实夹角约 60°，行星是斜着绕圈，没有被甩到后面。</p>
           </section>
@@ -188,6 +194,6 @@
     </main>
   </div>
 
-  <script type="module" src="main.js?v=b5b18d9873c2"></script>
+  <script type="module" src="main.js"></script>
 </body>
 </html>
