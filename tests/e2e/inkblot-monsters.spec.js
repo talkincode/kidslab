@@ -74,8 +74,10 @@ test.describe('inkblot monsters', () => {
     await page.getByRole('button', { name: '候选点 A' }).click();
     await page.getByRole('button', { name: '候选点 C' }).click();
 
+    // 第 2 关完成后应用会自动进入第 3 关。先等待这次状态转换结束，
+    // 再验证导航回切，避免导航点击和 850ms 自动跳关定时器竞速。
+    await expect(page.getByRole('heading', { name: '揪出冒牌怪' })).toBeVisible();
     await page.locator('#missionNav button').first().click();
-    await page.waitForTimeout(950);
     await expect(page.getByRole('heading', { name: '甩墨再对折' })).toBeVisible();
     await page.locator('#missionNav button').nth(2).click();
     await expect(page.getByRole('heading', { name: '揪出冒牌怪' })).toBeVisible();

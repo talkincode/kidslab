@@ -247,7 +247,6 @@ const I18N = {
 };
 
 const LS = {
-  lang: 'kidslab.lang', theme: 'kidslab.theme',
   best: 'kidslab.magic-cube.best', guided: 'kidslab.magic-cube.guided',
 };
 const store = {
@@ -255,9 +254,10 @@ const store = {
   set: (k, v) => { try { localStorage.setItem(k, v); } catch { /* 忽略 */ } },
 };
 
-let lang = store.get(LS.lang) || (navigator.language?.startsWith('zh') ? 'zh' : 'en');
+const preferences = window.cool?.preferences;
+let lang = preferences?.lang || (navigator.language?.startsWith('zh') ? 'zh' : 'en');
 if (!I18N[lang]) lang = 'zh';
-let theme = store.get(LS.theme) || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+let theme = preferences?.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 if (theme !== 'light' && theme !== 'dark') theme = 'light';
 
 const t = (key) => I18N[lang][key] ?? I18N.zh[key] ?? key;
@@ -282,11 +282,16 @@ function applyLang() {
 function applyTheme() {
   document.documentElement.dataset.theme = theme;
   if (themeBtn) themeBtn.textContent = theme === 'light' ? '🌙' : '☀️';
-  dispatchEvent(new CustomEvent('themechange', { detail: { theme } }));
   render();
 }
-langBtn?.addEventListener('click', () => { lang = lang === 'zh' ? 'en' : 'zh'; store.set(LS.lang, lang); applyLang(); });
-themeBtn?.addEventListener('click', () => { theme = theme === 'light' ? 'dark' : 'light'; store.set(LS.theme, theme); applyTheme(); });
+langBtn?.addEventListener('click', () => preferences?.toggleLang());
+themeBtn?.addEventListener('click', () => preferences?.toggleTheme());
+preferences?.subscribe(({ kind }) => {
+  lang = preferences.lang;
+  theme = preferences.theme;
+  if (kind === 'lang') applyLang();
+  if (kind === 'theme') applyTheme();
+});
 
 /* ======================= 游戏区 · Game ======================= */
 const audio = createAudio();

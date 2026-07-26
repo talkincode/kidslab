@@ -34,11 +34,71 @@ jobs:
       - name: Build courseware for tests
         run: npm run build
 
+      - name: Upload test build
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-build
+          overwrite: true
+          path: |
+            index.html
+            sw.js
+            courseware
+          retention-days: 1
+
+  e2e:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [desktop, mobile]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download test build
+        uses: actions/download-artifact@v4
+        with:
+          name: test-build
+          path: .
+
       - name: Install Playwright browser
         run: npx playwright install --with-deps chromium
 
       - name: Run smoke tests
-        run: npm run test:e2e
+        run: npm run test:e2e -- --project=${{ matrix.project }}
+
+      - name: Upload Playwright failure artifacts
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-failure-${{ matrix.project }}-${{ github.run_attempt }}
+          path: |
+            playwright-report
+            test-results
+          if-no-files-found: ignore
+          retention-days: 7
+
+  package:
+    needs: e2e
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Build deploy courseware
         run: npm run build
@@ -61,10 +121,11 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: site
+          overwrite: true
           path: _site
 
   deploy-github-pages:
-    needs: build
+    needs: package
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -74,7 +135,7 @@ jobs:
         uses: actions/deploy-pages@v4
 
   deploy-cloudflare-pages:
-    needs: build
+    needs: package
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4

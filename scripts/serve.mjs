@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PORT = Number(process.argv[2] || process.env.PORT || 8080);
+const HOST = process.env.KIDSLAB_PREVIEW_HOST || '127.0.0.1';
 
 const MIME = {
   '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8',
@@ -25,4 +26,4 @@ createServer((req, res) => {
   if (!existsSync(file)) { res.writeHead(404, { 'content-type': 'text/plain' }).end('404 Not Found'); return; }
   res.writeHead(200, { 'content-type': MIME[path.extname(file)] || 'application/octet-stream', 'cache-control': 'no-store' });
   createReadStream(file).pipe(res);
-}).listen(PORT, () => console.log(`▶ KidsLab 预览: http://localhost:${PORT}`));
+}).listen(PORT, HOST, () => console.log(`▶ KidsLab 预览: http://${HOST}:${PORT}`));

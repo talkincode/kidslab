@@ -1,16 +1,26 @@
 import { defineConfig } from '@playwright/test';
 
+const e2ePort = Number(process.env.KIDSLAB_E2E_PORT || 4173);
+const e2eBaseURL = `http://127.0.0.1:${e2ePort}`;
+
 export default defineConfig({
   testDir: './tests/e2e',
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
-  workers: process.env.CI ? 2 : undefined,
-  reporter: process.env.CI ? 'github' : 'list',
+  // 大型 Three.js 页面和 PWA 离线服务器并发时会争抢软件渲染/端口资源，
+  // 表现为无关的 localStorage 轮询或临时服务器恢复超时。CI 串行换稳定性。
+  workers: process.env.CI ? 1 : undefined,
+  reporter: process.env.CI
+    ? [
+        ['github'],
+        ['html', { open: 'never', outputFolder: 'playwright-report' }],
+      ]
+    : 'list',
   // CI runner 无 GPU，WebGL 课件（three.js）软件渲染更慢，放宽超时
   timeout: process.env.CI ? 60000 : 30000,
   use: {
-    baseURL: 'http://127.0.0.1:4173',
+    baseURL: e2eBaseURL,
     screenshot: 'only-on-failure',
     trace: 'retain-on-failure',
     launchOptions: {
@@ -24,9 +34,10 @@ export default defineConfig({
     },
   },
   webServer: {
-    command: 'npm run preview -- 4173',
-    url: 'http://127.0.0.1:4173',
-    reuseExistingServer: !process.env.CI,
+    command: `npm run preview -- ${e2ePort}`,
+    url: e2eBaseURL,
+    // 复用同端口的任意静态服务器可能让测试误连到其他工作区。
+    reuseExistingServer: false,
   },
   projects: [
     {

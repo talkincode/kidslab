@@ -13,7 +13,17 @@ const HEAVY_WEBGL_COURSES = new Set([
   'venn-port',
   'optics-lab',
   'solar-explorer',
+  'welcome',
 ]);
+
+async function storedValue(page, key) {
+  const state = await page.context().storageState();
+  const origin = new URL(page.url()).origin;
+  return state.origins
+    .find((entry) => entry.origin === origin)
+    ?.localStorage.find((entry) => entry.name === key)
+    ?.value ?? null;
+}
 
 function observeFailures(page) {
   const failures = [];
@@ -466,7 +476,8 @@ test.describe('SDK source-page pilots', () => {
 
   for (const path of pilots) {
     test(`${path} runs before build`, async ({ page }) => {
-      if (path.includes('/solar-explorer/')) test.slow();
+      const courseId = path.split('/').at(-2);
+      if (HEAVY_WEBGL_COURSES.has(courseId)) test.slow();
       const failures = observeFailures(page);
       await page.addInitScript(() => {
         localStorage.setItem('kidslab.lang', 'zh');
@@ -474,10 +485,10 @@ test.describe('SDK source-page pilots', () => {
       });
       await page.goto(path);
       await page.locator('#langBtn').click();
-      await expect.poll(() => page.evaluate(() => localStorage.getItem('kidslab.lang'))).toBe('en');
+      await expect.poll(() => storedValue(page, 'kidslab.lang')).toBe('en');
       await expect(page.locator('html')).toHaveAttribute('lang', 'en');
       await page.locator('#themeBtn').click();
-      await expect.poll(() => page.evaluate(() => localStorage.getItem('kidslab.theme'))).toBe('dark');
+      await expect.poll(() => storedValue(page, 'kidslab.theme')).toBe('dark');
       await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
       await expectHealthyPage(page, failures);
     });
@@ -629,8 +640,7 @@ test.describe('courseware manifest', () => {
       await expect(themeBtn).toBeVisible();
       await themeBtn.click();
       await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
-      await expect.poll(() =>
-        page.evaluate(() => localStorage.getItem('kidslab.theme'))).toBe('light');
+      await expect.poll(() => storedValue(page, 'kidslab.theme')).toBe('light');
       await expectHealthyPage(page, failures);
 
       failures.length = 0;

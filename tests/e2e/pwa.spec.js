@@ -9,7 +9,9 @@
  * 不一定被 Playwright 的离线仿真覆盖，杀死服务器是真实且确定的断网。
  */
 import { spawn } from 'node:child_process';
+import { once } from 'node:events';
 import { readFileSync } from 'node:fs';
+import { createServer } from 'node:net';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { test, expect } from '@playwright/test';
@@ -24,6 +26,17 @@ async function waitServiceWorkerReady(page) {
     const registration = await navigator.serviceWorker.ready;
     if (!registration.active) throw new Error('no active service worker');
   });
+}
+
+async function reserveFreePort() {
+  const probe = createServer();
+  await new Promise((resolve, reject) => {
+    probe.once('error', reject);
+    probe.listen(0, '127.0.0.1', resolve);
+  });
+  const { port } = probe.address();
+  await new Promise((resolve, reject) => probe.close((error) => error ? reject(error) : resolve()));
+  return port;
 }
 
 test.describe('PWA 壳', () => {
@@ -71,24 +84,42 @@ test.describe('PWA 壳', () => {
 
 test.describe('课件离线（cache-on-visit + 离线回放）', () => {
   let server;
+  let serverError = '';
   let origin;
 
+  async function stopServer() {
+    const child = server;
+    server = undefined;
+    if (!child || child.exitCode !== null || child.signalCode !== null) return;
+
+    const exited = once(child, 'exit');
+    child.kill('SIGKILL');
+    const stopped = await Promise.race([
+      exited.then(() => true),
+      new Promise((resolve) => setTimeout(() => resolve(false), 5_000)),
+    ]);
+    if (!stopped) throw new Error(`preview server ${child.pid} did not exit`);
+  }
+
   test.beforeAll(async ({}, testInfo) => {
-    const port = 4300 + testInfo.workerIndex;
+    await stopServer();
+    const port = await reserveFreePort();
     origin = `http://127.0.0.1:${port}`;
+    serverError = '';
     server = spawn(process.execPath, ['scripts/serve.mjs', String(port)], {
       cwd: ROOT,
-      stdio: 'ignore',
+      env: { ...process.env, KIDSLAB_PREVIEW_HOST: '127.0.0.1' },
+      stdio: ['ignore', 'ignore', 'pipe'],
     });
+    server.stderr.setEncoding('utf8');
+    server.stderr.on('data', (chunk) => { serverError += chunk; });
     await expect(async () => {
-      const res = await fetch(`${origin}/index.html`);
-      expect(res.ok).toBeTruthy();
+      const res = await fetch(`${origin}/index.html`, { signal: AbortSignal.timeout(1_000) });
+      expect(res.ok, serverError || `preview server exited with ${server.exitCode}`).toBeTruthy();
     }).toPass({ timeout: 15_000 });
   });
 
-  test.afterAll(() => {
-    if (server && server.exitCode === null) server.kill('SIGKILL');
-  });
+  test.afterAll(async () => stopServer());
 
   test('玩过的课件断网可重玩，主站显示可离线角标', async ({ page }) => {
     test.setTimeout(60_000);
@@ -112,9 +143,11 @@ test.describe('课件离线（cache-on-visit + 离线回放）', () => {
     await expect(badge).toBeVisible();
 
     /* 4. 杀死服务器 = 真实断网 */
-    server.kill('SIGKILL');
+    await stopServer();
     await expect(async () => {
-      await expect(fetch(`${origin}/index.html`)).rejects.toThrow();
+      await expect(fetch(`${origin}/index.html`, {
+        signal: AbortSignal.timeout(1_000),
+      })).rejects.toThrow();
     }).toPass({ timeout: 15_000 });
 
     /* 5. 断网重开该课件：SW 缓存兜底，页面正常加载且无脚本错误 */
