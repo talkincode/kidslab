@@ -1,0 +1,53 @@
+{
+  "audio": "star-confirm.ogg",
+  "bars": 1,
+  "crossfade_samples": 0,
+  "instrument_resolution": {
+    "fallbacks": [],
+    "missing_instruments": [],
+    "mode": "conservative",
+    "summary": {
+      "alias": 0,
+      "exact": 1,
+      "fallback": 0,
+      "missing": 0,
+      "rejected": 0
+    },
+    "tracks": [
+      {
+        "canonical": "celesta",
+        "reasons": [
+          "general_midi_exact"
+        ],
+        "requested": "celesta",
+        "resolved": "celesta",
+        "score": 1.0,
+        "status": "exact",
+        "track": 0,
+        "track_id": "star_confirm",
+        "warnings": []
+      }
+    ]
+  },
+  "key": "B_major",
+  "loop": false,
+  "loop_samples": 8820,
+  "sample_rate": 44100,
+  "seconds": 0.32,
+  "stems": [],
+  "story": "A tiny point of light confirms a course, topic, filter, or control click.",
+  "tempo": 300,
+  "time_signature": "1/4",
+  "title": "Star Confirm",
+  "total_samples": 14112,
+  "tracks": [
+    {
+      "articulation": "sustain",
+      "id": "star_confirm",
+      "instrument": "celesta",
+      "intensity": 0.5199999809265137,
+      "palette": null,
+      "pattern": "melody"
+    }
+  ]
+}

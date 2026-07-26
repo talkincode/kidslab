@@ -1,0 +1,27 @@
+# 知识星图直接操作确认音：短促、明亮，不与模式跃迁混淆。
+title: Star Confirm
+story: A tiny point of light confirms a course, topic, filter, or control click.
+tempo: 300
+key: B_major
+time_signature: 1/4
+bars: 1
+loop: false
+
+performance:
+  humanize: { timing_ms: 0, velocity: 0, seed: 20260731 }
+  dynamics: { start: mp, peak: mp }
+
+motifs:
+  confirm:
+    - { degree: 5, beats: 0.125 }
+    - { degree: 8, beats: 0.125 }
+    - { degree: 0, beats: 0.75 }
+
+tracks:
+  - id: star_confirm
+    instrument: celesta
+    pattern: melody
+    motif: confirm
+    intensity: 0.52
+    pan: 0.52
+    reverb: 0.18

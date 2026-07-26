@@ -1,0 +1,62 @@
+# 知识星图循环配乐 · 「轨道图书馆」
+# Palette decision:
+# - Inertia answer: slow A-minor synth pad in 4/4.
+# - Candidates: chiptune (too busy), music-box (too toy-like), synth-ambient.
+# - Pick: synth-ambient, because search needs a calm sonic floor while the
+#   interface still feels computational and weightless.
+# - Variation vs recent KidsLab cues: B major, 7/8, no drums, synthesized lead,
+#   three-track chamber density.
+title: Orbital Library
+story: >
+  A child opens a living atlas of knowledge. Ideas glow like quiet stars,
+  connections drift into view, and every search feels like tuning a small
+  observatory. Curious, spacious, precise, and loop-safe without becoming sleepy.
+tempo: 84
+key: B_major
+time_signature: 7/8
+bars: 14
+loop: true
+
+harmony: [I, V, vi, IV, I, ii, V]
+
+performance:
+  humanize: { timing_ms: 16, velocity: 7, seed: 20260730 }
+  legato: true
+  dynamics: { start: p, peak: mp }
+
+motifs:
+  searchlight:
+    - { degree: 1, beats: 1 }
+    - { degree: 3, beats: 0.5 }
+    - { degree: 5, beats: 1 }
+    - { degree: 0, beats: 1 }
+    - { degree: 8, beats: 0.5 }
+    - { degree: 7, beats: 1 }
+    - { degree: 5, beats: 0.5 }
+    - { degree: 0, beats: 1.5 }
+    - { degree: 3, beats: 0.5 }
+    - { degree: 5, beats: 1 }
+    - { degree: 6, beats: 0.5 }
+    - { degree: 5, beats: 1 }
+    - { degree: 0, beats: 2 }
+
+tracks:
+  - id: atlas_light
+    instrument: epiano
+    pattern: melody
+    motif: searchlight
+    intensity: 0.42
+    pan: 0.42
+    reverb: 0.48
+  - id: orbit_air
+    instrument: halo_pad
+    pattern: sustain
+    intensity: 0.22
+    pan: 0.56
+    reverb: 0.62
+  - id: quiet_axis
+    instrument: synth_bass
+    pattern: bass
+    intensity: 0.18
+    pan: 0.5
+    reverb: 0.16

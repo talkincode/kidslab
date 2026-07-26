@@ -1,0 +1,67 @@
+# 维恩太空港循环配乐 · 「轨道海关夜班」
+# Palette decision: reject the obvious slow synth-ambient score. A lunar-lounge
+# jazz palette makes classification feel observant, precise, and quietly playful.
+title: Orbital Customs Night Shift
+story: >
+  A child runs a retro-futurist orbital customs deck. Two holographic landing
+  rings pulse with scanner telemetry while friendly ships queue beyond a planet's
+  rim. Calm, clever, tactile, and loop-safe rather than cinematic or arcade-like.
+tempo: 106
+key: F_major
+time_signature: 5/4
+bars: 12
+loop: true
+
+harmony: [I, vi, IV, V, ii, vi, IV, V, I, iii, IV, V]
+
+performance:
+  humanize: { timing_ms: 18, velocity: 7, seed: 20260728 }
+  swing: 0.22
+  dynamics: { start: p, peak: mf }
+
+motifs:
+  customs_ping:
+    - { degree: 1, beats: 1 }
+    - { degree: 3, beats: 0.5 }
+    - { degree: 5, beats: 0.5 }
+    - { degree: 6, beats: 1 }
+    - { degree: 0, beats: 1 }
+    - { degree: 5, beats: 0.5 }
+    - { degree: 3, beats: 0.5 }
+    - { degree: 2, beats: 1 }
+    - { degree: 0, beats: 2 }
+    - { degree: 1, beats: 1 }
+    - { degree: 0, beats: 1 }
+
+tracks:
+  - id: customs_beacon
+    instrument: vibraphone
+    pattern: melody
+    motif: customs_ping
+    intensity: 0.52
+    pan: 0.43
+    reverb: 0.38
+  - id: relay_comp
+    instrument: muted_guitar
+    pattern: arpeggio
+    intensity: 0.27
+    pan: 0.62
+    reverb: 0.23
+  - id: cabin_air
+    instrument: halo_pad
+    pattern: sustain
+    intensity: 0.18
+    pan: 0.5
+    reverb: 0.52
+  - id: orbit_bass
+    instrument: fretless_bass
+    pattern: bass
+    intensity: 0.29
+    pan: 0.48
+    reverb: 0.12
+  - id: telemetry
+    instrument: drums
+    pattern: drums
+    intensity: 0.2
+    pan: 0.54
+    reverb: 0.1

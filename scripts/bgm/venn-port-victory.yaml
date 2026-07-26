@@ -1,0 +1,61 @@
+# 维恩太空港任务完成短曲 · 同一海关信标动机的明亮归航变奏
+title: Clear to Dock
+story: >
+  The scanner confirms every ship. The customs beacon rises into a brief,
+  polished arrival signal with a warm final light over the docking rings.
+tempo: 124
+key: F_major
+time_signature: 4/4
+bars: 4
+loop: false
+
+harmony: [IV, V, vi, I]
+
+performance:
+  humanize: { timing_ms: 12, velocity: 6, seed: 20260729 }
+  swing: 0.16
+  dynamics: { start: mp, peak: f }
+
+motifs:
+  clear_signal:
+    - { degree: 1, beats: 0.5 }
+    - { degree: 3, beats: 0.5 }
+    - { degree: 5, beats: 0.5 }
+    - { degree: 6, beats: 0.5 }
+    - { degree: 8, beats: 1 }
+    - { degree: 10, beats: 1 }
+    - { degree: 8, beats: 1 }
+    - { degree: 0, beats: 3 }
+
+tracks:
+  - id: customs_beacon
+    instrument: vibraphone
+    pattern: melody
+    motif: clear_signal
+    intensity: 0.68
+    pan: 0.43
+    reverb: 0.42
+  - id: relay_comp
+    instrument: muted_guitar
+    pattern: arpeggio
+    intensity: 0.34
+    pan: 0.62
+    reverb: 0.26
+  - id: orbit_bass
+    instrument: fretless_bass
+    pattern: bass
+    intensity: 0.36
+    pan: 0.48
+    reverb: 0.14
+  - id: arrival_bell
+    instrument: tubular_bells
+    pattern: sustain
+    intensity: 0.22
+    pan: 0.68
+    reverb: 0.48
+  - id: telemetry
+    instrument: drums
+    pattern: drums
+    intensity: 0.29
+    pan: 0.54
+    reverb: 0.12

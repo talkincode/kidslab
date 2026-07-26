@@ -14,11 +14,20 @@
   const canvas = overlay.querySelector('canvas');
   const ctx = canvas.getContext('2d');
   const closeBtn = overlay.querySelector('.starmap__close');
-  const layoutBtn = overlay.querySelector('.starmap__layout');
+  const soundBtn = overlay.querySelector('.starmap__sound');
+  const modeNav = overlay.querySelector('.starmap__modes');
+  const modeBtns = [...modeNav.querySelectorAll('[data-layout]')];
+  const searchInput = overlay.querySelector('#starmapSearch');
+  const searchLabel = overlay.querySelector('.starmap__search-label');
+  const resultsEl = overlay.querySelector('.starmap__results');
+  const resultsHead = resultsEl.querySelector('strong');
+  const resultsList = resultsEl.querySelector('.starmap__results-list');
+  const searchClearBtn = resultsEl.querySelector('.starmap__search-clear');
   const titleEl = overlay.querySelector('.starmap__title');
   const hintEl = overlay.querySelector('.starmap__hint');
   const legendEl = overlay.querySelector('.starmap__legend');
   const infoEl = overlay.querySelector('.starmap__info');
+  const statusEl = overlay.querySelector('.starmap__status');
 
   const I18N = {
     zh: {
@@ -32,6 +41,16 @@
       layoutTip: '切换宇宙布局',
       focus: '点击聚焦这颗知识点 →',
       unfocus: '再点一次返回全景',
+      search: '搜索知识点或课程',
+      searchPh: '搜索知识点或课程…',
+      searchCount: (n) => `找到 ${n} 个结果`,
+      searchEmpty: '没有匹配的星星，试试“分数”“轨道”或“逻辑”',
+      clear: '清除',
+      courseResult: '课程',
+      topicResult: (n) => `知识点 · 关联 ${n} 门课程`,
+      soundOn: '关闭星图音乐与音效',
+      soundOff: '打开星图音乐与音效',
+      status: (courses, topics) => `${courses} 门课程 · ${topics} 个知识点`,
       cats: { featured: '精选', math: '数学', physics: '物理', chemistry: '化学', programming: '编程', science: '科学', logic: '逻辑' },
     },
     en: {
@@ -45,6 +64,16 @@
       layoutTip: 'Switch cosmic layout',
       focus: 'Click to focus this topic →',
       unfocus: 'Click again for overview',
+      search: 'Search topics or courseware',
+      searchPh: 'Search topics or courseware…',
+      searchCount: (n) => `${n} result${n === 1 ? '' : 's'}`,
+      searchEmpty: 'No matching stars. Try “fractions”, “orbit”, or “logic”.',
+      clear: 'Clear',
+      courseResult: 'Courseware',
+      topicResult: (n) => `Topic · ${n} linked courseware`,
+      soundOn: 'Mute star map music and sounds',
+      soundOff: 'Turn on star map music and sounds',
+      status: (courses, topics) => `${courses} courseware · ${topics} topics`,
       cats: { featured: 'Featured', math: 'Math', physics: 'Physics', chemistry: 'Chemistry', programming: 'Coding', science: 'Science', logic: 'Logic' },
     },
   };
@@ -58,6 +87,50 @@
   const TAG_COLOR = '#7ce7ff';   // ice cyan — distinct from every subject color
   const TAG_FILL = '#eafcff';    // near-white star core
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- ScoreKit 音频：用户手势后启动，失败时静默降级 ---------- */
+  const SOUND_STORE = 'kidslab.sound.muted';
+  const audio = {
+    muted: (() => {
+      try { return localStorage.getItem(SOUND_STORE) === '1'; } catch { return false; }
+    })(),
+    bgm: new Audio('assets/audio/starmap/orbital-library.ogg'),
+    click: new Audio('assets/audio/starmap/star-confirm.ogg'),
+    switch: new Audio('assets/audio/starmap/atlas-warp.ogg'),
+  };
+  audio.bgm.loop = true;
+  audio.bgm.volume = 0.18;
+  audio.click.volume = 0.42;
+  audio.switch.volume = 0.46;
+  Object.values(audio).forEach((item) => {
+    if (item instanceof Audio) item.preload = 'auto';
+  });
+
+  function startBgm(force = false) {
+    if (audio.muted || (!force && overlay.hidden) || document.hidden) return;
+    audio.bgm.play().catch(() => {});
+  }
+  function pauseBgm(reset = false) {
+    audio.bgm.pause();
+    if (reset) {
+      try { audio.bgm.currentTime = 0; } catch { /* media may not be ready */ }
+    }
+  }
+  function playSfx(kind = 'click') {
+    if (audio.muted) return;
+    const cue = audio[kind] || audio.click;
+    try {
+      cue.pause();
+      cue.currentTime = 0;
+      cue.play().catch(() => {});
+    } catch { /* audio support is optional */ }
+  }
+  function renderSound() {
+    soundBtn.setAttribute('aria-pressed', String(audio.muted));
+    soundBtn.setAttribute('aria-label', audio.muted ? t().soundOff : t().soundOn);
+    soundBtn.title = audio.muted ? t().soundOff : t().soundOn;
+    soundBtn.querySelector('span').textContent = audio.muted ? '🔇' : '🔊';
+  }
 
   /* ---------- 图数据 ---------- */
   let nodes = [], edges = [], adj = new Map(), catAnchors = new Map();
@@ -134,6 +207,9 @@
   let bgStars = [];
   const activeCats = new Set(); /* 空 = 全部显示 */
   let showTags = true;
+  let searchQuery = '';
+  let searchMatches = [];
+  let searchContext = null;
 
   /* ---------- 宇宙布局状态 ---------- */
   const LAYOUTS = ['nebula', 'constellation', 'solar', 'galaxy', 'blackhole', 'knowledge'];
@@ -150,9 +226,12 @@
 
   const catVisible = (cat) => activeCats.size === 0 || activeCats.has(cat);
   function visible(n) {
+    if (searchContext && !searchContext.has(n)) return false;
     if (n.type === 'course') return catVisible(n.cat);
     if (!showTags && layout !== 'knowledge') return false; /* 知识网布局里知识点始终是主角 */
-    for (const m of adj.get(n.id) || []) if (catVisible(m.cat)) return true;
+    for (const m of adj.get(n.id) || []) {
+      if (catVisible(m.cat) && (!searchContext || searchContext.has(m) || searchMatches.includes(n))) return true;
+    }
     return false;
   }
 
@@ -166,6 +245,7 @@
         tagF: tagFocus?.id || null,
         cats: [...activeCats],
         showTags,
+        q: searchQuery,
         cam,
         sel: selected?.id || null,
         pos: Object.fromEntries(nodes.map((n) => [n.id, [Math.round(n.x), Math.round(n.y)]])),
@@ -701,11 +781,124 @@
   }
 
   function switchLayout(next) {
+    if (!LAYOUTS.includes(next) || next === layout) return;
     layout = next;
     tagFocus = null; egoSet = null;
     selected = null; hovered = null; renderInfo();
     relayout(1);
     renderChrome();
+    playSfx('switch');
+  }
+
+  /* ---------- 检索：课程与知识点都可命中，并保留一跳关系作为上下文 ---------- */
+  const normalize = (value) => String(value || '').trim().toLocaleLowerCase();
+  function nodeSearchText(n) {
+    if (n.type === 'tag') return `${n.tag} ${n.en}`;
+    const c = n.course;
+    return [
+      c.title?.zh, c.title?.en, c.description?.zh, c.description?.en,
+      ...(c.tags || []), c.id,
+    ].filter(Boolean).join(' ');
+  }
+  function nodeLabel(n) {
+    return n.type === 'tag'
+      ? (lang() === 'zh' ? n.tag : n.en)
+      : (n.course.title?.[lang()] || n.course.id);
+  }
+  function searchRank(n, query) {
+    const label = normalize(nodeLabel(n));
+    const text = normalize(nodeSearchText(n));
+    if (label === query) return 0;
+    if (label.startsWith(query)) return 1;
+    if (label.includes(query)) return 2;
+    if (text.includes(query)) return 3;
+    return 99;
+  }
+  function renderSearch() {
+    const open = Boolean(searchQuery);
+    resultsEl.hidden = !open;
+    searchInput.setAttribute('aria-expanded', String(open));
+    if (!open) return;
+
+    resultsHead.textContent = t().searchCount(searchMatches.length);
+    searchClearBtn.textContent = t().clear;
+    if (!searchMatches.length) {
+      resultsList.innerHTML = `<p class="starmap__results-empty">${esc(t().searchEmpty)}</p>`;
+      return;
+    }
+
+    resultsList.innerHTML = '';
+    for (const n of searchMatches.slice(0, 12)) {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'starmap__result';
+      b.dataset.nodeId = n.id;
+      const subtitle = n.type === 'tag'
+        ? t().topicResult(n.degree)
+        : `${t().courseResult} · ${t().cats[n.cat] || n.cat}`;
+      b.innerHTML = `
+        <span class="starmap__result-icon">${n.type === 'tag' ? '✦' : esc(n.course.icon || '📘')}</span>
+        <span class="starmap__result-copy"><b>${esc(nodeLabel(n))}</b><small>${esc(subtitle)}</small></span>
+        <span class="starmap__result-arrow" aria-hidden="true">↗</span>`;
+      b.addEventListener('click', () => focusSearchResult(n));
+      resultsList.appendChild(b);
+    }
+  }
+  function updateSearch(value, { quiet = false } = {}) {
+    searchQuery = String(value || '').trim();
+    searchInput.value = searchQuery;
+    const q = normalize(searchQuery);
+    if (!q) {
+      searchMatches = [];
+      searchContext = null;
+    } else {
+      searchMatches = nodes
+        .map((n) => ({ n, rank: searchRank(n, q) }))
+        .filter(({ n, rank }) => rank < 99 && (
+          n.type === 'course'
+            ? catVisible(n.cat)
+            : [...(adj.get(n.id) || [])].some((course) => catVisible(course.cat))
+        ))
+        .sort((a, b) => a.rank - b.rank || nodeLabel(a.n).localeCompare(nodeLabel(b.n), lang()))
+        .map(({ n }) => n);
+      searchContext = new Set(searchMatches);
+      for (const n of searchMatches) {
+        for (const neighbor of adj.get(n.id) || []) searchContext.add(neighbor);
+      }
+    }
+    if (selected && !visible(selected)) selected = null;
+    if (hovered && !visible(hovered)) hovered = null;
+    if (tagFocus && !visible(tagFocus)) { tagFocus = null; egoSet = null; }
+    relayout(q ? 0.4 : 0.65);
+    renderSearch();
+    renderChrome();
+    renderInfo();
+    if (!quiet && q) playSfx('click');
+  }
+  function focusSearchResult(n) {
+    playSfx('click');
+    if (n.type === 'tag') {
+      if (layout !== 'knowledge') {
+        layout = 'knowledge';
+        playSfx('switch');
+      }
+      tagFocus = n;
+      egoSet = null;
+      selected = n;
+      relayout(0.8);
+    } else {
+      selected = n;
+      tagFocus = null;
+      egoSet = null;
+      camGoal = { x: n.x, y: n.y, s: Math.max(cam.s, 1.25) };
+      warp = reducedMotion ? 0.001 : 0.42;
+      if (reducedMotion) { cam = { ...camGoal }; camGoal = null; }
+    }
+    renderChrome();
+    renderInfo();
+    resultsEl.hidden = true;
+    searchInput.setAttribute('aria-expanded', 'false');
+    canvas.focus?.();
   }
 
   /* ---------- 布局步进 ---------- */
@@ -833,16 +1026,17 @@
       if (p.x < -60 || p.y < -60 || p.x > w + 60 || p.y > h + 60) continue;
       const r = nodeRadius(n) * (n === focus ? 1.25 : 1);
       const dim = dimmed(n);
+      const directMatch = Boolean(searchQuery && searchMatches.includes(n));
       ctx.globalAlpha = dim ? (ego ? 0.08 : 0.14) : 1;
 
       if (n.type === 'tag') {
         const glow = reducedMotion ? 0.75 : 0.6 + 0.4 * Math.sin(tSec * 1.4 + n.phase);
-        if (!dim) drawGlow(p.x, p.y, TAG_COLOR, r + (n === tagFocus ? 30 : 12 * glow));
+        if (!dim) drawGlow(p.x, p.y, TAG_COLOR, r + (n === tagFocus || directMatch ? 30 : 12 * glow));
         ctx.fillStyle = TAG_FILL;
         ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI * 2); ctx.fill();
         const wantLabel = layout === 'knowledge'
-          ? (ego ? ego.has(n) : (showAllLabels || n.degree >= 2 || cam.s > 0.5))
-          : (showAllLabels || n.degree >= 2 || focusSet?.has(n));
+          ? (ego ? ego.has(n) : (showAllLabels || n.degree >= 2 || cam.s > 0.5 || directMatch))
+          : (showAllLabels || n.degree >= 2 || focusSet?.has(n) || directMatch);
         if (!dim && wantLabel) {
           drawLabel(lang() === 'zh' ? n.tag : n.en, p.x, p.y + r + 14, TAG_COLOR, '600');
         }
@@ -850,17 +1044,25 @@
         const col = catColor(n.cat);
         /* 知识网全景：课程只是暗淡卫星，避免抢知识点的戏；悬停/选中/关系网内恢复亮度 */
         const muted = layout === 'knowledge' && !ego && !dim
-          && n !== focus && !(focusSet?.has(n));
+          && n !== focus && !(focusSet?.has(n)) && !directMatch;
         if (muted) ctx.globalAlpha = 0.3;
-        if (!dim && !muted) drawGlow(p.x, p.y, col, r + (n === focus ? 22 : 12));
+        if (!dim && !muted) drawGlow(p.x, p.y, col, r + (n === focus || directMatch ? 22 : 12));
         ctx.fillStyle = col;
         ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI * 2); ctx.fill();
         if (!muted) {
           drawEmoji(n.course.icon || '📘', p.x, p.y + 1, Math.round(r * 1.25));
         }
-        if (!dim && !muted && (showAllLabels || focusSet?.has(n))) {
+        if (!dim && !muted && (showAllLabels || focusSet?.has(n) || directMatch)) {
           drawLabel(n.course.title?.[lang()] || n.course.id, p.x, p.y + r + 15, '#ffffff', '700');
         }
+      }
+      if (directMatch && !dim) {
+        ctx.strokeStyle = '#ffffff';
+        ctx.globalAlpha = 0.8;
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([3, 4]);
+        ctx.beginPath(); ctx.arc(p.x, p.y, r + 7, 0, Math.PI * 2); ctx.stroke();
+        ctx.setLineDash([]);
       }
     }
     ctx.globalAlpha = 1;
@@ -895,7 +1097,11 @@
       const c = n.course;
       infoEl.innerHTML = `<b>${c.icon || ''} ${esc(c.title?.[lang()] || c.id)}</b>
         <p>${esc(c.description?.[lang()] || '')}</p>
-        <small>${t().open}</small>`;
+        <a href="${esc(c.path)}">${t().open}</a>`;
+      infoEl.querySelector('a').addEventListener('click', () => {
+        playSfx('click');
+        saveState();
+      });
     } else {
       const hint = layout === 'knowledge'
         ? `<small>${n === tagFocus ? t().unfocus : t().focus}</small>`
@@ -910,15 +1116,33 @@
     titleEl.textContent = t().title;
     hintEl.textContent = t().hint;
     closeBtn.title = t().close;
-    layoutBtn.textContent = `${LAYOUT_ICONS[layout]} ${t().layouts[layout]}`;
-    layoutBtn.title = t().layoutTip;
+    closeBtn.setAttribute('aria-label', t().close);
+    searchInput.placeholder = t().searchPh;
+    searchInput.setAttribute('aria-label', t().search);
+    searchLabel.textContent = t().search;
+    modeNav.setAttribute('aria-label', t().layoutTip);
+    for (const b of modeBtns) {
+      const id = b.dataset.layout;
+      b.querySelector('span').textContent = LAYOUT_ICONS[id];
+      b.querySelector('b').textContent = t().layouts[id];
+      b.setAttribute('aria-label', `${t().layoutTip}: ${t().layouts[id]}`);
+      b.setAttribute('aria-pressed', String(layout === id));
+      b.title = t().layouts[id];
+    }
+    renderSound();
+    const visCourses = nodes.filter((n) => n.type === 'course' && visible(n)).length;
+    const visTopics = nodes.filter((n) => n.type === 'tag' && visible(n)).length;
+    statusEl.textContent = t().status(visCourses, visTopics);
     legendEl.innerHTML = '';
     const chip = (label, color, active, round, onClick) => {
       const b = document.createElement('button');
       b.type = 'button';
       b.className = 'starmap__lg' + (active ? ' is-on' : '');
       b.innerHTML = `<i style="background:${color}${round ? ';border-radius:50%' : ''}"></i>${label}`;
-      b.addEventListener('click', onClick);
+      b.addEventListener('click', () => {
+        playSfx('click');
+        onClick();
+      });
       legendEl.appendChild(b);
     };
     for (const c of catAnchors.keys()) {
@@ -933,9 +1157,14 @@
       showTags = !showTags;
       applyFilter();
     });
+    renderSearch();
   }
 
   function applyFilter() {
+    if (searchQuery) {
+      updateSearch(searchQuery, { quiet: true });
+      return;
+    }
     if (tagFocus && !visible(tagFocus)) { tagFocus = null; egoSet = null; }
     if (selected && !visible(selected)) selected = null;
     if (hovered && !visible(hovered)) hovered = null;
@@ -1009,11 +1238,17 @@
     const wasDrag = dragNode;
     if (moved < 6) {
       const n = hitTest(e.offsetX, e.offsetY);
-      if (n?.type === 'course') { saveState(); location.href = n.course.path; return; }
+      if (n?.type === 'course') {
+        playSfx('click');
+        saveState();
+        location.href = n.course.path;
+        return;
+      }
       if (layout === 'knowledge') {
         /* 知识网：点知识点聚焦其关系，再点它或点空白返回全景 */
         const next = (n?.type === 'tag' && n !== tagFocus) ? n : null;
         if (next !== tagFocus) {
+          playSfx('click');
           tagFocus = next;
           selected = next;
           relayout(0.45);
@@ -1022,6 +1257,7 @@
           return;
         }
       }
+      if (n) playSfx('click');
       selected = (n && n !== selected) ? n : null;
       renderInfo();
     }
@@ -1043,7 +1279,11 @@
 
   /* ---------- 开关 ---------- */
   async function open(restore) {
-    try { await loadGraph(); } catch { return; }
+    try { await loadGraph(); } catch {
+      pauseBgm(true);
+      overlay.hidden = true;
+      return;
+    }
     overlay.hidden = false;
     document.body.style.overflow = 'hidden';
     resize();
@@ -1053,7 +1293,9 @@
       activeCats.clear();
       for (const c of s.cats || []) if (catAnchors.has(c)) activeCats.add(c);
       showTags = s.showTags !== false;
+      searchQuery = String(s.q || '');
       layout = LAYOUTS.includes(s.layout) ? s.layout : 'nebula';
+      updateSearch(searchQuery, { quiet: true });
       tagFocus = (layout === 'knowledge' && s.tagF) ? nodes.find((n) => n.id === s.tagF) || null : null;
       if (layout !== 'nebula') setLayoutTargets();
       for (const n of nodes) {
@@ -1066,6 +1308,10 @@
       alpha = 0.06; /* 布局已还原，仅轻微松弛 */
     } else {
       layout = 'nebula';
+      searchQuery = '';
+      searchMatches = [];
+      searchContext = null;
+      searchInput.value = '';
       fitView();
       alpha = 1;
     }
@@ -1077,11 +1323,15 @@
     renderChrome(); renderInfo();
     running = true; tick0 = performance.now();
     raf = requestAnimationFrame(loop);
-    closeBtn.focus();
+    startBgm();
+    if (matchMedia('(pointer: fine)').matches) searchInput.focus();
+    else closeBtn.focus();
   }
   function close() {
+    playSfx('click');
     running = false;
     cancelAnimationFrame(raf);
+    pauseBgm(true);
     overlay.hidden = true;
     document.body.style.overflow = '';
     clearState();
@@ -1089,13 +1339,55 @@
     btn.focus();
   }
 
-  btn.addEventListener('click', () => open(false));
-  closeBtn.addEventListener('click', close);
-  layoutBtn.addEventListener('click', () => {
-    switchLayout(LAYOUTS[(LAYOUTS.indexOf(layout) + 1) % LAYOUTS.length]);
+  btn.addEventListener('click', () => {
+    startBgm(true);
+    open(false);
   });
-  addEventListener('keydown', (e) => { if (e.key === 'Escape' && !overlay.hidden) close(); });
+  closeBtn.addEventListener('click', close);
+  modeBtns.forEach((b) => {
+    b.addEventListener('click', () => switchLayout(b.dataset.layout));
+  });
+  soundBtn.addEventListener('click', () => {
+    audio.muted = !audio.muted;
+    try { localStorage.setItem(SOUND_STORE, audio.muted ? '1' : '0'); } catch { /* ignore */ }
+    if (audio.muted) pauseBgm();
+    else {
+      startBgm();
+      playSfx('click');
+    }
+    renderSound();
+  });
+  let searchTimer = 0;
+  searchInput.addEventListener('input', () => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => updateSearch(searchInput.value, { quiet: true }), 90);
+  });
+  searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && searchMatches[0]) {
+      e.preventDefault();
+      focusSearchResult(searchMatches[0]);
+    }
+  });
+  searchClearBtn.addEventListener('click', () => {
+    playSfx('click');
+    updateSearch('', { quiet: true });
+    searchInput.focus();
+  });
+  addEventListener('keydown', (e) => {
+    if (overlay.hidden) return;
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      searchInput.focus();
+      searchInput.select();
+      return;
+    }
+    if (e.key === 'Escape') close();
+  });
   addEventListener('resize', () => { if (!overlay.hidden) resize(); });
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) pauseBgm();
+    else if (running) startBgm();
+  });
 
   /* 从课件页返回：#starmap 锚点或会话内保存的打开状态 → 自动恢复星图 */
   if (location.hash === '#starmap' || loadState()?.open) open(true);

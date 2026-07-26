@@ -1,0 +1,137 @@
+{
+  "audio": "clear-to-dock.ogg",
+  "bars": 4,
+  "crossfade_samples": 0,
+  "instrument_resolution": {
+    "fallbacks": [],
+    "missing_instruments": [],
+    "mode": "conservative",
+    "summary": {
+      "alias": 0,
+      "exact": 5,
+      "fallback": 0,
+      "missing": 0,
+      "rejected": 0
+    },
+    "tracks": [
+      {
+        "canonical": "vibraphone",
+        "reasons": [
+          "general_midi_exact"
+        ],
+        "requested": "vibraphone",
+        "resolved": "vibraphone",
+        "score": 1.0,
+        "status": "exact",
+        "track": 0,
+        "track_id": "customs_beacon",
+        "warnings": []
+      },
+      {
+        "canonical": "muted_guitar",
+        "reasons": [
+          "general_midi_exact"
+        ],
+        "requested": "muted_guitar",
+        "resolved": "muted_guitar",
+        "score": 1.0,
+        "status": "exact",
+        "track": 1,
+        "track_id": "relay_comp",
+        "warnings": []
+      },
+      {
+        "canonical": "fretless_bass",
+        "reasons": [
+          "general_midi_exact"
+        ],
+        "requested": "fretless_bass",
+        "resolved": "fretless_bass",
+        "score": 1.0,
+        "status": "exact",
+        "track": 2,
+        "track_id": "orbit_bass",
+        "warnings": []
+      },
+      {
+        "canonical": "tubular_bells",
+        "reasons": [
+          "general_midi_exact"
+        ],
+        "requested": "tubular_bells",
+        "resolved": "tubular_bells",
+        "score": 1.0,
+        "status": "exact",
+        "track": 3,
+        "track_id": "arrival_bell",
+        "warnings": []
+      },
+      {
+        "canonical": "drums",
+        "reasons": [
+          "general_midi_exact"
+        ],
+        "requested": "drums",
+        "resolved": "drums",
+        "score": 1.0,
+        "status": "exact",
+        "track": 4,
+        "track_id": "telemetry",
+        "warnings": []
+      }
+    ]
+  },
+  "key": "F_major",
+  "loop": false,
+  "loop_samples": 341419,
+  "sample_rate": 44100,
+  "seconds": 9.241927437641724,
+  "stems": [],
+  "story": "The scanner confirms every ship. The customs beacon rises into a brief, polished arrival signal with a warm final light over the docking rings.\n",
+  "tempo": 124,
+  "time_signature": "4/4",
+  "title": "Clear to Dock",
+  "total_samples": 407569,
+  "tracks": [
+    {
+      "articulation": "sustain",
+      "id": "customs_beacon",
+      "instrument": "vibraphone",
+      "intensity": 0.6800000071525574,
+      "palette": null,
+      "pattern": "melody"
+    },
+    {
+      "articulation": "sustain",
+      "id": "relay_comp",
+      "instrument": "muted_guitar",
+      "intensity": 0.3400000035762787,
+      "palette": null,
+      "pattern": "arpeggio"
+    },
+    {
+      "articulation": "sustain",
+      "id": "orbit_bass",
+      "instrument": "fretless_bass",
+      "intensity": 0.36000001430511475,
+      "palette": null,
+      "pattern": "bass"
+    },
+    {
+      "articulation": "sustain",
+      "id": "arrival_bell",
+      "instrument": "tubular_bells",
+      "intensity": 0.2199999988079071,
+      "palette": null,
+      "pattern": "sustain"
+    },
+    {
+      "articulation": "sustain",
+      "id": "telemetry",
+      "instrument": "drums",
+      "intensity": 0.28999999165534973,
+      "palette": null,
+      "pattern": "drums"
+    }
+  ]
+}

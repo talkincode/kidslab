@@ -358,6 +358,9 @@ async function emitServiceWorker(assetVersions) {
     'assets/icons/icon-512.png',
     'assets/icons/icon-maskable-512.png',
     'assets/icons/apple-touch-icon.png',
+    'assets/audio/starmap/orbital-library.ogg',
+    'assets/audio/starmap/star-confirm.ogg',
+    'assets/audio/starmap/atlas-warp.ogg',
   ];
   const precache = [
     './',

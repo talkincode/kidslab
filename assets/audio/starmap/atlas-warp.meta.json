@@ -1,0 +1,53 @@
+{
+  "audio": "atlas-warp.ogg",
+  "bars": 1,
+  "crossfade_samples": 0,
+  "instrument_resolution": {
+    "fallbacks": [],
+    "missing_instruments": [],
+    "mode": "conservative",
+    "summary": {
+      "alias": 0,
+      "exact": 1,
+      "fallback": 0,
+      "missing": 0,
+      "rejected": 0
+    },
+    "tracks": [
+      {
+        "canonical": "square_lead",
+        "reasons": [
+          "general_midi_exact"
+        ],
+        "requested": "square_lead",
+        "resolved": "square_lead",
+        "score": 1.0,
+        "status": "exact",
+        "track": 0,
+        "track_id": "projection_warp",
+        "warnings": []
+      }
+    ]
+  },
+  "key": "B_major",
+  "loop": false,
+  "loop_samples": 18900,
+  "sample_rate": 44100,
+  "seconds": 0.6085714285714285,
+  "stems": [],
+  "story": "A compact rising signal marks the observatory changing its map projection.",
+  "tempo": 280,
+  "time_signature": "2/4",
+  "title": "Atlas Warp",
+  "total_samples": 26838,
+  "tracks": [
+    {
+      "articulation": "sustain",
+      "id": "projection_warp",
+      "instrument": "square_lead",
+      "intensity": 0.3799999952316284,
+      "palette": null,
+      "pattern": "melody"
+    }
+  ]
+}

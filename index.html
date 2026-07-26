@@ -14,7 +14,7 @@
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <link rel="preload" href="assets/fonts/baloo2-latin.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="stylesheet" href="assets/css/app.css?v=530afe0d" />
+  <link rel="stylesheet" href="assets/css/app.css?v=136f751c" />
 </head>
 <body>
   <div class="app" id="app">
@@ -136,9 +136,36 @@
   <section class="starmap" id="starmap" hidden role="dialog" aria-modal="true" aria-label="知识星图 Knowledge Star Map">
     <canvas></canvas>
     <header class="starmap__bar">
-      <h2 class="starmap__title">知识星图</h2>
-      <p class="starmap__hint"></p>
-      <button class="starmap__layout" type="button" id="starmapLayoutBtn"></button>
+      <div class="starmap__identity">
+        <span class="starmap__eyebrow">KIDSLAB · ORBITAL ATLAS</span>
+        <h2 class="starmap__title">知识星图</h2>
+        <p class="starmap__hint"></p>
+      </div>
+
+      <label class="starmap__search" for="starmapSearch">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+             stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+          <circle cx="10.8" cy="10.8" r="6.6"/><line x1="15.8" y1="15.8" x2="21" y2="21"/>
+        </svg>
+        <span class="sr-only starmap__search-label">搜索知识点或课程</span>
+        <input id="starmapSearch" type="search" autocomplete="off"
+               aria-controls="starmapResults" aria-expanded="false"
+               placeholder="搜索知识点或课程…" />
+        <kbd>⌘ K</kbd>
+      </label>
+
+      <nav class="starmap__modes" aria-label="星图布局">
+        <button type="button" data-layout="nebula"><span>🌌</span><b>星云</b></button>
+        <button type="button" data-layout="constellation"><span>✨</span><b>星座</b></button>
+        <button type="button" data-layout="solar"><span>🪐</span><b>太阳系</b></button>
+        <button type="button" data-layout="galaxy"><span>🌠</span><b>银河系</b></button>
+        <button type="button" data-layout="blackhole"><span>🕳️</span><b>黑洞</b></button>
+        <button type="button" data-layout="knowledge"><span>🧠</span><b>知识网</b></button>
+      </nav>
+
+      <button class="icon-btn starmap__sound" type="button" aria-pressed="false">
+        <span aria-hidden="true">🔊</span>
+      </button>
       <button class="icon-btn starmap__close" type="button" title="返回列表 (Esc)">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
              stroke-width="2.6" stroke-linecap="round" aria-hidden="true">
@@ -146,11 +173,19 @@
         </svg>
       </button>
     </header>
+    <section class="starmap__results" id="starmapResults" hidden aria-live="polite">
+      <div class="starmap__results-head">
+        <strong></strong>
+        <button type="button" class="starmap__search-clear"></button>
+      </div>
+      <div class="starmap__results-list"></div>
+    </section>
     <div class="starmap__legend"></div>
     <aside class="starmap__info" hidden></aside>
+    <div class="starmap__status" aria-live="polite"></div>
   </section>
 
   <script src="assets/js/app.js?v=67de7f0b"></script>
-  <script src="assets/js/starmap.js?v=4673236f"></script>
+  <script src="assets/js/starmap.js?v=f76485ee"></script>
 </body>
 </html>

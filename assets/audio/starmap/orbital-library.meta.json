@@ -1,0 +1,95 @@
+{
+  "audio": "orbital-library.ogg",
+  "bars": 14,
+  "crossfade_samples": 2205,
+  "instrument_resolution": {
+    "fallbacks": [],
+    "missing_instruments": [],
+    "mode": "conservative",
+    "summary": {
+      "alias": 0,
+      "exact": 3,
+      "fallback": 0,
+      "missing": 0,
+      "rejected": 0
+    },
+    "tracks": [
+      {
+        "canonical": "epiano",
+        "reasons": [
+          "general_midi_exact"
+        ],
+        "requested": "epiano",
+        "resolved": "epiano",
+        "score": 1.0,
+        "status": "exact",
+        "track": 0,
+        "track_id": "atlas_light",
+        "warnings": []
+      },
+      {
+        "canonical": "halo_pad",
+        "reasons": [
+          "general_midi_exact"
+        ],
+        "requested": "halo_pad",
+        "resolved": "halo_pad",
+        "score": 1.0,
+        "status": "exact",
+        "track": 1,
+        "track_id": "orbit_air",
+        "warnings": []
+      },
+      {
+        "canonical": "synth_bass",
+        "reasons": [
+          "general_midi_exact"
+        ],
+        "requested": "synth_bass",
+        "resolved": "synth_bass",
+        "score": 1.0,
+        "status": "exact",
+        "track": 2,
+        "track_id": "quiet_axis",
+        "warnings": []
+      }
+    ]
+  },
+  "key": "B_major",
+  "loop": true,
+  "loop_samples": 1543498,
+  "sample_rate": 44100,
+  "seconds": 34.99995464852608,
+  "stems": [],
+  "story": "A child opens a living atlas of knowledge. Ideas glow like quiet stars, connections drift into view, and every search feels like tuning a small observatory. Curious, spacious, precise, and loop-safe without becoming sleepy.\n",
+  "tempo": 84,
+  "time_signature": "7/8",
+  "title": "Orbital Library",
+  "total_samples": 1543498,
+  "tracks": [
+    {
+      "articulation": "sustain",
+      "id": "atlas_light",
+      "instrument": "epiano",
+      "intensity": 0.41999998688697815,
+      "palette": null,
+      "pattern": "melody"
+    },
+    {
+      "articulation": "sustain",
+      "id": "orbit_air",
+      "instrument": "halo_pad",
+      "intensity": 0.2199999988079071,
+      "palette": null,
+      "pattern": "sustain"
+    },
+    {
+      "articulation": "sustain",
+      "id": "quiet_axis",
+      "instrument": "synth_bass",
+      "intensity": 0.18000000715255737,
+      "palette": null,
+      "pattern": "bass"
+    }
+  ]
+}

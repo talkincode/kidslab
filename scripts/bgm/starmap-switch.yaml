@@ -1,0 +1,30 @@
+# 知识星图模式切换音：上行跃迁手势，与普通点击拉开语义距离。
+title: Atlas Warp
+story: A compact rising signal marks the observatory changing its map projection.
+tempo: 280
+key: B_major
+time_signature: 2/4
+bars: 1
+loop: false
+
+performance:
+  humanize: { timing_ms: 0, velocity: 0, seed: 20260732 }
+  dynamics: { start: mp, peak: f }
+
+motifs:
+  warp_up:
+    - { degree: 1, beats: 0.25 }
+    - { degree: 3, beats: 0.25 }
+    - { degree: 5, beats: 0.25 }
+    - { degree: 8, beats: 0.25 }
+    - { degree: 10, beats: 0.5 }
+    - { degree: 0, beats: 0.5 }
+
+tracks:
+  - id: projection_warp
+    instrument: square_lead
+    pattern: melody
+    motif: warp_up
+    intensity: 0.38
+    pan: 0.5
+    reverb: 0.24

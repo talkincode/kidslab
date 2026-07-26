@@ -10,6 +10,7 @@ const HEAVY_WEBGL_COURSES = new Set([
   'plant-lab',
   'magic-cube',
   'huarong-dao',
+  'venn-port',
   'optics-lab',
   'solar-explorer',
 ]);
@@ -127,6 +128,42 @@ test.describe('main site', () => {
         page.locator('#sidebar').evaluate((sidebar) =>
           Math.round(sidebar.getBoundingClientRect().right))).toBeLessThanOrEqual(0);
     }
+    await expectHealthyPage(page, failures);
+  });
+
+  test('knowledge star map searches, focuses results, switches layouts, and persists sound', async ({ page }) => {
+    const failures = observeFailures(page);
+    const searchable = manifest.courses.find((course) => !course.pinned && course.title?.zh);
+    await page.addInitScript(() => localStorage.setItem('kidslab.lang', 'zh'));
+    await page.goto('/');
+    await page.locator('#starmapBtn').click();
+
+    const atlas = page.locator('#starmap');
+    await expect(atlas).toBeVisible();
+    await expect(atlas.locator('.starmap__modes button')).toHaveCount(6);
+    await expect(atlas.locator('[data-layout="nebula"]')).toHaveAttribute('aria-pressed', 'true');
+
+    await atlas.locator('[data-layout="knowledge"]').click();
+    await expect(atlas.locator('[data-layout="knowledge"]')).toHaveAttribute('aria-pressed', 'true');
+    await expect(atlas.locator('[data-layout="nebula"]')).toHaveAttribute('aria-pressed', 'false');
+
+    const starSearch = atlas.locator('#starmapSearch');
+    await starSearch.fill(searchable.title.zh);
+    await expect(atlas.locator('.starmap__results')).toBeVisible();
+    await expect(atlas.locator('.starmap__result').first()).toContainText(searchable.title.zh);
+    await atlas.locator('.starmap__result').first().click();
+    await expect(atlas.locator('.starmap__info')).toBeVisible();
+    await expect(atlas.locator('.starmap__info')).toContainText(searchable.title.zh);
+    await expect(atlas.locator('.starmap__info a')).toHaveAttribute('href', searchable.path);
+
+    const sound = atlas.locator('.starmap__sound');
+    await expect(sound).toHaveAttribute('aria-pressed', 'false');
+    await sound.click();
+    await expect(sound).toHaveAttribute('aria-pressed', 'true');
+    await expect.poll(() => page.evaluate(() => localStorage.getItem('kidslab.sound.muted'))).toBe('1');
+
+    await atlas.locator('.starmap__close').click();
+    await expect(atlas).toBeHidden();
     await expectHealthyPage(page, failures);
   });
 

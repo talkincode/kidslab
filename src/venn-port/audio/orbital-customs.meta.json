@@ -1,0 +1,137 @@
+{
+  "audio": "orbital-customs.ogg",
+  "bars": 12,
+  "crossfade_samples": 2205,
+  "instrument_resolution": {
+    "fallbacks": [],
+    "missing_instruments": [],
+    "mode": "conservative",
+    "summary": {
+      "alias": 0,
+      "exact": 5,
+      "fallback": 0,
+      "missing": 0,
+      "rejected": 0
+    },
+    "tracks": [
+      {
+        "canonical": "vibraphone",
+        "reasons": [
+          "general_midi_exact"
+        ],
+        "requested": "vibraphone",
+        "resolved": "vibraphone",
+        "score": 1.0,
+        "status": "exact",
+        "track": 0,
+        "track_id": "customs_beacon",
+        "warnings": []
+      },
+      {
+        "canonical": "muted_guitar",
+        "reasons": [
+          "general_midi_exact"
+        ],
+        "requested": "muted_guitar",
+        "resolved": "muted_guitar",
+        "score": 1.0,
+        "status": "exact",
+        "track": 1,
+        "track_id": "relay_comp",
+        "warnings": []
+      },
+      {
+        "canonical": "halo_pad",
+        "reasons": [
+          "general_midi_exact"
+        ],
+        "requested": "halo_pad",
+        "resolved": "halo_pad",
+        "score": 1.0,
+        "status": "exact",
+        "track": 2,
+        "track_id": "cabin_air",
+        "warnings": []
+      },
+      {
+        "canonical": "fretless_bass",
+        "reasons": [
+          "general_midi_exact"
+        ],
+        "requested": "fretless_bass",
+        "resolved": "fretless_bass",
+        "score": 1.0,
+        "status": "exact",
+        "track": 3,
+        "track_id": "orbit_bass",
+        "warnings": []
+      },
+      {
+        "canonical": "drums",
+        "reasons": [
+          "general_midi_exact"
+        ],
+        "requested": "drums",
+        "resolved": "drums",
+        "score": 1.0,
+        "status": "exact",
+        "track": 4,
+        "track_id": "telemetry",
+        "warnings": []
+      }
+    ]
+  },
+  "key": "F_major",
+  "loop": true,
+  "loop_samples": 1497734,
+  "sample_rate": 44100,
+  "seconds": 33.96222222222222,
+  "stems": [],
+  "story": "A child runs a retro-futurist orbital customs deck. Two holographic landing rings pulse with scanner telemetry while friendly ships queue beyond a planet's rim. Calm, clever, tactile, and loop-safe rather than cinematic or arcade-like.\n",
+  "tempo": 106,
+  "time_signature": "5/4",
+  "title": "Orbital Customs Night Shift",
+  "total_samples": 1497734,
+  "tracks": [
+    {
+      "articulation": "sustain",
+      "id": "customs_beacon",
+      "instrument": "vibraphone",
+      "intensity": 0.5199999809265137,
+      "palette": null,
+      "pattern": "melody"
+    },
+    {
+      "articulation": "sustain",
+      "id": "relay_comp",
+      "instrument": "muted_guitar",
+      "intensity": 0.27000001072883606,
+      "palette": null,
+      "pattern": "arpeggio"
+    },
+    {
+      "articulation": "sustain",
+      "id": "cabin_air",
+      "instrument": "halo_pad",
+      "intensity": 0.18000000715255737,
+      "palette": null,
+      "pattern": "sustain"
+    },
+    {
+      "articulation": "sustain",
+      "id": "orbit_bass",
+      "instrument": "fretless_bass",
+      "intensity": 0.28999999165534973,
+      "palette": null,
+      "pattern": "bass"
+    },
+    {
+      "articulation": "sustain",
+      "id": "telemetry",
+      "instrument": "drums",
+      "intensity": 0.20000000298023224,
+      "palette": null,
+      "pattern": "drums"
+    }
+  ]
+}
