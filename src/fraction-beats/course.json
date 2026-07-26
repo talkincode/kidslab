@@ -1,0 +1,18 @@
+{
+  "id": "fraction-beats",
+  "title": {
+    "zh": "分数节拍屋",
+    "en": "Fraction Beat House"
+  },
+  "description": {
+    "zh": "把一小节切成二分之一、四分之一和八分之一节拍，用耳朵听懂等值分数，再拼出点亮全场的完整律动。",
+    "en": "Slice one measure into halves, quarters, and eighths, hear equivalent fractions, and build a complete groove that lights the whole house."
+  },
+  "category": "math",
+  "levels": ["primary"],
+  "grades": ["g3", "g4"],
+  "tags": ["分数", "音乐", "益智游戏"],
+  "icon": "🎵",
+  "order": 26,
+  "badge": "new"
+}

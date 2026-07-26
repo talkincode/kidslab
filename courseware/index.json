@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-26T14:31:47.083Z",
+  "generatedAt": "2026-07-26T15:51:33.789Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -1224,6 +1224,54 @@
         "游戏"
       ],
       "path": "courseware/inkblot-monsters/index.html"
+    },
+    {
+      "id": "fraction-beats",
+      "title": {
+        "zh": "分数节拍屋",
+        "en": "Fraction Beat House"
+      },
+      "description": {
+        "zh": "把一小节切成二分之一、四分之一和八分之一节拍，用耳朵听懂等值分数，再拼出点亮全场的完整律动。",
+        "en": "Slice one measure into halves, quarters, and eighths, hear equivalent fractions, and build a complete groove that lights the whole house."
+      },
+      "category": "math",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g3",
+        "g4"
+      ],
+      "tags": [
+        "分数",
+        "音乐",
+        "益智游戏"
+      ],
+      "icon": "🎵",
+      "order": 26,
+      "badge": "new",
+      "keywords": [
+        "Fractions",
+        "fraction",
+        "fractions",
+        "等值分数",
+        "equivalent fractions",
+        "百分数",
+        "percent",
+        "percentage",
+        "Music",
+        "music",
+        "节奏",
+        "rhythm",
+        "music coding",
+        "Puzzle Game",
+        "puzzle",
+        "game",
+        "益智",
+        "游戏"
+      ],
+      "path": "courseware/fraction-beats/index.html"
     },
     {
       "id": "plant-lab",

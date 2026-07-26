@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>分数节拍屋 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title"><span aria-hidden="true">🎵</span> <span data-t="title">分数节拍屋</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="course">
+    <section class="mission card">
+      <div class="house-sign" aria-hidden="true"><span>BEAT</span><strong id="missionNumber">01</strong></div>
+      <div class="mission__copy">
+        <p class="eyebrow" id="missionKicker">热身排练</p>
+        <h2 id="missionTitle">把一小节拼满</h2>
+        <p id="missionText">一圈是 1。用节拍块刚好铺满 8 格。</p>
+      </div>
+      <nav class="mission-nav" id="missionNav" aria-label="关卡"></nav>
+    </section>
+
+    <section class="workspace">
+      <section class="stage card">
+        <div class="stage__hud">
+          <p class="status" id="status" role="status" aria-live="polite">点一个节拍块，把它送进唱片！</p>
+          <div class="total"><span data-t="total">这一小节</span><strong id="fractionTotal">0</strong></div>
+        </div>
+
+        <div class="club" id="club">
+          <div class="light light--one" aria-hidden="true"></div>
+          <div class="light light--two" aria-hidden="true"></div>
+          <div class="crowd" aria-hidden="true"><span>🐻</span><span>🐰</span><span>🦊</span><span>🐼</span></div>
+          <div class="turntable">
+            <div class="beat-wheel" id="beatWheel" aria-label="八格节拍唱片">
+              <div class="record-label">
+                <span data-t="oneMeasure">一小节</span>
+                <strong>1</strong>
+              </div>
+            </div>
+            <div class="needle" aria-hidden="true"></div>
+          </div>
+          <div class="measure-board">
+            <div class="target-row" id="targetRow" hidden>
+              <span data-t="target">目标</span>
+              <div class="measure-track measure-track--target" id="targetTrack"></div>
+            </div>
+            <div class="builder-row">
+              <span data-t="yours">你的</span>
+              <div class="measure-track" id="measureTrack" aria-label="你的节拍小节"></div>
+            </div>
+            <div class="equation" id="equation" aria-live="polite">0 / 1</div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="console card">
+        <div class="console__heading">
+          <div>
+            <p data-t="sampleDesk">节拍采样台</p>
+            <strong data-t="chooseBeat">选一个音色块</strong>
+          </div>
+          <span class="meter" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        </div>
+
+        <div class="beat-palette" id="beatPalette" aria-label="节拍块">
+          <button type="button" draggable="true" data-units="4" data-kind="kick" aria-label="加入二分之一拍">
+            <span class="beat-icon">🥁</span><strong>1/2</strong><small data-t="half">大鼓 · 4 格</small>
+          </button>
+          <button type="button" draggable="true" data-units="2" data-kind="clap" aria-label="加入四分之一拍">
+            <span class="beat-icon">👏</span><strong>1/4</strong><small data-t="quarter">拍手 · 2 格</small>
+          </button>
+          <button type="button" draggable="true" data-units="1" data-kind="shaker" aria-label="加入八分之一拍">
+            <span class="beat-icon">🪇</span><strong>1/8</strong><small data-t="eighth">沙锤 · 1 格</small>
+          </button>
+        </div>
+
+        <div class="drop-hint" id="dropHint" data-t="dropHint">点击节拍块，或拖到唱片上</div>
+
+        <div class="transport">
+          <button class="btn btn--play" id="playBtn" type="button"><span aria-hidden="true">▶</span> <span data-t="play">试听</span></button>
+          <button class="btn btn--check" id="checkBtn" type="button"><span aria-hidden="true">✓</span> <span data-t="check">检查节奏</span></button>
+          <button class="btn btn--next" id="nextBtn" type="button" hidden><span data-t="next">下一关</span> <span aria-hidden="true">→</span></button>
+        </div>
+
+        <div class="utilities">
+          <button class="utility" id="undoBtn" type="button"><span aria-hidden="true">↶</span> <span data-t="undo">撤回</span></button>
+          <button class="utility" id="clearBtn" type="button"><span aria-hidden="true">✦</span> <span data-t="clear">清空</span></button>
+          <button class="utility" id="hintBtn" type="button"><span aria-hidden="true">💡</span> <span data-t="hint">提示</span></button>
+        </div>
+
+        <div class="fraction-key">
+          <span><i class="key key--half"></i><b>1/2</b><small>4/8</small></span>
+          <span><i class="key key--quarter"></i><b>1/4</b><small>2/8</small></span>
+          <span><i class="key key--eighth"></i><b>1/8</b><small>1/8</small></span>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal" id="completeModal" hidden>
+    <section class="modal__card" role="dialog" aria-modal="true" aria-labelledby="completeTitle">
+      <div class="disco-ball" aria-hidden="true">🪩</div>
+      <p data-t="finalKicker">三间节拍房全部点亮</p>
+      <h2 id="completeTitle" data-t="finalTitle">全场节拍制作人！</h2>
+      <p data-t="finalText">你把分数拼成了完整的一小节，还听出了 1/4 和 2/8 一样长。</p>
+      <button class="btn btn--check" id="playAgainBtn" type="button" data-t="playAgain">再编一首</button>
+    </section>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
