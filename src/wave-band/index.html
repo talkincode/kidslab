@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>声波乐团 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill pill--back" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1><span aria-hidden="true">🎸</span> <span data-t="title">声波乐团</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill pill--lang" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="course">
+    <section class="brief card">
+      <div class="brief__number" aria-hidden="true"><small>LAB</small><strong id="missionNumber">01</strong></div>
+      <div class="brief__copy">
+        <p id="missionKicker">第一声部 · 音高</p>
+        <h2 id="missionTitle">把琴弦调成高音</h2>
+        <p id="missionText">绷紧琴弦，再拨一下。让示波器挤出更多波峰。</p>
+      </div>
+      <nav class="mission-nav" id="missionNav" aria-label="实验关卡"></nav>
+    </section>
+
+    <section class="lab">
+      <section class="stage card">
+        <div class="stage__top">
+          <p class="status" id="status" role="status" aria-live="polite">先拨一下琴弦，听听现在的声音。</p>
+          <div class="signal" id="signalBadge"><i></i><span data-t="signal">信号在线</span></div>
+        </div>
+
+        <div class="apparatus">
+          <div class="string-bench" id="stringBench">
+            <span class="bench-label" data-t="stringCam">高速琴弦相机</span>
+            <div class="peg peg--left" aria-hidden="true"></div>
+            <div class="string-wrap" aria-hidden="true"><i id="stringLine"></i></div>
+            <div class="peg peg--right" aria-hidden="true"></div>
+            <div class="pick" id="pick" aria-hidden="true">◆</div>
+            <div class="vibration-notes" aria-hidden="true"><span>♪</span><span>♫</span></div>
+          </div>
+
+          <div class="scope">
+            <div class="scope__head">
+              <span data-t="scope">波形观察窗</span>
+              <b id="scopeReadout">290 Hz</b>
+            </div>
+            <canvas id="waveCanvas" aria-label="声音波形图"></canvas>
+            <div class="scope__scale" aria-hidden="true"><span>TIME →</span><span>VOLT</span></div>
+          </div>
+
+          <div class="bell-jar" id="bellJar" hidden>
+            <span class="jar-label" data-t="vacuumJar">真空罩</span>
+            <div class="jar-glass">
+              <div class="alarm" id="alarm" aria-hidden="true"><i></i><b>⏰</b></div>
+              <div class="air-dots" id="airDots" aria-hidden="true"></div>
+            </div>
+            <div class="pump-hose" aria-hidden="true"></div>
+          </div>
+        </div>
+
+        <div class="meters" aria-label="实时测量">
+          <div><span data-t="frequency">频率</span><strong id="frequencyValue">290 <small>Hz</small></strong></div>
+          <div><span data-t="amplitude">振幅</span><strong id="amplitudeValue">1 <small>/ 3</small></strong></div>
+          <div><span data-t="air">空气</span><strong id="airValue">100 <small>%</small></strong></div>
+        </div>
+      </section>
+
+      <aside class="console card">
+        <div class="console__head">
+          <div>
+            <p data-t="controlDesk">WAVE BAND / 控制台</p>
+            <strong id="consoleTitle">琴弦调音器</strong>
+          </div>
+          <span class="on-air" aria-hidden="true">ON AIR</span>
+        </div>
+
+        <section class="control-panel" id="pitchPanel">
+          <label for="tensionSlider">
+            <span data-t="tension">琴弦松紧</span>
+            <strong id="tensionLabel">松</strong>
+          </label>
+          <input id="tensionSlider" type="range" min="1" max="3" step="1" value="1" />
+          <div class="range-labels" aria-hidden="true"><span data-t="loose">松</span><span data-t="tight">紧</span></div>
+          <div class="target"><span data-t="target">演出目标</span><b data-t="pitchTarget">做出 510 Hz 的高音</b></div>
+          <button class="action action--pluck" id="pluckBtn" type="button"><span aria-hidden="true">✦</span> <span data-t="pluck">拨动琴弦</span></button>
+        </section>
+
+        <section class="control-panel" id="loudnessPanel" hidden>
+          <label for="strengthSlider">
+            <span data-t="pluckStrength">拨弦力度</span>
+            <strong id="strengthLabel">轻</strong>
+          </label>
+          <input id="strengthSlider" type="range" min="1" max="3" step="1" value="1" />
+          <div class="range-labels" aria-hidden="true"><span data-t="soft">轻</span><span data-t="strong">重</span></div>
+          <div class="target"><span data-t="target">演出目标</span><b data-t="loudTarget">保持音高，做出大振幅响音</b></div>
+          <button class="action action--pluck" id="loudPluckBtn" type="button"><span aria-hidden="true">✦</span> <span data-t="pluck">拨动琴弦</span></button>
+        </section>
+
+        <section class="control-panel" id="vacuumPanel" hidden>
+          <div class="vacuum-copy">
+            <span data-t="airBridge">空气桥</span>
+            <strong id="airLabel">满格 · 声音能传出</strong>
+          </div>
+          <div class="air-gauge" aria-hidden="true"><i id="airGauge"></i></div>
+          <div class="target"><span data-t="target">演出目标</span><b data-t="vacuumTarget">抽光空气，观察闹钟</b></div>
+          <div class="vacuum-actions">
+            <button class="action action--pump" id="pumpBtn" type="button"><span aria-hidden="true">⇣</span> <span data-t="pump">抽走空气</span></button>
+            <button class="action action--ghost" id="alarmBtn" type="button"><span aria-hidden="true">⏰</span> <span data-t="ring">敲响闹钟</span></button>
+          </div>
+          <button class="reset-link" id="refillBtn" type="button" data-t="refill">让空气回来</button>
+        </section>
+
+        <div class="lesson-card">
+          <span aria-hidden="true" id="lessonIcon">↟</span>
+          <p id="lessonText">弦越紧，每秒振动次数越多，音高越高。</p>
+        </div>
+
+        <div class="console__actions">
+          <button class="secondary" id="hintBtn" type="button"><span aria-hidden="true">💡</span> <span data-t="hint">小提示</span></button>
+          <button class="action action--check" id="checkBtn" type="button"><span aria-hidden="true">✓</span> <span data-t="check">检查实验</span></button>
+          <button class="action action--next" id="nextBtn" type="button" hidden><span data-t="next">下一声部</span> <span aria-hidden="true">→</span></button>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal" id="completeModal" hidden>
+    <section class="modal__card" role="dialog" aria-modal="true" aria-labelledby="completeTitle">
+      <div class="final-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+      <p data-t="finalKicker">三种声音秘密全部看见</p>
+      <h2 id="completeTitle" data-t="finalTitle">首席声波指挥！</h2>
+      <p data-t="finalText">你用频率改变音高，用振幅改变响度，还发现声音离不开传播介质。</p>
+      <button class="action action--check" id="playAgainBtn" type="button" data-t="playAgain">再演一次</button>
+    </section>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

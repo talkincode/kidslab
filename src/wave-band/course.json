@@ -1,0 +1,18 @@
+{
+  "id": "wave-band",
+  "title": {
+    "zh": "声波乐团",
+    "en": "Wave Band"
+  },
+  "description": {
+    "zh": "拨动会发光的琴弦，在示波器里看见频率与振幅，再把闹钟送进真空罩，完成一场看得见的声音演出。",
+    "en": "Pluck a glowing string, watch frequency and amplitude on an oscilloscope, then send an alarm clock into a vacuum chamber for a sound show you can see."
+  },
+  "category": "science",
+  "levels": ["primary"],
+  "grades": ["g3", "g4"],
+  "tags": ["音乐", "实验"],
+  "icon": "🎸",
+  "order": 57,
+  "badge": "new"
+}
