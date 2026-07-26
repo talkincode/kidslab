@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>华容道 · 木关智局 · KidsLab</title>
+  <meta name="description" content="在逼真的 3D 木制华容道中学习空间规划，拖动棋块、观看解法演示，让曹操从出口离开。" />
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    (() => {
+      try {
+        const theme = localStorage.getItem('kidslab.theme')
+          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        const lang = localStorage.getItem('kidslab.lang')
+          || (navigator.language?.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+      } catch {
+        document.documentElement.dataset.theme = 'light';
+      }
+    })();
+  </script>
+  <script type="importmap">
+    { "imports": { "three": "./vendor/three.module.min.js" } }
+  </script>
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <canvas id="scene" aria-label="3D 华容道棋盘"></canvas>
+  <p class="nogl" id="nogl" hidden data-t="nogl">浏览器暂不支持 WebGL，木机关没法转起来。请换一个新浏览器试试。</p>
+
+  <header class="topbar">
+    <a class="pill pill--back" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <div class="brand">
+      <span class="brand__seal" aria-hidden="true">華</span>
+      <div>
+        <h1 data-t="title">华容道 · 木关智局</h1>
+        <p data-t="subtitle">腾出两格路，让曹操从南门离开</p>
+      </div>
+    </div>
+    <div class="topbar__actions">
+      <button class="pill pill--icon" id="musicBtn" type="button" aria-pressed="true" title="背景音乐">♫</button>
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-pressed="true" title="音效">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" title="切换主题">🌙</button>
+      <button class="pill pill--lang" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <section class="hud" aria-label="游戏数据">
+    <div class="hud__mode" id="modeBadge">横刀立马</div>
+    <div class="hud__stat">
+      <span data-t="moves">格步</span>
+      <strong id="moveValue">0</strong>
+    </div>
+    <div class="hud__stat">
+      <span data-t="time">时间</span>
+      <strong id="timeValue">0:00</strong>
+    </div>
+    <div class="hud__stat">
+      <span data-t="best">最佳</span>
+      <strong id="bestValue">—</strong>
+    </div>
+  </section>
+
+  <div class="coach" id="coach" role="status" aria-live="polite">
+    <span class="coach__icon" id="coachIcon">◎</span>
+    <div>
+      <b id="coachTitle">先找空位</b>
+      <p id="coachText">拖动空位旁边的棋块，给曹操慢慢让出一条路。</p>
+    </div>
+  </div>
+
+  <aside class="panel" id="panel">
+    <button class="panel__handle" id="panelHandle" type="button" aria-expanded="true">
+      <span data-t="panelTitle">机关台</span>
+      <i id="panelArrow">▾</i>
+    </button>
+    <div class="panel__body" id="panelBody">
+      <section class="panel__section">
+        <p class="panel__label" data-t="chooseLevel">选择棋局</p>
+        <div class="seg" id="levelSeg" role="group">
+          <button class="seg__btn" data-level="practice" type="button">
+            <span>🌱</span><span data-t="levelPractice">开门练习</span>
+          </button>
+          <button class="seg__btn is-on" data-level="classic" type="button">
+            <span>🏮</span><span data-t="levelClassic">横刀立马</span>
+          </button>
+        </div>
+      </section>
+
+      <button class="btn btn--demo" id="demoBtn" type="button">
+        <span>▶</span><span data-t="watchDemo">观看解法演示</span>
+      </button>
+
+      <section class="selected-card" aria-live="polite">
+        <div class="selected-card__head">
+          <span data-t="selected">当前棋块</span>
+          <strong id="selectedName">还没选中</strong>
+        </div>
+        <div class="move-pad" id="movePad" aria-label="移动棋块">
+          <button type="button" data-dx="0" data-dy="-1" aria-label="向上移动">↑</button>
+          <button type="button" data-dx="-1" data-dy="0" aria-label="向左移动">←</button>
+          <span class="move-pad__center" aria-hidden="true">滑</span>
+          <button type="button" data-dx="1" data-dy="0" aria-label="向右移动">→</button>
+          <button type="button" data-dx="0" data-dy="1" aria-label="向下移动">↓</button>
+        </div>
+        <p class="selected-card__tip" id="selectedTip">点一块棋，再按方向；也可以直接拖动。</p>
+      </section>
+
+      <div class="action-grid">
+        <button class="btn btn--ghost" id="undoBtn" type="button" disabled>
+          <span>↩</span><span data-t="undo">撤销</span>
+        </button>
+        <button class="btn btn--ghost" id="hintBtn" type="button">
+          <span>💡</span><span data-t="hint">给我提示</span>
+        </button>
+        <button class="btn btn--ghost" id="restartBtn" type="button">
+          <span>↻</span><span data-t="restart">重新摆阵</span>
+        </button>
+        <button class="btn btn--lesson" id="lessonBtn" type="button">
+          <span>卷</span><span data-t="lesson">三分钟小课堂</span>
+        </button>
+      </div>
+
+      <div class="rule-strip">
+        <span class="rule-strip__mark">2</span>
+        <p><b data-t="ruleTitle">两格空位，就是整局的钥匙</b><span data-t="ruleText">棋块不能旋转，也不能跨过别人。</span></p>
+      </div>
+    </div>
+  </aside>
+
+  <p class="foot-tip" id="footTip" data-t="footTip">拖棋块滑动 · 拖空白转视角 · 滚轮或双指缩放</p>
+
+  <section class="demo-bar" id="demoBar" hidden aria-label="演示控制">
+    <div class="demo-bar__top">
+      <b><span data-t="demoProgress">解法演示</span> <span id="demoCount">0 / 0</span></b>
+      <button id="demoExitBtn" type="button" data-t="exitDemo">退出演示</button>
+    </div>
+    <input id="demoRange" type="range" min="0" max="1" value="0" aria-label="演示进度" />
+    <div class="demo-bar__controls">
+      <button id="demoPrevBtn" type="button" aria-label="上一步">‹</button>
+      <button class="demo-bar__play" id="demoPlayBtn" type="button" aria-label="暂停">Ⅱ</button>
+      <button id="demoNextBtn" type="button" aria-label="下一步">›</button>
+      <label>
+        <span data-t="speed">速度</span>
+        <select id="demoSpeed">
+          <option value="0.7">0.7×</option>
+          <option value="1" selected>1×</option>
+          <option value="1.5">1.5×</option>
+          <option value="2">2×</option>
+        </select>
+      </label>
+    </div>
+  </section>
+
+  <section class="lesson-card" id="lessonCard" hidden>
+    <div class="lesson-card__top">
+      <span id="lessonBadge">1 / 4</span>
+      <button id="lessonExitBtn" type="button" aria-label="关闭小课堂">×</button>
+    </div>
+    <p class="lesson-card__eyebrow" data-t="lessonEyebrow">木关小课堂</p>
+    <h2 id="lessonTitle">先看两格空位</h2>
+    <p id="lessonText">棋盘总会留下两格空位。所有移动，都是把空位“传”到新的地方。</p>
+    <div class="lesson-card__nav">
+      <button class="btn btn--ghost" id="lessonPrevBtn" type="button" data-t="previous">上一步</button>
+      <button class="btn" id="lessonNextBtn" type="button" data-t="next">下一步</button>
+    </div>
+  </section>
+
+  <section class="guide" id="guide" hidden>
+    <div class="guide__card">
+      <span class="guide__seal">開</span>
+      <p class="guide__eyebrow" data-t="guideEyebrow">第一次来到木关</p>
+      <h2 data-t="guideTitle">把路“借”给曹操</h2>
+      <ol>
+        <li data-t="guide1">找空位旁边的棋块</li>
+        <li data-t="guide2">沿着棋盘拖动一格</li>
+        <li data-t="guide3">让曹操走到下方金色出口</li>
+      </ol>
+      <div class="guide__actions">
+        <button class="btn" id="guideDemoBtn" type="button" data-t="guideDemo">先看开门练习</button>
+        <button class="btn btn--ghost" id="guidePlayBtn" type="button" data-t="guidePlay">我自己试试</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="win" id="win" hidden>
+    <div class="win__card">
+      <span class="win__seal">通</span>
+      <p class="win__eyebrow" data-t="winEyebrow">南门已开</p>
+      <h2 data-t="winTitle">你把曹操送出去了！</h2>
+      <p id="winStats">用了 0 格步 · 0:00</p>
+      <p id="winNote">空位会走，路就会出现。</p>
+      <div class="win__actions">
+        <button class="btn" id="winAgainBtn" type="button" data-t="again">再摆一局</button>
+        <button class="btn btn--ghost" id="winDemoBtn" type="button" data-t="reviewDemo">回看解法</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="confetti-layer" id="confettiLayer" aria-hidden="true"></div>
+  <script type="module" src="main.js"></script>
+</body>
+</html>

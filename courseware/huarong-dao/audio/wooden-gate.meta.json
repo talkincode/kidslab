@@ -1,0 +1,116 @@
+{
+  "audio": "wooden-gate.ogg",
+  "bars": 16,
+  "crossfade_samples": 2205,
+  "instrument_resolution": {
+    "fallbacks": [],
+    "missing_instruments": [],
+    "mode": "conservative",
+    "summary": {
+      "alias": 0,
+      "exact": 4,
+      "fallback": 0,
+      "missing": 0,
+      "rejected": 0
+    },
+    "tracks": [
+      {
+        "canonical": "marimba",
+        "reasons": [
+          "general_midi_exact"
+        ],
+        "requested": "marimba",
+        "resolved": "marimba",
+        "score": 1.0,
+        "status": "exact",
+        "track": 0,
+        "track_id": "wooden_key",
+        "warnings": []
+      },
+      {
+        "canonical": "harp",
+        "reasons": [
+          "general_midi_exact"
+        ],
+        "requested": "harp",
+        "resolved": "harp",
+        "score": 1.0,
+        "status": "exact",
+        "track": 1,
+        "track_id": "silk_threads",
+        "warnings": []
+      },
+      {
+        "canonical": "pizzicato",
+        "reasons": [
+          "general_midi_exact"
+        ],
+        "requested": "pizzicato",
+        "resolved": "pizzicato",
+        "score": 1.0,
+        "status": "exact",
+        "track": 2,
+        "track_id": "stone_step",
+        "warnings": []
+      },
+      {
+        "canonical": "drums",
+        "reasons": [
+          "general_midi_exact"
+        ],
+        "requested": "drums",
+        "resolved": "drums",
+        "score": 1.0,
+        "status": "exact",
+        "track": 3,
+        "track_id": "frame_pulse",
+        "warnings": []
+      }
+    ]
+  },
+  "key": "E_minor",
+  "loop": true,
+  "loop_samples": 1380520,
+  "sample_rate": 44100,
+  "seconds": 31.304308390022676,
+  "stems": [],
+  "story": "A child studies a lacquered Huarong Dao on a quiet scholar's desk. Wooden pieces click into place, a path slowly opens, and careful planning feels curious rather than tense. Pentatonic, tactile, focused, and loop-safe.\n",
+  "tempo": 92,
+  "time_signature": "6/8",
+  "title": "The Wooden Gate Opens",
+  "total_samples": 1380520,
+  "tracks": [
+    {
+      "articulation": "sustain",
+      "id": "wooden_key",
+      "instrument": "marimba",
+      "intensity": 0.550000011920929,
+      "palette": null,
+      "pattern": "melody"
+    },
+    {
+      "articulation": "sustain",
+      "id": "silk_threads",
+      "instrument": "harp",
+      "intensity": 0.25,
+      "palette": null,
+      "pattern": "arpeggio"
+    },
+    {
+      "articulation": "sustain",
+      "id": "stone_step",
+      "instrument": "pizzicato",
+      "intensity": 0.30000001192092896,
+      "palette": null,
+      "pattern": "bass"
+    },
+    {
+      "articulation": "sustain",
+      "id": "frame_pulse",
+      "instrument": "drums",
+      "intensity": 0.18000000715255737,
+      "palette": null,
+      "pattern": "drums"
+    }
+  ]
+}

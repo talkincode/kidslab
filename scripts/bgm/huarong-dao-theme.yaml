@@ -1,0 +1,62 @@
+# 华容道课件循环配乐 · 「木门徐开」
+# Palette decision: reject the default cinematic strings; use a compact
+# pentatonic struck/plucked ensemble so the score feels like a wooden mechanism.
+title: The Wooden Gate Opens
+story: >
+  A child studies a lacquered Huarong Dao on a quiet scholar's desk. Wooden
+  pieces click into place, a path slowly opens, and careful planning feels
+  curious rather than tense. Pentatonic, tactile, focused, and loop-safe.
+tempo: 92
+key: E_minor
+time_signature: 6/8
+bars: 16
+loop: true
+
+harmony: [i, VII, VI, v, i, III, iv, v]
+
+performance:
+  humanize: { timing_ms: 14, velocity: 8, seed: 20260726 }
+  dynamics: { start: p, peak: mf }
+
+motifs:
+  wooden_gate:
+    - { degree: 1, beats: 1 }
+    - { degree: 3, beats: 0.5 }
+    - { degree: 4, beats: 0.5 }
+    - { degree: 5, beats: 1 }
+    - { degree: 0, beats: 1 }
+    - { degree: 7, beats: 1 }
+    - { degree: 5, beats: 0.5 }
+    - { degree: 4, beats: 0.5 }
+    - { degree: 3, beats: 1 }
+    - { degree: 0, beats: 2 }
+    - { degree: 1, beats: 1 }
+    - { degree: 3, beats: 1 }
+    - { degree: 0, beats: 1 }
+
+tracks:
+  - id: wooden_key
+    instrument: marimba
+    pattern: melody
+    motif: wooden_gate
+    intensity: 0.55
+    pan: 0.42
+    reverb: 0.28
+  - id: silk_threads
+    instrument: harp
+    pattern: arpeggio
+    intensity: 0.25
+    pan: 0.64
+    reverb: 0.38
+  - id: stone_step
+    instrument: pizzicato
+    pattern: bass
+    intensity: 0.3
+    pan: 0.48
+    reverb: 0.2
+  - id: frame_pulse
+    instrument: drums
+    pattern: drums
+    intensity: 0.18
+    pan: 0.54
+    reverb: 0.12

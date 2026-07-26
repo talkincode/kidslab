@@ -6,7 +6,13 @@ const manifest = JSON.parse(
 );
 
 // 依赖 three.js/WebGL 的重课件，CI 软件渲染下需要更长超时
-const HEAVY_WEBGL_COURSES = new Set(['plant-lab', 'magic-cube', 'optics-lab', 'solar-explorer']);
+const HEAVY_WEBGL_COURSES = new Set([
+  'plant-lab',
+  'magic-cube',
+  'huarong-dao',
+  'optics-lab',
+  'solar-explorer',
+]);
 
 function observeFailures(page) {
   const failures = [];

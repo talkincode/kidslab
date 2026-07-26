@@ -1,0 +1,67 @@
+# 华容道通关短曲 · 循环主题的明亮终止式变奏
+title: The Pass Is Clear
+story: >
+  Cao Cao reaches the open gate. The same wooden pentatonic cell rises into a
+  short, warm celebration: satisfying and clear, never bombastic.
+tempo: 108
+key: E_minor
+time_signature: 6/8
+bars: 4
+loop: false
+
+harmony: [VI, VII, v, i]
+
+performance:
+  humanize: { timing_ms: 10, velocity: 6, seed: 20260727 }
+  legato: true
+  dynamics: { start: mf, peak: f }
+
+motifs:
+  clear_pass:
+    - { degree: 1, beats: 0.5 }
+    - { degree: 3, beats: 0.5 }
+    - { degree: 4, beats: 0.5 }
+    - { degree: 5, beats: 0.5 }
+    - { degree: 7, beats: 0.5 }
+    - { degree: 8, beats: 0.5 }
+    - { degree: 10, beats: 1 }
+    - { degree: 12, beats: 2 }
+    - { degree: 0, beats: 1 }
+    - { degree: 8, beats: 0.5 }
+    - { degree: 5, beats: 0.5 }
+    - { degree: 3, beats: 0.5 }
+    - { degree: 1, beats: 0.5 }
+    - { degree: 0, beats: 3 }
+
+tracks:
+  - id: wooden_key
+    instrument: marimba
+    pattern: melody
+    motif: clear_pass
+    intensity: 0.68
+    pan: 0.44
+    reverb: 0.34
+  - id: silk_threads
+    instrument: harp
+    pattern: arpeggio
+    intensity: 0.38
+    pan: 0.62
+    reverb: 0.45
+  - id: stone_step
+    instrument: pizzicato
+    pattern: bass
+    intensity: 0.4
+    pan: 0.48
+    reverb: 0.24
+  - id: gate_bells
+    instrument: glockenspiel
+    pattern: sustain
+    intensity: 0.28
+    pan: 0.7
+    reverb: 0.5
+  - id: frame_pulse
+    instrument: drums
+    pattern: drums
+    intensity: 0.28
+    pan: 0.54
+    reverb: 0.16

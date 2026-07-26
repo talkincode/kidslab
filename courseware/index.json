@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-25T18:19:46.498Z",
+  "generatedAt": "2026-07-26T08:52:46.719Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -2499,6 +2499,81 @@
         "游戏"
       ],
       "path": "courseware/magic-cube/index.html"
+    },
+    {
+      "id": "huarong-dao",
+      "title": {
+        "zh": "华容道 · 木关智局",
+        "en": "Huarong Dao · The Wooden Pass"
+      },
+      "description": {
+        "zh": "在逼真的 3D 木制华容道里传递两格空位，让曹操从南门离开；可自由闯关、分步提示，也能暂停回看完整解法演示。",
+        "en": "Pass two empty cells around a realistic 3D wooden Huarong Dao and guide Cao Cao through the south gate, with free play, progressive hints, and a pausable full solution demo."
+      },
+      "category": "logic",
+      "levels": [
+        "primary",
+        "junior",
+        "senior"
+      ],
+      "grades": [
+        "g3",
+        "g4",
+        "g5",
+        "g6",
+        "g7",
+        "g8",
+        "g9"
+      ],
+      "tags": [
+        "空间想象",
+        "推理",
+        "策略",
+        "算法",
+        "3D",
+        "益智游戏"
+      ],
+      "icon": "🀄",
+      "order": 72,
+      "badge": "new",
+      "keywords": [
+        "Spatial Reasoning",
+        "spatial reasoning",
+        "spatial",
+        "空间思维",
+        "Reasoning",
+        "reasoning",
+        "演绎推理",
+        "deduction",
+        "排除法",
+        "elimination",
+        "逻辑网格",
+        "logic grid",
+        "逆向推理",
+        "backward reasoning",
+        "证据",
+        "evidence",
+        "inference",
+        "Strategy",
+        "strategy",
+        "博弈策略",
+        "game theory",
+        "尼姆游戏",
+        "nim",
+        "Algorithms",
+        "algorithms",
+        "algorithm",
+        "3D",
+        "3d",
+        "三维",
+        "three.js",
+        "Puzzle Game",
+        "puzzle",
+        "game",
+        "益智",
+        "游戏"
+      ],
+      "path": "courseware/huarong-dao/index.html"
     },
     {
       "id": "sudoku-zoo",

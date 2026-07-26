@@ -1,0 +1,137 @@
+{
+  "audio": "pass-clear.ogg",
+  "bars": 4,
+  "crossfade_samples": 0,
+  "instrument_resolution": {
+    "fallbacks": [],
+    "missing_instruments": [],
+    "mode": "conservative",
+    "summary": {
+      "alias": 0,
+      "exact": 5,
+      "fallback": 0,
+      "missing": 0,
+      "rejected": 0
+    },
+    "tracks": [
+      {
+        "canonical": "marimba",
+        "reasons": [
+          "general_midi_exact"
+        ],
+        "requested": "marimba",
+        "resolved": "marimba",
+        "score": 1.0,
+        "status": "exact",
+        "track": 0,
+        "track_id": "wooden_key",
+        "warnings": []
+      },
+      {
+        "canonical": "harp",
+        "reasons": [
+          "general_midi_exact"
+        ],
+        "requested": "harp",
+        "resolved": "harp",
+        "score": 1.0,
+        "status": "exact",
+        "track": 1,
+        "track_id": "silk_threads",
+        "warnings": []
+      },
+      {
+        "canonical": "pizzicato",
+        "reasons": [
+          "general_midi_exact"
+        ],
+        "requested": "pizzicato",
+        "resolved": "pizzicato",
+        "score": 1.0,
+        "status": "exact",
+        "track": 2,
+        "track_id": "stone_step",
+        "warnings": []
+      },
+      {
+        "canonical": "glockenspiel",
+        "reasons": [
+          "general_midi_exact"
+        ],
+        "requested": "glockenspiel",
+        "resolved": "glockenspiel",
+        "score": 1.0,
+        "status": "exact",
+        "track": 3,
+        "track_id": "gate_bells",
+        "warnings": []
+      },
+      {
+        "canonical": "drums",
+        "reasons": [
+          "general_midi_exact"
+        ],
+        "requested": "drums",
+        "resolved": "drums",
+        "score": 1.0,
+        "status": "exact",
+        "track": 4,
+        "track_id": "frame_pulse",
+        "warnings": []
+      }
+    ]
+  },
+  "key": "E_minor",
+  "loop": false,
+  "loop_samples": 294000,
+  "sample_rate": 44100,
+  "seconds": 8.166666666666666,
+  "stems": [],
+  "story": "Cao Cao reaches the open gate. The same wooden pentatonic cell rises into a short, warm celebration: satisfying and clear, never bombastic.\n",
+  "tempo": 108,
+  "time_signature": "6/8",
+  "title": "The Pass Is Clear",
+  "total_samples": 360150,
+  "tracks": [
+    {
+      "articulation": "sustain",
+      "id": "wooden_key",
+      "instrument": "marimba",
+      "intensity": 0.6800000071525574,
+      "palette": null,
+      "pattern": "melody"
+    },
+    {
+      "articulation": "sustain",
+      "id": "silk_threads",
+      "instrument": "harp",
+      "intensity": 0.3799999952316284,
+      "palette": null,
+      "pattern": "arpeggio"
+    },
+    {
+      "articulation": "sustain",
+      "id": "stone_step",
+      "instrument": "pizzicato",
+      "intensity": 0.4000000059604645,
+      "palette": null,
+      "pattern": "bass"
+    },
+    {
+      "articulation": "sustain",
+      "id": "gate_bells",
+      "instrument": "glockenspiel",
+      "intensity": 0.2800000011920929,
+      "palette": null,
+      "pattern": "sustain"
+    },
+    {
+      "articulation": "sustain",
+      "id": "frame_pulse",
+      "instrument": "drums",
+      "intensity": 0.2800000011920929,
+      "palette": null,
+      "pattern": "drums"
+    }
+  ]
+}
