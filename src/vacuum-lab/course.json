@@ -1,0 +1,18 @@
+{
+  "id": "vacuum-lab",
+  "title": {
+    "zh": "扫地机器人研究所",
+    "en": "Robo-Vacuum Lab"
+  },
+  "description": {
+    "zh": "给扫地机器人装上随机转向、弓字清扫或沿墙行走策略芯片，在三种户型里实测覆盖率、用时和碰撞，找出每间房的算法冠军。",
+    "en": "Fit a robo-vacuum with random-turn, lawnmower, or wall-following strategy chips, then benchmark coverage, time, and bumps across three very different rooms."
+  },
+  "category": "programming",
+  "levels": ["primary"],
+  "grades": ["g3", "g4"],
+  "tags": ["算法", "策略", "实验"],
+  "icon": "🤖",
+  "order": 59,
+  "badge": "new"
+}

@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>扫地机器人研究所 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body data-running="false">
+  <header class="bar">
+    <a class="pill pill--back" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1><span aria-hidden="true">🤖</span> <span data-t="title">扫地机器人研究所</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill pill--lang" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="course">
+    <section class="brief card">
+      <div class="lab-stamp" aria-hidden="true"><small>TEST</small><strong id="missionNumber">01</strong></div>
+      <div class="brief__copy">
+        <p id="missionKicker">一号户型 · 空旷摄影棚</p>
+        <h2 id="missionTitle">谁能少走冤枉路？</h2>
+        <p id="missionText">地面很开阔。挑一颗策略芯片，启动后只能观察。</p>
+      </div>
+      <nav class="mission-nav" id="missionNav" aria-label="实验户型"></nav>
+    </section>
+
+    <section class="lab">
+      <section class="stage card">
+        <div class="stage__top">
+          <p class="status" id="status" role="status" aria-live="polite">先给机器人装一颗策略芯片。</p>
+          <span class="live"><i></i><span data-t="live">实验待机</span></span>
+        </div>
+        <div class="floor-wrap">
+          <canvas id="roomCanvas" aria-label="扫地机器人实验场地"></canvas>
+          <div class="room-tag"><span data-t="roomCamera">ROOM CAM</span><b id="roomCode">OPEN-01</b></div>
+          <div class="dust-meter" aria-hidden="true"><i id="dustBar"></i></div>
+        </div>
+        <div class="metrics" aria-label="实验实时数据">
+          <div><span data-t="coverage">覆盖率</span><strong id="coverageValue">0<small>%</small></strong></div>
+          <div><span data-t="time">用时</span><strong id="timeValue">0<small>s</small></strong></div>
+          <div><span data-t="bumps">碰撞</span><strong id="bumpsValue">0<small>次</small></strong></div>
+        </div>
+      </section>
+
+      <aside class="console card">
+        <div class="console__head">
+          <div>
+            <p data-t="brainBay">ROBO BRAIN / 芯片舱</p>
+            <strong data-t="chooseChip">选择一种清扫规则</strong>
+          </div>
+          <span class="serial">RV-03</span>
+        </div>
+
+        <div class="strategy-grid" id="strategyGrid" role="group" aria-label="策略芯片">
+          <button class="strategy" type="button" data-strategy="random" aria-pressed="false">
+            <span aria-hidden="true">🎲</span><b data-t="randomName">随机转向</b><small data-t="randomRule">碰壁就换方向</small>
+          </button>
+          <button class="strategy" type="button" data-strategy="sweep" aria-pressed="false">
+            <span aria-hidden="true">↔</span><b data-t="sweepName">弓字清扫</b><small data-t="sweepRule">一行接一行</small>
+          </button>
+          <button class="strategy" type="button" data-strategy="wall" aria-pressed="false">
+            <span aria-hidden="true">🧱</span><b data-t="wallName">沿墙行走</b><small data-t="wallRule">贴住边界前进</small>
+          </button>
+        </div>
+
+        <div class="brain-note">
+          <span aria-hidden="true" id="brainIcon">?</span>
+          <p id="brainNote">规则很简单，结果要跑过才知道。</p>
+        </div>
+
+        <div class="result" id="result" hidden>
+          <span id="resultBadge">本轮记录</span>
+          <p id="resultText">还可以换一颗芯片再试。</p>
+        </div>
+
+        <div class="console__actions">
+          <button class="secondary" id="hintBtn" type="button"><span aria-hidden="true">💡</span> <span data-t="hint">提示</span></button>
+          <button class="action" id="runBtn" type="button"><span aria-hidden="true">▶</span> <span data-t="run">启动测试</span></button>
+          <button class="action action--next" id="nextBtn" type="button" hidden><span data-t="next">下一户型</span> <span aria-hidden="true">→</span></button>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal" id="completeModal" hidden>
+    <section class="modal__card" role="dialog" aria-modal="true" aria-labelledby="completeTitle">
+      <div class="chip-crown" aria-hidden="true">♛</div>
+      <p data-t="finalKicker">三间房，三位冠军</p>
+      <h2 id="completeTitle" data-t="finalTitle">首席机器人策略师！</h2>
+      <p data-t="finalText">你发现了：算法不是越复杂越好，适合环境的规则才跑得漂亮。</p>
+      <button class="action" id="playAgainBtn" type="button" data-t="playAgain">重新测试</button>
+    </section>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
