@@ -1,0 +1,18 @@
+{
+  "id": "punch-origami",
+  "title": {
+    "zh": "折纸打孔妙妙屋",
+    "en": "Punch & Fold House"
+  },
+  "description": {
+    "zh": "把纸折成小方块、打下一孔，再在展开图上预测所有孔位。沿折痕拖开纸张，看一个孔怎样连续镜像成二、四、八，最后绽放成十六孔纸花。",
+    "en": "Fold a sheet into a tiny square, punch once, and predict every hole on the open paper. Drag the folds apart to watch one hole mirror into two, four, eight, and finally a sixteen-hole paper bloom."
+  },
+  "category": "logic",
+  "levels": ["primary"],
+  "grades": ["g4", "g5", "g6"],
+  "tags": ["空间想象", "推理", "益智游戏"],
+  "icon": "📄",
+  "order": 78,
+  "badge": "new"
+}

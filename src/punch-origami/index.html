@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>折纸打孔妙妙屋 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body data-state="predict">
+  <header class="bar">
+    <a class="pill pill--back" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1><span aria-hidden="true">📄</span> <span data-t="title">折纸打孔妙妙屋</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill pill--icon" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="course">
+    <section class="brief card">
+      <div class="house-mark" aria-hidden="true"><span>✂</span><b id="levelNumber">01</b></div>
+      <div class="brief__copy">
+        <p id="levelKicker">第一间 · 半折门廊</p>
+        <h2 id="levelTitle">一折以后，孔会去哪？</h2>
+        <p id="levelText">纸的右半边向左合上，黑点是打孔位置。</p>
+      </div>
+      <nav class="level-nav" id="levelNav" aria-label="纸艺房间"></nav>
+    </section>
+
+    <section class="workbench">
+      <section class="stage card">
+        <div class="status-row">
+          <p class="status" id="status" role="status" aria-live="polite">在展开图上点出你预测的孔。</p>
+          <span class="counter"><span data-t="picked">已选</span> <b id="pickedCount">0</b>/<b id="targetCount">2</b></span>
+        </div>
+
+        <div class="paper-zone">
+          <div class="fold-model">
+            <canvas id="foldCanvas" aria-label="折叠纸张示意图"></canvas>
+            <span data-t="foldedView">折后纸包</span>
+          </div>
+          <div class="prediction-wrap">
+            <div class="axis axis--top" aria-hidden="true"><span>A</span><span>B</span><span>C</span><span>D</span></div>
+            <div class="axis axis--side" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span></div>
+            <div class="prediction-grid" id="predictionGrid" role="grid" aria-label="展开纸张孔位预测"></div>
+          </div>
+        </div>
+
+        <div class="unfold" id="unfoldPanel" hidden>
+          <label for="unfoldSlider"><span data-t="unfold">拖住纸带，展开到底</span><b id="unfoldPercent">0%</b></label>
+          <input id="unfoldSlider" type="range" min="0" max="100" value="0" />
+        </div>
+      </section>
+
+      <aside class="control card">
+        <div class="control__head">
+          <div>
+            <p data-t="foldPlan">FOLD PLAN / 折叠路线</p>
+            <strong id="foldSummary">向左折 1 次</strong>
+          </div>
+          <span class="room-code" id="roomCode">F-01</span>
+        </div>
+
+        <div class="fold-strip" id="foldStrip" aria-label="折叠步骤"></div>
+
+        <div class="rule-note">
+          <span aria-hidden="true">↔</span>
+          <p id="ruleNote">展开一折，就把已有的孔沿折痕镜像一次。</p>
+        </div>
+
+        <div class="lesson" id="lesson" hidden>
+          <b id="lessonTitle">镜像成功</b>
+          <p id="lessonText">两个孔到折痕的距离一样远。</p>
+        </div>
+
+        <div class="control__actions">
+          <button class="secondary" id="clearBtn" type="button"><span aria-hidden="true">↺</span> <span data-t="clear">清空</span></button>
+          <button class="secondary" id="hintBtn" type="button"><span aria-hidden="true">💡</span> <span data-t="hint">提示</span></button>
+          <button class="action" id="checkBtn" type="button"><span data-t="check">检查预测</span> <span aria-hidden="true">→</span></button>
+          <button class="action action--next" id="nextBtn" type="button" hidden><span data-t="next">下一间</span> <span aria-hidden="true">→</span></button>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal" id="completeModal" hidden>
+    <section class="modal__card" role="dialog" aria-modal="true" aria-labelledby="completeTitle">
+      <div class="paper-flower" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <p data-t="finalKicker">一孔，四次镜像</p>
+      <h2 id="completeTitle" data-t="finalTitle">纸上开出了十六朵花！</h2>
+      <p data-t="finalText">你没有靠猜，而是在脑中把每一道折痕倒着展开。</p>
+      <button class="action" id="playAgainBtn" type="button" data-t="playAgain">再折一次</button>
+    </section>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
