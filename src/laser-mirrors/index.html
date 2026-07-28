@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>激光镜屋 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill pill--back" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1><span aria-hidden="true">🔦</span> <span data-t="title">激光镜屋</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill pill--icon" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="course">
+    <section class="mission card">
+      <div class="room-mark" aria-hidden="true"><span>R</span><b id="roomNumber">01</b></div>
+      <div class="mission__copy">
+        <p id="roomKicker">入门廊 · 单镜转向</p>
+        <h2 id="roomTitle">一面镜子，第一次转弯</h2>
+        <p id="roomText">先想好路线，再把斜镜放进格子。通电后才能看见光。</p>
+      </div>
+      <nav class="room-nav" id="roomNav" aria-label="镜屋房间"></nav>
+    </section>
+
+    <section class="workspace">
+      <section class="stage card">
+        <div class="stage__hud">
+          <p class="status" id="status" role="status" aria-live="polite">选一面斜镜，再点格子摆放。</p>
+          <span class="mirror-count"><span data-t="mirrors">镜子</span> <b id="placedCount">0</b>/<b id="mirrorLimit">1</b></span>
+        </div>
+        <div class="board-shell">
+          <canvas id="laserCanvas" aria-hidden="true"></canvas>
+          <div class="grid-board" id="gridBoard" role="grid" aria-label="镜子摆放网格"></div>
+          <div class="power-glow" id="powerGlow" aria-hidden="true"></div>
+        </div>
+      </section>
+
+      <aside class="console card">
+        <div class="console__head">
+          <div>
+            <p data-t="mirrorRack">MIRROR RACK / 镜架</p>
+            <strong id="roomGoal">点亮 1 颗水晶</strong>
+          </div>
+          <span class="room-code" id="roomCode">L-01</span>
+        </div>
+
+        <div class="tool-rack" role="group" aria-label="镜子工具">
+          <button class="mirror-tool selected" type="button" data-tool="slash" aria-pressed="true">
+            <span aria-hidden="true">╱</span><b data-t="slashMirror">右斜镜</b>
+          </button>
+          <button class="mirror-tool" type="button" data-tool="backslash" aria-pressed="false">
+            <span aria-hidden="true">╲</span><b data-t="backslashMirror">左斜镜</b>
+          </button>
+        </div>
+
+        <div class="legend" id="legend">
+          <span><i class="legend__source"></i><b data-t="source">发射器</b></span>
+          <span><i class="legend__crystal"></i><b data-t="crystal">水晶</b></span>
+          <span><i class="legend__fixed"></i><b data-t="fixed">固定装置</b></span>
+        </div>
+
+        <div class="lesson" id="lesson">
+          <span aria-hidden="true">↗</span>
+          <p id="lessonText">45° 斜镜会让横向光转成竖向光。</p>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn--ghost" id="clearBtn" type="button"><span aria-hidden="true">↺</span> <span data-t="clear">收回镜子</span></button>
+          <button class="btn btn--ghost" id="hintBtn" type="button"><span aria-hidden="true">💡</span> <span data-t="hint">轻提示</span></button>
+          <button class="btn btn--power" id="powerBtn" type="button"><span aria-hidden="true">⚡</span> <span data-t="power">通电看光路</span></button>
+          <button class="btn btn--next" id="nextBtn" type="button" hidden><span data-t="next">下一间</span> <span aria-hidden="true">→</span></button>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal" id="completeModal" hidden>
+    <section class="modal__card" role="dialog" aria-modal="true" aria-labelledby="completeTitle">
+      <div class="crystal-crown" aria-hidden="true"><i></i><i></i><i></i></div>
+      <p data-t="finalKicker">四间镜屋恢复供电</p>
+      <h2 id="completeTitle" data-t="finalTitle">全屋水晶依次亮起来了！</h2>
+      <p data-t="finalText">你先在脑中走完光路，再让每一面镜子把预测变成了亮光。</p>
+      <button class="btn btn--power" id="playAgainBtn" type="button" data-t="playAgain">再巡一次镜屋</button>
+    </section>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

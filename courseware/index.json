@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-28T16:33:27.127Z",
+  "generatedAt": "2026-07-28T18:08:24.962Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -3194,6 +3194,67 @@
         "游戏"
       ],
       "path": "courseware/punch-origami/index.html"
+    },
+    {
+      "id": "laser-mirrors",
+      "title": {
+        "zh": "激光镜屋",
+        "en": "Laser Mirror House"
+      },
+      "description": {
+        "zh": "先在脑中预测光路，再摆放和旋转斜镜。让激光绕过障碍、穿过分光镜和彩色滤镜，依次点亮整座镜屋的水晶。",
+        "en": "Predict each route before placing and rotating diagonal mirrors. Guide laser beams around walls, through a splitter and color filters, then light every crystal in the mirror house."
+      },
+      "category": "logic",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g3",
+        "g4",
+        "g5"
+      ],
+      "tags": [
+        "空间想象",
+        "推理",
+        "光学",
+        "益智游戏"
+      ],
+      "icon": "🔦",
+      "order": 79,
+      "badge": "new",
+      "keywords": [
+        "Spatial Reasoning",
+        "spatial reasoning",
+        "spatial",
+        "空间思维",
+        "Reasoning",
+        "reasoning",
+        "演绎推理",
+        "deduction",
+        "排除法",
+        "elimination",
+        "逻辑网格",
+        "logic grid",
+        "逆向推理",
+        "backward reasoning",
+        "证据",
+        "evidence",
+        "inference",
+        "Optics",
+        "optics",
+        "光线",
+        "ray",
+        "rays",
+        "几何光学",
+        "geometric optics",
+        "Puzzle Game",
+        "puzzle",
+        "game",
+        "益智",
+        "游戏"
+      ],
+      "path": "courseware/laser-mirrors/index.html"
     }
   ]
 }
