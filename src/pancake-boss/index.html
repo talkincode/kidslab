@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>煎饼老板 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title"><span aria-hidden="true">🥞</span> <span data-t="title">煎饼老板</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="course">
+    <section class="ticket card">
+      <div class="ticket__number"><span data-t="order">订单</span><strong id="missionNumber">01</strong></div>
+      <div class="ticket__copy">
+        <p class="eyebrow" id="missionKicker">开摊热身</p>
+        <h2 id="missionTitle">两张饼，铁板别空着</h2>
+        <p id="missionText">每张饼两面各煎 3 分钟。把 4 个饼面排进 2 轮。</p>
+      </div>
+      <nav class="mission-nav" id="missionNav" aria-label="订单"></nav>
+    </section>
+
+    <section class="workspace">
+      <section class="kitchen card">
+        <div class="kitchen__hud">
+          <p class="status" id="status" role="status" aria-live="polite">先点一个饼面，再点铁板空位。</p>
+          <div class="timer"><span data-t="totalTime">总用时</span><strong id="totalTime">0</strong><span data-t="minutes">分钟</span></div>
+        </div>
+
+        <div class="counter">
+          <div class="stall-sign" aria-hidden="true"><b>PANCAKE</b><span>朝食屋</span></div>
+          <div class="customer" aria-hidden="true"><span class="customer__face">🐰</span><i>8:15</i></div>
+          <div class="steam steam--one" aria-hidden="true"></div>
+          <div class="steam steam--two" aria-hidden="true"></div>
+
+          <section class="griddle-area">
+            <div class="time-ruler" id="timeRuler"></div>
+            <div class="schedule" id="schedule" aria-label="铁板时间表"></div>
+          </section>
+
+          <section class="parallel-panel" id="parallelPanel" hidden>
+            <div class="soy-machine" id="soyMachine" aria-hidden="true">
+              <span class="soy-machine__light"></span><b>SOY</b><i></i>
+            </div>
+            <div>
+              <strong data-t="soyTitle">豆浆机 · 需要 6 分钟</strong>
+              <p data-t="soyText">让它和煎饼同时开工，就不用多等 6 分钟。</p>
+            </div>
+            <button class="btn btn--soy" id="soyBtn" type="button" aria-pressed="false" data-t="startSoy">启动豆浆机</button>
+          </section>
+
+          <section class="clock-panel" id="clockPanel" hidden>
+            <div class="clock" aria-hidden="true"><span>7:52</span><i>+ 9</i></div>
+            <fieldset>
+              <legend data-t="clockQuestion">7:52 开始，9 分钟后是几点？</legend>
+              <div class="clock-options">
+                <label><input type="radio" name="finish-time" value="7:61" /><span>7:61</span></label>
+                <label><input type="radio" name="finish-time" value="8:01" /><span>8:01</span></label>
+                <label><input type="radio" name="finish-time" value="8:04" /><span>8:04</span></label>
+              </div>
+            </fieldset>
+          </section>
+        </div>
+      </section>
+
+      <aside class="prep card">
+        <div class="prep__heading">
+          <div>
+            <p data-t="prepDesk">备餐台</p>
+            <strong data-t="chooseSide">先选饼面，再放进铁板</strong>
+          </div>
+          <span class="bell" aria-hidden="true">🛎️</span>
+        </div>
+
+        <div class="token-tray" id="tokenTray" aria-label="待排饼面"></div>
+        <p class="legend"><span data-t="sideHint">同一张饼的正反面不能在同一轮煎。</span></p>
+
+        <div class="actions">
+          <button class="btn btn--check" id="checkBtn" type="button"><span aria-hidden="true">✓</span> <span data-t="check">检查排班</span></button>
+          <button class="btn btn--next" id="nextBtn" type="button" hidden><span data-t="next">下一单</span> <span aria-hidden="true">→</span></button>
+        </div>
+
+        <div class="utilities">
+          <button class="utility" id="undoBtn" type="button"><span aria-hidden="true">↶</span> <span data-t="undo">撤回</span></button>
+          <button class="utility" id="clearBtn" type="button"><span aria-hidden="true">✦</span> <span data-t="clear">清空</span></button>
+          <button class="utility" id="hintBtn" type="button"><span aria-hidden="true">💡</span> <span data-t="hint">提示</span></button>
+        </div>
+
+        <div class="rule-card">
+          <span aria-hidden="true">🔥</span>
+          <p><strong data-t="ruleTitle">铁板规则</strong><small data-t="ruleText">一轮 3 分钟，同时最多煎 2 个面。</small></p>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal" id="completeModal" hidden>
+    <section class="modal__card" role="dialog" aria-modal="true" aria-labelledby="completeTitle">
+      <div class="breakfast" aria-hidden="true">🥞🥛</div>
+      <p data-t="finalKicker">早餐赶上了 8:15 的公交</p>
+      <h2 id="completeTitle" data-t="finalTitle">早高峰统筹大师！</h2>
+      <p data-t="finalText">三张饼最快 9 分钟。豆浆同时做，7:52 开始，8:01 全部出餐！</p>
+      <button class="btn btn--check" id="playAgainBtn" type="button" data-t="playAgain">再开一摊</button>
+    </section>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

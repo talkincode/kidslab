@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-27T18:18:19.199Z",
+  "generatedAt": "2026-07-28T16:33:27.127Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -1272,6 +1272,54 @@
         "游戏"
       ],
       "path": "courseware/fraction-beats/index.html"
+    },
+    {
+      "id": "pancake-boss",
+      "title": {
+        "zh": "煎饼老板",
+        "en": "Pancake Boss"
+      },
+      "description": {
+        "zh": "把煎饼两面排进双格铁板，用 9 分钟完成三张饼，再让豆浆机和煎饼同时开工。",
+        "en": "Schedule both sides of each pancake on a two-slot griddle, finish three pancakes in 9 minutes, and run the soy maker in parallel."
+      },
+      "category": "math",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g3",
+        "g4"
+      ],
+      "tags": [
+        "时间",
+        "运算",
+        "益智游戏"
+      ],
+      "icon": "🥞",
+      "order": 27,
+      "badge": "new",
+      "keywords": [
+        "Time & Clocks",
+        "telling time",
+        "clock",
+        "认识钟表",
+        "整时",
+        "半时",
+        "hours",
+        "minutes",
+        "作息",
+        "Arithmetic",
+        "arithmetic",
+        "operations",
+        "四则运算",
+        "Puzzle Game",
+        "puzzle",
+        "game",
+        "益智",
+        "游戏"
+      ],
+      "path": "courseware/pancake-boss/index.html"
     },
     {
       "id": "plant-lab",

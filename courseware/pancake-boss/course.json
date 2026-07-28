@@ -1,0 +1,18 @@
+{
+  "id": "pancake-boss",
+  "title": {
+    "zh": "煎饼老板",
+    "en": "Pancake Boss"
+  },
+  "description": {
+    "zh": "把煎饼两面排进双格铁板，用 9 分钟完成三张饼，再让豆浆机和煎饼同时开工。",
+    "en": "Schedule both sides of each pancake on a two-slot griddle, finish three pancakes in 9 minutes, and run the soy maker in parallel."
+  },
+  "category": "math",
+  "levels": ["primary"],
+  "grades": ["g3", "g4"],
+  "tags": ["时间", "运算", "益智游戏"],
+  "icon": "🥞",
+  "order": 27,
+  "badge": "new"
+}
