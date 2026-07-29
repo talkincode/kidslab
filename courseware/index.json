@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-28T18:08:24.962Z",
+  "generatedAt": "2026-07-29T15:18:27.629Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -1994,6 +1994,47 @@
         "data representation"
       ],
       "path": "courseware/pixel-post/index.html"
+    },
+    {
+      "id": "rainbow-stage",
+      "title": {
+        "zh": "彩虹舞台",
+        "en": "Rainbow Stage"
+      },
+      "description": {
+        "zh": "接管青蛙音乐节的灯光台，用红绿蓝色光合成白光、用青黄颜料调出绿色，再让三棱镜展开白光里的彩虹。",
+        "en": "Run the Frog Festival light desk: combine red, green, and blue light into white, mix cyan and yellow pigment into green, then unfold the rainbow hidden in white light."
+      },
+      "category": "science",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g4",
+        "g5"
+      ],
+      "tags": [
+        "光学",
+        "实验"
+      ],
+      "icon": "🌈",
+      "order": 58,
+      "badge": "new",
+      "keywords": [
+        "Optics",
+        "optics",
+        "光线",
+        "ray",
+        "rays",
+        "几何光学",
+        "geometric optics",
+        "Experiment",
+        "experiment",
+        "simulation",
+        "lab",
+        "模拟"
+      ],
+      "path": "courseware/rainbow-stage/index.html"
     },
     {
       "id": "tiny-harbor",
