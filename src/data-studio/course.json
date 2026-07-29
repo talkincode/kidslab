@@ -1,0 +1,18 @@
+{
+  "id": "data-studio",
+  "title": {
+    "zh": "数据演播室",
+    "en": "Data Studio"
+  },
+  "description": {
+    "zh": "走进动物电视台，用“正”字收集台歌投票，为不同问题挑选条形图、折线图和扇形图，再根据数据完成直播播报。",
+    "en": "Join Animal TV: tally theme-song votes, match questions with bar, line, and pie charts, then deliver a live report from the data."
+  },
+  "category": "math",
+  "levels": ["primary"],
+  "grades": ["g3", "g4", "g5", "g6"],
+  "tags": ["分类", "运算", "实验"],
+  "icon": "📊",
+  "order": 27,
+  "badge": "new"
+}

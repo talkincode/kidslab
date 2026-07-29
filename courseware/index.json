@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T15:18:27.629Z",
+  "generatedAt": "2026-07-29T18:15:25.484Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -1272,6 +1272,50 @@
         "游戏"
       ],
       "path": "courseware/fraction-beats/index.html"
+    },
+    {
+      "id": "data-studio",
+      "title": {
+        "zh": "数据演播室",
+        "en": "Data Studio"
+      },
+      "description": {
+        "zh": "走进动物电视台，用“正”字收集台歌投票，为不同问题挑选条形图、折线图和扇形图，再根据数据完成直播播报。",
+        "en": "Join Animal TV: tally theme-song votes, match questions with bar, line, and pie charts, then deliver a live report from the data."
+      },
+      "category": "math",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g3",
+        "g4",
+        "g5",
+        "g6"
+      ],
+      "tags": [
+        "分类",
+        "运算",
+        "实验"
+      ],
+      "icon": "📊",
+      "order": 27,
+      "badge": "new",
+      "keywords": [
+        "Classification",
+        "classification",
+        "categorize",
+        "Arithmetic",
+        "arithmetic",
+        "operations",
+        "四则运算",
+        "Experiment",
+        "experiment",
+        "simulation",
+        "lab",
+        "模拟"
+      ],
+      "path": "courseware/data-studio/index.html"
     },
     {
       "id": "pancake-boss",

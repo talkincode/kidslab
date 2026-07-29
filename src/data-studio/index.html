@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>数据演播室 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill pill--back" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1><span aria-hidden="true">📊</span> <span data-t="title">数据演播室</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill pill--lang" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="course">
+    <section class="mission card">
+      <div class="mission__badge" aria-hidden="true"><small>LIVE</small><strong id="missionNumber">01</strong></div>
+      <div class="mission__copy">
+        <p id="missionKicker">第一场 · 收票</p>
+        <h2 id="missionTitle">用“正”字接住 20 张选票</h2>
+        <p id="missionText">看清每位小观众的选择，再把一笔记到对应台歌。</p>
+      </div>
+      <nav class="mission-nav" id="missionNav" aria-label="直播任务"></nav>
+    </section>
+
+    <section class="workspace">
+      <section class="studio card">
+        <div class="studio__hud">
+          <p class="status" id="status" role="status" aria-live="polite">第一位观众进场了。把票记到他说的台歌上。</p>
+          <div class="on-air" aria-hidden="true"><i></i><span>ON AIR</span></div>
+        </div>
+
+        <div class="screen">
+          <div class="screen__grid" aria-hidden="true"></div>
+          <svg id="chart" viewBox="0 0 760 390" role="img" aria-label="台歌投票图表"></svg>
+          <div class="voter-card" id="voterCard" data-vote="rocket">
+            <span id="voterEmoji" aria-hidden="true">🐰</span>
+            <p><small id="voterLabel">观众 1 / 20</small><strong id="voterChoice">火箭舞</strong></p>
+          </div>
+          <div class="screen-stamp" aria-hidden="true">KIDS<br>NEWS</div>
+        </div>
+      </section>
+
+      <aside class="console card">
+        <div class="console__head">
+          <div>
+            <p id="consoleKicker">TALLY DESK / 计票台</p>
+            <strong id="consoleTitle">点击观众选择的台歌</strong>
+          </div>
+          <span class="press-pass" aria-hidden="true">PRESS</span>
+        </div>
+
+        <section class="panel" id="tallyPanel">
+          <div class="tally-grid" id="tallyGrid"></div>
+        </section>
+
+        <section class="panel" id="chartPanel" hidden>
+          <div class="director-card">
+            <span aria-hidden="true">🎬</span>
+            <p><small id="questionCount">导播题 1 / 3</small><strong id="directorQuestion">哪首台歌得票最多？</strong></p>
+          </div>
+          <div class="chart-choices" id="chartChoices">
+            <button type="button" data-chart="bar"><span aria-hidden="true">▥</span><b data-t="barChart">条形图</b></button>
+            <button type="button" data-chart="line"><span aria-hidden="true">⌁</span><b data-t="lineChart">折线图</b></button>
+            <button type="button" data-chart="pie"><span aria-hidden="true">◕</span><b data-t="pieChart">扇形图</b></button>
+          </div>
+        </section>
+
+        <section class="panel" id="reportPanel" hidden>
+          <div class="anchor-card">
+            <span aria-hidden="true">🎙️</span>
+            <p><small id="reportCount">播报题 1 / 3</small><strong id="reportQuestion">哪首台歌得票最多？</strong></p>
+          </div>
+          <div class="answer-grid" id="answerGrid"></div>
+        </section>
+
+        <div class="lesson-card">
+          <span id="lessonIcon" aria-hidden="true">正</span>
+          <p id="lessonText">每五票凑成一个“正”字，既不漏票，也方便快速数总数。</p>
+        </div>
+
+        <div class="console__actions">
+          <button class="secondary" id="hintBtn" type="button"><span aria-hidden="true">💡</span> <span data-t="hint">轻提示</span></button>
+          <button class="action" id="nextBtn" type="button" hidden><span data-t="next">进入下一场</span> <span aria-hidden="true">→</span></button>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal" id="completeModal" hidden>
+    <section class="modal__card" role="dialog" aria-modal="true" aria-labelledby="completeTitle">
+      <div class="rating-burst" aria-hidden="true"><span>20</span><i></i><i></i><i></i></div>
+      <p data-t="finalKicker">数据直播圆满收官</p>
+      <h2 id="completeTitle" data-t="finalTitle">你把数据讲明白了！</h2>
+      <p data-t="finalText">你准确计票、为问题选对图表，还算出了每首台歌平均得到 5 票。</p>
+      <button class="action" id="playAgainBtn" type="button" data-t="playAgain">再做一期节目</button>
+    </section>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
