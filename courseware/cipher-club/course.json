@@ -1,0 +1,18 @@
+{
+  "id": "cipher-club",
+  "title": {
+    "zh": "密码社",
+    "en": "Cipher Club"
+  },
+  "description": {
+    "zh": "加入藏在课桌后的秘密社团，旋转凯撒密码盘加密纸条、倒转钥匙解密暗号，再用字母频率在没有钥匙时破译密文。",
+    "en": "Join a secret school club: turn a Caesar wheel to encrypt notes, reverse the key to decrypt clues, then crack a message with letter frequency."
+  },
+  "category": "programming",
+  "levels": ["primary"],
+  "grades": ["g5", "g6"],
+  "tags": ["算法", "编程启蒙", "益智游戏"],
+  "icon": "🔐",
+  "order": 71,
+  "badge": "new"
+}

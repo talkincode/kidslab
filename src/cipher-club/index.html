@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>密码社 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill pill--back" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1><span aria-hidden="true">🔐</span> <span data-t="title">密码社</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill pill--lang" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="course">
+    <section class="mission card">
+      <div class="mission__seal" aria-hidden="true"><small>CASE</small><strong id="missionNumber">01</strong></div>
+      <div class="mission__copy">
+        <p id="missionKicker">入社考验 · 加密</p>
+        <h2 id="missionTitle">把转盘调到钥匙 3，封好第一张纸条</h2>
+        <p id="missionText">每个字母一起向前走 3 格，空格保持不动。</p>
+      </div>
+      <nav class="mission-nav" id="missionNav" aria-label="密码任务"></nav>
+    </section>
+
+    <section class="workspace">
+      <section class="cipher-stage card">
+        <div class="stage__hud">
+          <p class="status" id="status" role="status" aria-live="polite">先转动钥匙，再看明文怎样变成密文。</p>
+          <span class="classified" aria-hidden="true">TOP<br>SECRET</span>
+        </div>
+
+        <div class="evidence">
+          <div class="string-line string-line--one" aria-hidden="true"></div>
+          <div class="string-line string-line--two" aria-hidden="true"></div>
+
+          <section class="wheel-scene" id="wheelScene">
+            <div class="decoder-wheel" aria-label="凯撒密码转盘">
+              <div class="wheel wheel--outer" id="outerWheel"></div>
+              <div class="wheel wheel--inner" id="innerWheel"></div>
+              <div class="wheel__hub">
+                <small data-t="key">钥匙</small>
+                <strong id="wheelKey">0</strong>
+              </div>
+            </div>
+            <div class="paper-note">
+              <span class="paper-note__pin" aria-hidden="true"></span>
+              <small data-t="plainText">明文</small>
+              <strong>MEET AT TREE</strong>
+              <i aria-hidden="true">↓</i>
+              <small data-t="cipherText">密文</small>
+              <b id="cipherPreview">MEET AT TREE</b>
+            </div>
+          </section>
+
+          <section class="decode-scene" id="decodeScene" hidden>
+            <div class="key-tag"><span data-t="foundKey">找到的钥匙</span><strong>5</strong></div>
+            <article class="intercept-note">
+              <span aria-hidden="true">✦ INTERCEPT ✦</span>
+              <small data-t="cipherText">密文</small>
+              <strong>HQZG WTTR</strong>
+              <p data-t="decodeDirection">把每个字母向后退 5 格，找回集合地点。</p>
+            </article>
+            <div class="alphabet-strip" id="alphabetStrip" aria-label="字母反向移位示例"></div>
+          </section>
+
+          <section class="frequency-scene" id="frequencyScene" hidden>
+            <article class="long-note">
+              <small data-t="interceptedMessage">截获的长纸条</small>
+              <strong>PHHW PH DIWHU VFKRRO<br>NHHS WKH PHVVDJH VHFUHW</strong>
+            </article>
+            <div class="frequency-board">
+              <p data-t="frequencyTitle">密文字母出现次数</p>
+              <div class="frequency-bars" id="frequencyBars"></div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <aside class="control-desk card">
+        <div class="desk__head">
+          <div>
+            <p id="deskKicker">CIPHER DESK / 密码台</p>
+            <strong id="deskTitle">让两圈字母错开 3 格</strong>
+          </div>
+          <span class="member-card" aria-hidden="true">CC</span>
+        </div>
+
+        <section class="panel key-panel" id="keyPanel">
+          <p class="panel-label" data-t="chooseKey">旋转钥匙</p>
+          <div class="key-control">
+            <button id="keyDownBtn" type="button" aria-label="钥匙减一">−</button>
+            <div><small data-t="key">钥匙</small><strong id="keyValue">0</strong></div>
+            <button id="keyUpBtn" type="button" aria-label="钥匙加一">+</button>
+          </div>
+          <button class="action action--wide" id="sealBtn" type="button"><span data-t="sealNote">封好纸条</span> <span aria-hidden="true">✉</span></button>
+        </section>
+
+        <section class="panel" id="decodePanel" hidden>
+          <p class="panel-label" data-t="choosePlain">哪张纸条是还原后的明文？</p>
+          <div class="answer-grid" id="answerGrid"></div>
+        </section>
+
+        <section class="panel crack-panel" id="crackPanel" hidden>
+          <div id="letterStep">
+            <p class="panel-label" data-t="chooseFrequent">第一步：点出次数最多的密文字母</p>
+            <div class="letter-choices">
+              <button type="button" data-letter="K">K <small>2×</small></button>
+              <button type="button" data-letter="H">H <small>11×</small></button>
+              <button type="button" data-letter="V">V <small>4×</small></button>
+              <button type="button" data-letter="W">W <small>4×</small></button>
+            </div>
+          </div>
+          <div id="mapStep" hidden>
+            <p class="panel-label" data-t="chooseMapping">第二步：先猜它可能对应哪个常见明文字母</p>
+            <div class="map-choices">
+              <button type="button" data-map="T">H → T</button>
+              <button type="button" data-map="E">H → E</button>
+              <button type="button" data-map="A">H → A</button>
+              <button type="button" data-map="O">H → O</button>
+            </div>
+          </div>
+          <button class="action action--wide" id="crackBtn" type="button" hidden><span data-t="crackMessage">用推出的钥匙 3 破译</span> <span aria-hidden="true">⚡</span></button>
+        </section>
+
+        <div class="lesson-card">
+          <span id="lessonIcon" aria-hidden="true">+3</span>
+          <p id="lessonText">凯撒密码让所有字母移动相同格数；走过 Z 会从 A 继续。</p>
+        </div>
+
+        <div class="desk__actions">
+          <button class="secondary" id="hintBtn" type="button"><span aria-hidden="true">💡</span> <span data-t="hint">轻提示</span></button>
+          <button class="action" id="nextBtn" type="button" hidden><span data-t="next">领取下一张纸条</span> <span aria-hidden="true">→</span></button>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal" id="completeModal" hidden>
+    <section class="modal__card" role="dialog" aria-modal="true" aria-labelledby="completeTitle">
+      <div class="club-badge" aria-hidden="true"><span>CC</span><i></i><i></i></div>
+      <p data-t="finalKicker">三封秘密纸条全部破解</p>
+      <h2 id="completeTitle" data-t="finalTitle">欢迎加入密码社！</h2>
+      <p data-t="finalText">你会用钥匙加密和解密，还能从重复的字母中寻找没有钥匙的突破口。</p>
+      <button class="action" id="playAgainBtn" type="button" data-t="playAgain">重新接受入社考验</button>
+    </section>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T18:15:25.484Z",
+  "generatedAt": "2026-07-30T15:38:25.150Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -2717,6 +2717,48 @@
         "游戏"
       ],
       "path": "courseware/hanoi-tower/index.html"
+    },
+    {
+      "id": "cipher-club",
+      "title": {
+        "zh": "密码社",
+        "en": "Cipher Club"
+      },
+      "description": {
+        "zh": "加入藏在课桌后的秘密社团，旋转凯撒密码盘加密纸条、倒转钥匙解密暗号，再用字母频率在没有钥匙时破译密文。",
+        "en": "Join a secret school club: turn a Caesar wheel to encrypt notes, reverse the key to decrypt clues, then crack a message with letter frequency."
+      },
+      "category": "programming",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g5",
+        "g6"
+      ],
+      "tags": [
+        "算法",
+        "编程启蒙",
+        "益智游戏"
+      ],
+      "icon": "🔐",
+      "order": 71,
+      "badge": "new",
+      "keywords": [
+        "Algorithms",
+        "algorithms",
+        "algorithm",
+        "Coding Basics",
+        "coding basics",
+        "coding",
+        "编程",
+        "Puzzle Game",
+        "puzzle",
+        "game",
+        "益智",
+        "游戏"
+      ],
+      "path": "courseware/cipher-club/index.html"
     },
     {
       "id": "magic-cube",
