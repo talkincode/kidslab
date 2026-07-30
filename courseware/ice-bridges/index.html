@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>七桥滑冰 · KidsLab</title>
+  <link rel="stylesheet" href="style.css?v=82c69be8" />
+  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<script>(()=>{"use strict";const g=window,r=g.cool||{};if(r.sdkVersion)return;try{document.documentElement.style.touchAction="manipulation"}catch{}const w="ice-bridges",b=location.pathname.split("/").filter(Boolean),E=b.at(-1)||"",A=E.includes(".")?b.at(-2):E,f=w.startsWith("__")?A:w,l={get(t,n=null){try{const e=localStorage.getItem(t);return e===null?n:e}catch{return n}},set(t,n){try{return localStorage.setItem(t,n),!0}catch{return!1}},remove(t){try{return localStorage.removeItem(t),!0}catch{return!1}}},d=new Set,S=new Set(["zh","en"]),I=new Set(["light","dark"]),C=(navigator.language||"").toLowerCase().startsWith("zh")?"zh":"en";let m="light";try{m=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch{}let s=l.get("kidslab.lang",C),c=l.get("kidslab.theme",m);S.has(s)||(s=C),I.has(c)||(c=m);function p(){document.documentElement.lang=s==="zh"?"zh-CN":"en",document.documentElement.dataset.theme=c}function T(t,n){const e={kind:t,value:n};for(const o of[...d])o(e);g.dispatchEvent(new CustomEvent(`${t}change`,{detail:{[t]:n}}))}const z={get lang(){return s},get theme(){return c},setLang(t){if(!S.has(t))throw new RangeError(`Unsupported language: ${t}`);t!==s&&(s=t,l.set("kidslab.lang",t),p(),T("lang",t))},setTheme(t){if(!I.has(t))throw new RangeError(`Unsupported theme: ${t}`);t!==c&&(c=t,l.set("kidslab.theme",t),p(),T("theme",t))},toggleLang(){this.setLang(s==="zh"?"en":"zh")},toggleTheme(){this.setTheme(c==="light"?"dark":"light")},subscribe(t){if(typeof t!="function")throw new TypeError("Preference listener must be a function");return d.add(t),()=>d.delete(t)}};function D(t,n={}){if(!t||typeof t!="object")throw new TypeError("Messages must be an object");const e=n.root||document;if(!e.querySelectorAll&&!e.matches)throw new TypeError("i18n root must be a Document or Element");function o(a,...h){const i=t[s]?.[a]??t.zh?.[a]??t.en?.[a];return typeof i=="function"?i(...h):i??a}function y(a="lang"){const h=[];e.matches?.("[data-t]")&&h.push(e),e.querySelectorAll&&h.push(...e.querySelectorAll("[data-t]"));for(const i of h){const L=o(i.dataset.t);typeof L=="string"&&(i.textContent=L)}n.onChange?.({kind:a,lang:s,theme:c,t:o})}const $=z.subscribe(({kind:a})=>{a==="lang"?y("lang"):n.onChange?.({kind:a,lang:s,theme:c,t:o})});return y("init"),{t:o,render:y,destroy:$}}const u=f?`kidslab.progress.${f}`:"";function _(){if(!u)return null;try{const t=JSON.parse(l.get(u,"null"));return!t||!["played","completed"].includes(t.status)?null:t}catch{return null}}function k(t,n){if(!u)return null;const e=_()||{},o={status:e.status==="completed"?"completed":t,stage:n||e.stage||"",updatedAt:Date.now()};return e.status===o.status&&e.stage===o.stage?e:(l.set(u,JSON.stringify(o)),o)}const P={get:_,clear(){return u?l.remove(u):!1}};r.sdkVersion=2,r.courseId=f,r.storage=l,r.preferences=z,r.bindI18n=D,r.progress=P,typeof r.track!="function"&&(r.track=()=>{}),r.stage=t=>{typeof t!="string"||!t||k("played",t.slice(0,48))},r.complete=()=>k("completed"),g.cool=r,p()})();
+</script>
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="chip chip--back" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1><span aria-hidden="true">⛸️</span> <span data-t="title">七桥滑冰</span></h1>
+    <div class="topbar__actions">
+      <button class="chip chip--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="chip chip--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="chip chip--lang" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="course">
+    <section class="brief card">
+      <div class="brief__number"><small>RINK</small><strong id="missionNumber">01</strong></div>
+      <div class="brief__copy">
+        <p id="missionKicker">旧城谜案 · 先判断</p>
+        <h2 id="missionTitle">七座桥，真的能每座只滑一次吗？</h2>
+        <p id="missionText">桥滑过就会碎。先别急着出发，看看每块陆地接了几座桥。</p>
+      </div>
+      <nav class="mission-nav" id="missionNav" aria-label="滑冰任务"></nav>
+    </section>
+
+    <section class="workspace">
+      <section class="rink card">
+        <div class="rink__status">
+          <p id="status" role="status" aria-live="polite">戴上奇偶眼镜，让每块陆地说出自己的桥数。</p>
+          <div class="bridge-meter" aria-label="桥梁进度">
+            <span data-t="bridges">冰桥</span>
+            <strong><b id="usedCount">0</b>/<b id="edgeCount">7</b></strong>
+          </div>
+        </div>
+
+        <div class="map" id="map">
+          <div class="snow snow--one" aria-hidden="true"></div>
+          <div class="snow snow--two" aria-hidden="true"></div>
+          <svg class="river-map" id="riverMap" viewBox="0 0 100 100" role="img" aria-label="冰雪小镇桥梁图"></svg>
+          <div class="nodes" id="nodesLayer"></div>
+          <div class="skater" id="skater" aria-hidden="true">⛸</div>
+          <div class="map-stamp" aria-hidden="true"><span>ONE</span><b>STROKE</b></div>
+        </div>
+
+        <div class="degree-strip" id="degreeStrip" aria-label="顶点度数"></div>
+      </section>
+
+      <aside class="fieldbook card">
+        <div class="fieldbook__head">
+          <div>
+            <p id="deskKicker">EULER FIELD BOOK / 欧拉观察簿</p>
+            <strong id="deskTitle">数一数，哪些陆地亮红灯</strong>
+          </div>
+          <span aria-hidden="true">❄</span>
+        </div>
+
+        <section class="panel" id="judgePanel">
+          <button class="goggles" id="gogglesBtn" type="button">
+            <span aria-hidden="true">🥽</span>
+            <span data-t="wearGoggles">戴上奇偶眼镜</span>
+          </button>
+          <p class="panel-label" data-t="judgeQuestion">七桥地图能一笔滑完吗？</p>
+          <div class="choice-row">
+            <button type="button" data-judge="possible" data-t="possible">能，继续试</button>
+            <button type="button" data-judge="impossible" data-t="impossible">不能，奇点太多</button>
+          </div>
+        </section>
+
+        <section class="panel route-panel" id="routePanel" hidden>
+          <p class="panel-label" data-t="routeGuide">点击一块陆地出发，再逐块选择下一站。</p>
+          <div class="route-readout">
+            <span data-t="route">路线</span>
+            <strong id="routeText">—</strong>
+          </div>
+          <div class="choice-row">
+            <button type="button" id="undoBtn"><span aria-hidden="true">↶</span> <span data-t="undo">退一步</span></button>
+            <button type="button" id="resetRouteBtn"><span aria-hidden="true">↺</span> <span data-t="resetRoute">重铺冰面</span></button>
+          </div>
+        </section>
+
+        <section class="panel repair-panel" id="repairPanel" hidden>
+          <p class="panel-label" data-t="repairGuide">选一张施工单，再检查奇点有没有降到 0 或 2。</p>
+          <div class="repair-grid">
+            <button type="button" data-repair="double"><span>×2</span><b data-t="repairDouble">同时封两座北桥</b></button>
+            <button type="button" data-repair="close-one"><span>−1</span><b data-t="repairClose">封掉城堡东桥</b></button>
+            <button type="button" data-repair="add-one"><span>+1</span><b data-t="repairAdd">新建南北直桥</b></button>
+          </div>
+          <button class="primary primary--wide" id="testRepairBtn" type="button" disabled>
+            <span data-t="testRepair">让巡逻员试滑</span> <span aria-hidden="true">→</span>
+          </button>
+        </section>
+
+        <div class="insight">
+          <span id="lessonIcon" aria-hidden="true">4</span>
+          <p id="lessonText">奇数点超过 2 个，不管从哪里出发都会被困住。</p>
+        </div>
+
+        <div class="fieldbook__actions">
+          <button class="secondary" id="hintBtn" type="button"><span aria-hidden="true">💡</span> <span data-t="hint">轻提示</span></button>
+          <button class="primary" id="nextBtn" type="button" hidden><span data-t="next">去下一块冰场</span> <span aria-hidden="true">→</span></button>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal" id="completeModal" hidden>
+    <section class="modal__card" role="dialog" aria-modal="true" aria-labelledby="completeTitle">
+      <div class="medal" aria-hidden="true">⛸️<i></i></div>
+      <p data-t="finalKicker">三张冰图全部破解</p>
+      <h2 id="completeTitle" data-t="finalTitle">你拿到了欧拉巡冰章！</h2>
+      <p data-t="finalText">你会先数奇点判断能不能一笔画，也能改一座桥，让无解的小镇重新通车。</p>
+      <button class="primary" id="playAgainBtn" type="button" data-t="playAgain">重新巡查三块冰场</button>
+    </section>
+  </div>
+
+  <script src="main.js?v=57113919"></script>
+</body>
+</html>

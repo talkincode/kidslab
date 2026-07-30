@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-30T15:38:25.150Z",
+  "generatedAt": "2026-07-30T18:17:12.816Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -2880,6 +2880,60 @@
         "游戏"
       ],
       "path": "courseware/huarong-dao/index.html"
+    },
+    {
+      "id": "ice-bridges",
+      "title": {
+        "zh": "七桥滑冰",
+        "en": "Seven Bridges on Ice"
+      },
+      "description": {
+        "zh": "在会碎的冰桥上规划一笔滑行：先用奇偶眼镜看穿七桥为何无解，再滑完一条欧拉回路，最后亲手改桥救活冰雪小镇。",
+        "en": "Plan one-stroke skating routes on fragile ice bridges: expose why the seven-bridge map is impossible, skate an Euler circuit, then repair the town by changing its graph."
+      },
+      "category": "logic",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g5",
+        "g6"
+      ],
+      "tags": [
+        "推理",
+        "策略",
+        "益智游戏"
+      ],
+      "icon": "⛸️",
+      "order": 72,
+      "badge": "new",
+      "keywords": [
+        "Reasoning",
+        "reasoning",
+        "演绎推理",
+        "deduction",
+        "排除法",
+        "elimination",
+        "逻辑网格",
+        "logic grid",
+        "逆向推理",
+        "backward reasoning",
+        "证据",
+        "evidence",
+        "inference",
+        "Strategy",
+        "strategy",
+        "博弈策略",
+        "game theory",
+        "尼姆游戏",
+        "nim",
+        "Puzzle Game",
+        "puzzle",
+        "game",
+        "益智",
+        "游戏"
+      ],
+      "path": "courseware/ice-bridges/index.html"
     },
     {
       "id": "sudoku-zoo",
