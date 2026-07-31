@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-30T18:17:12.816Z",
+  "generatedAt": "2026-07-31T15:24:30.327Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -2934,6 +2934,54 @@
         "游戏"
       ],
       "path": "courseware/ice-bridges/index.html"
+    },
+    {
+      "id": "robo-pet-school",
+      "title": {
+        "zh": "机器宠物学校",
+        "en": "Robo-Pet School"
+      },
+      "description": {
+        "zh": "用“是球 / 不是球”的例子训练机器狗，亲眼发现样本太少造成的误判，再补充多样例和反例，让它在公园认出从没见过的新球。",
+        "en": "Train a robo-dog with ball and not-ball examples, catch mistakes caused by narrow data, then add varied examples so it recognizes new balls at the park."
+      },
+      "category": "programming",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g5",
+        "g6"
+      ],
+      "tags": [
+        "分类",
+        "观察",
+        "编程启蒙",
+        "实验"
+      ],
+      "icon": "🐶",
+      "order": 72,
+      "badge": "new",
+      "keywords": [
+        "Classification",
+        "classification",
+        "categorize",
+        "Observation",
+        "observation",
+        "五感",
+        "five senses",
+        "特征",
+        "Coding Basics",
+        "coding basics",
+        "coding",
+        "编程",
+        "Experiment",
+        "experiment",
+        "simulation",
+        "lab",
+        "模拟"
+      ],
+      "path": "courseware/robo-pet-school/index.html"
     },
     {
       "id": "sudoku-zoo",

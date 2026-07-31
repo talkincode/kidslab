@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>机器宠物学校 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill pill--back" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1><span aria-hidden="true">🐶</span> <span data-t="title">机器宠物学校</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill pill--lang" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="course">
+    <section class="mission card">
+      <div class="mission__badge" aria-hidden="true"><small>CLASS</small><strong id="missionNumber">01</strong></div>
+      <div class="mission__copy">
+        <p id="missionKicker">第一课 · 喂例子</p>
+        <h2 id="missionTitle">机器狗不会猜，要用例子教</h2>
+        <p id="missionText">看清物品，再告诉豆豆“是球”还是“不是球”。</p>
+      </div>
+      <nav class="mission-nav" id="missionNav" aria-label="训练课程"></nav>
+    </section>
+
+    <section class="workspace">
+      <section class="schoolyard card">
+        <div class="stage__hud">
+          <p class="status" id="status" role="status" aria-live="polite">先给豆豆看第一个例子：红色橡胶球。</p>
+          <div class="data-count" aria-label="训练样本数">
+            <span data-t="examples">样本</span>
+            <strong id="exampleCount">0</strong>
+          </div>
+        </div>
+
+        <div class="yard" id="yard">
+          <div class="yard__sign" aria-hidden="true">
+            <span>ROBO-PET</span>
+            <strong>SCHOOL</strong>
+          </div>
+          <div class="cloud cloud--one" aria-hidden="true"></div>
+          <div class="cloud cloud--two" aria-hidden="true"></div>
+          <div class="fence" aria-hidden="true"></div>
+
+          <div class="dog-wrap" id="dogWrap" aria-hidden="true">
+            <div class="thought" id="thoughtBubble">?</div>
+            <div class="dog">
+              <div class="dog__tail"></div>
+              <div class="dog__body"><span class="dog__panel">AI</span></div>
+              <div class="dog__head">
+                <i class="dog__ear dog__ear--left"></i>
+                <i class="dog__ear dog__ear--right"></i>
+                <b class="dog__eye dog__eye--left"></b>
+                <b class="dog__eye dog__eye--right"></b>
+                <span class="dog__muzzle"><i></i></span>
+              </div>
+              <div class="dog__leg dog__leg--one"></div>
+              <div class="dog__leg dog__leg--two"></div>
+            </div>
+          </div>
+
+          <div class="object-pedestal" id="objectPedestal">
+            <span class="object-emoji" id="objectEmoji" aria-hidden="true">🔴</span>
+            <strong id="objectName">红色橡胶球</strong>
+            <div class="feature-tags" id="featureTags"></div>
+          </div>
+
+          <section class="brain-card" aria-label="机器狗判断面板">
+            <div class="brain-card__top">
+              <span data-t="brain">豆豆的脑内雷达</span>
+              <strong id="confidenceText">等待样本</strong>
+            </div>
+            <canvas id="brainCanvas" aria-hidden="true"></canvas>
+            <p id="brainNote">例子越有变化，豆豆越能抓住“球”的共同特点。</p>
+          </section>
+        </div>
+
+        <div class="sample-strip" id="sampleStrip" aria-label="已学习的样本"></div>
+      </section>
+
+      <aside class="trainer card">
+        <div class="trainer__head">
+          <div>
+            <p id="trainerKicker">TRAINING DESK / 训练台</p>
+            <strong id="trainerTitle">给当前物品贴标签</strong>
+          </div>
+          <span class="trainer__stamp" id="trainerStamp" aria-hidden="true">01</span>
+        </div>
+
+        <section class="lesson-panel">
+          <span id="lessonIcon" aria-hidden="true">🏷️</span>
+          <p id="lessonText">标签就是例子的正确答案。豆豆会从这些答案里寻找线索。</p>
+        </section>
+
+        <section class="controls" id="labelControls">
+          <p class="control-label" data-t="chooseLabel">这个物品应该贴哪个标签？</p>
+          <div class="label-actions">
+            <button class="answer answer--yes" id="ballBtn" type="button">
+              <span aria-hidden="true">✓</span>
+              <strong data-t="isBall">是球</strong>
+            </button>
+            <button class="answer answer--no" id="notBallBtn" type="button">
+              <span aria-hidden="true">×</span>
+              <strong data-t="notBall">不是球</strong>
+            </button>
+          </div>
+        </section>
+
+        <section class="controls" id="biasControls" hidden>
+          <p class="control-label" data-t="biasPrompt">测试新物品，看看窄样本会发生什么。</p>
+          <button class="action action--wide" id="biasTestBtn" type="button"><span data-t="runBiasTest">让豆豆认绿网球</span> <span aria-hidden="true">▶</span></button>
+        </section>
+
+        <section class="controls" id="retrainControls" hidden>
+          <p class="control-label" data-t="retrainPrompt">新例子都贴好了，现在重新训练。</p>
+          <button class="action action--wide" id="retrainBtn" type="button"><span data-t="retrain">重新训练豆豆</span> <span aria-hidden="true">↻</span></button>
+        </section>
+
+        <section class="controls" id="parkControls" hidden>
+          <p class="control-label" id="parkPrompt">让豆豆独立判断公园里的新物品。</p>
+          <button class="action action--wide" id="decideBtn" type="button"><span data-t="letDecide">让豆豆判断</span> <span aria-hidden="true">🐾</span></button>
+          <button class="action action--wide" id="nextObjectBtn" type="button" hidden><span data-t="nextObject">下一个公园物品</span> <span aria-hidden="true">→</span></button>
+        </section>
+
+        <div class="trainer__actions">
+          <button class="secondary" id="hintBtn" type="button"><span aria-hidden="true">💡</span> <span data-t="hint">轻提示</span></button>
+          <button class="action" id="nextLessonBtn" type="button" hidden><span data-t="nextLesson">去下一课</span> <span aria-hidden="true">→</span></button>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal" id="completeModal" hidden>
+    <section class="modal__card" role="dialog" aria-modal="true" aria-labelledby="completeTitle">
+      <div class="graduate-dog" aria-hidden="true">🐶<span>🎓</span></div>
+      <p data-t="finalKicker">公园测验 6 / 6 全部通过</p>
+      <h2 id="completeTitle" data-t="finalTitle">豆豆毕业啦！</h2>
+      <p data-t="finalText">你没有把答案写成死规则，而是用多样例和反例教它，再拿从没见过的物品检验它是否真的学会。</p>
+      <button class="action" id="playAgainBtn" type="button" data-t="playAgain">重新开学</button>
+    </section>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
