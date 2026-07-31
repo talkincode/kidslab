@@ -1,0 +1,18 @@
+{
+  "id": "triangle-lab",
+  "title": {
+    "zh": "三角形实验室",
+    "en": "Triangle Lab"
+  },
+  "description": {
+    "zh": "给摇晃货架加斜撑，把三角形三个角拼成平角，再用木条亲手验证三边关系，完成三项三角形实验。",
+    "en": "Brace a wobbly shelf, fit three corner pieces into a straight angle, and test stick lengths to discover the triangle inequality."
+  },
+  "category": "math",
+  "levels": ["primary"],
+  "grades": ["g4"],
+  "tags": ["平面图形", "实验", "益智游戏"],
+  "icon": "🔺",
+  "order": 73,
+  "badge": "new"
+}

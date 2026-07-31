@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>三角形实验室 · KidsLab</title>
+  <link rel="stylesheet" href="style.css?v=c7927a01" />
+  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<script>(()=>{"use strict";const g=window,r=g.cool||{};if(r.sdkVersion)return;try{document.documentElement.style.touchAction="manipulation"}catch{}const w="triangle-lab",b=location.pathname.split("/").filter(Boolean),E=b.at(-1)||"",A=E.includes(".")?b.at(-2):E,f=w.startsWith("__")?A:w,l={get(t,n=null){try{const e=localStorage.getItem(t);return e===null?n:e}catch{return n}},set(t,n){try{return localStorage.setItem(t,n),!0}catch{return!1}},remove(t){try{return localStorage.removeItem(t),!0}catch{return!1}}},d=new Set,S=new Set(["zh","en"]),I=new Set(["light","dark"]),C=(navigator.language||"").toLowerCase().startsWith("zh")?"zh":"en";let m="light";try{m=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch{}let s=l.get("kidslab.lang",C),c=l.get("kidslab.theme",m);S.has(s)||(s=C),I.has(c)||(c=m);function p(){document.documentElement.lang=s==="zh"?"zh-CN":"en",document.documentElement.dataset.theme=c}function T(t,n){const e={kind:t,value:n};for(const o of[...d])o(e);g.dispatchEvent(new CustomEvent(`${t}change`,{detail:{[t]:n}}))}const z={get lang(){return s},get theme(){return c},setLang(t){if(!S.has(t))throw new RangeError(`Unsupported language: ${t}`);t!==s&&(s=t,l.set("kidslab.lang",t),p(),T("lang",t))},setTheme(t){if(!I.has(t))throw new RangeError(`Unsupported theme: ${t}`);t!==c&&(c=t,l.set("kidslab.theme",t),p(),T("theme",t))},toggleLang(){this.setLang(s==="zh"?"en":"zh")},toggleTheme(){this.setTheme(c==="light"?"dark":"light")},subscribe(t){if(typeof t!="function")throw new TypeError("Preference listener must be a function");return d.add(t),()=>d.delete(t)}};function D(t,n={}){if(!t||typeof t!="object")throw new TypeError("Messages must be an object");const e=n.root||document;if(!e.querySelectorAll&&!e.matches)throw new TypeError("i18n root must be a Document or Element");function o(a,...h){const i=t[s]?.[a]??t.zh?.[a]??t.en?.[a];return typeof i=="function"?i(...h):i??a}function y(a="lang"){const h=[];e.matches?.("[data-t]")&&h.push(e),e.querySelectorAll&&h.push(...e.querySelectorAll("[data-t]"));for(const i of h){const L=o(i.dataset.t);typeof L=="string"&&(i.textContent=L)}n.onChange?.({kind:a,lang:s,theme:c,t:o})}const $=z.subscribe(({kind:a})=>{a==="lang"?y("lang"):n.onChange?.({kind:a,lang:s,theme:c,t:o})});return y("init"),{t:o,render:y,destroy:$}}const u=f?`kidslab.progress.${f}`:"";function _(){if(!u)return null;try{const t=JSON.parse(l.get(u,"null"));return!t||!["played","completed"].includes(t.status)?null:t}catch{return null}}function k(t,n){if(!u)return null;const e=_()||{},o={status:e.status==="completed"?"completed":t,stage:n||e.stage||"",updatedAt:Date.now()};return e.status===o.status&&e.stage===o.stage?e:(l.set(u,JSON.stringify(o)),o)}const P={get:_,clear(){return u?l.remove(u):!1}};r.sdkVersion=2,r.courseId=f,r.storage=l,r.preferences=z,r.bindI18n=D,r.progress=P,typeof r.track!="function"&&(r.track=()=>{}),r.stage=t=>{typeof t!="string"||!t||k("played",t.slice(0,48))},r.complete=()=>k("completed"),g.cool=r,p()})();
+</script>
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill pill--back" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1><span aria-hidden="true">🔺</span> <span data-t="title">三角形实验室</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill pill--lang" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="course">
+    <section class="mission card">
+      <div class="mission__badge" aria-hidden="true"><small>LAB</small><strong id="missionNumber">01</strong></div>
+      <div class="mission__copy">
+        <p id="missionKicker">实验一 · 结构抗震</p>
+        <h2 id="missionTitle">斜撑让货架不再变形</h2>
+        <p id="missionText">先放上大象测试方框，再加斜撑重试。</p>
+      </div>
+      <nav class="mission-nav" id="missionNav" aria-label="实验项目"></nav>
+    </section>
+
+    <section class="workspace">
+      <section class="stage card">
+        <div class="stage__hud">
+          <p class="status" id="status" role="status" aria-live="polite">方框看着结实，真的扛得住吗？先放上大象。</p>
+          <div class="result-chip"><span data-t="records">记录</span><strong id="recordCount">0/3</strong></div>
+        </div>
+        <div class="canvas-shell" id="canvasShell">
+          <canvas id="labCanvas" aria-label="三角形实验台"></canvas>
+          <div class="canvas-label" id="canvasLabel">SQUARE FRAME / 方框货架</div>
+          <div class="formula" id="formula" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <aside class="console card">
+        <div class="console__head">
+          <div>
+            <p id="consoleKicker">STRUCTURE BENCH / 结构台</p>
+            <strong id="consoleTitle">让货架经受重量测试</strong>
+          </div>
+          <span class="console__stamp" id="consoleStamp" aria-hidden="true">01</span>
+        </div>
+
+        <section class="lesson-panel">
+          <span id="lessonIcon" aria-hidden="true">🏗️</span>
+          <p id="lessonText">方框能在边长不变时改变角度；一根斜撑会把它分成两个稳定的三角形。</p>
+        </section>
+
+        <section class="controls" id="stabilityControls">
+          <button class="action action--primary" id="loadBtn" type="button"><span aria-hidden="true">🐘</span> <span data-t="loadElephant">放上大象</span></button>
+          <button class="action" id="braceBtn" type="button"><span aria-hidden="true">🪵</span> <span data-t="addBrace">加一根斜撑</span></button>
+        </section>
+
+        <section class="controls" id="angleControls" hidden>
+          <button class="action action--primary" id="tearBtn" type="button"><span aria-hidden="true">✂️</span> <span data-t="tearAngles">撕下三个角</span></button>
+          <button class="action" id="newTriangleBtn" type="button"><span aria-hidden="true">🔄</span> <span data-t="newTriangle">换个三角形</span></button>
+        </section>
+
+        <section class="controls" id="sticksControls" hidden>
+          <p class="control-label" data-t="stickQuestion">这三根木条能围成三角形吗？</p>
+          <div class="answer-row">
+            <button class="answer answer--yes" id="canBuildBtn" type="button"><span aria-hidden="true">△</span><strong data-t="canBuild">能围成</strong></button>
+            <button class="answer answer--no" id="cannotBuildBtn" type="button"><span aria-hidden="true">—</span><strong data-t="cannotBuild">围不成</strong></button>
+          </div>
+        </section>
+
+        <div class="console__actions">
+          <button class="secondary" id="hintBtn" type="button"><span aria-hidden="true">💡</span> <span data-t="hint">轻提示</span></button>
+          <button class="action action--next" id="nextLabBtn" type="button" hidden><span data-t="nextLab">去下一个实验</span> <span aria-hidden="true">→</span></button>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal" id="completeModal" hidden>
+    <section class="modal__card" role="dialog" aria-modal="true" aria-labelledby="completeTitle">
+      <div class="trophy" aria-hidden="true">🔺<span>✨</span></div>
+      <p data-t="finalKicker">三项实验记录完成</p>
+      <h2 id="completeTitle" data-t="finalTitle">三角形专家认证！</h2>
+      <p data-t="finalText">你用斜撑造出稳定结构，把三个内角拼成 180°，还找到了木条能围成三角形的严格条件。</p>
+      <button class="action action--primary" id="playAgainBtn" type="button" data-t="playAgain">重新做实验</button>
+    </section>
+  </div>
+
+  <script src="main.js?v=34405c3f"></script>
+</body>
+</html>
