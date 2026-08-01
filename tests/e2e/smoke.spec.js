@@ -161,13 +161,15 @@ test.describe('main site', () => {
     await expect(atlas.locator('[data-layout="blackhole"]')).toHaveAttribute('aria-pressed', 'true');
     await expect(atlas.locator('.starmap__hint')).toContainText(/黑洞|black hole/i);
 
-    /* 点击画布中心进入/退出黑洞内部预览 */
+    /* 点击画布中心进入/退出黑洞内部预览（穿膜过场以 data-bh-fx 标记） */
     const canvas = atlas.locator('canvas');
     const box = await canvas.boundingBox();
     await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
-    await expect(atlas.locator('.starmap__hint')).toContainText(/内部|Inside/i);
+    await expect(atlas.locator('.starmap__hint')).toContainText(/内部|Inside/i, { timeout: 4000 });
+    await expect(atlas).not.toHaveAttribute('data-bh-fx', 'cross', { timeout: 4000 });
     await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
-    await expect(atlas.locator('.starmap__hint')).toContainText(/穿梭|tunnels/i);
+    await expect(atlas.locator('.starmap__hint')).toContainText(/穿梭|tunnels/i, { timeout: 4000 });
+    await expect(atlas).not.toHaveAttribute('data-bh-fx', 'cross', { timeout: 4000 });
 
     const starSearch = atlas.locator('#starmapSearch');
     await starSearch.fill(searchable.title.zh);

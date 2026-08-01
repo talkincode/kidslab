@@ -233,11 +233,14 @@
   let ufo = null;
   /* 黑洞模式：内部预览 + 课件穿梭 */
   const BH_R = 84;       /* 事件视界世界半径 */
+  const BH_BEAM = -0.55; /* 多普勒迎向轴（弧度，盘面坐标系） */
   let bhInside = false;
   let bhHover = false;
   const bhTransits = []; /* { n, t0, durIn, durOut, phase, fromR, fromA, toR, toA, spin } */
   let nextTransit = 0;
   let bhPlasma = null;   /* 吸积盘等离子体粒子缓存 */
+  /* 进出视界过场：{ t0, dur, entering, flipped } */
+  let bhCross = null;
 
   const catVisible = (cat) => activeCats.size === 0 || activeCats.has(cat);
   function visible(n) {
@@ -358,28 +361,82 @@
     }));
   }
 
+  /* 黑洞外侧：背景点的弱引力透镜（径向外推 + 近视界弧拉长） */
+  function lensBgPoint(sx, sy, cx, cy, rH) {
+    const dx = sx - cx, dy = sy - cy;
+    const d = Math.hypot(dx, dy) || 0.001;
+    if (d < rH * 0.92) return null; /* 落入视界，不画 */
+    const u = rH / d;
+    /* 近光子环处外推最强，远处迅速衰减 */
+    const push = 1 + (u * u) * 1.15 * Math.exp(-Math.max(0, d / rH - 1.05) * 1.8);
+    const ang = Math.atan2(dy, dx);
+    /* 环向切向拉伸：越靠近视界，星点越被拉成弧 */
+    const shear = Math.min(2.8, (u * u) * 3.4);
+    return {
+      x: cx + Math.cos(ang) * d * push,
+      y: cy + Math.sin(ang) * d * push,
+      ang,
+      shear,
+      near: u,
+    };
+  }
+
   function drawBackground(tSec, w, h) {
+    const cx0 = w / 2, cy0 = h / 2;
+    const holeC = (layout === 'blackhole' && !bhInside) ? toScreen({ x: 0, y: 0 }) : null;
+    const rH = holeC ? BH_R * cam.s : 0;
+    const crossK = bhCross ? Math.min(1, (performance.now() - bhCross.t0) / bhCross.dur) : 0;
+    const lensBoost = 1 + (bhCross ? (crossK < 0.5 ? crossK * 2 : (1 - crossK) * 1.2) * 1.4 : 0);
+
     /* 漂移星云 */
     ctx.globalCompositeOperation = 'lighter';
     for (const nb of nebulae) {
-      const size = 256 * nb.s;
-      const x = nb.fx * w + Math.sin(tSec * nb.sp + nb.ph) * 46 - cam.x * cam.s * nb.par - size / 2;
-      const y = nb.fy * h + Math.cos(tSec * nb.sp * 0.8 + nb.ph) * 34 - cam.y * cam.s * nb.par - size / 2;
+      let size = 256 * nb.s;
+      let x = nb.fx * w + Math.sin(tSec * nb.sp + nb.ph) * 46 - cam.x * cam.s * nb.par - size / 2;
+      let y = nb.fy * h + Math.cos(tSec * nb.sp * 0.8 + nb.ph) * 34 - cam.y * cam.s * nb.par - size / 2;
+      if (holeC && !reducedMotion) {
+        const mx = x + size / 2, my = y + size / 2;
+        const lp = lensBgPoint(mx, my, holeC.x, holeC.y, rH * lensBoost);
+        if (!lp) continue;
+        const sMul = 1 + lp.near * 0.35;
+        size *= sMul;
+        x = lp.x - size / 2;
+        y = lp.y - size / 2;
+      }
       ctx.globalAlpha = reducedMotion ? 0.5 : 0.42 + 0.18 * Math.sin(tSec * 0.3 + nb.ph);
       ctx.drawImage(nb.img, x, y, size, size);
     }
     ctx.globalCompositeOperation = 'source-over';
 
-    /* 星尘（带视差；跃迁时拉成流光） */
-    const cx0 = w / 2, cy0 = h / 2;
+    /* 星尘（带视差；跃迁时拉成流光；黑洞外侧近视界透镜弧） */
     for (const s of bgStars) {
-      const sx = (((s.x - cam.x * cam.s * s.par) % w) + w) % w;
-      const sy = (((s.y - cam.y * cam.s * s.par) % h) + h) % h;
+      let sx = (((s.x - cam.x * cam.s * s.par) % w) + w) % w;
+      let sy = (((s.y - cam.y * cam.s * s.par) % h) + h) % h;
       if (warp > 0.03) {
         const dx = sx - cx0, dy = sy - cy0;
         ctx.globalAlpha = 0.25 + 0.55 * warp;
         ctx.strokeStyle = '#bfe9ff'; ctx.lineWidth = s.r; ctx.lineCap = 'round';
         ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx + dx * warp * 0.7, sy + dy * warp * 0.7); ctx.stroke();
+      } else if (holeC && !reducedMotion) {
+        const lp = lensBgPoint(sx, sy, holeC.x, holeC.y, rH * lensBoost);
+        if (!lp) continue;
+        const a = reducedMotion ? 0.55 : 0.35 + 0.35 * Math.sin(tSec * s.sp + s.phase);
+        if (lp.shear > 0.55) {
+          /* 近视界：拉成沿切向的微弧（爱因斯坦环感） */
+          const arc = Math.min(0.55, lp.shear * 0.16);
+          const rr = Math.hypot(lp.x - holeC.x, lp.y - holeC.y);
+          ctx.globalAlpha = a * (0.55 + lp.near * 0.55);
+          ctx.strokeStyle = lp.near > 0.72 ? '#ffe6b0' : '#cdd6ff';
+          ctx.lineWidth = Math.max(0.6, s.r * (0.8 + lp.shear * 0.25));
+          ctx.lineCap = 'round';
+          ctx.beginPath();
+          ctx.arc(holeC.x, holeC.y, rr, lp.ang - arc, lp.ang + arc);
+          ctx.stroke();
+        } else {
+          ctx.globalAlpha = a;
+          ctx.fillStyle = '#cdd6ff';
+          ctx.beginPath(); ctx.arc(lp.x, lp.y, s.r * (1 + lp.near * 0.4), 0, Math.PI * 2); ctx.fill();
+        }
       } else {
         ctx.globalAlpha = reducedMotion ? 0.55 : 0.35 + 0.35 * Math.sin(tSec * s.sp + s.phase);
         ctx.fillStyle = '#cdd6ff';
@@ -520,34 +577,71 @@
       return;
     }
 
-    /* —— over：吸积盘 + 等离子体 + 光子环 + 视界 —— */
+    /* —— over：吸积盘（多普勒不对称）+ 等离子体 + 光子环 + 视界 —— */
+    const tilt = -0.32 + (reducedMotion ? 0 : Math.sin(spin * 0.12) * 0.04);
+    const beamAxis = BH_BEAM + (reducedMotion ? 0 : spin * 0.08);
     ctx.save();
     ctx.translate(c.x, c.y);
-    ctx.rotate(-0.32 + (reducedMotion ? 0 : Math.sin(spin * 0.12) * 0.04));
+    ctx.rotate(tilt);
     ctx.scale(1, 0.42);
 
     ctx.globalCompositeOperation = 'lighter';
+    /* 底盘：双侧分色径向晕——迎向侧青白热，远离侧暗橙红 */
     for (let i = 0; i < 7; i++) {
       const rr = r * (1.18 + i * 0.36);
-      const g = ctx.createRadialGradient(rr * 0.24, 0, rr * 0.06, 0, 0, rr);
-      const a0 = 0.82 - i * 0.08;
-      g.addColorStop(0, `rgba(255, 252, 235, ${a0 * 0.7})`);
-      g.addColorStop(0.26, `rgba(255, ${200 - i * 12}, ${48 + i * 10}, ${a0 * 0.88})`);
-      g.addColorStop(0.58, `rgba(255, 110, 28, ${a0 * 0.42})`);
-      g.addColorStop(1, 'rgba(40, 10, 0, 0)');
-      ctx.globalAlpha = 0.78 + pulse * 0.22;
-      ctx.fillStyle = g;
+      const a0 = 0.78 - i * 0.07;
+      /* 迎向（蓝移）热斑 */
+      const gHot = ctx.createRadialGradient(
+        Math.cos(beamAxis) * rr * 0.42, Math.sin(beamAxis) * rr * 0.18,
+        rr * 0.04, 0, 0, rr,
+      );
+      gHot.addColorStop(0, `rgba(255, 252, 245, ${a0 * 0.95})`);
+      gHot.addColorStop(0.22, `rgba(190, 235, 255, ${a0 * 0.72})`);
+      gHot.addColorStop(0.48, `rgba(255, ${190 - i * 10}, ${70 + i * 8}, ${a0 * 0.4})`);
+      gHot.addColorStop(1, 'rgba(40, 10, 0, 0)');
+      ctx.globalAlpha = 0.7 + pulse * 0.25;
+      ctx.fillStyle = gHot;
+      ctx.beginPath(); ctx.arc(0, 0, rr, 0, Math.PI * 2); ctx.fill();
+
+      /* 远离（红移）暗侧 */
+      const gCool = ctx.createRadialGradient(
+        Math.cos(beamAxis + Math.PI) * rr * 0.38, Math.sin(beamAxis + Math.PI) * rr * 0.16,
+        rr * 0.05, 0, 0, rr,
+      );
+      gCool.addColorStop(0, `rgba(120, 30, 20, ${a0 * 0.55})`);
+      gCool.addColorStop(0.35, `rgba(180, 55, 20, ${a0 * 0.32})`);
+      gCool.addColorStop(1, 'rgba(20, 0, 0, 0)');
+      ctx.globalAlpha = 0.55 + pulse * 0.12;
+      ctx.fillStyle = gCool;
       ctx.beginPath(); ctx.arc(0, 0, rr, 0, Math.PI * 2); ctx.fill();
     }
 
-    for (let k = 0; k < 5; k++) {
-      const a0 = spin * (1.2 + k * 0.24) + k * 1.55;
-      ctx.strokeStyle = k % 2 === 0 ? 'rgba(255, 240, 175, 0.98)' : 'rgba(255, 155, 55, 0.78)';
-      ctx.lineWidth = (6.2 - k * 0.75) * Math.max(0.75, s);
-      ctx.lineCap = 'round';
-      ctx.beginPath();
-      ctx.arc(0, 0, r * (1.35 + k * 0.3), a0, a0 + 2.15 - k * 0.18);
-      ctx.stroke();
+    /* 螺旋臂弧：按局部 cos(θ−beam) 调制亮度与色温 */
+    for (let k = 0; k < 6; k++) {
+      const a0 = spin * (1.15 + k * 0.22) + k * 1.48;
+      const a1 = a0 + 2.05 - k * 0.16;
+      const steps = 10;
+      const rr = r * (1.32 + k * 0.28);
+      const lw = (6.4 - k * 0.7) * Math.max(0.75, s);
+      for (let sIdx = 0; sIdx < steps; sIdx++) {
+        const t0 = sIdx / steps;
+        const t1 = (sIdx + 1) / steps;
+        const mid = a0 + (a1 - a0) * ((t0 + t1) / 2);
+        const dop = Math.cos(mid - beamAxis); /* +1 迎向, -1 远离 */
+        const boost = 0.28 + 0.72 * Math.max(0, dop);
+        const dim = 0.18 + 0.35 * Math.max(0, -dop);
+        ctx.globalAlpha = (boost + dim) * (0.75 + pulse * 0.25);
+        if (dop >= 0) {
+          ctx.strokeStyle = `rgba(${210 + boost * 45 | 0}, ${230 + boost * 20 | 0}, ${255}, ${0.55 + boost * 0.45})`;
+        } else {
+          ctx.strokeStyle = `rgba(${200 + dim * 40 | 0}, ${70 + dim * 40 | 0}, ${30}, ${0.35 + dim * 0.45})`;
+        }
+        ctx.lineWidth = lw * (0.55 + boost * 0.75 + dim * 0.25);
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.arc(0, 0, rr, a0 + (a1 - a0) * t0, a0 + (a1 - a0) * t1);
+        ctx.stroke();
+      }
     }
     ctx.globalCompositeOperation = 'source-over';
     ctx.restore();
@@ -557,18 +651,27 @@
       const plasma = ensureBhPlasma();
       ctx.save();
       ctx.translate(c.x, c.y);
+      ctx.rotate(tilt);
       ctx.globalCompositeOperation = 'lighter';
       for (const p of plasma) {
         const ang = p.a + spin * p.sp;
         const pr = r * p.r;
         const x = Math.cos(ang) * pr;
         const y = Math.sin(ang) * pr * 0.42;
-        const beam = 0.3 + 0.7 * Math.max(0, Math.cos(ang - 0.35));
+        const dop = Math.cos(ang - beamAxis);
+        const beam = 0.22 + 0.78 * Math.max(0, dop);
+        const red = 0.15 + 0.4 * Math.max(0, -dop);
         const tw = 0.55 + 0.45 * Math.sin(spin * 3.2 + p.ph);
-        ctx.globalAlpha = beam * tw * 0.95;
-        ctx.fillStyle = p.hot > 0.55 ? '#fff8dc' : p.hot > 0.25 ? '#ffb14a' : '#9af0ff';
+        ctx.globalAlpha = (beam * 0.95 + red * 0.55) * tw;
+        if (dop > 0.15) {
+          ctx.fillStyle = p.hot > 0.4 ? '#f5fbff' : '#9af0ff';
+        } else if (dop < -0.15) {
+          ctx.fillStyle = p.hot > 0.5 ? '#ff7a3a' : '#c43a18';
+        } else {
+          ctx.fillStyle = p.hot > 0.55 ? '#fff8dc' : '#ffb14a';
+        }
         ctx.beginPath();
-        ctx.arc(x, y, p.size * Math.max(0.7, s) * (0.85 + beam * 0.6), 0, Math.PI * 2);
+        ctx.arc(x, y, p.size * Math.max(0.7, s) * (0.75 + beam * 0.85 + red * 0.2), 0, Math.PI * 2);
         ctx.fill();
       }
       ctx.restore();
@@ -576,16 +679,19 @@
       ctx.globalCompositeOperation = 'source-over';
     }
 
-    /* 光子环 */
+    /* 光子环：迎向侧更亮更青，远离侧偏琥珀 */
     const phR = r * 1.06;
-    const ph = ctx.createRadialGradient(c.x, c.y, phR * 0.9, c.x, c.y, phR * 1.22);
+    const phCx = c.x + Math.cos(tilt + beamAxis) * r * 0.08;
+    const phCy = c.y + Math.sin(tilt + beamAxis) * r * 0.03;
+    const ph = ctx.createRadialGradient(phCx, phCy, phR * 0.88, c.x, c.y, phR * 1.24);
     ph.addColorStop(0, 'rgba(0,0,0,0)');
-    ph.addColorStop(0.42, `rgba(255, 244, 200, ${0.2 + pulse * 0.12})`);
-    ph.addColorStop(0.55, 'rgba(255, 255, 255, 0.95)');
-    ph.addColorStop(0.68, `rgba(124, 231, 255, ${0.45 + pulse * 0.2})`);
+    ph.addColorStop(0.4, `rgba(255, 244, 200, ${0.16 + pulse * 0.1})`);
+    ph.addColorStop(0.52, 'rgba(255, 255, 255, 0.98)');
+    ph.addColorStop(0.62, `rgba(160, 230, 255, ${0.55 + pulse * 0.2})`);
+    ph.addColorStop(0.78, `rgba(255, 140, 60, ${0.22 + pulse * 0.1})`);
     ph.addColorStop(1, 'rgba(0,0,0,0)');
     ctx.fillStyle = ph;
-    ctx.beginPath(); ctx.arc(c.x, c.y, phR * 1.22, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(c.x, c.y, phR * 1.24, 0, Math.PI * 2); ctx.fill();
 
     /* 事件视界 */
     const core = ctx.createRadialGradient(c.x - r * 0.18, c.y - r * 0.18, 0, c.x, c.y, r);
@@ -1045,25 +1151,134 @@
   }
 
   function switchLayout(next) {
-    if (!LAYOUTS.includes(next) || next === layout) return;
+    if (!LAYOUTS.includes(next) || next === layout || bhCross) return;
     layout = next;
     tagFocus = null; egoSet = null;
-    bhInside = false; bhHover = false; bhTransits.length = 0;
+    bhInside = false; bhHover = false; bhTransits.length = 0; setBhCross(null);
     selected = null; hovered = null; renderInfo();
     relayout(1);
     renderChrome();
     playSfx('switch');
   }
 
-  function toggleBlackHoleInside() {
-    if (layout !== 'blackhole') return;
-    bhInside = !bhInside;
+  function setBhCross(next) {
+    bhCross = next;
+    if (bhCross) overlay.dataset.bhFx = 'cross';
+    else delete overlay.dataset.bhFx;
+  }
+
+  function applyBlackHoleInside(next) {
+    bhInside = !!next;
     bhTransits.length = 0;
-    selected = null; hovered = null;
-    relayout(0.85);
+    selected = null; hovered = null; bhHover = false;
+    relayout(0.9);
     renderChrome();
     renderInfo();
+  }
+
+  function toggleBlackHoleInside() {
+    if (layout !== 'blackhole' || bhCross) return;
+    const entering = !bhInside;
     playSfx('switch');
+    if (reducedMotion) {
+      applyBlackHoleInside(entering);
+      return;
+    }
+    /* 过场中段再切换内外布局，避免瞬间跳变 */
+    setBhCross({
+      t0: performance.now(),
+      dur: entering ? 980 : 860,
+      entering,
+      flipped: false,
+    });
+    warp = Math.max(warp, 0.55);
+  }
+
+  function stepBhCross(now) {
+    if (!bhCross) return;
+    const t = (now - bhCross.t0) / bhCross.dur;
+    if (!bhCross.flipped && t >= 0.48) {
+      bhCross.flipped = true;
+      applyBlackHoleInside(bhCross.entering);
+      warp = Math.max(warp, 0.7);
+    }
+    if (t >= 1) setBhCross(null);
+  }
+
+  /* 穿越视界：径向流光 + 光子环收缩/扩张 + 中心闪白 */
+  function drawBhCross(now, w, h) {
+    if (!bhCross) return;
+    const t = Math.min(1, (now - bhCross.t0) / bhCross.dur);
+    const entering = bhCross.entering;
+    const c = toScreen({ x: 0, y: 0 });
+    /* 0→0.5 冲向视界；0.5→1 从内侧/外侧重生 */
+    const phase = t < 0.5 ? t * 2 : (t - 0.5) * 2;
+    const rush = t < 0.5
+      ? phase * phase
+      : 1 - (1 - phase) * (1 - phase);
+    const ease = t < 0.5 ? rush : (1 - rush);
+
+    /* 全屏暗角压向中心 */
+    const vigR = Math.hypot(w, h) * (0.72 - rush * 0.38);
+    const vig = ctx.createRadialGradient(c.x, c.y, vigR * 0.15, c.x, c.y, vigR);
+    vig.addColorStop(0, `rgba(0,0,0,${0.05 + rush * 0.35})`);
+    vig.addColorStop(0.55, `rgba(8, 4, 20, ${0.2 + rush * 0.45})`);
+    vig.addColorStop(1, `rgba(0,0,0,${0.55 + rush * 0.4})`);
+    ctx.fillStyle = vig;
+    ctx.fillRect(0, 0, w, h);
+
+    /* 径向流光 */
+    ctx.save();
+    ctx.translate(c.x, c.y);
+    ctx.globalCompositeOperation = 'lighter';
+    const rays = 26;
+    for (let i = 0; i < rays; i++) {
+      const a = (i / rays) * Math.PI * 2 + now * 0.0012 * (entering ? 1 : -1);
+      const len = Math.min(w, h) * (0.2 + rush * 0.55 + (i % 3) * 0.04);
+      const g = ctx.createLinearGradient(0, 0, Math.cos(a) * len, Math.sin(a) * len);
+      const hot = i % 2 === 0;
+      g.addColorStop(0, hot ? 'rgba(255,250,240,0.55)' : 'rgba(140,220,255,0.35)');
+      g.addColorStop(0.45, hot ? 'rgba(255,170,60,0.2)' : 'rgba(160,120,255,0.16)');
+      g.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.strokeStyle = g;
+      ctx.lineWidth = (1.2 + rush * 2.2) * (hot ? 1.3 : 0.8);
+      ctx.lineCap = 'round';
+      ctx.globalAlpha = 0.35 + rush * 0.55;
+      ctx.beginPath();
+      ctx.moveTo(Math.cos(a) * (12 + ease * 20), Math.sin(a) * (12 + ease * 20));
+      ctx.lineTo(Math.cos(a) * len, Math.sin(a) * len);
+      ctx.stroke();
+    }
+
+    /* 光子环脉动：进入时收缩，离开时扩张 */
+    const ringR = BH_R * cam.s * (entering
+      ? (1.8 - rush * 1.35)
+      : (0.45 + rush * 1.5));
+    const ring = ctx.createRadialGradient(0, 0, ringR * 0.82, 0, 0, ringR * 1.25);
+    ring.addColorStop(0, 'rgba(0,0,0,0)');
+    ring.addColorStop(0.45, `rgba(255, 220, 160, ${0.15 + rush * 0.25})`);
+    ring.addColorStop(0.62, `rgba(255, 255, 255, ${0.55 + rush * 0.4})`);
+    ring.addColorStop(0.78, `rgba(120, 220, 255, ${0.35 + rush * 0.3})`);
+    ring.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = ring;
+    ctx.globalAlpha = 0.85;
+    ctx.beginPath(); ctx.arc(0, 0, ringR * 1.25, 0, Math.PI * 2); ctx.fill();
+
+    /* 中段闪白（穿膜瞬间） */
+    if (t > 0.42 && t < 0.62) {
+      const flash = 1 - Math.abs(t - 0.52) / 0.1;
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.globalAlpha = flash * 0.75;
+      const fg = ctx.createRadialGradient(0, 0, 0, 0, 0, Math.min(w, h) * 0.55);
+      fg.addColorStop(0, 'rgba(255, 252, 245, 1)');
+      fg.addColorStop(0.35, 'rgba(180, 230, 255, 0.55)');
+      fg.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = fg;
+      ctx.beginPath(); ctx.arc(0, 0, Math.min(w, h) * 0.55, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.restore();
+    ctx.globalAlpha = 1;
+    ctx.globalCompositeOperation = 'source-over';
   }
 
   function transitOf(n) {
@@ -1072,7 +1287,7 @@
 
   /* 课件穿梭：螺旋吸入 → 短暂消失 → 从另一侧喷出 */
   function spawnTransit(now) {
-    if (layout !== 'blackhole' || bhInside || reducedMotion || warp > 0.05) return;
+    if (layout !== 'blackhole' || bhInside || bhCross || reducedMotion || warp > 0.05) return;
     if (now < nextTransit || bhTransits.length >= 2) return;
     nextTransit = now + 2800 + Math.random() * 4200;
     const busy = new Set(bhTransits.map((t) => t.n));
@@ -1496,6 +1711,7 @@
     }
 
     drawEffects(now);
+    drawBhCross(now, w, h);
   }
 
   function loop(now) {
@@ -1509,11 +1725,12 @@
         if (warp === 0) camGoal = null;
       }
     }
+    stepBhCross(now);
     spawnAmbient(now);
     spawnTransit(now);
     stepTransits(now);
     /* 力导向休眠：星云布局静止后跳过 O(n²) 物理，交互/过滤会重新点燃 alpha */
-    const asleep = layout === 'nebula' && alpha <= 0.021 && !dragNode && warp === 0;
+    const asleep = layout === 'nebula' && alpha <= 0.021 && !dragNode && warp === 0 && !bhCross;
     if (!asleep) step();
     draw(now);
     raf = requestAnimationFrame(loop);
@@ -1695,6 +1912,11 @@
     pinchD = 0;
     const wasDrag = dragNode;
     if (moved < 6) {
+      /* 过场中忽略点击，避免连点打断穿膜 */
+      if (bhCross) {
+        dragNode = null; panning = false;
+        return;
+      }
       /* 视界/内部出口优先于课件节点，避免穿梭途中误进课 */
       if (hitBlackHole(e.offsetX, e.offsetY)) {
         toggleBlackHoleInside();
@@ -1753,7 +1975,7 @@
     document.body.style.overflow = 'hidden';
     resize();
     hovered = null; selected = null; tagFocus = null; egoSet = null;
-    bhInside = false; bhHover = false; bhTransits.length = 0;
+    bhInside = false; bhHover = false; bhTransits.length = 0; setBhCross(null);
     const s = restore ? loadState() : null;
     if (s) {
       activeCats.clear();
