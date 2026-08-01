@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>平衡马戏团 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill pill--back" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1><span aria-hidden="true">🎪</span> <span data-t="title">平衡马戏团</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill pill--lang" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="course">
+    <section class="playbill">
+      <div class="act-stamp"><small data-t="act">ACT</small><strong id="actNumber">1</strong><span>/ 3</span></div>
+      <div class="playbill__copy">
+        <p id="actKicker">开场 · 蒙面新星</p>
+        <h2 id="actTitle">让 x 独自站稳</h2>
+        <p id="actPrompt">两边必须同时撤走一样重的演员。</p>
+      </div>
+      <nav class="act-nav" id="actNav" aria-label="表演场次"></nav>
+    </section>
+
+    <section class="arena">
+      <section class="stage">
+        <div class="stage__top">
+          <p id="status" role="status" aria-live="polite">点击「两边都撤 10」，看看跷跷板会不会保持水平。</p>
+          <span class="live-badge"><i></i><span data-t="live">正在演出</span></span>
+        </div>
+        <div class="canvas-wrap" id="canvasWrap">
+          <canvas id="circusCanvas" aria-label="显示等式两边重量的马戏团跷跷板"></canvas>
+          <div class="spotlight" aria-hidden="true"></div>
+        </div>
+        <div class="sneak-row">
+          <button class="sneak" type="button" data-side="left"><span aria-hidden="true">🤫</span> <span data-t="sneakLeft">只动左边</span></button>
+          <button class="sneak" type="button" data-side="right"><span data-t="sneakRight">只动右边</span> <span aria-hidden="true">🤫</span></button>
+        </div>
+      </section>
+
+      <aside class="ringmaster">
+        <div class="equation-card">
+          <p data-t="nowOnStage">台上现在</p>
+          <div class="equation" id="equation" aria-live="polite"></div>
+        </div>
+
+        <section class="operation-panel">
+          <div class="panel-heading">
+            <div>
+              <small data-t="oneRule">唯一规则</small>
+              <h3 data-t="bothSides">两边做同一件事</h3>
+            </div>
+            <span aria-hidden="true">⚖</span>
+          </div>
+          <div class="operation-list" id="operationList"></div>
+        </section>
+
+        <div class="history">
+          <div class="history__head">
+            <strong data-t="yourMoves">你的解题动作</strong>
+            <button id="resetBtn" type="button" data-t="resetAct">重演本场</button>
+          </div>
+          <ol id="historyList"></ol>
+        </div>
+
+        <div class="ringmaster__foot">
+          <button class="hint" id="hintBtn" type="button"><span aria-hidden="true">💡</span> <span data-t="hint">递个提示</span></button>
+          <button class="next" id="nextBtn" type="button" hidden><span data-t="nextAct">下一场</span> <span aria-hidden="true">→</span></button>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="finale" id="finale" hidden>
+    <section class="finale__card" role="dialog" aria-modal="true" aria-labelledby="finaleTitle">
+      <div class="finale__lights" aria-hidden="true"><i></i><i></i><i></i></div>
+      <p data-t="finalKicker">三场平衡绝技完成</p>
+      <h2 id="finaleTitle" data-t="finalTitle">蒙面演员揭面了！</h2>
+      <div class="reveal" aria-hidden="true"><span>?</span><strong id="revealWeight">8 kg</strong></div>
+      <p data-t="finalText">你刚才不是在搬演员，而是在用等式性质解方程。每一步都能写成数学！</p>
+      <div class="final-equations" id="finalEquations"></div>
+      <button class="next finale__again" id="playAgainBtn" type="button" data-t="playAgain">再演一次</button>
+    </section>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

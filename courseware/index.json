@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-01T15:44:40.160Z",
+  "generatedAt": "2026-08-01T18:17:03.075Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -1364,6 +1364,68 @@
         "游戏"
       ],
       "path": "courseware/pancake-boss/index.html"
+    },
+    {
+      "id": "balance-circus",
+      "title": {
+        "zh": "平衡马戏团",
+        "en": "Balance Circus"
+      },
+      "description": {
+        "zh": "让跷跷板两边永远做同一件事，解开三场重量谜题；偷偷只动一边，演员会滚成一团。",
+        "en": "Keep both sides of the seesaw doing the same thing to solve three weight mysteries—touch only one side and the whole troupe tumbles."
+      },
+      "category": "math",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g5",
+        "g6"
+      ],
+      "tags": [
+        "运算",
+        "变量",
+        "推理",
+        "益智游戏"
+      ],
+      "icon": "🎪",
+      "order": 28,
+      "badge": "new",
+      "keywords": [
+        "Arithmetic",
+        "arithmetic",
+        "operations",
+        "四则运算",
+        "Variables",
+        "variable",
+        "variables",
+        "赋值",
+        "assignment",
+        "更新变量",
+        "update variable",
+        "临时变量",
+        "temporary variable",
+        "Reasoning",
+        "reasoning",
+        "演绎推理",
+        "deduction",
+        "排除法",
+        "elimination",
+        "逻辑网格",
+        "logic grid",
+        "逆向推理",
+        "backward reasoning",
+        "证据",
+        "evidence",
+        "inference",
+        "Puzzle Game",
+        "puzzle",
+        "game",
+        "益智",
+        "游戏"
+      ],
+      "path": "courseware/balance-circus/index.html"
     },
     {
       "id": "plant-lab",

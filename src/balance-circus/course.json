@@ -1,0 +1,18 @@
+{
+  "id": "balance-circus",
+  "title": {
+    "zh": "平衡马戏团",
+    "en": "Balance Circus"
+  },
+  "description": {
+    "zh": "让跷跷板两边永远做同一件事，解开三场重量谜题；偷偷只动一边，演员会滚成一团。",
+    "en": "Keep both sides of the seesaw doing the same thing to solve three weight mysteries—touch only one side and the whole troupe tumbles."
+  },
+  "category": "math",
+  "levels": ["primary"],
+  "grades": ["g5", "g6"],
+  "tags": ["运算", "变量", "推理", "益智游戏"],
+  "icon": "🎪",
+  "order": 28,
+  "badge": "new"
+}
