@@ -194,6 +194,7 @@ Agent 每次完成计划项后必须同步更新：
 | `welcome` 欢迎来到KidsLab · 从一盏灯到宇宙 | featured | primary/junior/senior | 保持置顶，不计入小学学科规划 |
 | `plant-lab` 植物生长实验室 | science | primary/junior | 核验是否替代 `plant-xray`；确认后统一 ID/规划文案 |
 | `magic-cube` 魔方小达人 | logic | primary/junior/senior | 作为逻辑扩展课件，若纳入规划需补条目 |
+| `pyramid-cube` 金属金字塔魔方 | logic | primary/junior/senior | 魔方小达人姊妹篇：三阶 Pyraminx，金属材质，三档难度，一步提示与还原演示 |
 | `huarong-dao` 华容道 · 木关智局 | logic | primary/junior/senior | 作为空间规划与滑块算法扩展课件；含经典阵、十二步练习与求解演示 |
 | `function-grapher` 函数变形记 | math | junior/senior | 初高中扩展，不计入小学规划 |
 | `square-root-lab` 平方根建筑师 | math | junior/senior | 初高中平方根扩展，不计入小学规划 |

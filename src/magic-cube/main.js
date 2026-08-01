@@ -16,7 +16,7 @@ const I18N = {
     panelTitle: '⚙️ 参数面板',
     labSize: '魔方阶数', labDiff: '打乱难度', labSpeed: '转动速度', labSkin: '贴纸配色',
     diff0: '轻松', diff1: '进阶', diff2: '大师',
-    skin0: '经典', skin1: '马卡龙', skin2: '霓虹',
+    skin0: '经典', skin1: '马卡龙', skin2: '霓虹', skin3: '镜面',
     btnScramble: '打乱，开始挑战！', btnUndo: '撤销', btnHint: '帮我一步',
     btnSolve: '还原演示', btnReset: '复原', btnAgain: '再来一局', btnClose: '先歇会儿',
     lessonTitle: '小课堂：转动记号',
@@ -134,7 +134,7 @@ const I18N = {
     panelTitle: '⚙️ Control Panel',
     labSize: 'Cube size', labDiff: 'Scramble level', labSpeed: 'Turn speed', labSkin: 'Sticker colors',
     diff0: 'Easy', diff1: 'Medium', diff2: 'Master',
-    skin0: 'Classic', skin1: 'Macaron', skin2: 'Neon',
+    skin0: 'Classic', skin1: 'Macaron', skin2: 'Neon', skin3: 'Mirror',
     btnScramble: 'Scramble & play!', btnUndo: 'Undo', btnHint: 'Help me',
     btnSolve: 'Auto-solve', btnReset: 'Reset', btnAgain: 'Play again', btnClose: 'Take a break',
     lessonTitle: 'Mini lesson: move notation',
@@ -318,7 +318,7 @@ if (!cube) {
 function boot() {
   /* ---------- 状态（数据为真，UI 是投影） ---------- */
   const S = {
-    size: 3, diff: 0, speed: 1, skin: 'classic',
+    size: 3, diff: 0, speed: 1, skin: 'mirror',
     phase: 'idle',            // idle | scrambling | playing | solving
     gen: 0,                   // 代际计数：每次重建+1，中止旧的异步动画循环
     history: [],              // 自复原态以来的全部转动（打乱+玩家，相邻同层自动合并抵消）
@@ -851,6 +851,7 @@ function boot() {
   /* ---------- 启动 ---------- */
   applyTheme();
   applyLang();
+  cube.setSkin(S.skin);   // 默认金属镜面
   setTip('tipIdle');
   render();
 }

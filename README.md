@@ -194,6 +194,7 @@ gh secret set CLOUDFLARE_ACCOUNT_ID
 | ⛵ 小小港湾 | 科学 | 小学 |
 | 🗼 汉诺塔挑战 | 逻辑 | 全部 |
 | 🀄 华容道 · 木关智局（Three.js + ScoreKit） | 逻辑 | 小学·初中·高中 |
+| 🔺 金属金字塔魔方(Three.js) | 逻辑 | 全部 |
 | 🧩 数独动物园 | 逻辑 | 小学·初中 |
 | 🐛 规律毛毛虫 | 逻辑 | 小学 |
 | 🛸 维恩太空港 · 轨道海关（Three.js + ScoreKit） | 逻辑 | 小学 |

@@ -51,6 +51,10 @@
       soundOn: '关闭星图音乐与音效',
       soundOff: '打开星图音乐与音效',
       status: (courses, topics) => `${courses} 门课程 · ${topics} 个知识点`,
+      bhHint: '课件会穿梭黑洞 · 点击黑洞进入内部',
+      bhInsideHint: '黑洞内部预览 · 点击中心回到外侧',
+      bhEnter: '点击进入黑洞内部 →',
+      bhExit: '点击中心离开黑洞 →',
       cats: { featured: '精选', math: '数学', physics: '物理', chemistry: '化学', programming: '编程', science: '科学', logic: '逻辑' },
     },
     en: {
@@ -74,6 +78,10 @@
       soundOn: 'Mute star map music and sounds',
       soundOff: 'Turn on star map music and sounds',
       status: (courses, topics) => `${courses} courseware · ${topics} topics`,
+      bhHint: 'Courseware tunnels the hole · click the hole to peek inside',
+      bhInsideHint: 'Inside the black hole · click the center to return',
+      bhEnter: 'Click to enter the black hole →',
+      bhExit: 'Click the center to leave →',
       cats: { featured: 'Featured', math: 'Math', physics: 'Physics', chemistry: 'Chemistry', programming: 'Coding', science: 'Science', logic: 'Logic' },
     },
   };
@@ -223,6 +231,13 @@
   let nebulae = [];      /* 背景星云 */
   let nextFx = 0, nextMeteor = 0, nextUfo = 0;
   let ufo = null;
+  /* 黑洞模式：内部预览 + 课件穿梭 */
+  const BH_R = 84;       /* 事件视界世界半径 */
+  let bhInside = false;
+  let bhHover = false;
+  const bhTransits = []; /* { n, t0, durIn, durOut, phase, fromR, fromA, toR, toA, spin } */
+  let nextTransit = 0;
+  let bhPlasma = null;   /* 吸积盘等离子体粒子缓存 */
 
   const catVisible = (cat) => activeCats.size === 0 || activeCats.has(cat);
   function visible(n) {
@@ -243,6 +258,7 @@
         open: true,
         layout,
         tagF: tagFocus?.id || null,
+        bhIn: bhInside || false,
         cats: [...activeCats],
         showTags,
         q: searchQuery,
@@ -436,22 +452,245 @@
       ctx.fillStyle = g;
       ctx.beginPath(); ctx.arc(c.x, c.y, r * 2, 0, Math.PI * 2); ctx.fill();
     } else if (layout === 'blackhole') {
-      const r = 50 * cam.s;
-      ctx.fillStyle = '#000';
-      ctx.beginPath(); ctx.arc(c.x, c.y, r, 0, Math.PI * 2); ctx.fill();
-      const spin = reducedMotion ? 0 : tSec * 1.4;
-      const rings = [
-        { off: 2.5, width: 3, color: 'rgba(255, 214, 102, 0.9)', glow: '#ffd166' },
-        { off: 8, width: 1.6, color: 'rgba(124, 231, 255, 0.8)', glow: '#7ce7ff' },
-      ];
-      rings.forEach((ring, i) => {
-        ctx.strokeStyle = ring.color;
-        ctx.lineWidth = ring.width * Math.max(0.6, cam.s);
-        ctx.shadowColor = ring.glow; ctx.shadowBlur = 16;
-        ctx.beginPath(); ctx.arc(c.x, c.y, r + ring.off * cam.s, spin + i * 1.3, spin + i * 1.3 + 5.1); ctx.stroke();
-      });
-      ctx.shadowBlur = 0;
+      drawBlackHole(tSec, c, 'under');
     }
+  }
+
+  function ensureBhPlasma() {
+    if (bhPlasma) return bhPlasma;
+    bhPlasma = Array.from({ length: 48 }, (_, i) => ({
+      a: (i / 48) * Math.PI * 2 + Math.random() * 0.2,
+      r: 1.15 + Math.random() * 1.55,
+      sp: 0.55 + Math.random() * 1.1,
+      size: 0.7 + Math.random() * 1.8,
+      hot: Math.random(),
+      ph: Math.random() * Math.PI * 2,
+    }));
+    return bhPlasma;
+  }
+
+  /* layer: 'under' 背景晕/喷流；'over' 吸积盘+视界（画在连线之上，避免被盖住） */
+  function drawBlackHole(tSec, c, layer = 'over') {
+    const s = cam.s;
+    const spin = reducedMotion ? 0 : tSec;
+    const pulse = reducedMotion ? 0.5 : 0.5 + 0.5 * Math.sin(tSec * 1.7);
+    const hoverBoost = bhHover ? 1.1 : 1;
+
+    if (bhInside) {
+      if (layer === 'over') drawBlackHoleInterior(tSec, c, spin, pulse);
+      return;
+    }
+
+    const r = BH_R * s * hoverBoost;
+
+    if (layer === 'under') {
+      /* 引力透镜外晕 */
+      const lens = ctx.createRadialGradient(c.x, c.y, r * 0.9, c.x, c.y, r * 5.2);
+      lens.addColorStop(0, 'rgba(0,0,0,0)');
+      lens.addColorStop(0.28, `rgba(60, 20, 90, ${0.18 + pulse * 0.06})`);
+      lens.addColorStop(0.55, `rgba(255, 140, 40, ${0.16 + pulse * 0.06})`);
+      lens.addColorStop(0.78, `rgba(124, 231, 255, ${0.08 + pulse * 0.04})`);
+      lens.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = lens;
+      ctx.beginPath(); ctx.arc(c.x, c.y, r * 5.2, 0, Math.PI * 2); ctx.fill();
+
+      if (!reducedMotion) {
+        ctx.globalCompositeOperation = 'lighter';
+        const jetLen = r * (3.2 + pulse * 0.5);
+        for (const dir of [-1, 1]) {
+          const jg = ctx.createLinearGradient(c.x, c.y, c.x + dir * r * 0.12, c.y + dir * jetLen);
+          jg.addColorStop(0, 'rgba(124, 231, 255, 0.4)');
+          jg.addColorStop(0.45, 'rgba(180, 140, 255, 0.14)');
+          jg.addColorStop(1, 'rgba(124, 231, 255, 0)');
+          ctx.strokeStyle = jg;
+          ctx.lineWidth = (3.5 + pulse * 2.2) * Math.max(0.5, s);
+          ctx.lineCap = 'round';
+          ctx.beginPath();
+          ctx.moveTo(c.x, c.y + dir * r * 0.25);
+          ctx.quadraticCurveTo(
+            c.x + dir * r * 0.28 * Math.sin(spin),
+            c.y + dir * jetLen * 0.5,
+            c.x + dir * r * 0.08,
+            c.y + dir * jetLen,
+          );
+          ctx.stroke();
+        }
+        ctx.globalCompositeOperation = 'source-over';
+      }
+      return;
+    }
+
+    /* —— over：吸积盘 + 等离子体 + 光子环 + 视界 —— */
+    ctx.save();
+    ctx.translate(c.x, c.y);
+    ctx.rotate(-0.32 + (reducedMotion ? 0 : Math.sin(spin * 0.12) * 0.04));
+    ctx.scale(1, 0.42);
+
+    ctx.globalCompositeOperation = 'lighter';
+    for (let i = 0; i < 7; i++) {
+      const rr = r * (1.18 + i * 0.36);
+      const g = ctx.createRadialGradient(rr * 0.24, 0, rr * 0.06, 0, 0, rr);
+      const a0 = 0.82 - i * 0.08;
+      g.addColorStop(0, `rgba(255, 252, 235, ${a0 * 0.7})`);
+      g.addColorStop(0.26, `rgba(255, ${200 - i * 12}, ${48 + i * 10}, ${a0 * 0.88})`);
+      g.addColorStop(0.58, `rgba(255, 110, 28, ${a0 * 0.42})`);
+      g.addColorStop(1, 'rgba(40, 10, 0, 0)');
+      ctx.globalAlpha = 0.78 + pulse * 0.22;
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(0, 0, rr, 0, Math.PI * 2); ctx.fill();
+    }
+
+    for (let k = 0; k < 5; k++) {
+      const a0 = spin * (1.2 + k * 0.24) + k * 1.55;
+      ctx.strokeStyle = k % 2 === 0 ? 'rgba(255, 240, 175, 0.98)' : 'rgba(255, 155, 55, 0.78)';
+      ctx.lineWidth = (6.2 - k * 0.75) * Math.max(0.75, s);
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.arc(0, 0, r * (1.35 + k * 0.3), a0, a0 + 2.15 - k * 0.18);
+      ctx.stroke();
+    }
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.restore();
+    ctx.globalAlpha = 1;
+
+    if (!reducedMotion) {
+      const plasma = ensureBhPlasma();
+      ctx.save();
+      ctx.translate(c.x, c.y);
+      ctx.globalCompositeOperation = 'lighter';
+      for (const p of plasma) {
+        const ang = p.a + spin * p.sp;
+        const pr = r * p.r;
+        const x = Math.cos(ang) * pr;
+        const y = Math.sin(ang) * pr * 0.42;
+        const beam = 0.3 + 0.7 * Math.max(0, Math.cos(ang - 0.35));
+        const tw = 0.55 + 0.45 * Math.sin(spin * 3.2 + p.ph);
+        ctx.globalAlpha = beam * tw * 0.95;
+        ctx.fillStyle = p.hot > 0.55 ? '#fff8dc' : p.hot > 0.25 ? '#ffb14a' : '#9af0ff';
+        ctx.beginPath();
+        ctx.arc(x, y, p.size * Math.max(0.7, s) * (0.85 + beam * 0.6), 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+      ctx.globalAlpha = 1;
+      ctx.globalCompositeOperation = 'source-over';
+    }
+
+    /* 光子环 */
+    const phR = r * 1.06;
+    const ph = ctx.createRadialGradient(c.x, c.y, phR * 0.9, c.x, c.y, phR * 1.22);
+    ph.addColorStop(0, 'rgba(0,0,0,0)');
+    ph.addColorStop(0.42, `rgba(255, 244, 200, ${0.2 + pulse * 0.12})`);
+    ph.addColorStop(0.55, 'rgba(255, 255, 255, 0.95)');
+    ph.addColorStop(0.68, `rgba(124, 231, 255, ${0.45 + pulse * 0.2})`);
+    ph.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = ph;
+    ctx.beginPath(); ctx.arc(c.x, c.y, phR * 1.22, 0, Math.PI * 2); ctx.fill();
+
+    /* 事件视界 */
+    const core = ctx.createRadialGradient(c.x - r * 0.18, c.y - r * 0.18, 0, c.x, c.y, r);
+    core.addColorStop(0, '#0a0a12');
+    core.addColorStop(0.65, '#000000');
+    core.addColorStop(0.9, '#080414');
+    core.addColorStop(1, '#1c0c30');
+    ctx.fillStyle = core;
+    ctx.beginPath(); ctx.arc(c.x, c.y, r, 0, Math.PI * 2); ctx.fill();
+
+    ctx.strokeStyle = `rgba(200, 140, 255, ${0.35 + pulse * 0.25})`;
+    ctx.lineWidth = 1.4 * Math.max(0.6, s);
+    ctx.beginPath(); ctx.arc(c.x, c.y, r * 0.985, 0, Math.PI * 2); ctx.stroke();
+
+    if (bhHover) {
+      ctx.strokeStyle = 'rgba(255, 214, 102, 0.7)';
+      ctx.lineWidth = 1.8;
+      ctx.setLineDash([5, 5]);
+      ctx.beginPath(); ctx.arc(c.x, c.y, r * 1.32, spin * 0.8, spin * 0.8 + Math.PI * 1.5); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+  }
+
+  /* 内部视角：站在视界内侧向外望，光子环变成环绕天际线 */
+  function drawBlackHoleInterior(tSec, c, spin, pulse) {
+    const w = overlay.clientWidth, h = overlay.clientHeight;
+    const R = Math.min(w, h) * 0.46;
+
+    /* 深空穹顶 */
+    const sky = ctx.createRadialGradient(c.x, c.y, 0, c.x, c.y, R * 1.35);
+    sky.addColorStop(0, 'rgba(12, 8, 28, 0.15)');
+    sky.addColorStop(0.55, 'rgba(40, 12, 60, 0.35)');
+    sky.addColorStop(1, 'rgba(0, 0, 0, 0.55)');
+    ctx.fillStyle = sky;
+    ctx.beginPath(); ctx.arc(c.x, c.y, R * 1.35, 0, Math.PI * 2); ctx.fill();
+
+    /* 旋转的时空网格 */
+    ctx.save();
+    ctx.translate(c.x, c.y);
+    ctx.strokeStyle = 'rgba(124, 231, 255, 0.08)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < 12; i++) {
+      const a = (i / 12) * Math.PI * 2 + spin * 0.15;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(Math.cos(a) * R * 1.2, Math.sin(a) * R * 1.2);
+      ctx.stroke();
+    }
+    for (let k = 1; k <= 5; k++) {
+      ctx.beginPath();
+      ctx.arc(0, 0, (R * k) / 5, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    /* 外缘光子环天际线 */
+    const rim = ctx.createRadialGradient(0, 0, R * 0.72, 0, 0, R * 1.05);
+    rim.addColorStop(0, 'rgba(0,0,0,0)');
+    rim.addColorStop(0.55, `rgba(255, 160, 40, ${0.15 + pulse * 0.08})`);
+    rim.addColorStop(0.78, `rgba(255, 244, 200, ${0.75 + pulse * 0.15})`);
+    rim.addColorStop(0.88, `rgba(124, 231, 255, ${0.45})`);
+    rim.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = rim;
+    ctx.beginPath(); ctx.arc(0, 0, R * 1.05, 0, Math.PI * 2); ctx.fill();
+
+    /* 旋转热斑弧 */
+    ctx.globalCompositeOperation = 'lighter';
+    for (let k = 0; k < 4; k++) {
+      const a0 = spin * (0.6 + k * 0.2) + k * 1.4;
+      ctx.strokeStyle = k % 2 ? 'rgba(255, 200, 100, 0.55)' : 'rgba(160, 120, 255, 0.4)';
+      ctx.lineWidth = 3 - k * 0.4;
+      ctx.beginPath();
+      ctx.arc(0, 0, R * (0.82 + k * 0.04), a0, a0 + 1.2);
+      ctx.stroke();
+    }
+    ctx.globalCompositeOperation = 'source-over';
+
+    /* 中心出口（可点击离开） */
+    const exitR = Math.max(48, 54 * Math.max(0.85, cam.s));
+    const eg = ctx.createRadialGradient(0, 0, 0, 0, 0, exitR * 2.1);
+    eg.addColorStop(0, `rgba(255, 244, 220, ${0.42 + pulse * 0.22})`);
+    eg.addColorStop(0.35, 'rgba(124, 231, 255, 0.3)');
+    eg.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = eg;
+    ctx.beginPath(); ctx.arc(0, 0, exitR * 2.1, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#030308';
+    ctx.beginPath(); ctx.arc(0, 0, exitR, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = bhHover ? 'rgba(255, 214, 102, 0.95)' : `rgba(124, 231, 255, ${0.5 + pulse * 0.28})`;
+    ctx.lineWidth = bhHover ? 2.6 : 1.6;
+    ctx.beginPath(); ctx.arc(0, 0, exitR * 1.08, 0, Math.PI * 2); ctx.stroke();
+    if (!reducedMotion) {
+      ctx.strokeStyle = `rgba(255, 214, 102, ${0.35 + pulse * 0.25})`;
+      ctx.lineWidth = 1.2;
+      ctx.setLineDash([4, 6]);
+      ctx.beginPath();
+      ctx.arc(0, 0, exitR * 1.28, spin * 0.7, spin * 0.7 + Math.PI * 1.4);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+    ctx.fillStyle = bhHover ? 'rgba(255, 244, 220, 0.95)' : 'rgba(200, 230, 255, 0.75)';
+    ctx.font = `700 ${Math.round(Math.max(11, 12 * cam.s))}px "Baloo 2", "PingFang SC", sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(lang() === 'zh' ? '出口' : 'EXIT', 0, 0);
+    ctx.textBaseline = 'alphabetic';
+    ctx.restore();
   }
 
   /* ---------- 随机节点特效 ---------- */
@@ -668,17 +907,42 @@
       });
       moonifyTags(0.8);
     } else if (layout === 'blackhole') {
-      /* 吸积盘：越靠近视界转得越快 */
-      const all = cats.flatMap((c) => byCat.get(c));
-      all.forEach((n, i) => {
-        const tt = i / Math.max(1, all.length - 1);
-        n.orbit = {
-          r: 118 + 330 * tt,
-          a: Math.random() * Math.PI * 2,
-          sp: reducedMotion ? 0 : 0.3 / (0.28 + tt),
-        };
-      });
-      moonifyTags(1.6);
+      if (bhInside) {
+        /* 内部预览：课件按黄金角分层漂浮，空出中心出口；知识点藏成远尘 */
+        const courses = cats.flatMap((c) => byCat.get(c));
+        const golden = Math.PI * (3 - Math.sqrt(5));
+        courses.forEach((n, i) => {
+          const tt = i / Math.max(1, courses.length);
+          const ring = 1 + (i % 4);
+          n.orbit = {
+            r: 155 + ring * 88 + (i % 6) * 6,
+            a: (i * golden) + ring * 0.35,
+            sp: reducedMotion ? 0 : (0.06 + tt * 0.05) * (i % 2 ? 1 : -1),
+          };
+        });
+        for (const n of nodes) {
+          if (n.type !== 'tag') continue;
+          n.moon = null;
+          /* 知识点退到外缘作星尘，默认不抢戏 */
+          n.orbit = {
+            r: 520 + (n.degree % 5) * 18,
+            a: (n.phase || 0) + n.degree * 0.7,
+            sp: reducedMotion ? 0 : 0.03 * (n.degree % 2 ? 1 : -1),
+          };
+        }
+      } else {
+        /* 吸积盘：越靠近视界转得越快 */
+        const all = cats.flatMap((c) => byCat.get(c));
+        all.forEach((n, i) => {
+          const tt = i / Math.max(1, all.length - 1);
+          n.orbit = {
+            r: 175 + 360 * tt, /* 让出吸积盘与光子环视觉空间 */
+            a: Math.random() * Math.PI * 2,
+            sp: reducedMotion ? 0 : 0.3 / (0.28 + tt),
+          };
+        });
+        moonifyTags(1.6);
+      }
     } else if (layout === 'knowledge') {
       const tags = nodes.filter((n) => n.type === 'tag' && visible(n)).sort((a, b) => b.degree - a.degree);
       visTagCount = Math.max(1, tags.length);
@@ -753,7 +1017,7 @@
       constellation: visCatCount === 1 ? 380 : 520,
       solar: 150 + (visCatCount - 1) * 82 + 60,
       galaxy: 420 * shrink + 80,
-      blackhole: 390 * shrink + 80,
+      blackhole: bhInside ? 320 : 390 * shrink + 80,
       knowledge: tagFocus ? 430 : 74 * Math.sqrt(visTagCount) + 170,
     }[layout] || 480;
   }
@@ -784,10 +1048,117 @@
     if (!LAYOUTS.includes(next) || next === layout) return;
     layout = next;
     tagFocus = null; egoSet = null;
+    bhInside = false; bhHover = false; bhTransits.length = 0;
     selected = null; hovered = null; renderInfo();
     relayout(1);
     renderChrome();
     playSfx('switch');
+  }
+
+  function toggleBlackHoleInside() {
+    if (layout !== 'blackhole') return;
+    bhInside = !bhInside;
+    bhTransits.length = 0;
+    selected = null; hovered = null;
+    relayout(0.85);
+    renderChrome();
+    renderInfo();
+    playSfx('switch');
+  }
+
+  function transitOf(n) {
+    return bhTransits.find((t) => t.n === n) || null;
+  }
+
+  /* 课件穿梭：螺旋吸入 → 短暂消失 → 从另一侧喷出 */
+  function spawnTransit(now) {
+    if (layout !== 'blackhole' || bhInside || reducedMotion || warp > 0.05) return;
+    if (now < nextTransit || bhTransits.length >= 2) return;
+    nextTransit = now + 2800 + Math.random() * 4200;
+    const busy = new Set(bhTransits.map((t) => t.n));
+    const pool = nodes.filter((n) => n.type === 'course' && visible(n) && n.orbit && !busy.has(n) && n !== dragNode && n !== selected && n !== hovered);
+    if (pool.length < 2) return;
+    /* 优先吸积盘内圈，视觉更戏剧 */
+    pool.sort((a, b) => a.orbit.r - b.orbit.r);
+    const pick = pool[Math.floor(Math.random() * Math.min(6, pool.length))];
+    const fromR = pick.orbit.r;
+    const fromA = pick.orbit.a;
+    const toA = fromA + Math.PI * (0.7 + Math.random() * 0.6) * (Math.random() < 0.5 ? 1 : -1);
+    const toR = 130 + Math.random() * 280;
+    bhTransits.push({
+      n: pick,
+      t0: now,
+      durIn: 1400 + Math.random() * 500,
+      durOut: 1200 + Math.random() * 400,
+      phase: 'in',
+      fromR, fromA, toR, toA,
+      spin: (Math.random() < 0.5 ? 1 : -1) * (4 + Math.random() * 5),
+      stretch: 1,
+      scale: 1,
+    });
+  }
+
+  function stepTransits(now) {
+    for (let i = bhTransits.length - 1; i >= 0; i--) {
+      const tr = bhTransits[i];
+      const n = tr.n;
+      if (!visible(n) || layout !== 'blackhole' || bhInside) {
+        if (n.orbit) { n.orbit.r = tr.toR || tr.fromR; n.orbit.a = tr.toA ?? tr.fromA; }
+        bhTransits.splice(i, 1);
+        continue;
+      }
+      if (tr.phase === 'in') {
+        const t = Math.min(1, (now - tr.t0) / tr.durIn);
+        const e = t * t; /* ease-in：越吸越快 */
+        const r = tr.fromR * (1 - e) + BH_R * 0.15 * e;
+        const a = tr.fromA + tr.spin * e;
+        n.x = Math.cos(a) * r;
+        n.y = Math.sin(a) * r;
+        tr.scale = 1 - e * 0.92;
+        tr.stretch = 1 + e * 2.4; /* 面条化 */
+        tr.a = a; tr.r = r;
+        if (t >= 1) {
+          tr.phase = 'out';
+          tr.t0 = now;
+          tr.scale = 0.08;
+          tr.stretch = 2.2;
+        }
+      } else {
+        const t = Math.min(1, (now - tr.t0) / tr.durOut);
+        const e = 1 - (1 - t) ** 2; /* ease-out */
+        const r = BH_R * 0.2 * (1 - e) + tr.toR * e;
+        const a = tr.toA + tr.spin * 0.35 * (1 - e);
+        n.x = Math.cos(a) * r;
+        n.y = Math.sin(a) * r;
+        tr.scale = 0.08 + e * 0.92;
+        tr.stretch = 2.2 - e * 1.2;
+        tr.a = a; tr.r = r;
+        if (t >= 1) {
+          if (n.orbit) { n.orbit.r = tr.toR; n.orbit.a = tr.toA; }
+          n.x = Math.cos(tr.toA) * tr.toR;
+          n.y = Math.sin(tr.toA) * tr.toR;
+          bhTransits.splice(i, 1);
+        }
+      }
+    }
+  }
+
+  function drawTransitTrail(tr) {
+    if (!tr || tr.r == null) return;
+    const steps = 8;
+    for (let i = steps; i >= 1; i--) {
+      const k = i / steps;
+      const back = k * 0.55;
+      const a = tr.a - tr.spin * 0.08 * back * (tr.phase === 'in' ? 1 : -0.5);
+      const r = tr.r + (tr.phase === 'in' ? back * 28 : -back * 18);
+      const p = toScreen({ x: Math.cos(a) * r, y: Math.sin(a) * r });
+      ctx.globalAlpha = (1 - k) * 0.35 * tr.scale;
+      ctx.fillStyle = catColor(tr.n.cat);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, Math.max(1.5, 4 * tr.scale * (1 - k * 0.5) * cam.s), 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
   }
 
   /* ---------- 检索：课程与知识点都可命中，并保留一跳关系作为上下文 ---------- */
@@ -950,11 +1321,18 @@
   /* 固定/轨道布局：星星弹性飞向目标位，轨道随时间公转 */
   function orbitStep() {
     const k = warp > 0.05 ? 0.16 : 0.07;
+    const bhPull = layout === 'blackhole' && !bhInside && !reducedMotion;
     for (const n of nodes) {
       if (n === dragNode) continue;
+      if (transitOf(n)) continue; /* 穿梭动画接管坐标 */
       let tx, ty;
       if (n.orbit) {
         n.orbit.a += n.orbit.sp * 0.016;
+        /* 黑洞外侧：内圈缓慢被潮汐拉近一点，增强吸积感 */
+        if (bhPull && n.type === 'course' && n.orbit.r > BH_R + 70) {
+          n.orbit.r += (Math.sin(n.orbit.a * 3 + n.phase) * 0.04) - 0.012;
+          if (n.orbit.r < BH_R + 70) n.orbit.r = BH_R + 70;
+        }
         tx = Math.cos(n.orbit.a) * n.orbit.r;
         ty = Math.sin(n.orbit.a) * n.orbit.r;
       } else if (n.moon?.host) {
@@ -975,6 +1353,9 @@
       if (n.type === 'tag') return (n === tagFocus ? 6 : 0) + Math.min(7 + n.degree * 1.5, 18);
       return (tagFocus && egoSet?.has(n)) ? 11 : 7; /* 全景时课程收敛成小卫星 */
     }
+    if (layout === 'blackhole' && bhInside) {
+      return n.type === 'course' ? 13 : Math.min(2.2 + n.degree * 0.35, 5);
+    }
     return n.type === 'course' ? 13 : Math.min(4 + n.degree * 1.4, 10);
   };
 
@@ -984,7 +1365,7 @@
     const tSec = (now - tick0) / 1000;
 
     drawBackground(tSec, w, h);
-    drawCenterpiece(tSec);
+    drawCenterpiece(tSec); /* 非黑洞布局的中心天体；黑洞 under 层也在此画 */
 
     const focus = selected || hovered;
     const focusSet = focus ? new Set([focus, ...(adj.get(focus.id) || [])]) : null;
@@ -1010,16 +1391,24 @@
       const pa = toScreen(e.a), pb = toScreen(e.b);
       const lit = focusSet && focusSet.has(e.a) && focusSet.has(e.b) && (focus === e.a || focus === e.b);
       ctx.strokeStyle = lit ? catColor(e.a.cat) : '#8d96c8';
+      /* 黑洞模式：外侧压暗留给吸积盘；内部几乎不画网，避免口袋宇宙变蜘蛛网 */
+      const baseA = layout === 'blackhole' ? (bhInside ? 0.03 : 0.08) : 0.16;
       ctx.globalAlpha = ego
         ? (lit ? 0.9 : (ego.has(e.a) && ego.has(e.b) ? 0.3 : 0.03))
-        : (lit ? 0.85 : (focusSet ? 0.05 : 0.16));
+        : (lit ? 0.85 : (focusSet ? 0.05 : baseA));
       ctx.lineWidth = lit ? 1.6 : 1;
       ctx.beginPath(); ctx.moveTo(pa.x, pa.y); ctx.lineTo(pb.x, pb.y); ctx.stroke();
     }
     ctx.globalAlpha = 1;
 
+    /* 黑洞主体画在连线之上、节点之下 */
+    if (layout === 'blackhole') {
+      drawBlackHole(tSec, toScreen({ x: 0, y: 0 }), 'over');
+    }
+
     /* 节点 */
-    const showAllLabels = cam.s > 0.85;
+    /* 黑洞内部禁止“放大即全标”，只靠悬停/选中/检索出字 */
+    const showAllLabels = cam.s > 0.85 && !(layout === 'blackhole' && bhInside);
     for (const n of nodes) {
       if (!visible(n)) continue;
       const p = toScreen(n);
@@ -1031,6 +1420,14 @@
 
       if (n.type === 'tag') {
         const glow = reducedMotion ? 0.75 : 0.6 + 0.4 * Math.sin(tSec * 1.4 + n.phase);
+        /* 黑洞内部：知识点只作远尘，不发光不贴标签 */
+        if (layout === 'blackhole' && bhInside && !directMatch && n !== focus) {
+          ctx.globalAlpha = 0.35;
+          ctx.fillStyle = TAG_FILL;
+          ctx.beginPath(); ctx.arc(p.x, p.y, Math.max(1.5, r * 0.55), 0, Math.PI * 2); ctx.fill();
+          ctx.globalAlpha = 1;
+          continue;
+        }
         if (!dim) drawGlow(p.x, p.y, TAG_COLOR, r + (n === tagFocus || directMatch ? 30 : 12 * glow));
         ctx.fillStyle = TAG_FILL;
         ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI * 2); ctx.fill();
@@ -1042,9 +1439,28 @@
         }
       } else {
         const col = catColor(n.cat);
+        const tr = transitOf(n);
         /* 知识网全景：课程只是暗淡卫星，避免抢知识点的戏；悬停/选中/关系网内恢复亮度 */
         const muted = layout === 'knowledge' && !ego && !dim
           && n !== focus && !(focusSet?.has(n)) && !directMatch;
+        if (tr) {
+          drawTransitTrail(tr);
+          const sc = Math.max(0.06, tr.scale);
+          const stretch = tr.stretch || 1;
+          const ang = Math.atan2(n.y, n.x);
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(ang);
+          ctx.scale(stretch * sc, sc / Math.sqrt(stretch));
+          ctx.globalAlpha = Math.min(1, sc * 1.4);
+          if (!dim) drawGlow(0, 0, col, r + 16);
+          ctx.fillStyle = col;
+          ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.fill();
+          drawEmoji(n.course.icon || '📘', 0, 1, Math.round(r * 1.25));
+          ctx.restore();
+          ctx.globalAlpha = 1;
+          continue;
+        }
         if (muted) ctx.globalAlpha = 0.3;
         if (!dim && !muted) drawGlow(p.x, p.y, col, r + (n === focus || directMatch ? 22 : 12));
         ctx.fillStyle = col;
@@ -1052,6 +1468,7 @@
         if (!muted) {
           drawEmoji(n.course.icon || '📘', p.x, p.y + 1, Math.round(r * 1.25));
         }
+        /* 内部也不常驻标题，避免口袋宇宙变字墙；悬停/选中/检索命中才显示 */
         if (!dim && !muted && (showAllLabels || focusSet?.has(n) || directMatch)) {
           drawLabel(n.course.title?.[lang()] || n.course.id, p.x, p.y + r + 15, '#ffffff', '700');
         }
@@ -1066,6 +1483,18 @@
       }
     }
     ctx.globalAlpha = 1;
+
+    /* 黑洞视界遮罩：盖住已落入视界的穿梭课件，形成真正的“被吞没” */
+    if (layout === 'blackhole' && !bhInside && bhTransits.some((tr) => tr.phase === 'in' && tr.r < BH_R * 1.05)) {
+      const c = toScreen({ x: 0, y: 0 });
+      const hr = BH_R * cam.s;
+      ctx.fillStyle = '#000';
+      ctx.beginPath(); ctx.arc(c.x, c.y, hr * 0.98, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = 'rgba(180, 120, 255, 0.35)';
+      ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.arc(c.x, c.y, hr * 0.98, 0, Math.PI * 2); ctx.stroke();
+    }
+
     drawEffects(now);
   }
 
@@ -1081,6 +1510,8 @@
       }
     }
     spawnAmbient(now);
+    spawnTransit(now);
+    stepTransits(now);
     /* 力导向休眠：星云布局静止后跳过 O(n²) 物理，交互/过滤会重新点燃 alpha */
     const asleep = layout === 'nebula' && alpha <= 0.021 && !dragNode && warp === 0;
     if (!asleep) step();
@@ -1090,6 +1521,13 @@
 
   /* ---------- 信息卡 ---------- */
   function renderInfo() {
+    if (bhHover && layout === 'blackhole' && !selected) {
+      infoEl.hidden = false;
+      infoEl.innerHTML = `<b>🕳️ ${t().layouts.blackhole}</b>
+        <p>${bhInside ? t().bhInsideHint : t().bhHint}</p>
+        <small>${bhInside ? t().bhExit : t().bhEnter}</small>`;
+      return;
+    }
     const n = selected || hovered;
     if (!n) { infoEl.hidden = true; return; }
     infoEl.hidden = false;
@@ -1114,7 +1552,9 @@
 
   function renderChrome() {
     titleEl.textContent = t().title;
-    hintEl.textContent = t().hint;
+    hintEl.textContent = layout === 'blackhole'
+      ? (bhInside ? t().bhInsideHint : t().bhHint)
+      : t().hint;
     closeBtn.title = t().close;
     closeBtn.setAttribute('aria-label', t().close);
     searchInput.placeholder = t().searchPh;
@@ -1182,12 +1622,24 @@
   function hitTest(sx, sy) {
     for (let i = nodes.length - 1; i >= 0; i--) {
       if (!visible(nodes[i])) continue;
+      if (transitOf(nodes[i])) continue; /* 穿梭中不可点 */
       const p = toScreen(nodes[i]);
       const r = nodeRadius(nodes[i]) + 6;
       if ((p.x - sx) ** 2 + (p.y - sy) ** 2 <= r * r) return nodes[i];
     }
     return null;
   }
+
+  function hitBlackHole(sx, sy) {
+    if (layout !== 'blackhole') return false;
+    const c = toScreen({ x: 0, y: 0 });
+    /* 内部出口略放大，保证跃迁过程中仍可点中 */
+    const r = bhInside
+      ? Math.max(52, 58 * Math.max(0.85, cam.s))
+      : BH_R * cam.s * (bhHover ? 1.12 : 1);
+    return (c.x - sx) ** 2 + (c.y - sy) ** 2 <= r * r;
+  }
+
   const toWorld = (sx, sy) => ({ x: (sx - overlay.clientWidth / 2) / cam.s + cam.x, y: (sy - overlay.clientHeight / 2) / cam.s + cam.y });
 
   canvas.addEventListener('pointerdown', (e) => {
@@ -1228,8 +1680,14 @@
       last = { x: e.offsetX, y: e.offsetY };
       return;
     }
-    const h = hitTest(e.offsetX, e.offsetY);
-    if (h !== hovered) { hovered = h; canvas.style.cursor = h ? 'pointer' : 'grab'; renderInfo(); }
+    const onHole = hitBlackHole(e.offsetX, e.offsetY);
+    const h = onHole ? null : hitTest(e.offsetX, e.offsetY);
+    if (h !== hovered || onHole !== bhHover) {
+      hovered = h;
+      bhHover = onHole;
+      canvas.style.cursor = (h || onHole) ? 'pointer' : 'grab';
+      renderInfo();
+    }
   });
 
   canvas.addEventListener('pointerup', (e) => {
@@ -1237,6 +1695,12 @@
     pinchD = 0;
     const wasDrag = dragNode;
     if (moved < 6) {
+      /* 视界/内部出口优先于课件节点，避免穿梭途中误进课 */
+      if (hitBlackHole(e.offsetX, e.offsetY)) {
+        toggleBlackHoleInside();
+        dragNode = null; panning = false;
+        return;
+      }
       const n = hitTest(e.offsetX, e.offsetY);
       if (n?.type === 'course') {
         playSfx('click');
@@ -1259,6 +1723,7 @@
       }
       if (n) playSfx('click');
       selected = (n && n !== selected) ? n : null;
+      bhHover = false;
       renderInfo();
     }
     dragNode = null; panning = false;
@@ -1288,6 +1753,7 @@
     document.body.style.overflow = 'hidden';
     resize();
     hovered = null; selected = null; tagFocus = null; egoSet = null;
+    bhInside = false; bhHover = false; bhTransits.length = 0;
     const s = restore ? loadState() : null;
     if (s) {
       activeCats.clear();
@@ -1295,6 +1761,7 @@
       showTags = s.showTags !== false;
       searchQuery = String(s.q || '');
       layout = LAYOUTS.includes(s.layout) ? s.layout : 'nebula';
+      bhInside = layout === 'blackhole' && !!s.bhIn;
       updateSearch(searchQuery, { quiet: true });
       tagFocus = (layout === 'knowledge' && s.tagF) ? nodes.find((n) => n.id === s.tagF) || null : null;
       if (layout !== 'nebula') setLayoutTargets();
@@ -1316,10 +1783,11 @@
       alpha = 1;
     }
     warp = 0; camGoal = null;
-    effects.length = 0; meteors.length = 0; ufo = null;
+    effects.length = 0; meteors.length = 0; ufo = null; bhTransits.length = 0;
     nextFx = performance.now() + 1500;
     nextMeteor = performance.now() + 2500;
     nextUfo = performance.now() + 15000;
+    nextTransit = performance.now() + 2200;
     renderChrome(); renderInfo();
     running = true; tick0 = performance.now();
     raf = requestAnimationFrame(loop);

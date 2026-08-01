@@ -1,0 +1,18 @@
+{
+  "id": "pyramid-cube",
+  "title": {
+    "zh": "金属金字塔魔方",
+    "en": "Metal Pyraminx"
+  },
+  "description": {
+    "zh": "亲手转动一颗金属三阶金字塔魔方！四面蓝红黄绿，轻松/进阶/大师三档打乱，卡住了有「帮我一步」和还原演示，还有玩法小课堂。",
+    "en": "Spin a metal 3-layer Pyraminx! Four faces in blue, red, yellow and green, three scramble levels, step hints, auto-solve demo, and a mini tutorial."
+  },
+  "category": "logic",
+  "levels": ["primary", "junior", "senior"],
+  "grades": ["g3", "g4", "g5", "g6", "g7", "g8", "g9"],
+  "tags": ["魔方", "空间想象", "3D", "益智游戏"],
+  "icon": "🔺",
+  "order": 72,
+  "badge": "new"
+}

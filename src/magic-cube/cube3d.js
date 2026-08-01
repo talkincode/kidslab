@@ -11,11 +11,22 @@ const HALF_PI = Math.PI / 2;
 const PITCH = 1.06;                    // 相邻小块中心距（块边长 1 + 缝 0.06）
 const AXES = [new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 0, 1)];
 
-/* 贴纸配色（面顺序：+x R, -x L, +y U, -y D, +z F, -z B） */
+/* 贴纸配色（面顺序：+x R, -x L, +y U, -y D, +z F, -z B）
+   mat = 贴纸物理参数；body = 黑色机体；mirror 为金属镜面皮肤 */
+const SKIN_MAT = {
+  plastic: { roughness: 0.26, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.14, envMapIntensity: 1.15 },
+  mirror:  { roughness: 0.08, metalness: 0.94, clearcoat: 0.9, clearcoatRoughness: 0.06, envMapIntensity: 1.75 },
+};
+const BODY_MAT = {
+  plastic: { color: 0x1a1b21, roughness: 0.38, metalness: 0.05, clearcoat: 0.7, clearcoatRoughness: 0.3, envMapIntensity: 0.9 },
+  mirror:  { color: 0x0b0c10, roughness: 0.16, metalness: 0.96, clearcoat: 0.75, clearcoatRoughness: 0.12, envMapIntensity: 1.55 },
+};
 const SKINS = {
-  classic: { colors: ['#e03131', '#ff8c1a', '#f8fafc', '#ffd21e', '#16b04f', '#2265e0'], emissive: 0 },
-  macaron: { colors: ['#ff9db0', '#ffc79b', '#fff7e6', '#ffe9a3', '#a5e6bd', '#a9c6f7'], emissive: 0 },
-  neon:    { colors: ['#ff2f68', '#ff9500', '#edf2ff', '#f2ff2e', '#2bff88', '#00c8ff'], emissive: 0.38 },
+  classic: { colors: ['#e03131', '#ff8c1a', '#f8fafc', '#ffd21e', '#16b04f', '#2265e0'], emissive: 0, finish: 'plastic' },
+  macaron: { colors: ['#ff9db0', '#ffc79b', '#fff7e6', '#ffe9a3', '#a5e6bd', '#a9c6f7'], emissive: 0, finish: 'plastic' },
+  neon:    { colors: ['#ff2f68', '#ff9500', '#edf2ff', '#f2ff2e', '#2bff88', '#00c8ff'], emissive: 0.38, finish: 'plastic' },
+  /* 阳极氧化金属 + 镜面反射：红/橙/银/金/绿/蓝 */
+  mirror:  { colors: ['#c23a3a', '#c56a1c', '#e6e8ee', '#d4a017', '#1a8f52', '#1d5fce'], emissive: 0.06, finish: 'mirror' },
 };
 
 /* ---------- 整数坐标绕 +axis 旋转 90°（右手，精确无漂移） ---------- */
@@ -74,7 +85,8 @@ export function createCubeApp({ canvas, cssVar, onUserTwist, onFirstInteract, on
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(38, innerWidth / innerHeight, 0.1, 120);
   const pmrem = new THREE.PMREMGenerator(renderer);
-  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  /* 略低 blur → 镜面皮肤反射更清晰；塑料皮肤仍靠自身 roughness 压光 */
+  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.02).texture;
 
   /* ---------- 主题背景（颜色一律来自 CSS token） ---------- */
   function applyThemeBg() {
@@ -118,21 +130,14 @@ export function createCubeApp({ canvas, cssVar, onUserTwist, onFirstInteract, on
 
   /* ---------- 共享几何与材质 ---------- */
   const bodyGeo = new RoundedBoxGeometry(1, 1, 1, 4, 0.085);
-  const bodyMat = new THREE.MeshPhysicalMaterial({
-    color: 0x1a1b21, roughness: 0.38, metalness: 0.05,
-    clearcoat: 0.7, clearcoatRoughness: 0.3, envMapIntensity: 0.9,
-  });
+  const bodyMat = new THREE.MeshPhysicalMaterial({ ...BODY_MAT.plastic });
   const stickGeo = new RoundedBoxGeometry(0.86, 0.86, 0.06, 3, 0.028);
   const stickMats = SKINS.classic.colors.map((c) => new THREE.MeshPhysicalMaterial({
-    color: c, roughness: 0.26, metalness: 0,
-    clearcoat: 1, clearcoatRoughness: 0.14, envMapIntensity: 1.15,
-    emissive: c, emissiveIntensity: 0,
+    color: c, ...SKIN_MAT.plastic, emissive: c, emissiveIntensity: 0,
   }));
   /* 讲解聚焦用的「亮灯」版贴纸 */
   const glowMats = SKINS.classic.colors.map((c) => new THREE.MeshPhysicalMaterial({
-    color: c, roughness: 0.26, metalness: 0,
-    clearcoat: 1, clearcoatRoughness: 0.14, envMapIntensity: 1.15,
-    emissive: c, emissiveIntensity: 0.42,
+    color: c, ...SKIN_MAT.plastic, emissive: c, emissiveIntensity: 0.42,
   }));
   /* 「帮我一步」非标记层用的淡化版贴纸：颜色变淡但仍可辨认 */
   const FADE_TINT = new THREE.Color(0xc9c6d2);
@@ -141,16 +146,48 @@ export function createCubeApp({ canvas, cssVar, onUserTwist, onFirstInteract, on
     color: fadeOf(c), roughness: 0.45, metalness: 0,
     clearcoat: 0.4, clearcoatRoughness: 0.4, envMapIntensity: 0.55,
   }));
+  let currentSkinId = 'classic';
+  function applyFinish(mat, finish, { faded = false, glow = false } = {}) {
+    const base = SKIN_MAT[finish] || SKIN_MAT.plastic;
+    if (faded) {
+      mat.roughness = finish === 'mirror' ? 0.28 : 0.45;
+      mat.metalness = finish === 'mirror' ? 0.55 : 0;
+      mat.clearcoat = finish === 'mirror' ? 0.55 : 0.4;
+      mat.clearcoatRoughness = finish === 'mirror' ? 0.22 : 0.4;
+      mat.envMapIntensity = finish === 'mirror' ? 0.9 : 0.55;
+      return;
+    }
+    mat.roughness = base.roughness;
+    mat.metalness = base.metalness;
+    mat.clearcoat = base.clearcoat;
+    mat.clearcoatRoughness = base.clearcoatRoughness;
+    mat.envMapIntensity = base.envMapIntensity * (glow ? 1.1 : 1);
+  }
   function setSkin(id) {
     const skin = SKINS[id] || SKINS.classic;
+    currentSkinId = SKINS[id] ? id : 'classic';
+    const finish = skin.finish || 'plastic';
+    const body = BODY_MAT[finish] || BODY_MAT.plastic;
+    bodyMat.color.setHex(body.color);
+    bodyMat.roughness = body.roughness;
+    bodyMat.metalness = body.metalness;
+    bodyMat.clearcoat = body.clearcoat;
+    bodyMat.clearcoatRoughness = body.clearcoatRoughness;
+    bodyMat.envMapIntensity = body.envMapIntensity;
     skin.colors.forEach((c, i) => {
       stickMats[i].color.set(c);
       stickMats[i].emissive.set(c);
       stickMats[i].emissiveIntensity = skin.emissive;
+      applyFinish(stickMats[i], finish);
       glowMats[i].color.set(c);
       glowMats[i].emissive.set(c);
+      glowMats[i].emissiveIntensity = Math.max(0.42, skin.emissive + 0.36);
+      applyFinish(glowMats[i], finish, { glow: true });
       fadeMats[i].color.copy(fadeOf(c));
+      applyFinish(fadeMats[i], finish, { faded: true });
     });
+    /* 镜面皮肤略提曝光，塑料皮肤回默认 */
+    renderer.toneMappingExposure = finish === 'mirror' ? 1.18 : 1.06;
   }
 
   /* ---------- 魔方数据与网格 ---------- */
@@ -622,7 +659,7 @@ export function createCubeApp({ canvas, cssVar, onUserTwist, onFirstInteract, on
     const mesh = new THREE.InstancedMesh(geo, mat, COUNT);
     mesh.frustumCulled = false;
     const parts = [];
-    const palette = SKINS.classic.colors;
+    const palette = (SKINS[currentSkinId] || SKINS.classic).colors;
     const col = new THREE.Color();
     for (let i = 0; i < COUNT; i++) {
       parts.push({
