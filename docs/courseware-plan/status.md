@@ -31,10 +31,10 @@ KidsLab 应该是一组孩子打开就想玩的交互课件，而不是题库或
 
 - 主站课程浏览：`index.html`、`assets/js/app.js` 支持学段、年级、分类、搜索、双语、主题、强调色与置顶课件。
 - 静态构建发布：`scripts/build.mjs` 校验 `course.json`、压缩资源、生成 `courseware/index.json`；GitHub Pages workflow 在 `main` 推送后构建发布。
-- 课件源码库：当前 `src/` 下有 71 个课件目录，其中小学规划内按 ID 直接完成 62 个。
+- 课件源码库：当前 `src/` 下有 73 个课件目录，其中小学规划内按 ID 直接完成 63 个。
 - 小学课件规划：`docs/courseware-plan/` 覆盖数学、编程、逻辑、科学 84 个小学目标课件。
 - 课件模板：`docs/courseware-template/` 提供双语、主题、静态独立课件起点。
-- 交互音效：当前 70 个游戏中 53 个有音频实现；`huarong-dao` 与 `venn-port` 使用 ScoreKit 循环配乐和通关短曲，并实现语义交互音效及独立静音控制，存量改进优先级见 `docs/courseware-audio-audit.md`。
+- 交互音效：当前 72 个游戏中 58 个有音频实现；`huarong-dao` 与 `venn-port` 使用 ScoreKit 循环配乐和通关短曲，并实现语义交互音效及独立静音控制，存量改进优先级见 `docs/courseware-audio-audit.md`。
 - 行为分析：`docs/analytics.md`、`scripts/track.js`、`cloudflare/analytics/` 提供可选埋点链路。
 
 ## 非目标（铁律）
@@ -67,11 +67,11 @@ Agent 每次完成计划项后必须同步更新：
 
 | 学科 | 目标数 | 已完成（按规划 ID） | 未实现 | 备注 |
 | --- | ---: | ---: | ---: | --- |
-| 数学 | 32 | 22 | 10 | P0 已完成 |
+| 数学 | 32 | 23 | 9 | P0 已完成 |
 | 编程 | 15 | 14 | 1 | P0 已完成 |
 | 逻辑 | 15 | 12 | 3 | P0 已完成；`magic-cube`、`huarong-dao` 为规划外补充 |
 | 科学 | 22 | 14 | 8 | `plant-lab` 可能对应 `plant-xray`，但 ID/标题未对齐 |
-| 合计 | 84 | 62 | 22 | 另有 9 个规划外已上线课件 |
+| 合计 | 84 | 63 | 21 | 另有 9 个规划外已上线课件 |
 
 ## 已完成（规划内）
 
@@ -99,6 +99,7 @@ Agent 每次完成计划项后必须同步更新：
 - [x] 煎饼老板 `pancake-boss`
 - [x] 数据演播室 `data-studio`
 - [x] 三角形实验室 `triangle-lab`
+- [x] 外星农场 `alien-farm`
 
 ### 编程
 
@@ -153,7 +154,6 @@ Agent 每次完成计划项后必须同步更新：
 
 ### 数学
 
-- [ ] 外星农场 `alien-farm`
 - [ ] 平衡马戏团 `balance-circus`
 - [ ] 因数水晶洞 `crystal-cave`
 - [ ] 魔药比例坊 `potion-ratio`
@@ -241,8 +241,9 @@ Agent 每次完成计划项后必须同步更新：
 | PWA 壳与课件离线缓存 | 高 | 已覆盖：manifest 合法性 + SW 激活预缓存 + cache-on-visit 角标 | 已覆盖：杀死服务器后离线回放已玩课件与主站壳 | 不适用：纯静态无角色 | 已覆盖：断网时 SW 缓存兜底，联网 network-first 自动恢复最新内容 | `tests/e2e/pwa.spec.js` |
 | 电工鼠开放电路实验室 | 高 | 已覆盖：桌面与触屏完成端口接线、合闸点亮、实时电流读数和触屏放置 | 已覆盖：制造短路并显示故障 | 不适用：纯静态无角色 | 已覆盖：撤销短路恢复通路；保存后清空并加载恢复作品 | `tests/e2e/electric-mouse.spec.js`；`tests/unit/electric-lab.test.mjs` |
 | 三角形实验室 | 中 | 已覆盖：桌面与触屏完成货架稳定性、内角和与三边关系三项实验，并验证拖动顶点后内角和仍为 180° | 已覆盖：无斜撑加载导致货架变形、三边关系误判后保留原题重试，以及两边和等于第三边时不能成三角形 | 不适用：纯静态无角色 | 已覆盖：错误状态可原地修正；实验进度、完成状态可重载恢复并支持重新开始 | `tests/e2e/triangle-lab.spec.js` |
+| 外星农场 | 中 | 已覆盖：桌面与触屏完成固定总数试调、假设法一次替换和眼腿双传感器反推三夜任务 | 已覆盖：错误腿数与错误眼腿组合保留原题和当前数量，可原地继续调整 | 不适用：纯静态无角色 | 已覆盖：任务状态、假设步骤和最终完成状态可重载恢复，并支持重新开始 | `tests/e2e/alien-farm.spec.js` |
 | 单个课件核心玩法 | 中 | 部分：搭配衣橱、找零售货机、格子大厦、巫师的罐子、惊喜鬼屋、变形旅馆、七巧板皮影戏、狐狸的石子、摆渡奇遇、真话岛、平方根建筑师、小小港湾、函数厨房、角度高尔夫、二进制灯塔、墨迹怪物、分数节拍屋、像素邮局、光学实验室、华容道、维恩太空港、声波乐团、扫地机器人研究所、折纸打孔妙妙屋、煎饼老板、激光镜屋、彩虹舞台、数据演播室、密码社、七桥滑冰与机器宠物学校完整闭环 | 部分：前七课件覆盖错误选择、重复搭配、错误找零、错误接线或错误放置后原地重试；狐狸的石子覆盖轮流拿取与必胜闭环；摆渡奇遇覆盖危险搭档违规、自动回退、撤销和重开后的状态恢复；真话岛覆盖错误身份、错误逻辑联结词判断、无效提问与错误道路选择后的原地重试；平方根建筑师覆盖负数输入和错答恢复；小小港湾覆盖超载进水、泥球下沉和错误预测后的原地恢复；函数厨房覆盖错误步骤、复制爆单和参数传错后的原地恢复；角度高尔夫覆盖报角偏差、轨迹反馈和原地重试；二进制灯塔覆盖错误数字、错误解码、错误字母编码和原地修正；墨迹怪物覆盖墨团不足、错误镜像点、错误嫌疑怪和原地重试；分数节拍屋覆盖超出一小节、等值分数不足、错误节拍顺序、未试听交付及撤回/清空后的原地恢复；像素邮局覆盖漏涂/多涂像素、错误数字还原和错误 RLE 编码后的原地修正；光学实验室覆盖实像对焦与虚像无法投屏状态；华容道覆盖无效方向、逐步提示、撤销恢复、十二步练习通关与演示时间线；维恩太空港覆盖错误泊位安全返航、五船完整任务、演示暂停/单步/跳转及退出后的进度恢复；声波乐团覆盖未拨弦检查、错误音高、错误振幅、空气未抽净和真空后未复验的原地恢复；扫地机器人研究所覆盖空芯片启动、三种错误策略及原地换芯重试；折纸打孔妙妙屋覆盖空预测、错误镜像孔位、清空后重试及四关逐层展开；煎饼老板覆盖铁板空位、同饼双面冲突、未启动并行任务和错误跨小时计算后的原地恢复；激光镜屋覆盖空路线、错误镜位、镜子上限、彩色光路不匹配后的原地调整及四关通关；彩虹舞台覆盖空灯光、缺色光、错误颜料组合、未开白光和错误棱镜角度后的原地调整及三幕通关；数据演播室覆盖错记选票、错误图表匹配、错误最大值/总数/平均数播报后的原地重试及三场通关；密码社覆盖错钥匙、错解码、错频率字母和错映射后的原地修正及三关通关；七桥滑冰覆盖未观察度数、错误可行性判断、非相邻滑行与无效双桥施工后的原地恢复，并完成判断、欧拉回路和改桥三关；机器宠物学校覆盖错误标签、窄样本误判、纠正样本重训和重开后的原地恢复，并完成训练、偏差纠正与未见物测试三课 | 不适用：纯静态无角色 | 部分：三十一课件支持重开、状态恢复或无损调参，其余课件需逐项确认 | `tests/e2e/combo-closet.spec.js`、`tests/e2e/change-vending.spec.js`、`tests/e2e/grid-tower.spec.js`、`tests/e2e/wizard-jars.spec.js`、`tests/e2e/haunted-events.spec.js`、`tests/e2e/metamorph-hotel.spec.js`、`tests/e2e/tangram-theater.spec.js`、`tests/e2e/fox-stones.spec.js`、`tests/e2e/ferry-tales.spec.js`、`tests/e2e/truth-island.spec.js`、`tests/e2e/square-root-lab.spec.js`、`tests/e2e/tiny-harbor.spec.js`、`tests/e2e/function-kitchen.spec.js`、`tests/e2e/angle-golf.spec.js`、`tests/e2e/binary-lighthouse.spec.js`、`tests/e2e/inkblot-monsters.spec.js`、`tests/e2e/fraction-beats.spec.js`、`tests/e2e/pixel-post.spec.js`、`tests/e2e/huarong-dao.spec.js`、`tests/e2e/venn-port.spec.js`、`tests/e2e/wave-band.spec.js`、`tests/e2e/vacuum-lab.spec.js`、`tests/e2e/punch-origami.spec.js`、`tests/e2e/pancake-boss.spec.js`、`tests/e2e/laser-mirrors.spec.js`、`tests/e2e/rainbow-stage.spec.js`、`tests/e2e/data-studio.spec.js`、`tests/e2e/cipher-club.spec.js`、`tests/e2e/ice-bridges.spec.js`、`tests/e2e/robo-pet-school.spec.js`、`tests/e2e/smoke.spec.js`（光学实验室）；`AGENT.md` 提交前自检；其余课件需补 E2E 或交互烟测 |
-| 课件交互音效 | 中 | 缺口：静态扫描确认 52/69 个游戏存在音频实现，未验证全部存量课件的语义、响度和完整玩法覆盖 | 缺口：需验证错误/无效操作、AudioContext 失败和快速连续操作 | 不适用：纯静态无角色 | 缺口：需验证静音可关闭一次性与循环声音、页面隐藏后停止环境音 | `docs/courseware-audio-audit.md`；分数节拍屋、声波乐团、扫地机器人研究所、折纸打孔妙妙屋、煎饼老板、激光镜屋、彩虹舞台、数据演播室、密码社、七桥滑冰与机器宠物学校覆盖交互/正确/错误/通关语义音效与静音状态，华容道与维恩太空港覆盖独立 BGM/音效开关及页面隐藏暂停；静态和 E2E 检查仍不能替代人工听测 |
-| 双语、主题、移动端适配 | 中 | 部分：华容道、维恩太空港、分数节拍屋、声波乐团、扫地机器人研究所、折纸打孔妙妙屋、煎饼老板、激光镜屋、彩虹舞台、数据演播室、密码社、七桥滑冰与机器宠物学校已覆盖中英切换、深浅主题和 1280×800/375×667 布局 | 部分：十三课件验证无横纵向溢出及可见按钮最小触控高度 | 不适用：纯静态无角色 | 部分：华容道与维恩太空港验证偏好写入 localStorage 并经重新加载恢复；分数节拍屋、声波乐团、扫地机器人研究所、折纸打孔妙妙屋、煎饼老板、激光镜屋、彩虹舞台、数据演播室、密码社、七桥滑冰与机器宠物学校验证即时切换，扫地机器人研究所、折纸打孔妙妙屋、煎饼老板、激光镜屋、彩虹舞台、数据演播室、密码社、七桥滑冰与机器宠物学校另验证进度重载恢复 | `tests/e2e/huarong-dao.spec.js`、`tests/e2e/venn-port.spec.js`、`tests/e2e/fraction-beats.spec.js`、`tests/e2e/wave-band.spec.js`、`tests/e2e/vacuum-lab.spec.js`、`tests/e2e/punch-origami.spec.js`、`tests/e2e/pancake-boss.spec.js`、`tests/e2e/laser-mirrors.spec.js`、`tests/e2e/rainbow-stage.spec.js`、`tests/e2e/data-studio.spec.js`、`tests/e2e/cipher-club.spec.js`、`tests/e2e/ice-bridges.spec.js`、`tests/e2e/robo-pet-school.spec.js`；其余课件仍需补同口径证据 |
+| 课件交互音效 | 中 | 缺口：静态扫描确认 58/72 个游戏存在音频实现，未验证全部存量课件的语义、响度和完整玩法覆盖 | 缺口：需验证错误/无效操作、AudioContext 失败和快速连续操作 | 不适用：纯静态无角色 | 缺口：需验证静音可关闭一次性与循环声音、页面隐藏后停止环境音 | `docs/courseware-audio-audit.md`；分数节拍屋、声波乐团、扫地机器人研究所、折纸打孔妙妙屋、煎饼老板、激光镜屋、彩虹舞台、数据演播室、密码社、七桥滑冰、机器宠物学校与外星农场覆盖交互/正确/错误/通关语义音效与静音状态，华容道与维恩太空港覆盖独立 BGM/音效开关及页面隐藏暂停；静态和 E2E 检查仍不能替代人工听测 |
+| 双语、主题、移动端适配 | 中 | 部分：华容道、维恩太空港、分数节拍屋、声波乐团、扫地机器人研究所、折纸打孔妙妙屋、煎饼老板、激光镜屋、彩虹舞台、数据演播室、密码社、七桥滑冰、机器宠物学校与外星农场已覆盖中英切换、深浅主题和 1280×800/375×667 布局 | 部分：十四课件验证无横纵向溢出及可见按钮最小触控高度 | 不适用：纯静态无角色 | 部分：华容道与维恩太空港验证偏好写入 localStorage 并经重新加载恢复；分数节拍屋、声波乐团、扫地机器人研究所、折纸打孔妙妙屋、煎饼老板、激光镜屋、彩虹舞台、数据演播室、密码社、七桥滑冰、机器宠物学校与外星农场验证即时切换，扫地机器人研究所、折纸打孔妙妙屋、煎饼老板、激光镜屋、彩虹舞台、数据演播室、密码社、七桥滑冰、机器宠物学校与外星农场另验证进度重载恢复 | `tests/e2e/huarong-dao.spec.js`、`tests/e2e/venn-port.spec.js`、`tests/e2e/fraction-beats.spec.js`、`tests/e2e/wave-band.spec.js`、`tests/e2e/vacuum-lab.spec.js`、`tests/e2e/punch-origami.spec.js`、`tests/e2e/pancake-boss.spec.js`、`tests/e2e/laser-mirrors.spec.js`、`tests/e2e/rainbow-stage.spec.js`、`tests/e2e/data-studio.spec.js`、`tests/e2e/cipher-club.spec.js`、`tests/e2e/ice-bridges.spec.js`、`tests/e2e/robo-pet-school.spec.js`、`tests/e2e/alien-farm.spec.js`；其余课件仍需补同口径证据 |
 | 行为分析埋点 | 中 | 缺口 | 缺口 | 不适用：无用户身份 | 缺口：endpoint 缺失时应空操作 | `docs/analytics.md`、`scripts/track.js`、`cloudflare/analytics/` |
 | GitHub Pages 发布 | 中 | 部分：workflow 运行 `npm run build` | 缺口 | 不适用：GitHub Actions 权限由仓库配置控制 | 缺口：发布失败回滚依赖 Pages 历史版本 | `.github/workflows/deploy.yml` |

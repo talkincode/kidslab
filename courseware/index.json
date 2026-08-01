@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-01T05:18:09.201Z",
+  "generatedAt": "2026-08-01T15:44:40.160Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -3173,6 +3173,59 @@
         "游戏"
       ],
       "path": "courseware/triangle-lab/index.html"
+    },
+    {
+      "id": "alien-farm",
+      "title": {
+        "zh": "外星农场",
+        "en": "Alien Farm"
+      },
+      "description": {
+        "zh": "戴上夜视仪清点三脚兽和四脚兽，用尝试调整、假设法和眼腿传感器破解三份外星农场清单。",
+        "en": "Use night vision to count three-legged and four-legged aliens, then solve farm manifests by trial, assumption, and eye-and-leg sensor clues."
+      },
+      "category": "math",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g4",
+        "g5",
+        "g6"
+      ],
+      "tags": [
+        "运算",
+        "推理",
+        "益智游戏"
+      ],
+      "icon": "👽",
+      "order": 74,
+      "badge": "new",
+      "keywords": [
+        "Arithmetic",
+        "arithmetic",
+        "operations",
+        "四则运算",
+        "Reasoning",
+        "reasoning",
+        "演绎推理",
+        "deduction",
+        "排除法",
+        "elimination",
+        "逻辑网格",
+        "logic grid",
+        "逆向推理",
+        "backward reasoning",
+        "证据",
+        "evidence",
+        "inference",
+        "Puzzle Game",
+        "puzzle",
+        "game",
+        "益智",
+        "游戏"
+      ],
+      "path": "courseware/alien-farm/index.html"
     },
     {
       "id": "detective-board",
