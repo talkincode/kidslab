@@ -1,0 +1,18 @@
+{
+  "id": "crystal-cave",
+  "title": {
+    "zh": "因数水晶洞",
+    "en": "Factor Crystal Cave"
+  },
+  "description": {
+    "zh": "敲开合数水晶，把 12 和 18 一路分解成质数原石，再用 3 号音叉点亮整面倍数矿墙。",
+    "en": "Crack composite crystals until 12 and 18 become prime stones, then light a wall of multiples with the No. 3 tuning fork."
+  },
+  "category": "math",
+  "levels": ["primary"],
+  "grades": ["g5", "g6"],
+  "tags": ["数的认识", "乘法", "推理", "益智游戏"],
+  "icon": "💎",
+  "order": 29,
+  "badge": "new"
+}

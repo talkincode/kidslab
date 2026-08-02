@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-01T18:17:03.075Z",
+  "generatedAt": "2026-08-02T15:24:59.637Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -1426,6 +1426,69 @@
         "游戏"
       ],
       "path": "courseware/balance-circus/index.html"
+    },
+    {
+      "id": "crystal-cave",
+      "title": {
+        "zh": "因数水晶洞",
+        "en": "Factor Crystal Cave"
+      },
+      "description": {
+        "zh": "敲开合数水晶，把 12 和 18 一路分解成质数原石，再用 3 号音叉点亮整面倍数矿墙。",
+        "en": "Crack composite crystals until 12 and 18 become prime stones, then light a wall of multiples with the No. 3 tuning fork."
+      },
+      "category": "math",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g5",
+        "g6"
+      ],
+      "tags": [
+        "数的认识",
+        "乘法",
+        "推理",
+        "益智游戏"
+      ],
+      "icon": "💎",
+      "order": 29,
+      "badge": "new",
+      "keywords": [
+        "Numbers & Counting",
+        "百数表",
+        "hundred chart",
+        "数序",
+        "number order",
+        "100以内的数",
+        "counting",
+        "Multiplication",
+        "multiplication",
+        "times tables",
+        "乘法口诀",
+        "arrays",
+        "交换律",
+        "commutative",
+        "Reasoning",
+        "reasoning",
+        "演绎推理",
+        "deduction",
+        "排除法",
+        "elimination",
+        "逻辑网格",
+        "logic grid",
+        "逆向推理",
+        "backward reasoning",
+        "证据",
+        "evidence",
+        "inference",
+        "Puzzle Game",
+        "puzzle",
+        "game",
+        "益智",
+        "游戏"
+      ],
+      "path": "courseware/crystal-cave/index.html"
     },
     {
       "id": "plant-lab",

@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>因数水晶洞 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <div class="cave-glow cave-glow--one" aria-hidden="true"></div>
+  <div class="cave-glow cave-glow--two" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="chip chip--back" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1><span aria-hidden="true">💎</span> <span data-t="title">因数水晶洞</span></h1>
+    <div class="topbar__actions">
+      <button class="chip chip--square" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="chip chip--square" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="chip chip--lang" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="expedition" id="course">
+    <section class="mission-card">
+      <div class="mission-card__number"><span data-t="chamber">洞厅</span><strong id="chamberNumber">1</strong><small>/ 3</small></div>
+      <div class="mission-card__copy">
+        <p id="missionKicker">第一矿层 · 紫晶裂谷</p>
+        <h2 id="missionTitle">把 12 敲成质数原石</h2>
+        <p id="missionPrompt">选择真正相乘等于水晶数字的因数锤。</p>
+      </div>
+      <nav class="progress-dots" id="progressDots" aria-label="洞厅进度"></nav>
+    </section>
+
+    <section class="workbench">
+      <section class="cavern">
+        <div class="cavern__status">
+          <p id="status" role="status" aria-live="polite">12 能被哪两个大于 1 的整数整齐敲开？</p>
+          <span class="depth-badge"><i aria-hidden="true"></i><span data-t="depth">地下 120 米</span></span>
+        </div>
+        <div class="canvas-shell" id="canvasShell">
+          <canvas id="caveCanvas" aria-label="显示水晶因数分解过程的地下洞穴"></canvas>
+          <div class="canvas-legend" id="canvasLegend">
+            <span><i class="legend-composite"></i><span data-t="compositeLegend">可敲开的合数</span></span>
+            <span><i class="legend-prime"></i><span data-t="primeLegend">质数原石</span></span>
+          </div>
+        </div>
+        <div class="prime-pouch">
+          <span data-t="pouch">原石袋</span>
+          <div id="primePouch" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <aside class="tool-panel">
+        <section class="factor-tools" id="factorTools">
+          <div class="panel-title">
+            <div>
+              <small data-t="selectedCrystal">当前水晶</small>
+              <h3><span id="selectedValue">12</span> <span data-t="chooseHammer">选择因数锤</span></h3>
+            </div>
+            <span class="hammer" aria-hidden="true">⛏️</span>
+          </div>
+          <div class="factor-options" id="factorOptions"></div>
+        </section>
+
+        <section class="resonance-tools" id="resonanceTools" hidden>
+          <div class="panel-title">
+            <div>
+              <small data-t="tuningFork">3 号音叉</small>
+              <h3 data-t="findMultiples">点亮所有 3 的倍数</h3>
+            </div>
+            <button class="fork" id="forkBtn" type="button" aria-label="敲响 3 号音叉">𝄢<b>3</b></button>
+          </div>
+          <div class="number-wall" id="numberWall"></div>
+          <button class="check-wall" id="checkWallBtn" type="button" data-t="checkWall">检查共振矿墙</button>
+        </section>
+
+        <section class="field-notes">
+          <div class="field-notes__head">
+            <strong data-t="notes">探险记录</strong>
+            <button id="resetBtn" type="button" data-t="reset">重探本厅</button>
+          </div>
+          <ol id="historyList"></ol>
+        </section>
+
+        <div class="panel-actions">
+          <button class="hint-btn" id="hintBtn" type="button"><span aria-hidden="true">🦇</span> <span data-t="hint">问问引路蝙蝠</span></button>
+          <button class="next-btn" id="nextBtn" type="button" hidden><span data-t="next">深入下一层</span> →</button>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="certificate" id="certificate" hidden>
+    <section class="certificate__card" role="dialog" aria-modal="true" aria-labelledby="certificateTitle">
+      <div class="certificate__seal" aria-hidden="true">✦</div>
+      <p data-t="certificateKicker">因数水晶洞勘探完成</p>
+      <h2 id="certificateTitle" data-t="certificateTitle">宇宙配方证书</h2>
+      <p data-t="certificateText">无论从哪条裂缝开始，同一个数最后都会留下同一袋质数原石，只是排列顺序可能不同。</p>
+      <div class="recipes">
+        <span>12 = 2 × 2 × 3</span>
+        <span>18 = 2 × 3 × 3</span>
+      </div>
+      <div class="certificate__stars" aria-hidden="true">◆ · ✦ · ◆</div>
+      <button class="next-btn certificate__again" id="playAgainBtn" type="button" data-t="playAgain">重新勘探</button>
+    </section>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
