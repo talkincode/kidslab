@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-02T15:24:59.637Z",
+  "generatedAt": "2026-08-02T18:07:11.483Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -1576,6 +1576,60 @@
         "模拟"
       ],
       "path": "courseware/pendulum-lab/index.html"
+    },
+    {
+      "id": "potion-ratio",
+      "title": {
+        "zh": "魔药比例坊",
+        "en": "Potion Ratio Workshop"
+      },
+      "description": {
+        "zh": "守住 3:2 的月光配方，从 15 勺小锅放大到 500 勺星光池，再按 2:3:5 为三只猫分好 100 枚金币。",
+        "en": "Keep a 3:2 moonlight recipe true from a 15-spoon pot to a 500-spoon starlight pool, then share 100 coins among three cats in a 2:3:5 ratio."
+      },
+      "category": "math",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g6"
+      ],
+      "tags": [
+        "分数",
+        "乘法",
+        "运算",
+        "益智游戏"
+      ],
+      "icon": "🧪",
+      "order": 30,
+      "badge": "new",
+      "keywords": [
+        "Fractions",
+        "fraction",
+        "fractions",
+        "等值分数",
+        "equivalent fractions",
+        "百分数",
+        "percent",
+        "percentage",
+        "Multiplication",
+        "multiplication",
+        "times tables",
+        "乘法口诀",
+        "arrays",
+        "交换律",
+        "commutative",
+        "Arithmetic",
+        "arithmetic",
+        "operations",
+        "四则运算",
+        "Puzzle Game",
+        "puzzle",
+        "game",
+        "益智",
+        "游戏"
+      ],
+      "path": "courseware/potion-ratio/index.html"
     },
     {
       "id": "optics-lab",

@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>魔药比例坊 · KidsLab</title>
+  <link rel="stylesheet" href="style.css?v=0eb9c49e" />
+  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<script>(()=>{"use strict";const g=window,r=g.cool||{};if(r.sdkVersion)return;try{document.documentElement.style.touchAction="manipulation"}catch{}const w="potion-ratio",b=location.pathname.split("/").filter(Boolean),E=b.at(-1)||"",A=E.includes(".")?b.at(-2):E,f=w.startsWith("__")?A:w,l={get(t,n=null){try{const e=localStorage.getItem(t);return e===null?n:e}catch{return n}},set(t,n){try{return localStorage.setItem(t,n),!0}catch{return!1}},remove(t){try{return localStorage.removeItem(t),!0}catch{return!1}}},d=new Set,S=new Set(["zh","en"]),I=new Set(["light","dark"]),C=(navigator.language||"").toLowerCase().startsWith("zh")?"zh":"en";let m="light";try{m=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch{}let s=l.get("kidslab.lang",C),c=l.get("kidslab.theme",m);S.has(s)||(s=C),I.has(c)||(c=m);function p(){document.documentElement.lang=s==="zh"?"zh-CN":"en",document.documentElement.dataset.theme=c}function T(t,n){const e={kind:t,value:n};for(const o of[...d])o(e);g.dispatchEvent(new CustomEvent(`${t}change`,{detail:{[t]:n}}))}const z={get lang(){return s},get theme(){return c},setLang(t){if(!S.has(t))throw new RangeError(`Unsupported language: ${t}`);t!==s&&(s=t,l.set("kidslab.lang",t),p(),T("lang",t))},setTheme(t){if(!I.has(t))throw new RangeError(`Unsupported theme: ${t}`);t!==c&&(c=t,l.set("kidslab.theme",t),p(),T("theme",t))},toggleLang(){this.setLang(s==="zh"?"en":"zh")},toggleTheme(){this.setTheme(c==="light"?"dark":"light")},subscribe(t){if(typeof t!="function")throw new TypeError("Preference listener must be a function");return d.add(t),()=>d.delete(t)}};function D(t,n={}){if(!t||typeof t!="object")throw new TypeError("Messages must be an object");const e=n.root||document;if(!e.querySelectorAll&&!e.matches)throw new TypeError("i18n root must be a Document or Element");function o(a,...h){const i=t[s]?.[a]??t.zh?.[a]??t.en?.[a];return typeof i=="function"?i(...h):i??a}function y(a="lang"){const h=[];e.matches?.("[data-t]")&&h.push(e),e.querySelectorAll&&h.push(...e.querySelectorAll("[data-t]"));for(const i of h){const L=o(i.dataset.t);typeof L=="string"&&(i.textContent=L)}n.onChange?.({kind:a,lang:s,theme:c,t:o})}const $=z.subscribe(({kind:a})=>{a==="lang"?y("lang"):n.onChange?.({kind:a,lang:s,theme:c,t:o})});return y("init"),{t:o,render:y,destroy:$}}const u=f?`kidslab.progress.${f}`:"";function _(){if(!u)return null;try{const t=JSON.parse(l.get(u,"null"));return!t||!["played","completed"].includes(t.status)?null:t}catch{return null}}function k(t,n){if(!u)return null;const e=_()||{},o={status:e.status==="completed"?"completed":t,stage:n||e.stage||"",updatedAt:Date.now()};return e.status===o.status&&e.stage===o.stage?e:(l.set(u,JSON.stringify(o)),o)}const P={get:_,clear(){return u?l.remove(u):!1}};r.sdkVersion=2,r.courseId=f,r.storage=l,r.preferences=z,r.bindI18n=D,r.progress=P,typeof r.track!="function"&&(r.track=()=>{}),r.stage=t=>{typeof t!="string"||!t||k("played",t.slice(0,48))},r.complete=()=>k("completed"),g.cool=r,p()})();
+</script>
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <div class="mist mist--one" aria-hidden="true"></div>
+  <div class="mist mist--two" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="pill pill--back" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1><span aria-hidden="true">🧪</span> <span data-t="title">魔药比例坊</span></h1>
+    <div class="topbar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill pill--lang" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="lab" id="course">
+    <section class="recipe-card">
+      <div class="recipe-card__seal">
+        <small data-t="lesson">配方</small>
+        <strong id="lessonNumber">1</strong><span>/3</span>
+      </div>
+      <div class="recipe-card__copy">
+        <p id="lessonKicker">学徒试炼 · 一锅不差</p>
+        <h2 id="lessonTitle">熬出 15 勺月光药</h2>
+        <p id="lessonPrompt">月光露 : 蘑菇粉 = 3 : 2。哪张称量单不会让客人长出蛙蹼？</p>
+      </div>
+      <nav class="lesson-nav" id="lessonNav" aria-label="配方进度"></nav>
+    </section>
+
+    <section class="workshop">
+      <section class="brewery" id="brewery">
+        <div class="brewery__status">
+          <p id="status" role="status" aria-live="polite">总共要 15 勺。先把 3:2 看成 5 份。</p>
+          <span class="open-sign"><i aria-hidden="true"></i><span data-t="open">正在营业</span></span>
+        </div>
+
+        <div class="brew-scene" id="brewScene">
+          <div class="shelf shelf--left" aria-hidden="true"><span>☾</span><b></b></div>
+          <div class="shelf shelf--right" aria-hidden="true"><span>♨</span><b></b></div>
+          <div class="bottle bottle--moon" aria-hidden="true"><span>☾</span></div>
+          <div class="bottle bottle--mushroom" aria-hidden="true"><span>♠</span></div>
+          <div class="customer" aria-hidden="true"><span class="customer__hat">⌃</span><span class="customer__face">😺</span><span class="customer__frog">🐸</span></div>
+          <div class="sparkles" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+          <div class="cauldron" id="cauldron" aria-hidden="true">
+            <div class="cauldron__rim"></div>
+            <div class="cauldron__liquid"></div>
+            <div class="cauldron__body"><span>3 : 2</span></div>
+            <div class="cauldron__leg cauldron__leg--left"></div>
+            <div class="cauldron__leg cauldron__leg--right"></div>
+          </div>
+          <div class="ingredient-readout">
+            <div><span class="drop drop--moon">☾</span><strong id="moonAmount">3</strong><small data-t="moonUnit">勺月光露</small></div>
+            <span class="ratio-mark">:</span>
+            <div><span class="drop drop--mushroom">♠</span><strong id="mushroomAmount">2</strong><small data-t="mushroomUnit">勺蘑菇粉</small></div>
+          </div>
+        </div>
+
+        <div class="coin-scene" id="coinScene" hidden>
+          <div class="coin-moon" aria-hidden="true">✦</div>
+          <div class="coin-total"><small data-t="dividend">今日分红</small><strong>100</strong><span data-t="coins">枚金币</span></div>
+          <div class="cat-row">
+            <article class="cat-card cat-card--one"><span aria-hidden="true">😺</span><small>2 <span data-t="shares">份</span></small><strong id="catOne">2</strong></article>
+            <article class="cat-card cat-card--two"><span aria-hidden="true">😸</span><small>3 <span data-t="shares">份</span></small><strong id="catTwo">3</strong></article>
+            <article class="cat-card cat-card--three"><span aria-hidden="true">😼</span><small>5 <span data-t="shares">份</span></small><strong id="catThree">5</strong></article>
+          </div>
+        </div>
+
+        <div class="ratio-strip" id="ratioStrip">
+          <span data-t="recipe">古老配方</span>
+          <strong id="ratioEquation">3 : 2 = 9 : 6</strong>
+          <span id="totalBadge">15 勺</span>
+        </div>
+      </section>
+
+      <aside class="ledger">
+        <div class="ledger__head">
+          <div>
+            <small data-t="choose">选择称量单</small>
+            <h3 id="choiceTitle">哪一锅保持 3:2？</h3>
+          </div>
+          <span class="quill" aria-hidden="true">✒</span>
+        </div>
+        <div class="choices" id="choices"></div>
+        <div class="rule-note">
+          <span aria-hidden="true">✦</span>
+          <p><strong data-t="rule">炼金铁律</strong><span id="ruleText">总量分成 5 份，月光露拿 3 份，蘑菇粉拿 2 份。</span></p>
+        </div>
+        <div class="ledger__actions">
+          <button class="secondary-btn" id="hintBtn" type="button"><span aria-hidden="true">🦉</span> <span data-t="hint">问账房猫头鹰</span></button>
+          <button class="primary-btn" id="checkBtn" type="button" disabled><span data-t="brew">开炉熬制</span> <span aria-hidden="true">→</span></button>
+          <button class="primary-btn" id="nextBtn" type="button" hidden><span data-t="next">下一张配方</span> <span aria-hidden="true">→</span></button>
+        </div>
+        <button class="reset-btn" id="resetBtn" type="button" data-t="reset">重配这一锅</button>
+      </aside>
+    </section>
+  </main>
+
+  <div class="finale" id="finale" hidden>
+    <section class="finale__card" role="dialog" aria-modal="true" aria-labelledby="finalTitle">
+      <div class="finale__crest" aria-hidden="true">⚗</div>
+      <p data-t="finalKicker">三张配方全部通过</p>
+      <h2 id="finalTitle" data-t="finalTitle">黄金量杯授予你！</h2>
+      <p data-t="finalText">比就像配方的指纹：整锅一起放大或缩小，味道不变；分金币时，先数清一共有多少份。</p>
+      <div class="finale__formulas"><span>3 : 2 = 300 : 200</span><span>100 ÷ (2 + 3 + 5) = 10</span></div>
+      <button class="primary-btn" id="playAgainBtn" type="button" data-t="playAgain">再开一间比例坊</button>
+    </section>
+  </div>
+
+  <script src="main.js?v=08d23d14"></script>
+</body>
+</html>
