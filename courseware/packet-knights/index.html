@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>数据包骑士 · KidsLab</title>
+  <link rel="stylesheet" href="style.css?v=32e9a55b" />
+  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<script>(()=>{"use strict";const g=window,r=g.cool||{};if(r.sdkVersion)return;try{document.documentElement.style.touchAction="manipulation"}catch{}const w="packet-knights",b=location.pathname.split("/").filter(Boolean),E=b.at(-1)||"",A=E.includes(".")?b.at(-2):E,f=w.startsWith("__")?A:w,l={get(t,n=null){try{const e=localStorage.getItem(t);return e===null?n:e}catch{return n}},set(t,n){try{return localStorage.setItem(t,n),!0}catch{return!1}},remove(t){try{return localStorage.removeItem(t),!0}catch{return!1}}},d=new Set,S=new Set(["zh","en"]),I=new Set(["light","dark"]),C=(navigator.language||"").toLowerCase().startsWith("zh")?"zh":"en";let m="light";try{m=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch{}let s=l.get("kidslab.lang",C),c=l.get("kidslab.theme",m);S.has(s)||(s=C),I.has(c)||(c=m);function p(){document.documentElement.lang=s==="zh"?"zh-CN":"en",document.documentElement.dataset.theme=c}function T(t,n){const e={kind:t,value:n};for(const o of[...d])o(e);g.dispatchEvent(new CustomEvent(`${t}change`,{detail:{[t]:n}}))}const z={get lang(){return s},get theme(){return c},setLang(t){if(!S.has(t))throw new RangeError(`Unsupported language: ${t}`);t!==s&&(s=t,l.set("kidslab.lang",t),p(),T("lang",t))},setTheme(t){if(!I.has(t))throw new RangeError(`Unsupported theme: ${t}`);t!==c&&(c=t,l.set("kidslab.theme",t),p(),T("theme",t))},toggleLang(){this.setLang(s==="zh"?"en":"zh")},toggleTheme(){this.setTheme(c==="light"?"dark":"light")},subscribe(t){if(typeof t!="function")throw new TypeError("Preference listener must be a function");return d.add(t),()=>d.delete(t)}};function D(t,n={}){if(!t||typeof t!="object")throw new TypeError("Messages must be an object");const e=n.root||document;if(!e.querySelectorAll&&!e.matches)throw new TypeError("i18n root must be a Document or Element");function o(a,...h){const i=t[s]?.[a]??t.zh?.[a]??t.en?.[a];return typeof i=="function"?i(...h):i??a}function y(a="lang"){const h=[];e.matches?.("[data-t]")&&h.push(e),e.querySelectorAll&&h.push(...e.querySelectorAll("[data-t]"));for(const i of h){const L=o(i.dataset.t);typeof L=="string"&&(i.textContent=L)}n.onChange?.({kind:a,lang:s,theme:c,t:o})}const $=z.subscribe(({kind:a})=>{a==="lang"?y("lang"):n.onChange?.({kind:a,lang:s,theme:c,t:o})});return y("init"),{t:o,render:y,destroy:$}}const u=f?`kidslab.progress.${f}`:"";function _(){if(!u)return null;try{const t=JSON.parse(l.get(u,"null"));return!t||!["played","completed"].includes(t.status)?null:t}catch{return null}}function k(t,n){if(!u)return null;const e=_()||{},o={status:e.status==="completed"?"completed":t,stage:n||e.stage||"",updatedAt:Date.now()};return e.status===o.status&&e.stage===o.stage?e:(l.set(u,JSON.stringify(o)),o)}const P={get:_,clear(){return u?l.remove(u):!1}};r.sdkVersion=2,r.courseId=f,r.storage=l,r.preferences=z,r.bindI18n=D,r.progress=P,typeof r.track!="function"&&(r.track=()=>{}),r.stage=t=>{typeof t!="string"||!t||k("played",t.slice(0,48))},r.complete=()=>k("completed"),g.cool=r,p()})();
+</script>
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <div class="sky-glow sky-glow--one" aria-hidden="true"></div>
+  <div class="sky-glow sky-glow--two" aria-hidden="true"></div>
+
+  <header class="topbar" id="topbar">
+    <a class="pill pill--back" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1><span aria-hidden="true">📦</span> <span data-t="title">数据包骑士</span></h1>
+    <div class="topbar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill pill--lang" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="course" id="course">
+    <section class="mission-card">
+      <div class="mission-card__shield">
+        <small data-t="mission">任务</small>
+        <strong id="missionNumber">1</strong><span>/3</span>
+      </div>
+      <div class="mission-card__copy">
+        <p id="missionKicker">骑士入队 · 分头送信</p>
+        <h2 id="missionTitle">把长信拆成 4 个编号包</h2>
+        <p id="missionPrompt">城门太窄，整封信过不去。拆开、编号，再让小队走两条驿道。</p>
+      </div>
+      <nav class="mission-nav" id="missionNav" aria-label="任务进度"></nav>
+    </section>
+
+    <section class="workspace">
+      <section class="kingdom">
+        <div class="kingdom__status">
+          <p id="status" role="status" aria-live="polite">先试试整封送出，或直接把信拆成 4 个小包。</p>
+          <span class="network-state"><i aria-hidden="true"></i><span id="networkState">驿道畅通</span></span>
+        </div>
+
+        <div class="map-wrap" id="mapWrap">
+          <canvas id="mapCanvas" aria-label="王国路由地图"></canvas>
+          <div class="map-legend">
+            <span><i class="legend-dot legend-dot--start"></i><b data-t="sender">晨星堡</b></span>
+            <span><i class="legend-dot legend-dot--end"></i><b data-t="receiver">月桂城</b></span>
+          </div>
+          <div class="bridge-alert" id="bridgeAlert" hidden>
+            <span aria-hidden="true">⚡</span>
+            <strong data-t="bridgeDown">主桥坍塌！</strong>
+          </div>
+        </div>
+
+        <div class="packet-dock">
+          <div class="packet-dock__label">
+            <span data-t="packetTeam">骑士小队</span>
+            <strong id="deliveryCount">0 / 4</strong>
+          </div>
+          <div class="packets" id="packets">
+            <button class="packet" data-packet="0" type="button" disabled><span>1</span><small>—</small></button>
+            <button class="packet" data-packet="1" type="button" disabled><span>2</span><small>—</small></button>
+            <button class="packet" data-packet="2" type="button" disabled><span>3</span><small>—</small></button>
+            <button class="packet" data-packet="3" type="button" disabled><span>4</span><small>—</small></button>
+          </div>
+          <div class="message-strip" id="messageStrip" aria-label="重组后的信件">
+            <span>守</span><span>护</span><span>星</span><span>光</span>
+          </div>
+        </div>
+      </section>
+
+      <aside class="dispatch">
+        <div class="dispatch__head">
+          <div>
+            <small data-t="desk">皇家调度台</small>
+            <h3 id="deskTitle">准备数据包</h3>
+          </div>
+          <span class="wax-seal" aria-hidden="true">PK</span>
+        </div>
+
+        <section class="lesson-note">
+          <span id="lessonIcon" aria-hidden="true">✉</span>
+          <p id="lessonText">编号不是装饰：即使 3 号先到、1 号后到，收信城也能按 1→4 拼回原文。</p>
+        </section>
+
+        <div class="starter-actions" id="starterActions">
+          <button class="route-btn route-btn--danger" id="wholeLetterBtn" type="button">
+            <span aria-hidden="true">✉</span><strong data-t="wholeLetter">整封送出</strong><small data-t="tooWide">最快？</small>
+          </button>
+          <button class="route-btn route-btn--split" id="splitBtn" type="button">
+            <span aria-hidden="true">✂</span><strong data-t="splitLetter">拆成 4 包</strong><small data-t="numbered">自动编号</small>
+          </button>
+        </div>
+
+        <div class="route-panel" id="routePanel" hidden>
+          <p class="control-label" id="routePrompt">先点一个数据包，再为它选择驿道。</p>
+          <div class="route-list" id="routeList"></div>
+        </div>
+
+        <div class="dispatch__actions">
+          <button class="secondary-btn" id="hintBtn" type="button"><span aria-hidden="true">🦉</span> <span data-t="hint">问信鸮</span></button>
+          <button class="primary-btn" id="dispatchBtn" type="button" hidden><span data-t="dispatch">吹号出发</span> <span aria-hidden="true">➜</span></button>
+          <button class="primary-btn" id="nextBtn" type="button" hidden><span data-t="next">下一项任务</span> <span aria-hidden="true">➜</span></button>
+        </div>
+        <button class="reset-btn" id="resetBtn" type="button" data-t="reset">重置本次调度</button>
+      </aside>
+    </section>
+  </main>
+
+  <div class="finale" id="finale" hidden>
+    <section class="finale__card" role="dialog" aria-modal="true" aria-labelledby="finalTitle">
+      <div class="finale__crest" aria-hidden="true">♞</div>
+      <p data-t="finalKicker">三封王国急件全部送达</p>
+      <h2 id="finalTitle" data-t="finalTitle">授予你“网络守护骑士”勋章！</h2>
+      <p data-t="finalText">数据被拆开后可以分路前进；编号负责重组，路由负责找路，断线时只需改道或重发没到的包。</p>
+      <div class="finale__rules">
+        <span data-t="finalRule1">编号 → 乱序也能拼回</span>
+        <span data-t="finalRule2">断线 → 未到包改道</span>
+      </div>
+      <button class="primary-btn" id="playAgainBtn" type="button" data-t="playAgain">再巡一次王国</button>
+    </section>
+  </div>
+
+  <script src="main.js?v=8f8b4df3"></script>
+</body>
+</html>

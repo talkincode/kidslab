@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-02T18:07:11.483Z",
+  "generatedAt": "2026-08-09T15:42:44.150Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -1734,6 +1734,55 @@
         "模拟"
       ],
       "path": "courseware/ph-lab/index.html"
+    },
+    {
+      "id": "packet-knights",
+      "title": {
+        "zh": "数据包骑士",
+        "en": "Packet Knights"
+      },
+      "description": {
+        "zh": "把王国信件拆成编号数据包，规划最短驿道，并在桥梁坍塌后为未送达的骑士实时改道。",
+        "en": "Split a royal message into numbered packets, plan the shortest relay route, and reroute undelivered knights when a bridge collapses."
+      },
+      "category": "programming",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g5",
+        "g6"
+      ],
+      "tags": [
+        "编程启蒙",
+        "算法",
+        "策略",
+        "益智游戏"
+      ],
+      "icon": "📦",
+      "order": 44,
+      "badge": "new",
+      "keywords": [
+        "Coding Basics",
+        "coding basics",
+        "coding",
+        "编程",
+        "Algorithms",
+        "algorithms",
+        "algorithm",
+        "Strategy",
+        "strategy",
+        "博弈策略",
+        "game theory",
+        "尼姆游戏",
+        "nim",
+        "Puzzle Game",
+        "puzzle",
+        "game",
+        "益智",
+        "游戏"
+      ],
+      "path": "courseware/packet-knights/index.html"
     },
     {
       "id": "turtle-studio",

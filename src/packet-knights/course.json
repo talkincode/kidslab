@@ -1,0 +1,18 @@
+{
+  "id": "packet-knights",
+  "title": {
+    "zh": "数据包骑士",
+    "en": "Packet Knights"
+  },
+  "description": {
+    "zh": "把王国信件拆成编号数据包，规划最短驿道，并在桥梁坍塌后为未送达的骑士实时改道。",
+    "en": "Split a royal message into numbered packets, plan the shortest relay route, and reroute undelivered knights when a bridge collapses."
+  },
+  "category": "programming",
+  "levels": ["primary"],
+  "grades": ["g5", "g6"],
+  "tags": ["编程启蒙", "算法", "策略", "益智游戏"],
+  "icon": "📦",
+  "order": 44,
+  "badge": "new"
+}
