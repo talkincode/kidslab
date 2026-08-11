@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>折扣侦探 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <div class="paper-noise" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="pill pill--back" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1><span aria-hidden="true">🕵️</span> <span data-t="title">折扣侦探</span></h1>
+    <div class="topbar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill pill--lang" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="casebook" id="course">
+    <section class="case-header">
+      <div class="case-file">
+        <small data-t="caseLabel">案卷</small>
+        <strong id="caseNumber">01</strong>
+        <span>/03</span>
+      </div>
+      <div class="case-header__copy">
+        <p id="caseKicker">购物街 7 号 · 价格变装</p>
+        <h2 id="caseTitle">提价 25% 再打八折，真的便宜了吗？</h2>
+        <p id="casePrompt">两家店原价都是 100 元。算出实际付款，再判断谁更便宜。</p>
+      </div>
+      <nav class="case-nav" id="caseNav" aria-label="案件进度"></nav>
+    </section>
+
+    <section class="desk">
+      <section class="street-scene" id="streetScene" data-result="idle" aria-labelledby="sceneLabel">
+        <div class="scene-top">
+          <p id="sceneLabel" data-t="sceneLabel">案发现场</p>
+          <span class="scene-light"><i></i><span data-t="live">正在调查</span></span>
+        </div>
+
+        <div class="shops">
+          <article class="shop shop--a">
+            <div class="awning" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+            <span class="shop__mascot" id="mascotA" aria-hidden="true">🦊</span>
+            <small>A · <span id="shopAName">闪闪商店</span></small>
+            <strong id="offerA">先涨 25%，再打八折</strong>
+          </article>
+          <div class="versus" data-t="versus">比</div>
+          <article class="shop shop--b">
+            <div class="awning" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+            <span class="shop__mascot" id="mascotB" aria-hidden="true">🐻</span>
+            <small>B · <span id="shopBName">老实商店</span></small>
+            <strong id="offerB">原价 100 元</strong>
+          </article>
+        </div>
+
+        <div class="receipt">
+          <div>
+            <small data-t="startingPrice">原始标价</small>
+            <strong id="startingPrice">¥100</strong>
+          </div>
+          <div class="receipt__math">
+            <span><b>A</b><em id="routeA">100 → 125 → ?</em><strong id="resultA">待查</strong></span>
+            <span><b>B</b><em id="routeB">100 → ?</em><strong id="resultB">待查</strong></span>
+          </div>
+        </div>
+        <div class="case-stamp" id="caseStamp" aria-hidden="true"><span>✓</span><b data-t="caseClosed">结案</b></div>
+      </section>
+
+      <aside class="investigation">
+        <div class="investigation__head">
+          <div>
+            <small data-t="calculator">侦探计算器</small>
+            <h3 data-t="instruction">选证据，再下结论</h3>
+          </div>
+          <span class="badge" aria-hidden="true">%</span>
+        </div>
+
+        <p class="status" id="status" role="status" aria-live="polite">先选一张算式证据，再选择你的结论。</p>
+
+        <fieldset class="choice-group">
+          <legend><span>1</span> <span data-t="evidenceLegend">哪张算式能当证据？</span></legend>
+          <div class="evidence-grid" id="evidenceGrid"></div>
+        </fieldset>
+
+        <fieldset class="choice-group choice-group--verdict">
+          <legend><span>2</span> <span data-t="verdictLegend">你的调查结论是？</span></legend>
+          <div class="verdict-grid" id="verdictGrid"></div>
+        </fieldset>
+
+        <div class="actions">
+          <button class="secondary-btn" id="hintBtn" type="button"><span aria-hidden="true">💡</span> <span data-t="hint">线索提示</span></button>
+          <button class="primary-btn" id="checkBtn" type="button"><span data-t="fileReport">提交调查报告</span> <span aria-hidden="true">→</span></button>
+          <button class="primary-btn" id="nextBtn" type="button" hidden><span data-t="nextCase">下一宗案件</span> <span aria-hidden="true">→</span></button>
+        </div>
+        <button class="reset-btn" id="resetBtn" type="button" data-t="resetCase">清空本案选择</button>
+      </aside>
+    </section>
+  </main>
+
+  <div class="finale" id="finale" hidden>
+    <section class="finale__card" role="dialog" aria-modal="true" aria-labelledby="finalTitle">
+      <div class="finale__seal" aria-hidden="true">%</div>
+      <p data-t="finalKicker">三宗促销疑案全部侦破</p>
+      <h2 id="finalTitle" data-t="finalTitle">你成为了“百分数神探”！</h2>
+      <p data-t="finalText">促销口号会变装，实际付款不会说谎。把百分数变成小数，算出每条路线的到手价，再比较大小。</p>
+      <div class="finale__facts"><span>125% × 80% = 100%</span><span>第二件半价 = 平均 75%</span></div>
+      <button class="primary-btn" id="playAgainBtn" type="button" data-t="playAgain">重新巡街办案</button>
+    </section>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,594 @@
+(() => {
+  'use strict';
+
+  const I18N = {
+    zh: {
+      doc: '折扣侦探 · KidsLab',
+      back: '返回平台',
+      title: '折扣侦探',
+      caseLabel: '案卷',
+      sceneLabel: '案发现场',
+      live: '正在调查',
+      versus: '比',
+      startingPrice: '原始标价',
+      caseClosed: '结案',
+      calculator: '侦探计算器',
+      instruction: '选证据，再下结论',
+      evidenceLegend: '哪张算式能当证据？',
+      verdictLegend: '你的调查结论是？',
+      hint: '线索提示',
+      fileReport: '提交调查报告',
+      nextCase: '下一宗案件',
+      finish: '领取神探徽章',
+      resetCase: '清空本案选择',
+      playAgain: '重新巡街办案',
+      soundOff: '关闭声音',
+      soundOn: '打开声音',
+      theme: '切换主题',
+      navLabel: '案件进度',
+      pending: '待查',
+      chooseBoth: '报告还缺一页：算式证据和调查结论都要选。',
+      partial: '线索已夹进案卷。再完成另一项，就能提交报告。',
+      ready: '证据和结论都已选好。提交报告，看看推理能否站住脚。',
+      finalKicker: '三宗促销疑案全部侦破',
+      finalTitle: '你成为了“百分数神探”！',
+      finalText: '促销口号会变装，实际付款不会说谎。把百分数变成小数，算出每条路线的到手价，再比较大小。',
+      cases: [
+        {
+          kicker: '购物街 7 号 · 价格变装',
+          title: '提价 25% 再打八折，真的便宜了吗？',
+          prompt: '两家店原价都是 100 元。算出实际付款，再判断谁更便宜。',
+          shops: ['闪闪商店', '老实商店'],
+          mascots: ['🦊', '🐻'],
+          offers: ['先涨 25%，再打八折', '原价 100 元'],
+          starting: '¥100',
+          routes: ['100 → 125 → 100', '100 → 100'],
+          results: ['¥100', '¥100'],
+          evidence: [
+            ['100 × 1.25 × 0.8 = 100', '每一步都乘对应倍率'],
+            ['100 × (25% − 20%) = 5', '把涨价和折扣直接相减'],
+            ['100 × (1 − 25% + 20%) = 95', '把两个百分数都加减在原价上'],
+          ],
+          verdicts: ['两家一样贵', 'A 店便宜', 'B 店便宜'],
+          start: '先选一张算式证据，再选择你的结论。',
+          hintText: '“打八折”是付现价的 80%。先把 100 元乘 1.25，再把新价格乘 0.8。',
+          wrongEvidence: '这张算式把连续两次变价混在了一起。每次百分数都作用在当时的价格上。',
+          wrongVerdict: '算式证据已经算出两条路线的到手价。再比较一次 ¥100 和 ¥100。',
+          correctText: '识破价格变装！100 × 1.25 × 0.8 = 100，两家实际都付 100 元。',
+        },
+        {
+          kicker: '双份甜品屋 · 半价迷雾',
+          title: '第二件半价，平均相当于几折？',
+          prompt: '同款点心每件 80 元，一次买两件。请算总价和平均折扣。',
+          shops: ['甜甜屋', '原价柜台'],
+          mascots: ['🐰', '🐼'],
+          offers: ['第一件 80，第二件 40', '两件共 160 元'],
+          starting: '2 × ¥80',
+          routes: ['80 + 40 = 120', '80 + 80 = 160'],
+          results: ['¥120', '¥160'],
+          evidence: [
+            ['(80 + 40) ÷ 160 = 75%', '实际总价除以原总价'],
+            ['40 ÷ 80 = 50%', '只看第二件的折扣'],
+            ['(80 − 40) ÷ 160 = 25%', '只看省下的钱占多少'],
+          ],
+          verdicts: ['平均五折', '平均七五折', '平均二五折'],
+          start: '第二件确实是半价，但要算两件合起来平均付了原价的百分之几。',
+          hintText: '两件原价一共 160 元，活动后付 120 元。用 120 ÷ 160。',
+          wrongEvidence: '你只盯住了第二件或省下的钱。要用“两件实际总价 ÷ 两件原总价”。',
+          wrongVerdict: '总价证据显示付了原总价的 75%，这正是平均七五折。',
+          correctText: '迷雾散开！两件共付 120 元，120 ÷ 160 = 75%，平均是七五折。',
+        },
+        {
+          kicker: '大采购中心 · 方案对决',
+          title: '满 300 减 80 和七五折，哪个更省？',
+          prompt: '购物车原价 360 元，两种活动只能选一种。分别算到手价。',
+          shops: ['满减中心', '折扣百货'],
+          mascots: ['🦁', '🐯'],
+          offers: ['满 300 减 80', '全单七五折'],
+          starting: '¥360',
+          routes: ['360 − 80 = 280', '360 × 0.75 = 270'],
+          results: ['¥280', '¥270'],
+          evidence: [
+            ['360 − 80 = 280；360 × 0.75 = 270', '分别算两种到手价'],
+            ['300 − 80 = 220；360 × 0.75 = 270', '把门槛当成购物车原价'],
+            ['360 × (0.75 − 0.8) = −18', '把金额优惠误当成折扣率'],
+          ],
+          verdicts: ['满减更省', '两种一样', '七五折省 10 元'],
+          start: '“满 300”只是使用门槛，不是新的标价。两种活动都从 360 元开始算。',
+          hintText: '满减价是 360 − 80；折扣价是 360 × 0.75。到手价更小的方案更省。',
+          wrongEvidence: '门槛不是标价，80 元也不是 80%。两种方案都要从购物车的 360 元出发。',
+          wrongVerdict: '两张收据分别是 280 元和 270 元。少付的那张还要比较相差多少。',
+          correctText: '终极结案！满减付 280 元，七五折付 270 元，七五折刚好多省 10 元。',
+        },
+      ],
+    },
+    en: {
+      doc: 'Discount Detective · KidsLab',
+      back: 'Back to platform',
+      title: 'Discount Detective',
+      caseLabel: 'FILE',
+      sceneLabel: 'CRIME SCENE',
+      live: 'UNDER REVIEW',
+      versus: 'VS',
+      startingPrice: 'LIST PRICE',
+      caseClosed: 'SOLVED',
+      calculator: 'DETECTIVE CALCULATOR',
+      instruction: 'Pick evidence, then a verdict',
+      evidenceLegend: 'Which equation proves the case?',
+      verdictLegend: 'What is your verdict?',
+      hint: 'Clue',
+      fileReport: 'File report',
+      nextCase: 'Next case',
+      finish: 'Claim detective badge',
+      resetCase: 'Clear this case',
+      playAgain: 'Patrol again',
+      soundOff: 'Turn sound off',
+      soundOn: 'Turn sound on',
+      theme: 'Switch theme',
+      navLabel: 'Case progress',
+      pending: 'CHECK',
+      chooseBoth: 'One report page is missing: choose both an equation and a verdict.',
+      partial: 'That clue is in the file. Complete the other choice to submit your report.',
+      ready: 'Evidence and verdict selected. File the report to test your reasoning.',
+      finalKicker: 'ALL THREE SALE CASES SOLVED',
+      finalTitle: 'You are now a Percent Detective!',
+      finalText: 'Sale slogans can wear disguises, but checkout prices do not lie. Turn percents into decimals, calculate each route, then compare.',
+      cases: [
+        {
+          kicker: 'SHOPPING STREET 7 · PRICE DISGUISE',
+          title: 'Raise 25%, then take 20% off—is it cheaper?',
+          prompt: 'Both shops start at 100 coins. Find each checkout price and compare.',
+          shops: ['Sparkle Shop', 'Honest Shop'],
+          mascots: ['🦊', '🐻'],
+          offers: ['Raise 25%, then 20% off', 'Stay at 100 coins'],
+          starting: '100',
+          routes: ['100 → 125 → 100', '100 → 100'],
+          results: ['100', '100'],
+          evidence: [
+            ['100 × 1.25 × 0.8 = 100', 'Multiply by each rate in order'],
+            ['100 × (25% − 20%) = 5', 'Subtract the two rates directly'],
+            ['100 × (1 − 25% + 20%) = 95', 'Add both changes to the first price'],
+          ],
+          verdicts: ['Same price', 'Shop A is cheaper', 'Shop B is cheaper'],
+          start: 'Choose one equation as evidence, then choose your verdict.',
+          hintText: '“20% off” means paying 80% of the current price. Multiply 100 by 1.25, then by 0.8.',
+          wrongEvidence: 'That equation mixes two consecutive price changes. Each percent acts on the current price.',
+          wrongVerdict: 'Your equation found both checkout prices. Compare 100 with 100 once more.',
+          correctText: 'Disguise exposed! 100 × 1.25 × 0.8 = 100, so both shops charge 100.',
+        },
+        {
+          kicker: 'DESSERT DUO · HALF-PRICE HAZE',
+          title: 'Second item half price—what is the average discount?',
+          prompt: 'Each treat costs 80 coins and you buy two. Find the total and average rate.',
+          shops: ['Sweet Pair', 'Regular Counter'],
+          mascots: ['🐰', '🐼'],
+          offers: ['First 80, second 40', 'Two cost 160'],
+          starting: '2 × 80',
+          routes: ['80 + 40 = 120', '80 + 80 = 160'],
+          results: ['120', '160'],
+          evidence: [
+            ['(80 + 40) ÷ 160 = 75%', 'Sale total divided by regular total'],
+            ['40 ÷ 80 = 50%', 'Look only at the second item'],
+            ['(80 − 40) ÷ 160 = 25%', 'Look only at the savings'],
+          ],
+          verdicts: ['50% average', '75% average', '25% average'],
+          start: 'The second item is half price, but what percent of the two-item total do you pay?',
+          hintText: 'The regular total is 160 and the sale total is 120. Calculate 120 ÷ 160.',
+          wrongEvidence: 'You only measured the second item or the savings. Use “sale total ÷ regular total.”',
+          wrongVerdict: 'The receipt says you pay 75% of the regular total. That is the average rate.',
+          correctText: 'Haze cleared! The pair costs 120, and 120 ÷ 160 = 75%, so the average is 25% off.',
+        },
+        {
+          kicker: 'MEGA CART · OFFER SHOWDOWN',
+          title: 'Save 80 over 300, or take 25% off?',
+          prompt: 'The cart total is 360 coins, and only one offer may be used. Find both prices.',
+          shops: ['Threshold Center', 'Discount Store'],
+          mascots: ['🦁', '🐯'],
+          offers: ['Save 80 over 300', 'Pay 75% of the total'],
+          starting: '360',
+          routes: ['360 − 80 = 280', '360 × 0.75 = 270'],
+          results: ['280', '270'],
+          evidence: [
+            ['360 − 80 = 280; 360 × 0.75 = 270', 'Calculate both checkout prices'],
+            ['300 − 80 = 220; 360 × 0.75 = 270', 'Treat the threshold as the cart total'],
+            ['360 × (0.75 − 0.8) = −18', 'Treat an 80-coin saving as an 80% rate'],
+          ],
+          verdicts: ['Save-80 wins', 'They are equal', '75% saves 10 more'],
+          start: 'The 300 is only a threshold, not a new price. Start both calculations from 360.',
+          hintText: 'The threshold offer is 360 − 80. The percent offer is 360 × 0.75. The lower checkout price wins.',
+          wrongEvidence: 'The threshold is not the price, and 80 coins is not 80%. Start both routes from 360.',
+          wrongVerdict: 'The two receipts are 280 and 270. Pick the lower one and find the difference.',
+          correctText: 'Final case closed! The prices are 280 and 270, so paying 75% saves 10 more coins.',
+        },
+      ],
+    },
+  };
+
+  const CASES = [
+    { evidence: 0, verdict: 0 },
+    { evidence: 0, verdict: 1 },
+    { evidence: 0, verdict: 2 },
+  ];
+  const SAVE_KEY = 'kidslab.sale-detective';
+  const SOUND_KEY = 'kidslab.sound.muted';
+  const $ = (selector) => document.querySelector(selector);
+  const elements = {
+    course: $('#course'),
+    caseNumber: $('#caseNumber'),
+    caseKicker: $('#caseKicker'),
+    caseTitle: $('#caseTitle'),
+    casePrompt: $('#casePrompt'),
+    caseNav: $('#caseNav'),
+    streetScene: $('#streetScene'),
+    shopAName: $('#shopAName'),
+    shopBName: $('#shopBName'),
+    mascotA: $('#mascotA'),
+    mascotB: $('#mascotB'),
+    offerA: $('#offerA'),
+    offerB: $('#offerB'),
+    startingPrice: $('#startingPrice'),
+    routeA: $('#routeA'),
+    routeB: $('#routeB'),
+    resultA: $('#resultA'),
+    resultB: $('#resultB'),
+    status: $('#status'),
+    evidenceGrid: $('#evidenceGrid'),
+    verdictGrid: $('#verdictGrid'),
+    hintBtn: $('#hintBtn'),
+    checkBtn: $('#checkBtn'),
+    nextBtn: $('#nextBtn'),
+    resetBtn: $('#resetBtn'),
+    soundBtn: $('#soundBtn'),
+    themeBtn: $('#themeBtn'),
+    langBtn: $('#langBtn'),
+    finale: $('#finale'),
+    playAgainBtn: $('#playAgainBtn'),
+  };
+
+  let t = (key) => key;
+  let lang = 'zh';
+  let muted = false;
+  let audioContext = null;
+  let idleTimer = null;
+  let state = loadState();
+
+  function freshState() {
+    return {
+      caseIndex: 0,
+      selectedEvidence: null,
+      selectedVerdict: null,
+      solved: false,
+      completed: false,
+      feedback: 'start',
+    };
+  }
+
+  function loadState() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(SAVE_KEY) || 'null');
+      if (!saved || !Number.isInteger(saved.caseIndex)) return freshState();
+      return {
+        caseIndex: Math.max(0, Math.min(CASES.length - 1, saved.caseIndex)),
+        selectedEvidence: Number.isInteger(saved.selectedEvidence) ? saved.selectedEvidence : null,
+        selectedVerdict: Number.isInteger(saved.selectedVerdict) ? saved.selectedVerdict : null,
+        solved: Boolean(saved.solved),
+        completed: Boolean(saved.completed),
+        feedback: typeof saved.feedback === 'string' ? saved.feedback : 'start',
+      };
+    } catch {
+      return freshState();
+    }
+  }
+
+  function saveState() {
+    try {
+      localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+    } catch {
+      // Progress remains available for this session if storage is unavailable.
+    }
+  }
+
+  function copy() {
+    return t('cases')[state.caseIndex];
+  }
+
+  function select(kind, index) {
+    if (state.solved) return;
+    if (kind === 'evidence') state.selectedEvidence = index;
+    else state.selectedVerdict = index;
+    state.feedback = state.selectedEvidence === null || state.selectedVerdict === null ? 'partial' : 'ready';
+    playSound('select');
+    window.cool?.track?.('select_clue', { case: state.caseIndex + 1, kind, index });
+    saveState();
+    render();
+    scheduleIdleHint();
+  }
+
+  function checkReport() {
+    if (state.solved) return;
+    if (state.selectedEvidence === null || state.selectedVerdict === null) {
+      state.feedback = 'missing';
+      playSound('error');
+      render();
+      return;
+    }
+
+    const answer = CASES[state.caseIndex];
+    if (state.selectedEvidence !== answer.evidence) {
+      state.feedback = 'wrongEvidence';
+      playSound('error');
+      window.cool?.track?.('file_wrong_report', { case: state.caseIndex + 1, reason: 'evidence' });
+      render();
+      return;
+    }
+    if (state.selectedVerdict !== answer.verdict) {
+      state.feedback = 'wrongVerdict';
+      playSound('error');
+      window.cool?.track?.('file_wrong_report', { case: state.caseIndex + 1, reason: 'verdict' });
+      render();
+      return;
+    }
+
+    state.solved = true;
+    state.feedback = 'correct';
+    saveState();
+    playSound('success');
+    window.cool?.stage?.(`case-${state.caseIndex + 1}`);
+    window.cool?.track?.('solve_sale_case', { case: state.caseIndex + 1 });
+    render();
+    clearTimeout(idleTimer);
+  }
+
+  function nextCase() {
+    if (!state.solved) return;
+    if (state.caseIndex === CASES.length - 1) {
+      state.completed = true;
+      saveState();
+      window.cool?.complete?.();
+      window.cool?.track?.('complete_discount_patrol', { cases: CASES.length });
+      playSound('complete');
+      render();
+      return;
+    }
+    state = {
+      ...freshState(),
+      caseIndex: state.caseIndex + 1,
+    };
+    saveState();
+    playSound('page');
+    window.cool?.stage?.(`case-${state.caseIndex + 1}`);
+    render();
+    scheduleIdleHint();
+  }
+
+  function resetCase() {
+    state.selectedEvidence = null;
+    state.selectedVerdict = null;
+    state.solved = false;
+    state.feedback = 'start';
+    saveState();
+    playSound('page');
+    render();
+    scheduleIdleHint();
+  }
+
+  function playAgain() {
+    state = freshState();
+    saveState();
+    elements.finale.hidden = true;
+    elements.course.inert = false;
+    playSound('page');
+    window.cool?.stage?.('case-1');
+    render();
+    scheduleIdleHint();
+  }
+
+  function showHint() {
+    if (state.solved) return;
+    state.feedback = 'hint';
+    playSound('hint');
+    window.cool?.track?.('request_sale_clue', { case: state.caseIndex + 1 });
+    render();
+    scheduleIdleHint();
+  }
+
+  function scheduleIdleHint() {
+    clearTimeout(idleTimer);
+    if (state.solved || state.completed) return;
+    idleTimer = setTimeout(() => {
+      state.feedback = 'hint';
+      render();
+    }, 30000);
+  }
+
+  function renderChoices() {
+    const current = copy();
+    const answer = CASES[state.caseIndex];
+    elements.evidenceGrid.replaceChildren();
+    current.evidence.forEach(([label, detail], index) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'choice-btn';
+      button.dataset.evidence = String(index);
+      button.innerHTML = `<span></span><small></small>`;
+      button.querySelector('span').textContent = label;
+      button.querySelector('small').textContent = detail;
+      button.setAttribute('aria-pressed', String(state.selectedEvidence === index));
+      if (state.selectedEvidence === index) button.classList.add('is-selected');
+      if (state.solved && index === answer.evidence) button.classList.add('is-right');
+      if (!state.solved && state.feedback === 'wrongEvidence' && state.selectedEvidence === index) button.classList.add('is-wrong');
+      button.disabled = state.solved;
+      elements.evidenceGrid.append(button);
+    });
+
+    elements.verdictGrid.replaceChildren();
+    current.verdicts.forEach((label, index) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'choice-btn';
+      button.dataset.verdict = String(index);
+      button.textContent = label;
+      button.setAttribute('aria-pressed', String(state.selectedVerdict === index));
+      if (state.selectedVerdict === index) button.classList.add('is-selected');
+      if (state.solved && index === answer.verdict) button.classList.add('is-right');
+      if (!state.solved && state.feedback === 'wrongVerdict' && state.selectedVerdict === index) button.classList.add('is-wrong');
+      button.disabled = state.solved;
+      elements.verdictGrid.append(button);
+    });
+  }
+
+  function feedbackText() {
+    const current = copy();
+    if (state.feedback === 'missing') return t('chooseBoth');
+    if (state.feedback === 'partial') return t('partial');
+    if (state.feedback === 'ready') return t('ready');
+    if (state.feedback === 'hint') return current.hintText;
+    if (state.feedback === 'wrongEvidence') return current.wrongEvidence;
+    if (state.feedback === 'wrongVerdict') return current.wrongVerdict;
+    if (state.feedback === 'correct') return current.correctText;
+    return current.start;
+  }
+
+  function render() {
+    const current = copy();
+    elements.caseNumber.textContent = String(state.caseIndex + 1).padStart(2, '0');
+    elements.caseKicker.textContent = current.kicker;
+    elements.caseTitle.textContent = current.title;
+    elements.casePrompt.textContent = current.prompt;
+    elements.shopAName.textContent = current.shops[0];
+    elements.shopBName.textContent = current.shops[1];
+    elements.mascotA.textContent = current.mascots[0];
+    elements.mascotB.textContent = current.mascots[1];
+    elements.offerA.textContent = current.offers[0];
+    elements.offerB.textContent = current.offers[1];
+    elements.startingPrice.textContent = current.starting;
+    elements.routeA.textContent = current.routes[0];
+    elements.routeB.textContent = current.routes[1];
+    elements.resultA.textContent = state.solved ? current.results[0] : t('pending');
+    elements.resultB.textContent = state.solved ? current.results[1] : t('pending');
+    elements.streetScene.dataset.result = state.solved
+      ? 'correct'
+      : state.feedback.startsWith('wrong') || state.feedback === 'missing'
+        ? 'wrong'
+        : 'idle';
+
+    elements.status.textContent = feedbackText();
+    elements.status.className = `status${state.solved ? ' is-correct' : state.feedback.startsWith('wrong') || state.feedback === 'missing' ? ' is-wrong' : ''}`;
+
+    elements.caseNav.replaceChildren();
+    CASES.forEach((_, index) => {
+      const marker = document.createElement('span');
+      marker.textContent = index < state.caseIndex || (index === state.caseIndex && state.solved) ? '✓' : String(index + 1);
+      if (index < state.caseIndex || (index === state.caseIndex && state.solved)) marker.className = 'is-done';
+      else if (index === state.caseIndex) marker.className = 'is-current';
+      elements.caseNav.append(marker);
+    });
+    elements.caseNav.setAttribute('aria-label', t('navLabel'));
+
+    renderChoices();
+    elements.checkBtn.hidden = state.solved;
+    elements.nextBtn.hidden = !state.solved;
+    elements.nextBtn.querySelector('span').textContent = state.caseIndex === CASES.length - 1 ? t('finish') : t('nextCase');
+    elements.hintBtn.disabled = state.solved;
+    elements.resetBtn.disabled = state.solved;
+
+    elements.soundBtn.textContent = muted ? '🔇' : '🔊';
+    elements.soundBtn.setAttribute('aria-label', muted ? t('soundOn') : t('soundOff'));
+    elements.soundBtn.setAttribute('aria-pressed', String(muted));
+    elements.themeBtn.setAttribute('aria-label', t('theme'));
+
+    elements.course.inert = state.completed;
+    elements.finale.hidden = !state.completed;
+    if (state.completed) requestAnimationFrame(() => elements.playAgainBtn.focus());
+  }
+
+  function ensureAudio() {
+    if (muted) return null;
+    try {
+      const AudioCtor = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtor) return null;
+      audioContext ||= new AudioCtor();
+      if (audioContext.state === 'suspended') audioContext.resume().catch(() => {});
+      return audioContext;
+    } catch {
+      return null;
+    }
+  }
+
+  function playSound(kind) {
+    const context = ensureAudio();
+    if (!context || muted) return;
+    const sounds = {
+      select: { notes: [390], duration: 0.07, type: 'triangle', gain: 0.035 },
+      hint: { notes: [523, 659], duration: 0.1, type: 'sine', gain: 0.035 },
+      error: { notes: [180, 135], duration: 0.14, type: 'sawtooth', gain: 0.025 },
+      success: { notes: [392, 523, 659], duration: 0.12, type: 'triangle', gain: 0.045 },
+      page: { notes: [294, 392], duration: 0.1, type: 'sine', gain: 0.035 },
+      complete: { notes: [392, 494, 587, 784], duration: 0.17, type: 'triangle', gain: 0.05 },
+    };
+    const sound = sounds[kind] || sounds.select;
+    sound.notes.forEach((frequency, index) => {
+      const start = context.currentTime + index * sound.duration * 0.72;
+      const oscillator = context.createOscillator();
+      const gain = context.createGain();
+      oscillator.type = sound.type;
+      oscillator.frequency.setValueAtTime(frequency, start);
+      gain.gain.setValueAtTime(0.0001, start);
+      gain.gain.exponentialRampToValueAtTime(sound.gain, start + 0.012);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + sound.duration);
+      oscillator.connect(gain).connect(context.destination);
+      oscillator.start(start);
+      oscillator.stop(start + sound.duration + 0.02);
+    });
+  }
+
+  function toggleSound() {
+    muted = !muted;
+    try {
+      localStorage.setItem(SOUND_KEY, String(muted));
+    } catch {
+      // Sound preference remains session-local if storage is unavailable.
+    }
+    if (muted && audioContext?.state === 'running') audioContext.suspend().catch(() => {});
+    if (!muted) playSound('select');
+    render();
+  }
+
+  elements.evidenceGrid.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-evidence]');
+    if (button) select('evidence', Number(button.dataset.evidence));
+  });
+  elements.verdictGrid.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-verdict]');
+    if (button) select('verdict', Number(button.dataset.verdict));
+  });
+  elements.checkBtn.addEventListener('click', checkReport);
+  elements.nextBtn.addEventListener('click', nextCase);
+  elements.hintBtn.addEventListener('click', showHint);
+  elements.resetBtn.addEventListener('click', resetCase);
+  elements.playAgainBtn.addEventListener('click', playAgain);
+  elements.soundBtn.addEventListener('click', toggleSound);
+  elements.langBtn.addEventListener('click', () => window.cool.preferences.toggleLang());
+  elements.themeBtn.addEventListener('click', () => window.cool.preferences.toggleTheme());
+
+  try {
+    const storedMute = localStorage.getItem(SOUND_KEY);
+    muted = storedMute === 'true' || storedMute === '1';
+  } catch {
+    muted = false;
+  }
+
+  window.cool.bindI18n(I18N, {
+    onChange({ t: translate, lang: nextLang, theme }) {
+      t = translate;
+      lang = nextLang;
+      document.title = t('doc');
+      document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+      elements.langBtn.textContent = lang === 'zh' ? 'EN' : '中';
+      elements.themeBtn.textContent = theme === 'light' ? '🌙' : '☀️';
+      render();
+    },
+  });
+  window.cool?.stage?.(`case-${state.caseIndex + 1}`);
+  scheduleIdleHint();
+})();

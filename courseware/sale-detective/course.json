@@ -1,0 +1,18 @@
+{
+  "id": "sale-detective",
+  "title": {
+    "zh": "折扣侦探",
+    "en": "Discount Detective"
+  },
+  "description": {
+    "zh": "巡查购物街的三宗促销疑案，用百分数计算真实到手价，为每个结论找到算式证据。",
+    "en": "Investigate three suspicious sales, calculate the real checkout prices with percentages, and match every verdict with mathematical evidence."
+  },
+  "category": "math",
+  "levels": ["primary"],
+  "grades": ["g6"],
+  "tags": ["分数", "小数", "运算", "益智游戏"],
+  "icon": "🕵️",
+  "order": 32,
+  "badge": "new"
+}

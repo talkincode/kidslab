@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-11T13:07:17.584Z",
+  "generatedAt": "2026-08-11T15:08:32.174Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -1683,6 +1683,56 @@
         "游戏"
       ],
       "path": "courseware/updown-world/index.html"
+    },
+    {
+      "id": "sale-detective",
+      "title": {
+        "zh": "折扣侦探",
+        "en": "Discount Detective"
+      },
+      "description": {
+        "zh": "巡查购物街的三宗促销疑案，用百分数计算真实到手价，为每个结论找到算式证据。",
+        "en": "Investigate three suspicious sales, calculate the real checkout prices with percentages, and match every verdict with mathematical evidence."
+      },
+      "category": "math",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g6"
+      ],
+      "tags": [
+        "分数",
+        "小数",
+        "运算",
+        "益智游戏"
+      ],
+      "icon": "🕵️",
+      "order": 32,
+      "badge": "new",
+      "keywords": [
+        "Fractions",
+        "fraction",
+        "fractions",
+        "等值分数",
+        "equivalent fractions",
+        "百分数",
+        "percent",
+        "percentage",
+        "Decimals",
+        "decimal",
+        "decimals",
+        "Arithmetic",
+        "arithmetic",
+        "operations",
+        "四则运算",
+        "Puzzle Game",
+        "puzzle",
+        "game",
+        "益智",
+        "游戏"
+      ],
+      "path": "courseware/sale-detective/index.html"
     },
     {
       "id": "optics-lab",
