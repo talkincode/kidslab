@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>无人机邮局 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <div class="sky-texture" aria-hidden="true"></div>
+
+  <header class="topbar" id="topbar">
+    <a class="pill pill--back" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1><span aria-hidden="true">🚁</span> <span data-t="title">无人机邮局</span></h1>
+    <div class="topbar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill pill--lang" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="dispatch" id="course">
+    <section class="mission-header">
+      <div class="mission-ticket">
+        <small data-t="mission">航班</small>
+        <strong id="missionNumber">01</strong>
+        <span>/03</span>
+      </div>
+      <div class="mission-copy">
+        <p id="missionKicker">夜航急件 · 坐标城</p>
+        <h2 id="missionTitle">把图书送到 (4, 7)</h2>
+        <p id="missionPrompt">先报横坐标 x，再报纵坐标 y。调好坐标后发射。</p>
+      </div>
+      <nav class="mission-nav" id="missionNav" aria-label="航班进度"></nav>
+    </section>
+
+    <section class="console">
+      <section class="radar" id="radar" data-result="idle" aria-labelledby="radarLabel">
+        <div class="radar__head">
+          <p id="radarLabel" data-t="radar">坐标雷达</p>
+          <span class="signal"><i></i><span id="signalText">等待坐标</span></span>
+        </div>
+        <canvas id="mapCanvas"></canvas>
+        <div class="telemetry" aria-live="polite">
+          <span><small data-t="command">指令</small><strong id="commandReadout">(0, 0)</strong></span>
+          <span><small data-t="wind">风偏</small><strong id="windReadout">(0, 0)</strong></span>
+          <span><small data-t="arrival">预计到达</small><strong id="arrivalReadout">(0, 0)</strong></span>
+        </div>
+        <div class="delivered-stamp" aria-hidden="true"><span>✓</span><b data-t="delivered">送达</b></div>
+      </section>
+
+      <aside class="control-panel">
+        <div class="panel-title">
+          <div>
+            <small data-t="tower">夜航调度台</small>
+            <h3 id="panelInstruction">输入无人机指令坐标</h3>
+          </div>
+          <span class="tower-light" aria-hidden="true">⌖</span>
+        </div>
+
+        <p class="status" id="status" role="status" aria-live="polite">邮局在 (1, 5)。图书馆向东 3 格、向北 2 格，它的坐标是多少？</p>
+
+        <section class="coordinate-controls" id="coordinateControls">
+          <div class="axis-control">
+            <span><b>X</b><small data-t="eastWest">东西 / 横轴</small></span>
+            <div class="stepper">
+              <button type="button" data-axis="x" data-delta="-1" aria-label="x 减 1">−</button>
+              <output id="xValue">0</output>
+              <button type="button" data-axis="x" data-delta="1" aria-label="x 加 1">+</button>
+            </div>
+          </div>
+          <div class="axis-control">
+            <span><b>Y</b><small data-t="northSouth">南北 / 纵轴</small></span>
+            <div class="stepper">
+              <button type="button" data-axis="y" data-delta="-1" aria-label="y 减 1">−</button>
+              <output id="yValue">0</output>
+              <button type="button" data-axis="y" data-delta="1" aria-label="y 加 1">+</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="scale-options" id="scaleOptions" hidden></section>
+        <section class="waypoint-options" id="waypointOptions" aria-label="航点坐标" hidden></section>
+
+        <div class="hint-card" id="hintCard">
+          <span aria-hidden="true">📡</span>
+          <p id="lessonText">向东让 x 增大，向北让 y 增大：相对方向也能算出新门牌。</p>
+        </div>
+
+        <div class="actions">
+          <button class="secondary-btn" id="hintBtn" type="button"><span aria-hidden="true">💡</span> <span data-t="hint">航管提示</span></button>
+          <button class="primary-btn" id="dispatchBtn" type="button"><span data-t="dispatch">发射无人机</span> <span aria-hidden="true">➜</span></button>
+          <button class="primary-btn" id="nextBtn" type="button" hidden><span data-t="next">下一封急件</span> <span aria-hidden="true">➜</span></button>
+        </div>
+        <button class="reset-btn" id="resetBtn" type="button" data-t="reset">重置本次指令</button>
+      </aside>
+    </section>
+  </main>
+
+  <div class="finale" id="finale" hidden>
+    <canvas id="finaleCanvas" aria-hidden="true"></canvas>
+    <section class="finale__card" role="dialog" aria-modal="true" aria-labelledby="finalTitle">
+      <div class="finale__badge" aria-hidden="true">⌖</div>
+      <p data-t="finalKicker">三封夜航急件全部送达</p>
+      <h2 id="finalTitle" data-t="finalTitle">你成为了“星光领航员”！</h2>
+      <p data-t="finalText">数对定位、向量修正、比例尺换算——六个航点已经在夜空连成你的专属邮路。</p>
+      <div class="finale__facts"><span>(x, y)</span><span>(5, 5) + (1, −2) = (6, 3)</span><span>6 × 500 m = 3 km</span></div>
+      <button class="primary-btn" id="playAgainBtn" type="button" data-t="playAgain">重新值夜班</button>
+    </section>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

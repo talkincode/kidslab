@@ -1,0 +1,18 @@
+{
+  "id": "drone-post",
+  "title": {
+    "zh": "无人机邮局",
+    "en": "Drone Post Office"
+  },
+  "description": {
+    "zh": "在夜航坐标城报数对、抵消风偏，再用比例尺算出跨城航程，完成三封紧急投递。",
+    "en": "Call coordinates across a night city, correct for wind drift, and use map scales to finish three urgent deliveries."
+  },
+  "category": "math",
+  "levels": ["primary"],
+  "grades": ["g6"],
+  "tags": ["空间想象", "计量单位", "运算", "益智游戏"],
+  "icon": "🚁",
+  "order": 33,
+  "badge": "new"
+}
