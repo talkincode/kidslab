@@ -1,0 +1,18 @@
+{
+  "id": "updown-world",
+  "title": {
+    "zh": "上下世界",
+    "en": "The Up-Down World"
+  },
+  "description": {
+    "zh": "驾驶升降艇穿过海平面，用同一条数轴完成跨层接送、零下温度比较和正负收支结算。",
+    "en": "Pilot a lift-craft across sea level, then use the same number line to compare below-zero temperatures and balance positive and negative transactions."
+  },
+  "category": "math",
+  "levels": ["primary"],
+  "grades": ["g6"],
+  "tags": ["数的认识", "加减法", "运算", "益智游戏"],
+  "icon": "🎈",
+  "order": 31,
+  "badge": "new"
+}

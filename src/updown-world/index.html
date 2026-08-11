@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>上下世界 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <div class="atmosphere" aria-hidden="true"><i></i><i></i><i></i></div>
+
+  <header class="topbar">
+    <a class="pill pill--back" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1><span aria-hidden="true">🎈</span> <span data-t="title">上下世界</span></h1>
+    <div class="topbar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill pill--lang" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="world" id="course">
+    <section class="mission-card">
+      <div class="mission-card__number"><small data-t="mission">航程</small><strong id="missionNumber">1</strong><span>/3</span></div>
+      <div class="mission-card__copy">
+        <p id="missionKicker">跨海接送 · 先找到零</p>
+        <h2 id="missionTitle">从章鱼家升到鸟巢</h2>
+        <p id="missionPrompt">章鱼住在 −3，鸟巢在 +5。驾驶升降艇准确停靠。</p>
+      </div>
+      <nav class="mission-nav" id="missionNav" aria-label="航程进度"></nav>
+    </section>
+
+    <section class="cockpit">
+      <section class="shaft" id="shaft" data-skin="world" data-result="idle">
+        <div class="shaft__status">
+          <p id="status" role="status" aria-live="polite">先向上越过 0 海平面，再停在 +5。</p>
+          <span class="depth-badge"><i aria-hidden="true"></i><span id="skinLabel">海空连通</span></span>
+        </div>
+        <div class="canvas-wrap">
+          <canvas id="worldCanvas" aria-label="从负数到正数的竖直数轴世界"></canvas>
+          <div class="zero-banner"><span>0</span><b data-t="seaLevel">海平面</b></div>
+          <div class="coordinate-card">
+            <small data-t="current">现在位置</small>
+            <strong id="currentValue">−3</strong>
+            <span id="positionName">章鱼家</span>
+          </div>
+          <div class="journey-card">
+            <small data-t="journey">本次变化</small>
+            <strong id="journeyValue">0</strong>
+            <span id="equation">−3 + 0 = −3</span>
+          </div>
+          <div class="deep-flash" id="deepFlash" hidden>
+            <span>−50</span>
+            <strong data-t="deepMoment">海平面变成头顶的一线光</strong>
+          </div>
+        </div>
+        <div class="number-strip" id="numberStrip" aria-label="竖直数轴刻度"></div>
+      </section>
+
+      <aside class="console">
+        <div class="console__head">
+          <div>
+            <small data-t="console">升降艇控制台</small>
+            <h3 id="controlTitle">每次移动几格？</h3>
+          </div>
+          <span class="console__lamp" aria-hidden="true">↕</span>
+        </div>
+
+        <div class="rule-card">
+          <span id="ruleIcon" aria-hidden="true">🌊</span>
+          <p id="ruleText">0 是海平面。向上数会变大，向下数会变小。</p>
+        </div>
+
+        <div class="move-controls" id="moveControls">
+          <button type="button" data-step="-5"><span>▼</span><strong>−5</strong></button>
+          <button type="button" data-step="-1"><span>↓</span><strong>−1</strong></button>
+          <button type="button" data-step="1"><span>↑</span><strong>+1</strong></button>
+          <button type="button" data-step="5"><span>▲</span><strong>+5</strong></button>
+        </div>
+
+        <div class="answer-controls" id="answerControls" hidden></div>
+
+        <div class="target-card">
+          <span data-t="target">目标</span>
+          <strong id="targetValue">+5</strong>
+          <small id="targetLabel">鸟巢</small>
+        </div>
+
+        <div class="console__actions">
+          <button class="secondary-btn" id="hintBtn" type="button"><span aria-hidden="true">💡</span> <span data-t="hint">给我一点提示</span></button>
+          <button class="primary-btn" id="checkBtn" type="button"><span data-t="arrive">确认停靠</span> <span aria-hidden="true">→</span></button>
+          <button class="primary-btn" id="nextBtn" type="button" hidden><span data-t="next">下一层世界</span> <span aria-hidden="true">→</span></button>
+        </div>
+        <button class="reset-btn" id="resetBtn" type="button" data-t="reset">回到本关起点</button>
+      </aside>
+    </section>
+  </main>
+
+  <div class="finale" id="finale" hidden>
+    <section class="finale__card" role="dialog" aria-modal="true" aria-labelledby="finalTitle">
+      <div class="finale__mark" aria-hidden="true">↕</div>
+      <p data-t="finalKicker">海拔、温度、账本全部贯通</p>
+      <h2 id="finalTitle" data-t="finalTitle">你拿到了“零点领航员”徽章！</h2>
+      <p data-t="finalText">负数不是奇怪的暗号：它只是 0 的另一边。沿着数轴向上变大、向下变小，跨过 0 也照样能计算。</p>
+      <div class="finale__facts"><span>−2 &gt; −7</span><span>7 + (−12) = −5</span></div>
+      <button class="primary-btn" id="playAgainBtn" type="button" data-t="playAgain">再航行一次</button>
+    </section>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

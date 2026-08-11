@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-09T15:42:44.150Z",
+  "generatedAt": "2026-08-11T13:07:17.584Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -1630,6 +1630,59 @@
         "游戏"
       ],
       "path": "courseware/potion-ratio/index.html"
+    },
+    {
+      "id": "updown-world",
+      "title": {
+        "zh": "上下世界",
+        "en": "The Up-Down World"
+      },
+      "description": {
+        "zh": "驾驶升降艇穿过海平面，用同一条数轴完成跨层接送、零下温度比较和正负收支结算。",
+        "en": "Pilot a lift-craft across sea level, then use the same number line to compare below-zero temperatures and balance positive and negative transactions."
+      },
+      "category": "math",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g6"
+      ],
+      "tags": [
+        "数的认识",
+        "加减法",
+        "运算",
+        "益智游戏"
+      ],
+      "icon": "🎈",
+      "order": 31,
+      "badge": "new",
+      "keywords": [
+        "Numbers & Counting",
+        "百数表",
+        "hundred chart",
+        "数序",
+        "number order",
+        "100以内的数",
+        "counting",
+        "Addition & Subtraction",
+        "addition",
+        "subtraction",
+        "凑十法",
+        "make ten",
+        "数的分解",
+        "number bonds",
+        "Arithmetic",
+        "arithmetic",
+        "operations",
+        "四则运算",
+        "Puzzle Game",
+        "puzzle",
+        "game",
+        "益智",
+        "游戏"
+      ],
+      "path": "courseware/updown-world/index.html"
     },
     {
       "id": "optics-lab",
