@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-12T17:56:51.693Z",
+  "generatedAt": "2026-08-12T18:20:07.916Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -1944,6 +1944,47 @@
         "模拟"
       ],
       "path": "courseware/optics-lab/index.html"
+    },
+    {
+      "id": "shape-tailor",
+      "title": {
+        "zh": "图形裁缝铺",
+        "en": "Shape Tailor Shop"
+      },
+      "description": {
+        "zh": "裁缝铺只会给长方形布料报价。把平行四边形、三角形、梯形一剪刀裁开再平移拼合，公式是你自己剪出来的。",
+        "en": "The shop only prices rectangles. Cut, slide, and reassemble parallelograms, triangles, and trapezoids until each area formula snaps into place."
+      },
+      "category": "math",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g5"
+      ],
+      "tags": [
+        "面积",
+        "平面图形",
+        "益智游戏"
+      ],
+      "icon": "✂️",
+      "order": 36,
+      "badge": "new",
+      "keywords": [
+        "Area",
+        "area",
+        "圆的面积",
+        "2D Shapes",
+        "2d shapes",
+        "长方形",
+        "rectangle",
+        "Puzzle Game",
+        "puzzle",
+        "game",
+        "益智",
+        "游戏"
+      ],
+      "path": "courseware/shape-tailor/index.html"
     },
     {
       "id": "ph-lab",

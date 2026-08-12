@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>图形裁缝铺 · KidsLab</title>
+  <link rel="stylesheet" href="style.css?v=b986e0d2" />
+  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<script>(()=>{"use strict";const g=window,r=g.cool||{};if(r.sdkVersion)return;try{document.documentElement.style.touchAction="manipulation"}catch{}const w="shape-tailor",b=location.pathname.split("/").filter(Boolean),E=b.at(-1)||"",A=E.includes(".")?b.at(-2):E,f=w.startsWith("__")?A:w,l={get(t,n=null){try{const e=localStorage.getItem(t);return e===null?n:e}catch{return n}},set(t,n){try{return localStorage.setItem(t,n),!0}catch{return!1}},remove(t){try{return localStorage.removeItem(t),!0}catch{return!1}}},d=new Set,S=new Set(["zh","en"]),I=new Set(["light","dark"]),C=(navigator.language||"").toLowerCase().startsWith("zh")?"zh":"en";let m="light";try{m=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch{}let s=l.get("kidslab.lang",C),c=l.get("kidslab.theme",m);S.has(s)||(s=C),I.has(c)||(c=m);function p(){document.documentElement.lang=s==="zh"?"zh-CN":"en",document.documentElement.dataset.theme=c}function T(t,n){const e={kind:t,value:n};for(const o of[...d])o(e);g.dispatchEvent(new CustomEvent(`${t}change`,{detail:{[t]:n}}))}const z={get lang(){return s},get theme(){return c},setLang(t){if(!S.has(t))throw new RangeError(`Unsupported language: ${t}`);t!==s&&(s=t,l.set("kidslab.lang",t),p(),T("lang",t))},setTheme(t){if(!I.has(t))throw new RangeError(`Unsupported theme: ${t}`);t!==c&&(c=t,l.set("kidslab.theme",t),p(),T("theme",t))},toggleLang(){this.setLang(s==="zh"?"en":"zh")},toggleTheme(){this.setTheme(c==="light"?"dark":"light")},subscribe(t){if(typeof t!="function")throw new TypeError("Preference listener must be a function");return d.add(t),()=>d.delete(t)}};function D(t,n={}){if(!t||typeof t!="object")throw new TypeError("Messages must be an object");const e=n.root||document;if(!e.querySelectorAll&&!e.matches)throw new TypeError("i18n root must be a Document or Element");function o(a,...h){const i=t[s]?.[a]??t.zh?.[a]??t.en?.[a];return typeof i=="function"?i(...h):i??a}function y(a="lang"){const h=[];e.matches?.("[data-t]")&&h.push(e),e.querySelectorAll&&h.push(...e.querySelectorAll("[data-t]"));for(const i of h){const L=o(i.dataset.t);typeof L=="string"&&(i.textContent=L)}n.onChange?.({kind:a,lang:s,theme:c,t:o})}const $=z.subscribe(({kind:a})=>{a==="lang"?y("lang"):n.onChange?.({kind:a,lang:s,theme:c,t:o})});return y("init"),{t:o,render:y,destroy:$}}const u=f?`kidslab.progress.${f}`:"";function _(){if(!u)return null;try{const t=JSON.parse(l.get(u,"null"));return!t||!["played","completed"].includes(t.status)?null:t}catch{return null}}function k(t,n){if(!u)return null;const e=_()||{},o={status:e.status==="completed"?"completed":t,stage:n||e.stage||"",updatedAt:Date.now()};return e.status===o.status&&e.stage===o.stage?e:(l.set(u,JSON.stringify(o)),o)}const P={get:_,clear(){return u?l.remove(u):!1}};r.sdkVersion=2,r.courseId=f,r.storage=l,r.preferences=z,r.bindI18n=D,r.progress=P,typeof r.track!="function"&&(r.track=()=>{}),r.stage=t=>{typeof t!="string"||!t||k("played",t.slice(0,48))},r.complete=()=>k("completed"),g.cool=r,p()})();
+</script>
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <div class="atelier" aria-hidden="true">
+    <i></i><i></i><i></i>
+  </div>
+
+  <header class="topbar">
+    <a class="pill pill--back" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1><span aria-hidden="true">✂️</span> <span data-t="title">图形裁缝铺</span></h1>
+    <div class="topbar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill pill--lang" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="shop" id="course">
+    <section class="mission-card">
+      <div class="mission-card__number">
+        <small data-t="mission">订单</small>
+        <strong id="missionNumber">1</strong>
+        <span>/3</span>
+      </div>
+      <div class="mission-card__copy">
+        <p id="missionKicker">客人来了 · 平行四边形布</p>
+        <h2 id="missionTitle">只会给长方形报价</h2>
+        <p id="missionPrompt">裁一刀，把斜角挪到另一头，变成好算的长方形。</p>
+      </div>
+      <nav class="mission-nav" id="missionNav" aria-label="订单进度"></nav>
+    </section>
+
+    <section class="workspace">
+      <section class="stage" id="stage" data-phase="ready" data-result="idle">
+        <div class="stage__head">
+          <p id="stageLabel">裁剪台</p>
+          <span class="price-pill">
+            <small data-t="priceTag">报价</small>
+            <strong id="priceValue">—</strong>
+          </span>
+        </div>
+        <canvas id="sceneCanvas" aria-label="裁缝铺裁剪台"></canvas>
+        <div class="readouts">
+          <span><small data-t="shapeLabel">布料</small><strong id="shapeReadout">平行四边形</strong></span>
+          <span><small data-t="baseLabel">底</small><strong id="baseReadout">8</strong></span>
+          <span><small data-t="heightLabel">高</small><strong id="heightReadout">5</strong></span>
+          <span><small data-t="areaLabel">面积</small><strong id="areaReadout">?</strong></span>
+        </div>
+        <div class="glow-seal" id="glowSeal" hidden>
+          <span aria-hidden="true">🧵</span>
+          <b id="sealText">拼成长方形啦</b>
+        </div>
+      </section>
+
+      <aside class="console">
+        <div class="console__head">
+          <div>
+            <small data-t="console">台账</small>
+            <h3 id="controlTitle">先裁，再拼</h3>
+          </div>
+          <span class="console__badge" aria-hidden="true">🪡</span>
+        </div>
+
+        <p class="status" id="status" role="status" aria-live="polite">客人拿来一块平行四边形布。裁缝铺只会算长方形价钱——动手裁一刀吧。</p>
+
+        <section class="formula-card">
+          <span data-t="think">墙上公式</span>
+          <strong id="formulaText">先变成会算的图形</strong>
+        </section>
+
+        <ol class="steps" id="stepsList" aria-label="步骤"></ol>
+
+        <section class="stepper-card" id="quoteCard" hidden>
+          <span id="stepperLabel">这块布的面积是？</span>
+          <div class="stepper">
+            <button id="minusBtn" type="button" aria-label="减少">−</button>
+            <output id="guessValue" for="minusBtn plusBtn">30</output>
+            <button id="plusBtn" type="button" aria-label="增加">+</button>
+          </div>
+          <small id="unitLabel">平方厘米</small>
+        </section>
+
+        <div class="hint-card">
+          <span aria-hidden="true">🧵</span>
+          <p id="lessonText">割下来的角平移到另一头，面积一点不少。</p>
+        </div>
+
+        <div class="actions">
+          <button class="secondary-btn" id="hintBtn" type="button"><span aria-hidden="true">💡</span> <span data-t="hint">给我一点提示</span></button>
+          <button class="primary-btn" id="cutBtn" type="button"><span data-t="cut">剪刀开剪</span> <span aria-hidden="true">✂️</span></button>
+          <button class="primary-btn" id="slideBtn" type="button" hidden><span data-t="slide">平移拼合</span> <span aria-hidden="true">➜</span></button>
+          <button class="primary-btn" id="quoteBtn" type="button" hidden><span data-t="quote">确认报价</span> <span aria-hidden="true">💰</span></button>
+          <button class="primary-btn" id="nextBtn" type="button" hidden><span id="nextLabel">下一位客人</span> <span aria-hidden="true">➜</span></button>
+        </div>
+        <button class="reset-btn" id="resetBtn" type="button" data-t="reset">收回这块布重裁</button>
+      </aside>
+    </section>
+  </main>
+
+  <div class="finale" id="finale" hidden>
+    <canvas id="finaleCanvas" aria-hidden="true"></canvas>
+    <section class="finale__card" role="dialog" aria-modal="true" aria-labelledby="finalTitle">
+      <div class="finale__badge" aria-hidden="true">🧵</div>
+      <p data-t="finalKicker">三种布料，一张转化族谱</p>
+      <h2 id="finalTitle" data-t="finalTitle">你剪出了面积公式墙！</h2>
+      <p data-t="finalText">平行四边形变长方形，两块三角形拼平行四边形，梯形割补后也回到底×高——面积在剪刀下显形。</p>
+      <div class="finale__grid" id="finaleGrid"></div>
+      <button class="primary-btn" id="playAgainBtn" type="button" data-t="playAgain">再开一铺</button>
+    </section>
+  </div>
+
+  <script src="main.js?v=7582e099"></script>
+</body>
+</html>
