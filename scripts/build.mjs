@@ -372,8 +372,11 @@ async function emitServiceWorker(assetVersions) {
     'courseware/index.json',
   ];
 
+  const template = await readFile(path.join(ROOT, 'scripts', 'sw.js'), 'utf8');
   const hash = createHash('md5');
   hash.update(precache.join('\n'));
+  /* SW 源码变更也必须换代，否则逻辑修复（如 206 缓存）不会激活新 worker */
+  hash.update(template);
   for (const rel of [...shellFiles, ...Object.keys(assetVersions)]) {
     const file = path.join(ROOT, rel);
     try {
@@ -385,7 +388,6 @@ async function emitServiceWorker(assetVersions) {
   await stat(path.join(OUT, 'index.json')); // 预缓存引用，仅校验存在
   const version = hash.digest('hex').slice(0, 12);
 
-  const template = await readFile(path.join(ROOT, 'scripts', 'sw.js'), 'utf8');
   const source = template
     .replaceAll('__CACHE_VERSION__', () => version)
     .replaceAll('__PRECACHE__', () => JSON.stringify(precache));

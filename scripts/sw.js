@@ -46,15 +46,29 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-/** 带超时的网络请求；成功响应写入指定缓存（cache-on-visit） */
+/** Cache API 只接受完整 200；206 Partial Content 会直接抛错并搞挂整次 fetch */
+function isCacheableResponse(response) {
+  return Boolean(response && response.status === 200 && response.type !== 'opaque');
+}
+
+async function putInCache(cacheName, request, response) {
+  if (!isCacheableResponse(response)) return;
+  try {
+    const cache = await caches.open(cacheName);
+    await cache.put(request, response.clone());
+  } catch {
+    /* 配额满/部分响应等：缓存失败不影响播放 */
+  }
+}
+
+/** 带超时的网络请求；成功完整响应写入指定缓存（cache-on-visit） */
 async function networkFirst(request, cacheName) {
-  const cache = await caches.open(cacheName);
   try {
     const response = await fetchWithTimeout(request);
-    if (response.ok) await cache.put(request, response.clone());
+    await putInCache(cacheName, request, response);
     return response;
   } catch (err) {
-    const cached = await cache.match(request, { ignoreSearch: false });
+    const cached = await caches.match(request, { ignoreSearch: false });
     if (cached) return cached;
     /* 导航离线兜底：返回预缓存主页（如深链主站路由） */
     if (request.mode === 'navigate') {
@@ -76,13 +90,18 @@ function fetchWithTimeout(request) {
 }
 
 async function cacheFirst(request) {
+  /* 媒体 Range 请求：优先回完整预缓存（200），避免 206 写入 Cache 导致 ERR_FAILED */
   const cached = await caches.match(request);
   if (cached) return cached;
-  const response = await fetch(request);
-  if (response.ok) {
-    const cache = await caches.open(SHELL_CACHE);
-    await cache.put(request, response.clone());
+
+  if (request.headers.has('range')) {
+    const full = await caches.match(request.url);
+    if (full) return full;
+    return fetch(request); /* 透传 206，绝不 cache.put */
   }
+
+  const response = await fetch(request);
+  await putInCache(SHELL_CACHE, request, response);
   return response;
 }
 
@@ -98,6 +117,11 @@ self.addEventListener('fetch', (event) => {
 
   /* 课件资源：network-first + 运行时缓存（玩过即可离线重玩，且发版不粘死） */
   if (rel.startsWith('courseware/') && rel !== 'courseware/index.json') {
+    /* 课件内音频/视频同样可能带 Range，走 cacheFirst 的 206 安全路径 */
+    if (/\.(?:ogg|m4a|mp3|wav|mp4|webm|aac)(?:$|\?)/i.test(rel)) {
+      event.respondWith(cacheFirst(request));
+      return;
+    }
     event.respondWith(networkFirst(request, COURSEWARE_CACHE));
     return;
   }
