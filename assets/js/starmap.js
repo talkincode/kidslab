@@ -97,40 +97,99 @@
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ---------- ScoreKit 音频：用户手势后启动，失败时静默降级 ---------- */
+  /* Safari/iOS 不播 Ogg Vorbis，优先 m4a；相对站点根解析，避免深链/哈希页路径漂移 */
   const SOUND_STORE = 'kidslab.sound.muted';
+  const audioExt = (() => {
+    const probe = document.createElement('audio');
+    if (probe.canPlayType('audio/mp4; codecs="mp4a.40.2"') || probe.canPlayType('audio/aac')) return 'm4a';
+    if (probe.canPlayType('audio/ogg; codecs="vorbis"')) return 'ogg';
+    return 'm4a';
+  })();
+  const audioUrl = (name) => {
+    try {
+      return new URL(`assets/audio/starmap/${name}.${audioExt}`, document.baseURI || location.href).href;
+    } catch {
+      return `assets/audio/starmap/${name}.${audioExt}`;
+    }
+  };
+  const makeCue = (name, volume) => {
+    const cue = new Audio(audioUrl(name));
+    cue.preload = 'auto';
+    cue.volume = volume;
+    cue.setAttribute('playsinline', '');
+    cue.load();
+    return cue;
+  };
   const audio = {
     muted: (() => {
       try { return localStorage.getItem(SOUND_STORE) === '1'; } catch { return false; }
     })(),
-    bgm: new Audio('assets/audio/starmap/orbital-library.ogg'),
-    click: new Audio('assets/audio/starmap/star-confirm.ogg'),
-    switch: new Audio('assets/audio/starmap/atlas-warp.ogg'),
+    unlocked: false,
+    bgm: makeCue('orbital-library', 0.18),
+    click: makeCue('star-confirm', 0.42),
+    switch: makeCue('atlas-warp', 0.46),
   };
   audio.bgm.loop = true;
-  audio.bgm.volume = 0.18;
-  audio.click.volume = 0.42;
-  audio.switch.volume = 0.46;
-  Object.values(audio).forEach((item) => {
-    if (item instanceof Audio) item.preload = 'auto';
-  });
 
+  function rewind(cue) {
+    try {
+      if (cue.readyState >= 1) cue.currentTime = 0;
+    } catch { /* media may not be seekable yet */ }
+  }
+  function tryPlay(cue) {
+    if (!cue) return Promise.resolve(false);
+    return cue.play().then(() => true).catch(() => false);
+  }
+  async function unlockAudio() {
+    if (audio.unlocked) return audio.unlocked;
+    const cues = [audio.bgm, audio.click, audio.switch];
+    await Promise.all(cues.map(async (cue) => {
+      try {
+        const prev = cue.volume;
+        cue.volume = 0;
+        const ok = await tryPlay(cue);
+        cue.pause();
+        rewind(cue);
+        cue.volume = prev;
+        return ok;
+      } catch {
+        try { cue.volume = cue === audio.bgm ? 0.18 : cue === audio.click ? 0.42 : 0.46; } catch { /* ignore */ }
+        return false;
+      }
+    }));
+    audio.unlocked = true;
+    return true;
+  }
   function startBgm(force = false) {
     if (audio.muted || (!force && overlay.hidden) || document.hidden) return;
-    audio.bgm.play().catch(() => {});
+    const kick = () => {
+      if (audio.muted || document.hidden || (!force && overlay.hidden)) return;
+      tryPlay(audio.bgm);
+    };
+    kick();
+    /* 资源未就绪或自动播放被拒时，加载完成后在同一次用户会话里再试一次 */
+    if (audio.bgm.readyState < 2) {
+      audio.bgm.addEventListener('canplay', kick, { once: true });
+    }
   }
   function pauseBgm(reset = false) {
     audio.bgm.pause();
-    if (reset) {
-      try { audio.bgm.currentTime = 0; } catch { /* media may not be ready */ }
-    }
+    if (reset) rewind(audio.bgm);
   }
   function playSfx(kind = 'click') {
     if (audio.muted) return;
     const cue = audio[kind] || audio.click;
     try {
       cue.pause();
-      cue.currentTime = 0;
-      cue.play().catch(() => {});
+      rewind(cue);
+      tryPlay(cue).then((ok) => {
+        if (ok || cue.readyState >= 2) return;
+        cue.addEventListener('canplay', () => {
+          if (audio.muted) return;
+          rewind(cue);
+          tryPlay(cue);
+        }, { once: true });
+      });
     } catch { /* audio support is optional */ }
   }
   function renderSound() {
@@ -2030,8 +2089,10 @@
   }
 
   btn.addEventListener('click', () => {
-    startBgm(true);
-    open(false);
+    unlockAudio().finally(() => {
+      startBgm(true);
+      open(false);
+    });
   });
   closeBtn.addEventListener('click', close);
   modeBtns.forEach((b) => {
@@ -2042,8 +2103,10 @@
     try { localStorage.setItem(SOUND_STORE, audio.muted ? '1' : '0'); } catch { /* ignore */ }
     if (audio.muted) pauseBgm();
     else {
-      startBgm();
-      playSfx('click');
+      unlockAudio().finally(() => {
+        startBgm(true);
+        playSfx('click');
+      });
     }
     renderSound();
   });
@@ -2078,6 +2141,13 @@
     if (document.hidden) pauseBgm();
     else if (running) startBgm();
   });
+  /* 从课件返回 #starmap 时无点击手势，等第一次交互再解锁音频 */
+  const resumeOnGesture = () => {
+    if (overlay.hidden || audio.muted || audio.unlocked) return;
+    unlockAudio().finally(() => { if (running && !audio.muted) startBgm(true); });
+  };
+  overlay.addEventListener('pointerdown', resumeOnGesture, { passive: true });
+  overlay.addEventListener('keydown', resumeOnGesture);
 
   /* 从课件页返回：#starmap 锚点或会话内保存的打开状态 → 自动恢复星图 */
   if (location.hash === '#starmap' || loadState()?.open) open(true);
