@@ -97,27 +97,43 @@
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ---------- ScoreKit 音频：用户手势后启动，失败时静默降级 ---------- */
-  /* Safari/iOS 不播 Ogg Vorbis，优先 m4a；相对站点根解析，避免深链/哈希页路径漂移 */
+  /* Chrome/Firefox 用 ogg；Safari/iOS 用 m4a。双源错误回退，避免单格式 404/伪 200 HTML 静音 */
   const SOUND_STORE = 'kidslab.sound.muted';
-  const audioExt = (() => {
-    const probe = document.createElement('audio');
-    if (probe.canPlayType('audio/mp4; codecs="mp4a.40.2"') || probe.canPlayType('audio/aac')) return 'm4a';
-    if (probe.canPlayType('audio/ogg; codecs="vorbis"')) return 'ogg';
-    return 'm4a';
-  })();
-  const audioUrl = (name) => {
+  const audioProbe = document.createElement('audio');
+  const canOgg = !!audioProbe.canPlayType('audio/ogg; codecs="vorbis"');
+  const canM4a = !!(audioProbe.canPlayType('audio/mp4; codecs="mp4a.40.2"')
+    || audioProbe.canPlayType('audio/aac')
+    || audioProbe.canPlayType('audio/mp4'));
+  const audioUrl = (name, ext) => {
     try {
-      return new URL(`assets/audio/starmap/${name}.${audioExt}`, document.baseURI || location.href).href;
+      return new URL(`assets/audio/starmap/${name}.${ext}`, document.baseURI || location.href).href;
     } catch {
-      return `assets/audio/starmap/${name}.${audioExt}`;
+      return `assets/audio/starmap/${name}.${ext}`;
     }
   };
   const makeCue = (name, volume) => {
-    const cue = new Audio(audioUrl(name));
+    const cue = new Audio();
+    const exts = [];
+    if (canOgg) exts.push('ogg');
+    if (canM4a) exts.push('m4a');
+    if (!exts.length) exts.push('m4a', 'ogg');
+    let extIndex = 0;
+    const assign = () => {
+      cue.src = audioUrl(name, exts[extIndex]);
+      try { cue.load(); } catch { /* ignore */ }
+    };
     cue.preload = 'auto';
     cue.volume = volume;
+    cue.playsInline = true;
     cue.setAttribute('playsinline', '');
-    cue.load();
+    cue.setAttribute('webkit-playsinline', '');
+    cue.addEventListener('error', () => {
+      if (extIndex + 1 >= exts.length) return;
+      extIndex += 1;
+      assign();
+    });
+    assign();
+    cue.__kidslabVolume = volume;
     return cue;
   };
   const audio = {
@@ -125,9 +141,9 @@
       try { return localStorage.getItem(SOUND_STORE) === '1'; } catch { return false; }
     })(),
     unlocked: false,
-    bgm: makeCue('orbital-library', 0.18),
-    click: makeCue('star-confirm', 0.42),
-    switch: makeCue('atlas-warp', 0.46),
+    bgm: makeCue('orbital-library', 0.28),
+    click: makeCue('star-confirm', 0.55),
+    switch: makeCue('atlas-warp', 0.58),
   };
   audio.bgm.loop = true;
 
@@ -144,18 +160,19 @@
     if (audio.unlocked) return audio.unlocked;
     const cues = [audio.bgm, audio.click, audio.switch];
     await Promise.all(cues.map(async (cue) => {
+      const prev = cue.__kidslabVolume ?? cue.volume ?? 0.3;
       try {
-        const prev = cue.volume;
-        cue.volume = 0;
-        const ok = await tryPlay(cue);
+        /* iOS 需要非零音量手势播放才真正解锁媒体元素 */
+        cue.muted = true;
+        cue.volume = Math.max(0.01, prev);
+        await tryPlay(cue);
         cue.pause();
         rewind(cue);
+      } catch { /* ignore */ }
+      try {
+        cue.muted = false;
         cue.volume = prev;
-        return ok;
-      } catch {
-        try { cue.volume = cue === audio.bgm ? 0.18 : cue === audio.click ? 0.42 : 0.46; } catch { /* ignore */ }
-        return false;
-      }
+      } catch { /* ignore */ }
     }));
     audio.unlocked = true;
     return true;
@@ -164,12 +181,13 @@
     if (audio.muted || (!force && overlay.hidden) || document.hidden) return;
     const kick = () => {
       if (audio.muted || document.hidden || (!force && overlay.hidden)) return;
+      audio.bgm.muted = false;
       tryPlay(audio.bgm);
     };
     kick();
-    /* 资源未就绪或自动播放被拒时，加载完成后在同一次用户会话里再试一次 */
     if (audio.bgm.readyState < 2) {
       audio.bgm.addEventListener('canplay', kick, { once: true });
+      audio.bgm.addEventListener('loadeddata', kick, { once: true });
     }
   }
   function pauseBgm(reset = false) {
@@ -181,14 +199,17 @@
     const cue = audio[kind] || audio.click;
     try {
       cue.pause();
+      cue.muted = false;
       rewind(cue);
       tryPlay(cue).then((ok) => {
         if (ok || cue.readyState >= 2) return;
-        cue.addEventListener('canplay', () => {
+        const retry = () => {
           if (audio.muted) return;
           rewind(cue);
           tryPlay(cue);
-        }, { once: true });
+        };
+        cue.addEventListener('canplay', retry, { once: true });
+        cue.addEventListener('loadeddata', retry, { once: true });
       });
     } catch { /* audio support is optional */ }
   }

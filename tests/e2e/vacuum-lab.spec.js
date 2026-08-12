@@ -30,9 +30,13 @@ async function expectFitsViewport(page) {
 }
 
 async function runStrategy(page, strategy) {
+  await expect(page.locator('body')).toHaveAttribute('data-running', 'false', { timeout: 15000 });
   await page.locator(`[data-strategy="${strategy}"]`).click();
+  await expect(page.locator(`[data-strategy="${strategy}"]`)).toHaveAttribute('aria-pressed', 'true');
   await page.locator('#runBtn').click();
-  await expect(page.locator('body')).toHaveAttribute('data-running', 'false', { timeout: 3000 });
+  /* 以结果文案为准：比 data-running 更稳，覆盖动画收尾与状态写入 */
+  await expect(page.locator('#status')).not.toContainText(/正在执行|is running/i, { timeout: 15000 });
+  await expect(page.locator('body')).toHaveAttribute('data-running', 'false');
 }
 
 test.describe('robo-vacuum lab', () => {

@@ -675,11 +675,12 @@
     render();
   }
 
-  function animateRun(now) {
+  function animateRun() {
     if (!running) return;
     const room = ROOMS[roomIndex];
     const result = room.results[selected];
-    const progress = Math.min(1, (now - runStartedAt) / 760);
+    /* 用 performance.now() 而非 rAF 时间戳，避免时间线偏移导致进度永远 < 1 */
+    const progress = Math.min(1, Math.max(0, (performance.now() - runStartedAt) / 760));
     const eased = 1 - ((1 - progress) ** 3);
     displayMetrics = {
       coverage: Math.round(result.coverage * eased),
@@ -702,6 +703,7 @@
       sound.error();
       return;
     }
+    cancelAnimationFrame(animationFrame);
     running = true;
     lastResult = null;
     displayMetrics = { coverage: 0, time: 0, bumps: 0 };
@@ -711,7 +713,6 @@
     sound.start();
     render();
     runStartedAt = performance.now();
-    cancelAnimationFrame(animationFrame);
     animationFrame = requestAnimationFrame(animateRun);
   }
 
