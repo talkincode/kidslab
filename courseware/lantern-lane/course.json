@@ -1,0 +1,18 @@
+{
+  "id": "lantern-lane",
+  "title": {
+    "zh": "灯笼街",
+    "en": "Lantern Lane"
+  },
+  "description": {
+    "zh": "元宵节布置灯笼街：先报数领货再挂灯，发现两端、一端、环形其实是同一道间隔题，锯木头和爬楼梯也会露馅。",
+    "en": "Hang lanterns for the festival: order first, place next, and discover that both ends, open ends, rings, saw cuts, and stairs are the same interval problem."
+  },
+  "category": "math",
+  "levels": ["primary"],
+  "grades": ["g5"],
+  "tags": ["运算", "找规律", "计量单位", "益智游戏"],
+  "icon": "🏮",
+  "order": 35,
+  "badge": "new"
+}

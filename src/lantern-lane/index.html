@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>灯笼街 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <div class="skyline" aria-hidden="true">
+    <i></i><i></i><i></i><i></i>
+  </div>
+
+  <header class="topbar">
+    <a class="pill pill--back" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1><span aria-hidden="true">🏮</span> <span data-t="title">灯笼街</span></h1>
+    <div class="topbar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill pill--lang" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="lane" id="course">
+    <section class="mission-card">
+      <div class="mission-card__number">
+        <small data-t="mission">关卡</small>
+        <strong id="missionNumber">1</strong>
+        <span>/5</span>
+      </div>
+      <div class="mission-card__copy">
+        <p id="missionKicker">元宵夜 · 两端都挂</p>
+        <h2 id="missionTitle">100 米长街，每 10 米一盏</h2>
+        <p id="missionPrompt">先报数领货，再把灯笼挂上街。多了尴尬，少了发黑。</p>
+      </div>
+      <nav class="mission-nav" id="missionNav" aria-label="关卡进度"></nav>
+    </section>
+
+    <section class="workspace">
+      <section class="stage" id="stage" data-skin="street" data-result="idle">
+        <div class="stage__head">
+          <p id="stageLabel">灯笼街现场</p>
+          <span class="stock-pill">
+            <small data-t="stock">货架</small>
+            <strong id="stockValue">0</strong>
+          </span>
+        </div>
+        <canvas id="sceneCanvas" aria-label="灯笼街场景"></canvas>
+        <div class="readouts">
+          <span><small data-t="length">长度</small><strong id="lengthReadout">100 m</strong></span>
+          <span><small data-t="gap">间距</small><strong id="gapReadout">10 m</strong></span>
+          <span><small data-t="intervals">间隔</small><strong id="intervalReadout">10</strong></span>
+          <span><small data-t="rule">规则</small><strong id="ruleReadout">两端都挂</strong></span>
+        </div>
+        <div class="glow-seal" id="glowSeal" hidden>
+          <span aria-hidden="true">✨</span>
+          <b id="sealText">全街点亮</b>
+        </div>
+      </section>
+
+      <aside class="console">
+        <div class="console__head">
+          <div>
+            <small data-t="console">布景台账</small>
+            <h3 id="controlTitle">先报数，再挂灯</h3>
+          </div>
+          <span class="console__badge" aria-hidden="true">🏮</span>
+        </div>
+
+        <p class="status" id="status" role="status" aria-live="polite">100 米街道，每隔 10 米挂一盏，两端都要挂。你先领几盏？</p>
+
+        <section class="formula-card">
+          <span data-t="think">先想一想</span>
+          <strong id="formulaText">间隔数 = 总长 ÷ 间距</strong>
+        </section>
+
+        <section class="stepper-card">
+          <span id="stepperLabel">领货数量</span>
+          <div class="stepper">
+            <button id="minusBtn" type="button" aria-label="减少">−</button>
+            <output id="guessValue" for="minusBtn plusBtn">10</output>
+            <button id="plusBtn" type="button" aria-label="增加">+</button>
+          </div>
+          <small id="unitLabel">盏灯笼</small>
+        </section>
+
+        <div class="hint-card">
+          <span aria-hidden="true">🧵</span>
+          <p id="lessonText">先数清楚有几段间隔，再问两端要不要算进去。</p>
+        </div>
+
+        <div class="actions">
+          <button class="secondary-btn" id="hintBtn" type="button"><span aria-hidden="true">💡</span> <span data-t="hint">给我一点提示</span></button>
+          <button class="primary-btn" id="placeBtn" type="button"><span data-t="place">挂上现场</span> <span aria-hidden="true">➜</span></button>
+          <button class="primary-btn" id="nextBtn" type="button" hidden><span data-t="next">下一处布景</span> <span aria-hidden="true">➜</span></button>
+        </div>
+        <button class="reset-btn" id="resetBtn" type="button" data-t="reset">收回本关灯笼</button>
+      </aside>
+    </section>
+  </main>
+
+  <div class="finale" id="finale" hidden>
+    <canvas id="finaleCanvas" aria-hidden="true"></canvas>
+    <section class="finale__card" role="dialog" aria-modal="true" aria-labelledby="finalTitle">
+      <div class="finale__badge" aria-hidden="true">🎆</div>
+      <p data-t="finalKicker">五种皮囊，同一道间隔题</p>
+      <h2 id="finalTitle" data-t="finalTitle">你点亮了整条灯笼街！</h2>
+      <p data-t="finalText">两端都挂、桥头不挂、环形湖边、锯木头、爬楼梯——先数间隔，再决定端点算不算。</p>
+      <div class="finale__grid" id="finaleGrid"></div>
+      <button class="primary-btn" id="playAgainBtn" type="button" data-t="playAgain">再布一次元宵夜</button>
+    </section>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

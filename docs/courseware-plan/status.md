@@ -1,6 +1,6 @@
 # KidsLab 计划状态清单
 
-最后核验：2026-08-12
+最后核验：2026-08-13
 
 事实来源：`src/*/course.json`、`docs/courseware-plan/*.md`、`README.md`、`AGENT.md`。本文件负责回答“哪些已完成、哪些未实现、后续 Agent 完成计划后要更新哪里”。
 
@@ -31,10 +31,10 @@ KidsLab 应该是一组孩子打开就想玩的交互课件，而不是题库或
 
 - 主站课程浏览：`index.html`、`assets/js/app.js` 支持学段、年级、分类、搜索、双语、主题、强调色与置顶课件。
 - 静态构建发布：`scripts/build.mjs` 校验 `course.json`、压缩资源、生成 `courseware/index.json`；GitHub Pages workflow 在 `main` 推送后构建发布。
-- 课件源码库：当前 `src/` 下有 80 个课件目录，其中小学规划内按 ID 直接完成 70 个。
+- 课件源码库：当前 `src/` 下有 81 个课件目录，其中小学规划内按 ID 直接完成 71 个。
 - 小学课件规划：`docs/courseware-plan/` 覆盖数学、编程、逻辑、科学 84 个小学目标课件。
 - 课件模板：`docs/courseware-template/` 提供双语、主题、静态独立课件起点。
-- 交互音效：当前 79 个游戏中 65 个有音频实现；`huarong-dao` 与 `venn-port` 使用 ScoreKit 循环配乐和通关短曲，并实现语义交互音效及独立静音控制，存量改进优先级见 `docs/courseware-audio-audit.md`。
+- 交互音效：当前 80 个游戏中 66 个有音频实现；`huarong-dao` 与 `venn-port` 使用 ScoreKit 循环配乐和通关短曲，并实现语义交互音效及独立静音控制，存量改进优先级见 `docs/courseware-audio-audit.md`。
 - 行为分析：`docs/analytics.md`、`scripts/track.js`、`cloudflare/analytics/` 提供可选埋点链路。
 
 ## 非目标（铁律）
@@ -67,11 +67,11 @@ Agent 每次完成计划项后必须同步更新：
 
 | 学科 | 目标数 | 已完成（按规划 ID） | 未实现 | 备注 |
 | --- | ---: | ---: | ---: | --- |
-| 数学 | 32 | 29 | 3 | P0 已完成 |
+| 数学 | 32 | 31 | 1 | P0 已完成 |
 | 编程 | 15 | 15 | 0 | P0 已完成；规划项已全部完成 |
 | 逻辑 | 15 | 12 | 3 | P0 已完成；`magic-cube`、`huarong-dao` 为规划外补充 |
 | 科学 | 22 | 14 | 8 | `plant-lab` 可能对应 `plant-xray`，但 ID/标题未对齐 |
-| 合计 | 84 | 70 | 14 | 另有 9 个规划外已上线课件 |
+| 合计 | 84 | 72 | 12 | 另有 9 个规划外已上线课件 |
 
 ## 已完成（规划内）
 
@@ -106,6 +106,8 @@ Agent 每次完成计划项后必须同步更新：
 - [x] 上下世界 `updown-world`
 - [x] 折扣侦探 `sale-detective`
 - [x] 无人机邮局 `drone-post`
+- [x] 游园会真相 `carnival-truth`
+- [x] 灯笼街 `lantern-lane`
 
 ### 编程
 
@@ -161,8 +163,6 @@ Agent 每次完成计划项后必须同步更新：
 
 ### 数学
 
-- [ ] 游园会真相 `carnival-truth`
-- [ ] 灯笼街 `lantern-lane`
 - [ ] 图形裁缝铺 `shape-tailor`
 
 ### 编程
@@ -250,8 +250,9 @@ Agent 每次完成计划项后必须同步更新：
 | 上下世界 | 中 | 已覆盖：桌面与触屏驾驶升降艇从 −3 到 +5、比较 −2°C 与 −7°C，并计算 7 + (−12) = −5 | 已覆盖：停错位置、选错较暖温度和选错结账余额均保留当前任务，可原地修正 | 不适用：纯静态无角色 | 已覆盖：错误后可继续；航程、偏好和通关状态可重载恢复，并支持重新航行 | `tests/e2e/updown-world.spec.js` |
 | 折扣侦探 | 中 | 已覆盖：桌面与触屏用算式证据完成提价后打折、第二件半价和满减对比三宗促销案件 | 已覆盖：错误算式、错误结论和报告缺项均保留当前案件选择，可原地修正 | 不适用：纯静态无角色 | 已覆盖：错误后可继续；案件选择、偏好和通关状态可重载恢复，并支持重新巡街 | `tests/e2e/sale-detective.spec.js` |
 | 无人机邮局 | 中 | 已覆盖：桌面与触屏完成相对方位数对投递、抵消风偏、比例尺换算和六航点正交邮路设计 | 已覆盖：数对次序颠倒、直接发送风偏目标、未选/误选比例尺航线和斜穿楼群均保留任务，可原地修正 | 不适用：纯静态无角色 | 已覆盖：错误后可重置或直接调整；航班、坐标、航线、航点、偏好与通关状态可重载恢复，并支持重新值夜班 | `tests/e2e/drone-post.spec.js` |
-| 单个课件核心玩法 | 中 | 部分：搭配衣橱、找零售货机、格子大厦、巫师的罐子、惊喜鬼屋、变形旅馆、七巧板皮影戏、狐狸的石子、摆渡奇遇、真话岛、平方根建筑师、小小港湾、函数厨房、角度高尔夫、二进制灯塔、墨迹怪物、分数节拍屋、像素邮局、光学实验室、华容道、维恩太空港、声波乐团、扫地机器人研究所、折纸打孔妙妙屋、煎饼老板、激光镜屋、彩虹舞台、数据演播室、密码社、七桥滑冰、机器宠物学校、因数水晶洞、魔药比例坊与数据包骑士完整闭环 | 部分：前七课件覆盖错误选择、重复搭配、错误找零、错误接线或错误放置后原地重试；狐狸的石子覆盖轮流拿取与必胜闭环；摆渡奇遇覆盖危险搭档违规、自动回退、撤销和重开后的状态恢复；真话岛覆盖错误身份、错误逻辑联结词判断、无效提问与错误道路选择后的原地重试；平方根建筑师覆盖负数输入和错答恢复；小小港湾覆盖超载进水、泥球下沉和错误预测后的原地恢复；函数厨房覆盖错误步骤、复制爆单和参数传错后的原地恢复；角度高尔夫覆盖报角偏差、轨迹反馈和原地重试；二进制灯塔覆盖错误数字、错误解码、错误字母编码和原地修正；墨迹怪物覆盖墨团不足、错误镜像点、错误嫌疑怪和原地重试；分数节拍屋覆盖超出一小节、等值分数不足、错误节拍顺序、未试听交付及撤回/清空后的原地恢复；像素邮局覆盖漏涂/多涂像素、错误数字还原和错误 RLE 编码后的原地修正；光学实验室覆盖实像对焦与虚像无法投屏状态；华容道覆盖无效方向、逐步提示、撤销恢复、十二步练习通关与演示时间线；维恩太空港覆盖错误泊位安全返航、五船完整任务、演示暂停/单步/跳转及退出后的进度恢复；声波乐团覆盖未拨弦检查、错误音高、错误振幅、空气未抽净和真空后未复验的原地恢复；扫地机器人研究所覆盖空芯片启动、三种错误策略及原地换芯重试；折纸打孔妙妙屋覆盖空预测、错误镜像孔位、清空后重试及四关逐层展开；煎饼老板覆盖铁板空位、同饼双面冲突、未启动并行任务和错误跨小时计算后的原地恢复；激光镜屋覆盖空路线、错误镜位、镜子上限、彩色光路不匹配后的原地调整及四关通关；彩虹舞台覆盖空灯光、缺色光、错误颜料组合、未开白光和错误棱镜角度后的原地调整及三幕通关；数据演播室覆盖错记选票、错误图表匹配、错误最大值/总数/平均数播报后的原地重试及三场通关；密码社覆盖错钥匙、错解码、错频率字母和错映射后的原地修正及三关通关；七桥滑冰覆盖未观察度数、错误可行性判断、非相邻滑行与无效双桥施工后的原地恢复，并完成判断、欧拉回路和改桥三关；机器宠物学校覆盖错误标签、窄样本误判、纠正样本重训和重开后的原地恢复，并完成训练、偏差纠正与未见物测试三课；因数水晶洞覆盖错误因数、错选/漏选倍数后的原地修正及三厅通关；魔药比例坊覆盖错误配方、错误批量和错误分红后的原地修正及三张配方通关；数据包骑士覆盖整信过宽、单路拥挤、非最短路线、拥塞路线和断桥重试后的原地改道，并完成拆包重组、最短路与断线容错三关 | 不适用：纯静态无角色 | 部分：三十四课件支持重开、状态恢复或无损调参，其余课件需逐项确认 | `tests/e2e/combo-closet.spec.js`、`tests/e2e/change-vending.spec.js`、`tests/e2e/grid-tower.spec.js`、`tests/e2e/wizard-jars.spec.js`、`tests/e2e/haunted-events.spec.js`、`tests/e2e/metamorph-hotel.spec.js`、`tests/e2e/tangram-theater.spec.js`、`tests/e2e/fox-stones.spec.js`、`tests/e2e/ferry-tales.spec.js`、`tests/e2e/truth-island.spec.js`、`tests/e2e/square-root-lab.spec.js`、`tests/e2e/tiny-harbor.spec.js`、`tests/e2e/function-kitchen.spec.js`、`tests/e2e/angle-golf.spec.js`、`tests/e2e/binary-lighthouse.spec.js`、`tests/e2e/inkblot-monsters.spec.js`、`tests/e2e/fraction-beats.spec.js`、`tests/e2e/pixel-post.spec.js`、`tests/e2e/huarong-dao.spec.js`、`tests/e2e/venn-port.spec.js`、`tests/e2e/wave-band.spec.js`、`tests/e2e/vacuum-lab.spec.js`、`tests/e2e/punch-origami.spec.js`、`tests/e2e/pancake-boss.spec.js`、`tests/e2e/laser-mirrors.spec.js`、`tests/e2e/rainbow-stage.spec.js`、`tests/e2e/data-studio.spec.js`、`tests/e2e/cipher-club.spec.js`、`tests/e2e/ice-bridges.spec.js`、`tests/e2e/robo-pet-school.spec.js`、`tests/e2e/crystal-cave.spec.js`、`tests/e2e/potion-ratio.spec.js`、`tests/e2e/packet-knights.spec.js`、`tests/e2e/smoke.spec.js`（光学实验室）；`AGENT.md` 提交前自检；其余课件需补 E2E 或交互烟测 |
-| 课件交互音效 | 中 | 缺口：静态扫描确认 65/79 个游戏存在音频实现，未验证全部存量课件的语义、响度和完整玩法覆盖 | 缺口：需验证错误/无效操作、AudioContext 失败和快速连续操作 | 不适用：纯静态无角色 | 缺口：需验证静音可关闭一次性与循环声音、页面隐藏后停止环境音 | `docs/courseware-audio-audit.md`；分数节拍屋、声波乐团、扫地机器人研究所、折纸打孔妙妙屋、煎饼老板、激光镜屋、彩虹舞台、数据演播室、密码社、七桥滑冰、机器宠物学校、外星农场、平衡马戏团、因数水晶洞、魔药比例坊、数据包骑士与无人机邮局覆盖交互/正确/错误/通关语义音效与静音状态，华容道与维恩太空港覆盖独立 BGM/音效开关及页面隐藏暂停；静态和 E2E 检查仍不能替代人工听测 |
-| 双语、主题、移动端适配 | 中 | 部分：华容道、维恩太空港、分数节拍屋、声波乐团、扫地机器人研究所、折纸打孔妙妙屋、煎饼老板、激光镜屋、彩虹舞台、数据演播室、密码社、七桥滑冰、机器宠物学校、外星农场、平衡马戏团、因数水晶洞、魔药比例坊、数据包骑士与无人机邮局已覆盖中英切换、深浅主题和 1280×800/375×667 布局 | 部分：十九课件验证无横纵向溢出及可见按钮最小触控高度 | 不适用：纯静态无角色 | 部分：华容道与维恩太空港验证偏好写入 localStorage 并经重新加载恢复；分数节拍屋、声波乐团、扫地机器人研究所、折纸打孔妙妙屋、煎饼老板、激光镜屋、彩虹舞台、数据演播室、密码社、七桥滑冰、机器宠物学校、外星农场、平衡马戏团、因数水晶洞、魔药比例坊、数据包骑士与无人机邮局验证即时切换，无人机邮局等十五课件另验证进度重载恢复 | `tests/e2e/huarong-dao.spec.js`、`tests/e2e/venn-port.spec.js`、`tests/e2e/fraction-beats.spec.js`、`tests/e2e/wave-band.spec.js`、`tests/e2e/vacuum-lab.spec.js`、`tests/e2e/punch-origami.spec.js`、`tests/e2e/pancake-boss.spec.js`、`tests/e2e/laser-mirrors.spec.js`、`tests/e2e/rainbow-stage.spec.js`、`tests/e2e/data-studio.spec.js`、`tests/e2e/cipher-club.spec.js`、`tests/e2e/ice-bridges.spec.js`、`tests/e2e/robo-pet-school.spec.js`、`tests/e2e/alien-farm.spec.js`、`tests/e2e/balance-circus.spec.js`、`tests/e2e/crystal-cave.spec.js`、`tests/e2e/potion-ratio.spec.js`、`tests/e2e/packet-knights.spec.js`、`tests/e2e/drone-post.spec.js`；其余课件仍需补同口径证据 |
+| 游园会真相 | 中 | 已覆盖：桌面与触屏完成 1/12 转盘查假、2/10 摸球机验真和 2/12 低中奖率转盘设计 | 已覆盖：未试验提交、错误公平性判断、错误大奖格数量和使用过期试验数据均保留当前调查，可原地修正 | 不适用：纯静态无角色 | 已覆盖：错误后可继续；调查、试验结果、设计、偏好和通关状态可重载恢复，并支持重新巡查 | `tests/e2e/carnival-truth.spec.js` |
+| 单个课件核心玩法 | 中 | 部分：搭配衣橱、找零售货机、格子大厦、巫师的罐子、惊喜鬼屋、变形旅馆、七巧板皮影戏、狐狸的石子、摆渡奇遇、真话岛、平方根建筑师、小小港湾、函数厨房、角度高尔夫、二进制灯塔、墨迹怪物、分数节拍屋、像素邮局、光学实验室、华容道、维恩太空港、声波乐团、扫地机器人研究所、折纸打孔妙妙屋、煎饼老板、激光镜屋、彩虹舞台、数据演播室、密码社、七桥滑冰、机器宠物学校、因数水晶洞、魔药比例坊与数据包骑士、灯笼街完整闭环 | 部分：前七课件覆盖错误选择、重复搭配、错误找零、错误接线或错误放置后原地重试；狐狸的石子覆盖轮流拿取与必胜闭环；摆渡奇遇覆盖危险搭档违规、自动回退、撤销和重开后的状态恢复；真话岛覆盖错误身份、错误逻辑联结词判断、无效提问与错误道路选择后的原地重试；平方根建筑师覆盖负数输入和错答恢复；小小港湾覆盖超载进水、泥球下沉和错误预测后的原地恢复；函数厨房覆盖错误步骤、复制爆单和参数传错后的原地恢复；角度高尔夫覆盖报角偏差、轨迹反馈和原地重试；二进制灯塔覆盖错误数字、错误解码、错误字母编码和原地修正；墨迹怪物覆盖墨团不足、错误镜像点、错误嫌疑怪和原地重试；分数节拍屋覆盖超出一小节、等值分数不足、错误节拍顺序、未试听交付及撤回/清空后的原地恢复；像素邮局覆盖漏涂/多涂像素、错误数字还原和错误 RLE 编码后的原地修正；光学实验室覆盖实像对焦与虚像无法投屏状态；华容道覆盖无效方向、逐步提示、撤销恢复、十二步练习通关与演示时间线；维恩太空港覆盖错误泊位安全返航、五船完整任务、演示暂停/单步/跳转及退出后的进度恢复；声波乐团覆盖未拨弦检查、错误音高、错误振幅、空气未抽净和真空后未复验的原地恢复；扫地机器人研究所覆盖空芯片启动、三种错误策略及原地换芯重试；折纸打孔妙妙屋覆盖空预测、错误镜像孔位、清空后重试及四关逐层展开；煎饼老板覆盖铁板空位、同饼双面冲突、未启动并行任务和错误跨小时计算后的原地恢复；激光镜屋覆盖空路线、错误镜位、镜子上限、彩色光路不匹配后的原地调整及四关通关；彩虹舞台覆盖空灯光、缺色光、错误颜料组合、未开白光和错误棱镜角度后的原地调整及三幕通关；数据演播室覆盖错记选票、错误图表匹配、错误最大值/总数/平均数播报后的原地重试及三场通关；密码社覆盖错钥匙、错解码、错频率字母和错映射后的原地修正及三关通关；七桥滑冰覆盖未观察度数、错误可行性判断、非相邻滑行与无效双桥施工后的原地恢复，并完成判断、欧拉回路和改桥三关；机器宠物学校覆盖错误标签、窄样本误判、纠正样本重训和重开后的原地恢复，并完成训练、偏差纠正与未见物测试三课；因数水晶洞覆盖错误因数、错选/漏选倍数后的原地修正及三厅通关；魔药比例坊覆盖错误配方、错误批量和错误分红后的原地修正及三张配方通关；数据包骑士覆盖整信过宽、单路拥挤、非最短路线、拥塞路线和断桥重试后的原地改道，并完成拆包重组、最短路与断线容错三关；灯笼街覆盖少领/多领后的原地加减货及五关间隔通关 | 不适用：纯静态无角色 | 部分：三十四课件支持重开、状态恢复或无损调参，其余课件需逐项确认 | `tests/e2e/combo-closet.spec.js`、`tests/e2e/change-vending.spec.js`、`tests/e2e/grid-tower.spec.js`、`tests/e2e/wizard-jars.spec.js`、`tests/e2e/haunted-events.spec.js`、`tests/e2e/metamorph-hotel.spec.js`、`tests/e2e/tangram-theater.spec.js`、`tests/e2e/fox-stones.spec.js`、`tests/e2e/ferry-tales.spec.js`、`tests/e2e/truth-island.spec.js`、`tests/e2e/square-root-lab.spec.js`、`tests/e2e/tiny-harbor.spec.js`、`tests/e2e/function-kitchen.spec.js`、`tests/e2e/angle-golf.spec.js`、`tests/e2e/binary-lighthouse.spec.js`、`tests/e2e/inkblot-monsters.spec.js`、`tests/e2e/fraction-beats.spec.js`、`tests/e2e/pixel-post.spec.js`、`tests/e2e/huarong-dao.spec.js`、`tests/e2e/venn-port.spec.js`、`tests/e2e/wave-band.spec.js`、`tests/e2e/vacuum-lab.spec.js`、`tests/e2e/punch-origami.spec.js`、`tests/e2e/pancake-boss.spec.js`、`tests/e2e/laser-mirrors.spec.js`、`tests/e2e/rainbow-stage.spec.js`、`tests/e2e/data-studio.spec.js`、`tests/e2e/cipher-club.spec.js`、`tests/e2e/ice-bridges.spec.js`、`tests/e2e/robo-pet-school.spec.js`、`tests/e2e/crystal-cave.spec.js`、`tests/e2e/potion-ratio.spec.js`、`tests/e2e/packet-knights.spec.js`、`tests/e2e/lantern-lane.spec.js`、`tests/e2e/smoke.spec.js`（光学实验室）；`AGENT.md` 提交前自检；其余课件需补 E2E 或交互烟测 |
+| 课件交互音效 | 中 | 缺口：静态扫描确认 66/80 个游戏存在音频实现，未验证全部存量课件的语义、响度和完整玩法覆盖 | 缺口：需验证错误/无效操作、AudioContext 失败和快速连续操作 | 不适用：纯静态无角色 | 缺口：需验证静音可关闭一次性与循环声音、页面隐藏后停止环境音 | `docs/courseware-audio-audit.md`；分数节拍屋、声波乐团、扫地机器人研究所、折纸打孔妙妙屋、煎饼老板、激光镜屋、彩虹舞台、数据演播室、密码社、七桥滑冰、机器宠物学校、外星农场、平衡马戏团、因数水晶洞、魔药比例坊、数据包骑士、无人机邮局、游园会真相与灯笼街覆盖交互/正确/错误/通关语义音效与静音状态，华容道与维恩太空港覆盖独立 BGM/音效开关及页面隐藏暂停；静态和 E2E 检查仍不能替代人工听测 |
+| 双语、主题、移动端适配 | 中 | 部分：华容道、维恩太空港、分数节拍屋、声波乐团、扫地机器人研究所、折纸打孔妙妙屋、煎饼老板、激光镜屋、彩虹舞台、数据演播室、密码社、七桥滑冰、机器宠物学校、外星农场、平衡马戏团、因数水晶洞、魔药比例坊、数据包骑士、无人机邮局、游园会真相与灯笼街已覆盖中英切换、深浅主题和 1280×800/375×667 布局 | 部分：二十课件验证无横纵向溢出及可见按钮最小触控高度 | 不适用：纯静态无角色 | 部分：华容道与维恩太空港验证偏好写入 localStorage 并经重新加载恢复；分数节拍屋、声波乐团、扫地机器人研究所、折纸打孔妙妙屋、煎饼老板、激光镜屋、彩虹舞台、数据演播室、密码社、七桥滑冰、机器宠物学校、外星农场、平衡马戏团、因数水晶洞、魔药比例坊、数据包骑士、无人机邮局、游园会真相与灯笼街验证即时切换，无人机邮局等十七课件另验证进度重载恢复 | `tests/e2e/huarong-dao.spec.js`、`tests/e2e/venn-port.spec.js`、`tests/e2e/fraction-beats.spec.js`、`tests/e2e/wave-band.spec.js`、`tests/e2e/vacuum-lab.spec.js`、`tests/e2e/punch-origami.spec.js`、`tests/e2e/pancake-boss.spec.js`、`tests/e2e/laser-mirrors.spec.js`、`tests/e2e/rainbow-stage.spec.js`、`tests/e2e/data-studio.spec.js`、`tests/e2e/cipher-club.spec.js`、`tests/e2e/ice-bridges.spec.js`、`tests/e2e/robo-pet-school.spec.js`、`tests/e2e/alien-farm.spec.js`、`tests/e2e/balance-circus.spec.js`、`tests/e2e/crystal-cave.spec.js`、`tests/e2e/potion-ratio.spec.js`、`tests/e2e/packet-knights.spec.js`、`tests/e2e/drone-post.spec.js`、`tests/e2e/carnival-truth.spec.js`、`tests/e2e/lantern-lane.spec.js`；其余课件仍需补同口径证据 |
 | 行为分析埋点 | 中 | 缺口 | 缺口 | 不适用：无用户身份 | 缺口：endpoint 缺失时应空操作 | `docs/analytics.md`、`scripts/track.js`、`cloudflare/analytics/` |
 | GitHub Pages 发布 | 中 | 部分：workflow 运行 `npm run build` | 缺口 | 不适用：GitHub Actions 权限由仓库配置控制 | 缺口：发布失败回滚依赖 Pages 历史版本 | `.github/workflows/deploy.yml` |

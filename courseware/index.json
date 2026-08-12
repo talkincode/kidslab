@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-11T18:39:07.997Z",
+  "generatedAt": "2026-08-12T16:45:47.052Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -1782,6 +1782,108 @@
         "游戏"
       ],
       "path": "courseware/drone-post/index.html"
+    },
+    {
+      "id": "carnival-truth",
+      "title": {
+        "zh": "游园会真相",
+        "en": "Carnival Truth"
+      },
+      "description": {
+        "zh": "带上千次试验仪调查游园会摊位，用稳定下来的频率揭穿夸张中奖承诺，再设计自己的低概率转盘。",
+        "en": "Audit carnival booths with a thousand-trial machine, expose inflated prize claims through stable frequencies, then design your own low-odds wheel."
+      },
+      "category": "math",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g5"
+      ],
+      "tags": [
+        "分数",
+        "运算",
+        "实验",
+        "益智游戏"
+      ],
+      "icon": "🎠",
+      "order": 34,
+      "badge": "new",
+      "keywords": [
+        "Fractions",
+        "fraction",
+        "fractions",
+        "等值分数",
+        "equivalent fractions",
+        "百分数",
+        "percent",
+        "percentage",
+        "Arithmetic",
+        "arithmetic",
+        "operations",
+        "四则运算",
+        "Experiment",
+        "experiment",
+        "simulation",
+        "lab",
+        "模拟",
+        "Puzzle Game",
+        "puzzle",
+        "game",
+        "益智",
+        "游戏"
+      ],
+      "path": "courseware/carnival-truth/index.html"
+    },
+    {
+      "id": "lantern-lane",
+      "title": {
+        "zh": "灯笼街",
+        "en": "Lantern Lane"
+      },
+      "description": {
+        "zh": "元宵节布置灯笼街：先报数领货再挂灯，发现两端、一端、环形其实是同一道间隔题，锯木头和爬楼梯也会露馅。",
+        "en": "Hang lanterns for the festival: order first, place next, and discover that both ends, open ends, rings, saw cuts, and stairs are the same interval problem."
+      },
+      "category": "math",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g5"
+      ],
+      "tags": [
+        "运算",
+        "找规律",
+        "计量单位",
+        "益智游戏"
+      ],
+      "icon": "🏮",
+      "order": 35,
+      "badge": "new",
+      "keywords": [
+        "Arithmetic",
+        "arithmetic",
+        "operations",
+        "四则运算",
+        "Patterns",
+        "patterns",
+        "模式识别",
+        "pattern recognition",
+        "逻辑启蒙",
+        "Units & Measurement",
+        "units",
+        "measurement",
+        "单位换算",
+        "unit conversion",
+        "cubic units",
+        "Puzzle Game",
+        "puzzle",
+        "game",
+        "益智",
+        "游戏"
+      ],
+      "path": "courseware/lantern-lane/index.html"
     },
     {
       "id": "optics-lab",

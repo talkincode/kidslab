@@ -1,0 +1,18 @@
+{
+  "id": "carnival-truth",
+  "title": {
+    "zh": "游园会真相",
+    "en": "Carnival Truth"
+  },
+  "description": {
+    "zh": "带上千次试验仪调查游园会摊位，用稳定下来的频率揭穿夸张中奖承诺，再设计自己的低概率转盘。",
+    "en": "Audit carnival booths with a thousand-trial machine, expose inflated prize claims through stable frequencies, then design your own low-odds wheel."
+  },
+  "category": "math",
+  "levels": ["primary"],
+  "grades": ["g5"],
+  "tags": ["分数", "运算", "实验", "益智游戏"],
+  "icon": "🎠",
+  "order": 34,
+  "badge": "new"
+}

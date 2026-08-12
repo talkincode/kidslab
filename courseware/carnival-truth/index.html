@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>游园会真相 · KidsLab</title>
+  <link rel="stylesheet" href="style.css?v=6f3c55a8" />
+  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<script>(()=>{"use strict";const g=window,r=g.cool||{};if(r.sdkVersion)return;try{document.documentElement.style.touchAction="manipulation"}catch{}const w="carnival-truth",b=location.pathname.split("/").filter(Boolean),E=b.at(-1)||"",A=E.includes(".")?b.at(-2):E,f=w.startsWith("__")?A:w,l={get(t,n=null){try{const e=localStorage.getItem(t);return e===null?n:e}catch{return n}},set(t,n){try{return localStorage.setItem(t,n),!0}catch{return!1}},remove(t){try{return localStorage.removeItem(t),!0}catch{return!1}}},d=new Set,S=new Set(["zh","en"]),I=new Set(["light","dark"]),C=(navigator.language||"").toLowerCase().startsWith("zh")?"zh":"en";let m="light";try{m=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch{}let s=l.get("kidslab.lang",C),c=l.get("kidslab.theme",m);S.has(s)||(s=C),I.has(c)||(c=m);function p(){document.documentElement.lang=s==="zh"?"zh-CN":"en",document.documentElement.dataset.theme=c}function T(t,n){const e={kind:t,value:n};for(const o of[...d])o(e);g.dispatchEvent(new CustomEvent(`${t}change`,{detail:{[t]:n}}))}const z={get lang(){return s},get theme(){return c},setLang(t){if(!S.has(t))throw new RangeError(`Unsupported language: ${t}`);t!==s&&(s=t,l.set("kidslab.lang",t),p(),T("lang",t))},setTheme(t){if(!I.has(t))throw new RangeError(`Unsupported theme: ${t}`);t!==c&&(c=t,l.set("kidslab.theme",t),p(),T("theme",t))},toggleLang(){this.setLang(s==="zh"?"en":"zh")},toggleTheme(){this.setTheme(c==="light"?"dark":"light")},subscribe(t){if(typeof t!="function")throw new TypeError("Preference listener must be a function");return d.add(t),()=>d.delete(t)}};function D(t,n={}){if(!t||typeof t!="object")throw new TypeError("Messages must be an object");const e=n.root||document;if(!e.querySelectorAll&&!e.matches)throw new TypeError("i18n root must be a Document or Element");function o(a,...h){const i=t[s]?.[a]??t.zh?.[a]??t.en?.[a];return typeof i=="function"?i(...h):i??a}function y(a="lang"){const h=[];e.matches?.("[data-t]")&&h.push(e),e.querySelectorAll&&h.push(...e.querySelectorAll("[data-t]"));for(const i of h){const L=o(i.dataset.t);typeof L=="string"&&(i.textContent=L)}n.onChange?.({kind:a,lang:s,theme:c,t:o})}const $=z.subscribe(({kind:a})=>{a==="lang"?y("lang"):n.onChange?.({kind:a,lang:s,theme:c,t:o})});return y("init"),{t:o,render:y,destroy:$}}const u=f?`kidslab.progress.${f}`:"";function _(){if(!u)return null;try{const t=JSON.parse(l.get(u,"null"));return!t||!["played","completed"].includes(t.status)?null:t}catch{return null}}function k(t,n){if(!u)return null;const e=_()||{},o={status:e.status==="completed"?"completed":t,stage:n||e.stage||"",updatedAt:Date.now()};return e.status===o.status&&e.stage===o.stage?e:(l.set(u,JSON.stringify(o)),o)}const P={get:_,clear(){return u?l.remove(u):!1}};r.sdkVersion=2,r.courseId=f,r.storage=l,r.preferences=z,r.bindI18n=D,r.progress=P,typeof r.track!="function"&&(r.track=()=>{}),r.stage=t=>{typeof t!="string"||!t||k("played",t.slice(0,48))},r.complete=()=>k("completed"),g.cool=r,p()})();
+</script>
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <div class="fairground-lights" aria-hidden="true"></div>
+
+  <header class="topbar" id="topbar">
+    <a class="pill pill--back" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1><span aria-hidden="true">🎠</span> <span data-t="title">游园会真相</span></h1>
+    <div class="topbar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill pill--lang" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="casebook" id="course">
+    <section class="case-header">
+      <div class="case-number">
+        <small data-t="case">调查</small>
+        <strong id="caseNumber">01</strong>
+        <span>/03</span>
+      </div>
+      <div class="case-copy">
+        <p id="caseKicker">旋转木马旁 · 幸运转盘</p>
+        <h2 id="caseTitle">“一半的人都能中大奖！”是真的吗？</h2>
+        <p id="casePrompt">先数大奖区，再启动千次试验仪，用证据判断摊主有没有夸大。</p>
+      </div>
+      <nav class="case-nav" id="caseNav" aria-label="调查进度"></nav>
+    </section>
+
+    <section class="lab">
+      <section class="evidence-stage" id="evidenceStage" data-result="idle" aria-labelledby="stageLabel">
+        <div class="stage-head">
+          <p id="stageLabel" data-t="evidence">概率证据台</p>
+          <span class="live-light"><i></i><span id="machineState">等待试验</span></span>
+        </div>
+        <canvas id="evidenceCanvas"></canvas>
+        <div class="readouts">
+          <span><small data-t="claim">摊主声称</small><strong id="claimReadout">1/2</strong></span>
+          <span><small data-t="theory">理论概率</small><strong id="theoryReadout">1/12</strong></span>
+          <span><small data-t="experiment">试验频率</small><strong id="experimentReadout">—</strong></span>
+        </div>
+        <div class="seal" aria-hidden="true"><span>✓</span><b id="sealText">证据成立</b></div>
+      </section>
+
+      <aside class="inspector-panel">
+        <div class="panel-title">
+          <div>
+            <small data-t="inspector">游园会调查局</small>
+            <h3 id="panelInstruction">收集一千位模拟游客的结果</h3>
+          </div>
+          <span class="badge" aria-hidden="true">🔎</span>
+        </div>
+
+        <p class="status" id="status" role="status" aria-live="polite">转盘有 12 个等大的格子，只有 1 个是大奖区。</p>
+
+        <section class="formula-card">
+          <span data-t="formula">先算一算</span>
+          <strong id="formulaText">1 个大奖区 ÷ 12 个等大格 = 1/12</strong>
+        </section>
+
+        <section class="designer" id="designer" hidden>
+          <div>
+            <span><b data-t="goldZones">大奖区数量</b><small data-t="designGoal">目标：12 格中放 2 格，诱人但不容易中</small></span>
+            <div class="stepper">
+              <button id="minusBtn" type="button" aria-label="减少大奖区">−</button>
+              <output id="prizeSlots">4</output>
+              <button id="plusBtn" type="button" aria-label="增加大奖区">+</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="verdicts" id="verdicts" aria-label="公平性判断">
+          <button type="button" data-verdict="honest"><span>✓</span><b data-t="honest">承诺可信</b></button>
+          <button type="button" data-verdict="dishonest"><span>!</span><b data-t="dishonest">夸大中奖率</b></button>
+        </section>
+
+        <div class="hint-card">
+          <span aria-hidden="true">🎟️</span>
+          <p id="lessonText">格子一样大时，中奖概率 = 大奖格数 ÷ 总格数。试验频率会在理论概率附近摇摆。</p>
+        </div>
+
+        <div class="actions">
+          <button class="secondary-btn" id="hintBtn" type="button"><span aria-hidden="true">💡</span> <span data-t="hint">调查提示</span></button>
+          <button class="primary-btn" id="trialBtn" type="button"><span data-t="trial">启动 1000 次试验</span> <span aria-hidden="true">⚡</span></button>
+          <button class="primary-btn" id="checkBtn" type="button"><span data-t="check">提交调查结论</span> <span aria-hidden="true">➜</span></button>
+          <button class="primary-btn" id="nextBtn" type="button" hidden><span data-t="next">下一处摊位</span> <span aria-hidden="true">➜</span></button>
+        </div>
+        <button class="reset-btn" id="resetBtn" type="button" data-t="reset">重置本次调查</button>
+      </aside>
+    </section>
+  </main>
+
+  <div class="finale" id="finale" hidden>
+    <canvas id="finaleCanvas" aria-hidden="true"></canvas>
+    <section class="finale__card" role="dialog" aria-modal="true" aria-labelledby="finalTitle">
+      <div class="finale__badge" aria-hidden="true">⚖</div>
+      <p data-t="finalKicker">三份概率证据全部归档</p>
+      <h2 id="finalTitle" data-t="finalTitle">你成为了“游园会真相官”！</h2>
+      <p data-t="finalText">你会先数等可能结果，再用大量试验核对承诺，还设计出了中奖率为 1/6 的诚实转盘。</p>
+      <div class="finale__facts"><span>1/12 ≈ 8.3%</span><span>2/10 = 1/5</span><span>2/12 = 1/6</span></div>
+      <button class="primary-btn" id="playAgainBtn" type="button" data-t="playAgain">重新巡查游园会</button>
+    </section>
+  </div>
+
+  <script src="main.js?v=8c0031ba"></script>
+</body>
+</html>

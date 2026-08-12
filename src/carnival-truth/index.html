@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>游园会真相 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <div class="fairground-lights" aria-hidden="true"></div>
+
+  <header class="topbar" id="topbar">
+    <a class="pill pill--back" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1><span aria-hidden="true">🎠</span> <span data-t="title">游园会真相</span></h1>
+    <div class="topbar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill pill--lang" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="casebook" id="course">
+    <section class="case-header">
+      <div class="case-number">
+        <small data-t="case">调查</small>
+        <strong id="caseNumber">01</strong>
+        <span>/03</span>
+      </div>
+      <div class="case-copy">
+        <p id="caseKicker">旋转木马旁 · 幸运转盘</p>
+        <h2 id="caseTitle">“一半的人都能中大奖！”是真的吗？</h2>
+        <p id="casePrompt">先数大奖区，再启动千次试验仪，用证据判断摊主有没有夸大。</p>
+      </div>
+      <nav class="case-nav" id="caseNav" aria-label="调查进度"></nav>
+    </section>
+
+    <section class="lab">
+      <section class="evidence-stage" id="evidenceStage" data-result="idle" aria-labelledby="stageLabel">
+        <div class="stage-head">
+          <p id="stageLabel" data-t="evidence">概率证据台</p>
+          <span class="live-light"><i></i><span id="machineState">等待试验</span></span>
+        </div>
+        <canvas id="evidenceCanvas"></canvas>
+        <div class="readouts">
+          <span><small data-t="claim">摊主声称</small><strong id="claimReadout">1/2</strong></span>
+          <span><small data-t="theory">理论概率</small><strong id="theoryReadout">1/12</strong></span>
+          <span><small data-t="experiment">试验频率</small><strong id="experimentReadout">—</strong></span>
+        </div>
+        <div class="seal" aria-hidden="true"><span>✓</span><b id="sealText">证据成立</b></div>
+      </section>
+
+      <aside class="inspector-panel">
+        <div class="panel-title">
+          <div>
+            <small data-t="inspector">游园会调查局</small>
+            <h3 id="panelInstruction">收集一千位模拟游客的结果</h3>
+          </div>
+          <span class="badge" aria-hidden="true">🔎</span>
+        </div>
+
+        <p class="status" id="status" role="status" aria-live="polite">转盘有 12 个等大的格子，只有 1 个是大奖区。</p>
+
+        <section class="formula-card">
+          <span data-t="formula">先算一算</span>
+          <strong id="formulaText">1 个大奖区 ÷ 12 个等大格 = 1/12</strong>
+        </section>
+
+        <section class="designer" id="designer" hidden>
+          <div>
+            <span><b data-t="goldZones">大奖区数量</b><small data-t="designGoal">目标：12 格中放 2 格，诱人但不容易中</small></span>
+            <div class="stepper">
+              <button id="minusBtn" type="button" aria-label="减少大奖区">−</button>
+              <output id="prizeSlots">4</output>
+              <button id="plusBtn" type="button" aria-label="增加大奖区">+</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="verdicts" id="verdicts" aria-label="公平性判断">
+          <button type="button" data-verdict="honest"><span>✓</span><b data-t="honest">承诺可信</b></button>
+          <button type="button" data-verdict="dishonest"><span>!</span><b data-t="dishonest">夸大中奖率</b></button>
+        </section>
+
+        <div class="hint-card">
+          <span aria-hidden="true">🎟️</span>
+          <p id="lessonText">格子一样大时，中奖概率 = 大奖格数 ÷ 总格数。试验频率会在理论概率附近摇摆。</p>
+        </div>
+
+        <div class="actions">
+          <button class="secondary-btn" id="hintBtn" type="button"><span aria-hidden="true">💡</span> <span data-t="hint">调查提示</span></button>
+          <button class="primary-btn" id="trialBtn" type="button"><span data-t="trial">启动 1000 次试验</span> <span aria-hidden="true">⚡</span></button>
+          <button class="primary-btn" id="checkBtn" type="button"><span data-t="check">提交调查结论</span> <span aria-hidden="true">➜</span></button>
+          <button class="primary-btn" id="nextBtn" type="button" hidden><span data-t="next">下一处摊位</span> <span aria-hidden="true">➜</span></button>
+        </div>
+        <button class="reset-btn" id="resetBtn" type="button" data-t="reset">重置本次调查</button>
+      </aside>
+    </section>
+  </main>
+
+  <div class="finale" id="finale" hidden>
+    <canvas id="finaleCanvas" aria-hidden="true"></canvas>
+    <section class="finale__card" role="dialog" aria-modal="true" aria-labelledby="finalTitle">
+      <div class="finale__badge" aria-hidden="true">⚖</div>
+      <p data-t="finalKicker">三份概率证据全部归档</p>
+      <h2 id="finalTitle" data-t="finalTitle">你成为了“游园会真相官”！</h2>
+      <p data-t="finalText">你会先数等可能结果，再用大量试验核对承诺，还设计出了中奖率为 1/6 的诚实转盘。</p>
+      <div class="finale__facts"><span>1/12 ≈ 8.3%</span><span>2/10 = 1/5</span><span>2/12 = 1/6</span></div>
+      <button class="primary-btn" id="playAgainBtn" type="button" data-t="playAgain">重新巡查游园会</button>
+    </section>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
