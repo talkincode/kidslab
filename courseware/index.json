@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-13T08:44:58.154Z",
+  "generatedAt": "2026-08-13T15:17:24.937Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -4157,6 +4157,60 @@
         "游戏"
       ],
       "path": "courseware/laser-mirrors/index.html"
+    },
+    {
+      "id": "four-color-kingdom",
+      "title": {
+        "zh": "四色王国",
+        "en": "Four-Color Kingdom"
+      },
+      "description": {
+        "zh": "给王国地图上色：相邻领地不能同色，颜料按桶收钱。从挥霍五色到紧预算、领主点名，直到亲手发现——四色永远够用。",
+        "en": "Color the kingdom map so neighbors never share a hue, while paint costs by the bucket. Spend freely, tighten the budget, obey a lord's demand, then feel why four colors always suffice."
+      },
+      "category": "logic",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g5",
+        "g6"
+      ],
+      "tags": [
+        "推理",
+        "策略",
+        "益智游戏"
+      ],
+      "icon": "🎨",
+      "order": 80,
+      "badge": "new",
+      "keywords": [
+        "Reasoning",
+        "reasoning",
+        "演绎推理",
+        "deduction",
+        "排除法",
+        "elimination",
+        "逻辑网格",
+        "logic grid",
+        "逆向推理",
+        "backward reasoning",
+        "证据",
+        "evidence",
+        "inference",
+        "Strategy",
+        "strategy",
+        "博弈策略",
+        "game theory",
+        "尼姆游戏",
+        "nim",
+        "Puzzle Game",
+        "puzzle",
+        "game",
+        "益智",
+        "游戏"
+      ],
+      "path": "courseware/four-color-kingdom/index.html"
     },
     {
       "id": "ice-maker-lab",

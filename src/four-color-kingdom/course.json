@@ -1,0 +1,18 @@
+{
+  "id": "four-color-kingdom",
+  "title": {
+    "zh": "四色王国",
+    "en": "Four-Color Kingdom"
+  },
+  "description": {
+    "zh": "给王国地图上色：相邻领地不能同色，颜料按桶收钱。从挥霍五色到紧预算、领主点名，直到亲手发现——四色永远够用。",
+    "en": "Color the kingdom map so neighbors never share a hue, while paint costs by the bucket. Spend freely, tighten the budget, obey a lord's demand, then feel why four colors always suffice."
+  },
+  "category": "logic",
+  "levels": ["primary"],
+  "grades": ["g5", "g6"],
+  "tags": ["推理", "策略", "益智游戏"],
+  "icon": "🎨",
+  "order": 80,
+  "badge": "new"
+}
