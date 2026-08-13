@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-13T15:17:24.937Z",
+  "generatedAt": "2026-08-13T18:17:54.047Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -3995,6 +3995,62 @@
         "游戏"
       ],
       "path": "courseware/ferry-tales/index.html"
+    },
+    {
+      "id": "pirate-scales",
+      "title": {
+        "zh": "海盗验金室",
+        "en": "Pirate Weighing Room"
+      },
+      "description": {
+        "zh": "一箱金币里混着一枚轻一点的假币。用天平称，每称一次付一枚佣金。发现天平会说三种话，一次就能把嫌疑砍成三分之一！",
+        "en": "A lighter fake hides among the gold. Each weighing costs a coin. Discover the scale's three answers and cut the suspects into thirds every time!"
+      },
+      "category": "logic",
+      "levels": [
+        "primary",
+        "junior"
+      ],
+      "grades": [
+        "g4",
+        "g5",
+        "g6"
+      ],
+      "tags": [
+        "推理",
+        "策略",
+        "益智游戏"
+      ],
+      "icon": "⚖️",
+      "order": 76,
+      "badge": "new",
+      "keywords": [
+        "Reasoning",
+        "reasoning",
+        "演绎推理",
+        "deduction",
+        "排除法",
+        "elimination",
+        "逻辑网格",
+        "logic grid",
+        "逆向推理",
+        "backward reasoning",
+        "证据",
+        "evidence",
+        "inference",
+        "Strategy",
+        "strategy",
+        "博弈策略",
+        "game theory",
+        "尼姆游戏",
+        "nim",
+        "Puzzle Game",
+        "puzzle",
+        "game",
+        "益智",
+        "游戏"
+      ],
+      "path": "courseware/pirate-scales/index.html"
     },
     {
       "id": "truth-island",
