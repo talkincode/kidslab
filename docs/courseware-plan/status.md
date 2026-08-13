@@ -31,7 +31,7 @@ KidsLab 应该是一组孩子打开就想玩的交互课件，而不是题库或
 
 - 主站课程浏览：`index.html`、`assets/js/app.js` 支持学段、年级、分类、搜索、双语、主题、强调色与置顶课件。
 - 静态构建发布：`scripts/build.mjs` 校验 `course.json`、压缩资源、生成 `courseware/index.json`；GitHub Pages workflow 在 `main` 推送后构建发布。
-- 课件源码库：当前 `src/` 下有 82 个课件目录，其中小学规划内按 ID 直接完成 72 个。
+- 课件源码库：当前 `src/` 下有 84 个课件目录，其中小学规划内按 ID 直接完成 73 个。
 - 小学课件规划：`docs/courseware-plan/` 覆盖数学、编程、逻辑、科学 84 个小学目标课件。
 - 课件模板：`docs/courseware-template/` 提供双语、主题、静态独立课件起点。
 - 交互音效：当前 80 个游戏中 66 个有音频实现；`huarong-dao` 与 `venn-port` 使用 ScoreKit 循环配乐和通关短曲，并实现语义交互音效及独立静音控制，存量改进优先级见 `docs/courseware-audio-audit.md`。
@@ -71,7 +71,7 @@ Agent 每次完成计划项后必须同步更新：
 | 编程 | 15 | 15 | 0 | P0 已完成；规划项已全部完成 |
 | 逻辑 | 15 | 12 | 3 | P0 已完成；`magic-cube`、`huarong-dao` 为规划外补充 |
 | 科学 | 22 | 14 | 8 | `plant-lab` 可能对应 `plant-xray`，但 ID/标题未对齐 |
-| 合计 | 84 | 73 | 11 | 另有 9 个规划外已上线课件 |
+| 合计 | 84 | 73 | 11 | 另有 10 个规划外已上线课件 |
 
 ## 已完成（规划内）
 
@@ -203,6 +203,7 @@ Agent 每次完成计划项后必须同步更新：
 | `pendulum-lab` 单摆实验室 | physics | junior/senior | 初高中物理扩展 |
 | `optics-lab` 光学实验室 | physics | junior/senior | 初高中几何光学扩展 |
 | `ph-lab` 酸碱魔法水 | chemistry | junior/senior | 初高中化学扩展 |
+| `ice-maker-lab` 制冰实验室 | physics | primary/junior | 蒸汽压缩制冷/制冰机原理扩展，不计入小学 84 项规划 ID |
 
 ## 方向与意图
 

@@ -1,0 +1,18 @@
+{
+  "id": "ice-maker-lab",
+  "title": {
+    "zh": "制冰实验室",
+    "en": "Ice Maker Lab"
+  },
+  "description": {
+    "zh": "切开制冰机看制冷回路：灌水、开压缩机、看蒸发器吸热结冰，再发现冷凝器把热甩到房间——热被搬走了，不是消失了。",
+    "en": "Cut open an ice maker: fill molds, run the compressor, watch the evaporator steal heat to freeze water, then catch the condenser dumping that heat into the room."
+  },
+  "category": "physics",
+  "levels": ["primary", "junior"],
+  "grades": ["g5", "g6", "g7"],
+  "tags": ["物质三态", "分子运动", "实验"],
+  "icon": "🧊",
+  "order": 80,
+  "badge": "new"
+}
