@@ -131,7 +131,7 @@ test.describe('main site', () => {
     await expect.poll(() => cards.count()).toBe(initialCount);
     const mobileMenu = await page.locator('#menuBtn').isVisible();
     if (mobileMenu) await page.locator('#menuBtn').click();
-    await page.locator('#catList li:nth-child(2) button').click();
+    await page.locator('#catList button[data-cat="math"]').click();
     await expect.poll(() => cards.count()).toBeLessThan(initialCount);
     if (mobileMenu) {
       await expect.poll(() =>
@@ -139,6 +139,67 @@ test.describe('main site', () => {
           Math.round(sidebar.getBoundingClientRect().right))).toBeLessThanOrEqual(0);
     }
     await expectHealthyPage(page, failures);
+  });
+
+  test('special category filters show recently explored and newly created courseware', async ({ page }) => {
+    const primary = manifest.courses.filter((course) => !course.pinned && course.levels.includes('primary'));
+    const older = primary[0];
+    const newer = primary[1];
+    const newestCourses = primary.filter((course) => course.badge === 'new');
+    expect(newestCourses.length).toBeGreaterThan(0);
+
+    await page.addInitScript(({ olderId, newerId }) => {
+      localStorage.setItem('kidslab.lang', 'zh');
+      localStorage.setItem(`kidslab.progress.${olderId}`, JSON.stringify({
+        status: 'played',
+        stage: 'started',
+        updatedAt: 1_000,
+      }));
+      localStorage.setItem(`kidslab.progress.${newerId}`, JSON.stringify({
+        status: 'completed',
+        stage: 'final',
+        updatedAt: 2_000,
+      }));
+    }, { olderId: older.id, newerId: newer.id });
+
+    await page.goto('/');
+    const cards = page.locator('#grid .card');
+    await expect(cards.first()).toBeVisible();
+
+    const openMenuIfNeeded = async () => {
+      if (await page.locator('#menuBtn').isVisible()) await page.locator('#menuBtn').click();
+    };
+
+    await openMenuIfNeeded();
+    await expect(page.locator('#catList button[data-cat="recent"] .cat__name')).toHaveText('最近探索的');
+    await expect(page.locator('#catList button[data-cat="newest"] .cat__name')).toHaveText('最新创建的');
+    await expect(page.locator('#catList button[data-cat="recent"] .cat__count')).toHaveText('2');
+    await page.locator('#catList button[data-cat="recent"]').click();
+
+    await expect.poll(async () => cards.count()).toBe(3); /* welcome 置顶 + 2 个探索过 */
+    await expect(cards.nth(1)).toHaveAttribute('href', newer.path);
+    await expect(cards.nth(2)).toHaveAttribute('href', older.path);
+
+    await openMenuIfNeeded();
+    await page.locator('#catList button[data-cat="newest"]').click();
+    await expect.poll(async () => {
+      const hrefs = await cards.evaluateAll((nodes) => nodes.map((node) => node.getAttribute('href')));
+      return hrefs.filter((href) => href !== 'courseware/welcome/index.html').length;
+    }).toBe(newestCourses.length);
+
+    const visibleNewest = await cards.evaluateAll((nodes) =>
+      nodes
+        .map((node) => node.getAttribute('href'))
+        .filter((href) => href && href !== 'courseware/welcome/index.html'));
+    const expectedNewest = [...newestCourses]
+      .sort((a, b) => (b.order ?? 0) - (a.order ?? 0) || a.id.localeCompare(b.id))
+      .map((course) => course.path);
+    expect(visibleNewest).toEqual(expectedNewest);
+
+    await page.locator('#langBtn').click();
+    await openMenuIfNeeded();
+    await expect(page.locator('#catList button[data-cat="recent"] .cat__name')).toHaveText('Recently explored');
+    await expect(page.locator('#catList button[data-cat="newest"] .cat__name')).toHaveText('Newly created');
   });
 
   test('knowledge star map searches, focuses results, switches layouts, and persists sound', async ({ page }) => {

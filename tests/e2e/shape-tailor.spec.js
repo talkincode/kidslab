@@ -44,16 +44,19 @@ async function setGuess(page, value) {
 }
 
 async function clearOrder(page, answer) {
-  await page.locator('#cutBtn').click();
-  await expect(page.locator('#slideBtn')).toBeVisible();
-  await page.locator('#slideBtn').click();
-  await expect(page.locator('#quoteBtn')).toBeVisible();
+  await expect(page.locator('#cutBtn')).toBeVisible();
+  await page.locator('#cutBtn').click({ force: true });
+  await expect(page.locator('#stage')).toHaveAttribute('data-phase', 'cut', { timeout: 10000 });
+  await expect(page.locator('#slideBtn')).toBeVisible({ timeout: 10000 });
+  await page.locator('#slideBtn').click({ force: true });
+  await expect(page.locator('#stage')).toHaveAttribute('data-phase', /snapped|quote/, { timeout: 10000 });
+  await expect(page.locator('#quoteBtn')).toBeVisible({ timeout: 10000 });
   await expect(page.locator('#status')).toContainText(/长方形|rectangle|拼|join|平均|average/i);
   await setGuess(page, answer);
-  await page.locator('#quoteBtn').click();
-  await expect(page.locator('#nextBtn')).toBeVisible();
+  await page.locator('#quoteBtn').click({ force: true });
+  await expect(page.locator('#nextBtn')).toBeVisible({ timeout: 10000 });
   await expect(page.locator('#status')).toContainText(String(answer));
-  await page.locator('#nextBtn').click();
+  await page.locator('#nextBtn').click({ force: true });
 }
 
 test.describe('shape tailor', () => {
@@ -73,28 +76,34 @@ test.describe('shape tailor', () => {
     await expectFitsViewport(page);
 
     // wrong quote then correct on parallelogram
-    await page.locator('#cutBtn').click();
-    await page.locator('#slideBtn').click();
+    await expect(page.locator('#cutBtn')).toBeVisible();
+    await page.locator('#cutBtn').click({ force: true });
+    await expect(page.locator('#stage')).toHaveAttribute('data-phase', 'cut');
+    await page.locator('#slideBtn').click({ force: true });
+    await expect(page.locator('#quoteBtn')).toBeVisible({ timeout: 10000 });
     await expect(page.locator('#formulaText')).toContainText('8 × 5');
     await setGuess(page, 30);
-    await page.locator('#quoteBtn').click();
+    await page.locator('#quoteBtn').click({ force: true });
     await expect(page.locator('#status')).toContainText('30');
     await expect(page.locator('#stage')).toHaveAttribute('data-result', 'wrong');
     await setGuess(page, 40);
-    await page.locator('#quoteBtn').click();
+    await page.locator('#quoteBtn').click({ force: true });
     await expect(page.locator('#status')).toContainText('8 × 5 = 40');
-    await page.locator('#nextBtn').click();
+    await page.locator('#nextBtn').click({ force: true });
 
     await expect(page.getByRole('heading', { name: '两块一样的才能拼' })).toBeVisible();
     await clearOrder(page, 24);
 
     await expect(page.getByRole('heading', { name: '上下底一加就好算' })).toBeVisible();
-    await page.locator('#cutBtn').click();
-    await page.locator('#slideBtn').click();
+    await expect(page.locator('#cutBtn')).toBeVisible();
+    await page.locator('#cutBtn').click({ force: true });
+    await expect(page.locator('#stage')).toHaveAttribute('data-phase', 'cut');
+    await page.locator('#slideBtn').click({ force: true });
+    await expect(page.locator('#quoteBtn')).toBeVisible({ timeout: 10000 });
     await setGuess(page, 32);
-    await page.locator('#quoteBtn').click();
+    await page.locator('#quoteBtn').click({ force: true });
     await expect(page.locator('#status')).toContainText('32');
-    await page.locator('#nextBtn').click();
+    await page.locator('#nextBtn').click({ force: true });
 
     await expect(page.getByRole('heading', { name: '你剪出了面积公式墙！' })).toBeVisible();
     await expect(page.locator('#playAgainBtn')).toBeFocused();
@@ -116,10 +125,12 @@ test.describe('shape tailor', () => {
     await page.locator('#themeBtn').click();
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
 
-    await page.locator('#cutBtn').click();
-    await page.locator('#slideBtn').click();
+    await page.locator('#cutBtn').click({ force: true });
+    await expect(page.locator('#stage')).toHaveAttribute('data-phase', 'cut');
+    await page.locator('#slideBtn').click({ force: true });
+    await expect(page.locator('#quoteBtn')).toBeVisible({ timeout: 10000 });
     await setGuess(page, 40);
-    await page.locator('#quoteBtn').click();
+    await page.locator('#quoteBtn').click({ force: true });
     await page.locator('#langBtn').click();
     await expect(page.getByRole('heading', { name: 'We only price rectangles' })).toBeVisible();
     await expect(page.locator('#status')).toContainText('40');

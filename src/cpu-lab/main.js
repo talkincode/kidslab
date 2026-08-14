@@ -878,6 +878,7 @@
 
       if (machine.halted) {
         fdePhase = 'done';
+        render();
         window.setTimeout(() => {
           setFeedback(t('fdeHalt'), 'success');
           completeStage(t('fdeDoneTitle'), t('fdeDoneText'), '⚙️✨');

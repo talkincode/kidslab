@@ -65,6 +65,8 @@
 
   const CATS = [
     { id: 'all',         icon: '✨', color: 'var(--accent)' },
+    { id: 'recent',      icon: '👀', color: 'var(--c-recent)', special: true },
+    { id: 'newest',      icon: '🆕', color: 'var(--c-newest)', special: true },
     { id: 'math',        icon: '🧮', color: 'var(--c-math)' },
     { id: 'physics',     icon: '🧲', color: 'var(--c-physics)' },
     { id: 'chemistry',   icon: '⚗️', color: 'var(--c-chemistry)' },
@@ -72,8 +74,9 @@
     { id: 'science',     icon: '🔬', color: 'var(--c-science)' },
     { id: 'logic',       icon: '🧩', color: 'var(--c-logic)' },
   ];
-  /* 小学只显示这些分类 */
-  const PRIMARY_CATS = new Set(['all', 'math', 'programming', 'science', 'logic']);
+  /* 小学只显示这些分类（含两个特殊快捷项） */
+  const PRIMARY_CATS = new Set(['all', 'recent', 'newest', 'math', 'programming', 'science', 'logic']);
+  const CAT_IDS = new Set(CATS.map((c) => c.id));
 
   const ACCENTS = [
     { id: 'candy', sw: '#ff5d8f' },
@@ -121,7 +124,8 @@
         g7: '七年级', g8: '八年级', g9: '九年级', g10: '高一', g11: '高二', g12: '高三',
       },
       cats: {
-        all: '全部', math: '数学', physics: '物理', chemistry: '化学',
+        all: '全部', recent: '最近探索的', newest: '最新创建的',
+        math: '数学', physics: '物理', chemistry: '化学',
         programming: '编程', science: '科学', logic: '逻辑', featured: '精选',
       },
     },
@@ -160,7 +164,8 @@
         g7: 'Grade 7', g8: 'Grade 8', g9: 'Grade 9', g10: 'Grade 10', g11: 'Grade 11', g12: 'Grade 12',
       },
       cats: {
-        all: 'All', math: 'Math', physics: 'Physics', chemistry: 'Chemistry',
+        all: 'All', recent: 'Recently explored', newest: 'Newly created',
+        math: 'Math', physics: 'Physics', chemistry: 'Chemistry',
         programming: 'Coding', science: 'Science', logic: 'Logic', featured: 'Featured',
       },
     },
@@ -182,7 +187,7 @@
   if (state.grade !== 'all' && !GRADE_IDS.has(state.grade)) state.grade = 'all';
   if (state.grade !== 'all' && !LEVEL_GRADE_IDS[state.level]?.has(state.grade)) state.grade = 'all';
   if (!['zh', 'en'].includes(state.lang)) state.lang = 'zh';
-  if (!CATS.some((c) => c.id === state.cat)) state.cat = 'all';
+  if (!CAT_IDS.has(state.cat)) state.cat = 'all';
   if (!ACCENTS.some((a) => a.id === state.accent)) state.accent = 'candy';
 
   const t = () => I18N[state.lang];
@@ -302,7 +307,7 @@
     el.gradeSec.hidden = false;
     el.gradeList.innerHTML = '';
 
-    const inCurrentScope = (c) => !c.pinned && inLevel(c) && (state.cat === 'all' || c.category === state.cat);
+    const inCurrentScope = (c) => !c.pinned && inLevel(c) && matchesCat(c, state.cat);
     const options = [
       { id: 'all', label: t().gradeAll, count: state.courses.filter(inCurrentScope).length },
       ...grades.map((g) => ({
@@ -329,10 +334,12 @@
     el.catList.innerHTML = '';
     const visible = state.level === 'primary' ? CATS.filter((c) => PRIMARY_CATS.has(c.id)) : CATS;
     for (const cat of visible) {
-      const n = state.courses.filter((c) => !c.pinned && inLevel(c) && inGrade(c) && (cat.id === 'all' || c.category === cat.id)).length;
+      const n = state.courses.filter((c) => !c.pinned && inLevel(c) && inGrade(c) && matchesCat(c, cat.id)).length;
       const li = document.createElement('li');
+      if (cat.special) li.className = 'cat-list__special';
       const b = document.createElement('button');
       b.type = 'button';
+      b.dataset.cat = cat.id;
       b.style.setProperty('--cat-c', cat.color);
       b.classList.toggle('is-active', state.cat === cat.id);
       b.innerHTML = `<span class="cat__dot">${cat.icon}</span><span class="cat__name"></span><span class="cat__count">${n}</span>`;
@@ -367,29 +374,66 @@
     return q.toLowerCase().trim().split(/\s+/).every((w) => hay.includes(w));
   }
 
+  function matchesCat(c, catId = state.cat) {
+    if (catId === 'all') return true;
+    if (catId === 'recent') return !!courseProgressMeta(c.id);
+    if (catId === 'newest') return c.badge === 'new';
+    return c.category === catId;
+  }
+
   function filtered() {
     const q = state.q;
-    return state.courses.filter((c) => {
+    const list = state.courses.filter((c) => {
       if (!matchQuery(c, q)) return false;
       if (c.pinned) return true; /* 置顶课件跳过侧栏筛选 */
       if (!inLevel(c)) return false;
       if (!inGrade(c)) return false;
-      if (state.cat !== 'all' && c.category !== state.cat) return false;
-      return true;
+      return matchesCat(c, state.cat);
     });
+
+    if (state.cat === 'recent') {
+      return sortPinnedFirst(list, (a, b) => {
+        const diff = courseProgressMeta(b.id).updatedAt - courseProgressMeta(a.id).updatedAt;
+        return diff || a.id.localeCompare(b.id);
+      });
+    }
+    if (state.cat === 'newest') {
+      return sortPinnedFirst(list, (a, b) => {
+        const diff = (b.order ?? 0) - (a.order ?? 0);
+        return diff || a.id.localeCompare(b.id);
+      });
+    }
+    return list;
+  }
+
+  function sortPinnedFirst(list, compare) {
+    const pinned = [];
+    const rest = [];
+    for (const c of list) (c.pinned ? pinned : rest).push(c);
+    rest.sort(compare);
+    return pinned.concat(rest);
   }
 
   function catColor(id) {
     return (CATS.find((c) => c.id === id) || {}).color || 'var(--c-featured)';
   }
 
-  function courseProgress(id) {
+  function courseProgressMeta(id) {
     try {
       const value = JSON.parse(local.get(`${PROGRESS_PREFIX}${id}`) || 'null');
-      return value && ['played', 'completed'].includes(value.status) ? value.status : '';
+      if (!value || !['played', 'completed'].includes(value.status)) return null;
+      const updatedAt = Number(value.updatedAt);
+      return {
+        status: value.status,
+        updatedAt: Number.isFinite(updatedAt) ? updatedAt : 0,
+      };
     } catch {
-      return '';
+      return null;
     }
+  }
+
+  function courseProgress(id) {
+    return courseProgressMeta(id)?.status || '';
   }
 
   function card(c, i) {

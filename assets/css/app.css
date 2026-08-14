@@ -18,6 +18,8 @@
 
   /* 学科签名色 category signatures */
   --c-featured: #ff9f1c;
+  --c-recent: #7c6af2;
+  --c-newest: #ff6b9d;
   --c-math: #ef476f;
   --c-physics: #118ab2;
   --c-chemistry: #9b5de5;
@@ -367,6 +369,12 @@ button { font-family: inherit; color: inherit; }
   border: 1.5px solid var(--line);
 }
 .cat-list button.is-active .cat__count { background: var(--cat-c, var(--accent)); color: #fff; border-color: transparent; }
+/* 特殊分类：最近探索 / 最新创建，与学科列表轻微分隔 */
+.cat-list__special + li:not(.cat-list__special) {
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1.5px dashed var(--line);
+}
 
 .sidebar__foot { margin-top: 14px; display: flex; flex-direction: column; gap: 10px; }
 .accent-row { display: flex; gap: 8px; padding: 0 4px; }

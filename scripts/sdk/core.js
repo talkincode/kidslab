@@ -164,7 +164,7 @@
       stage: stage || current.stage || '',
       updatedAt: Date.now(),
     };
-    if (current.status === next.status && current.stage === next.stage) return current;
+    /* 同一 stage 再访也刷新 updatedAt，供主站「最近探索的」排序 */
     storage.set(progressKey, JSON.stringify(next));
     return next;
   }

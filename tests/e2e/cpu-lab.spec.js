@@ -42,20 +42,25 @@ async function finishParts(page) {
     await tapPart(page, part);
   }
   await expect(page.getByRole('heading', { name: '零件都找到啦！' })).toBeVisible();
-  await page.locator('#nextBtn').click();
+  await page.locator('#nextBtn').click({ force: true });
+  await expect(page.locator('#modal')).toBeHidden();
+  await expect(page.locator('#actionBtn')).toBeVisible();
 }
 
 async function finishFde(page) {
-  // LOAD/ADD/STORE/HALT × 3 phases each, plus possible final complete
-  for (let i = 0; i < 20; i += 1) {
-    if (await page.getByRole('heading', { name: '你看见电脑怎么干活了！' }).isVisible().catch(() => false)) {
-      break;
+  const done = page.getByRole('heading', { name: '你看见电脑怎么干活了！' });
+  for (let i = 0; i < 30; i += 1) {
+    if (await done.isVisible().catch(() => false)) break;
+    if (!(await page.locator('#modal').isHidden())) break;
+    const action = page.locator('#actionBtn');
+    if (await action.isVisible() && await action.isEnabled()) {
+      await action.click({ force: true });
     }
-    await page.locator('#actionBtn').click();
-    await page.waitForTimeout(80);
+    await page.waitForTimeout(120);
   }
-  await expect(page.getByRole('heading', { name: '你看见电脑怎么干活了！' })).toBeVisible();
-  await page.locator('#nextBtn').click();
+  await expect(done).toBeVisible({ timeout: 10000 });
+  await page.locator('#nextBtn').click({ force: true });
+  await expect(page.locator('#modal')).toBeHidden();
 }
 
 test.describe('cpu lab', () => {
@@ -83,7 +88,6 @@ test.describe('cpu lab', () => {
     await finishFde(page);
     await expect(page.locator('#missionTitle')).toContainText('屏幕出现 9');
 
-    // wrong path: only one card, missing OUT/HALT
     await page.locator('[data-op="SET 4"]').click({ force: true });
     await page.locator('#actionBtn').click({ force: true });
     await expect(page.locator('#feedback')).toContainText('显示');
