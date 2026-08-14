@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN" data-theme="light">
+<html lang="zh-CN" data-theme="dark">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -15,78 +15,45 @@
       <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭音效" aria-pressed="false">🔊</button>
       <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
       <button class="pill" id="langBtn" type="button">EN</button>
+      <button class="pill pill--icon" id="resetBtn" type="button" aria-label="重新开始">↻</button>
     </div>
   </header>
 
-  <main class="wrap">
-    <section class="brief">
-      <div>
-        <p class="eyebrow" data-t="eyebrow">电脑小工厂</p>
-        <p class="tip" id="tip">电脑像一座小工厂。听上面的问题，去点对的零件。</p>
+  <main class="lab">
+    <section class="mission" aria-labelledby="missionTitle">
+      <div class="mission__meta">
+        <nav class="dots" id="levelDots" aria-label="关卡"></nav>
+        <strong class="mission__chip" id="phaseChip">1 / 3</strong>
       </div>
-      <div class="range-chip">
-        <span data-t="labLabel">第几关</span>
-        <strong id="phaseChip">1 / 3</strong>
-      </div>
+      <p class="mission__label" id="watchLabel">第 1 关</p>
+      <h2 class="mission__title" id="missionTitle">数字和命令放在哪里？</h2>
+      <p class="mission__cue" id="missionCue">点正确的零件</p>
     </section>
 
-    <nav class="level-strip" id="levelStrip" aria-label="关卡"></nav>
+    <section class="arena" id="arena" aria-live="polite"></section>
 
-    <section class="game-shell">
-      <section class="stage-card" aria-labelledby="missionTitle">
-        <div class="card-heading">
-          <div>
-            <p class="section-label" id="watchLabel">第 1 关 · 找零件</p>
-            <h2 id="missionTitle">东西都放在哪里？点那个像货架的。</h2>
-          </div>
-          <button class="round-button" id="hintBtn" type="button" aria-label="提示">💡</button>
-        </div>
-
-        <div class="machine" id="machine" aria-live="polite"></div>
-
-        <div class="feedback" id="feedback" role="status" aria-live="polite">
-          问题：东西都放在哪？去点像货架的那个。
-        </div>
-      </section>
-
-      <aside class="control-card">
-        <div class="card-heading">
-          <div>
-            <p class="section-label" data-t="controlLabel">怎么玩</p>
-            <h2 id="controlTitle">听问题再点零件</h2>
-          </div>
-          <button class="round-button round-button--reset" id="resetBtn" type="button" aria-label="重新开始">↻</button>
-        </div>
-
-        <div class="control-workspace" id="controlWorkspace"></div>
-
-        <div class="meter-board" id="meterBoard" hidden>
-          <div class="meter"><span data-t="pcLabel">书签</span><strong id="pcReadout">0</strong></div>
-          <div class="meter"><span data-t="irLabel">正在做</span><code id="irReadout">—</code></div>
-          <div class="meter"><span data-t="aLabel">草稿纸</span><strong id="aReadout">0</strong></div>
-          <div class="meter"><span data-t="outLabel">屏幕</span><strong id="outReadout">—</strong></div>
-        </div>
-
-        <div class="action-row">
-          <button class="ghost-button" id="secondaryBtn" type="button" hidden>
-            <span id="secondaryLabel">全部清空</span>
-          </button>
-          <button class="primary-button" id="actionBtn" type="button" hidden>
-            <span aria-hidden="true">👉</span>
-            <span id="actionLabel">下一步</span>
-          </button>
-        </div>
-      </aside>
+    <section class="dock">
+      <p class="dock__prompt" id="prompt" role="status">👉 点零件回答</p>
+      <div class="dock__row" id="dockRow">
+        <button class="btn btn--primary" id="actionBtn" type="button" hidden>
+          <span aria-hidden="true">👉</span>
+          <span id="actionLabel">下一步</span>
+        </button>
+      </div>
+      <div class="choice-row" id="choiceRow" hidden></div>
     </section>
   </main>
 
+  <div class="bubble" id="hintBubble" hidden role="status">💡</div>
+  <div class="fx-layer" id="fxLayer" aria-hidden="true"></div>
+
   <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
-    <section class="modal-card">
+    <section class="modal-card" id="modalCard">
       <div class="modal-magic" id="modalMagic" aria-hidden="true">🖥️✨</div>
       <p class="modal-kicker" data-t="watchPassed">太棒了</p>
       <h2 id="modalTitle">零件都找到啦！</h2>
-      <p id="modalText"></p>
-      <button class="primary-button" id="nextBtn" type="button">下一关</button>
+      <div class="modal-body" id="modalBody"></div>
+      <button class="btn btn--primary" id="nextBtn" type="button">下一关</button>
     </section>
   </div>
 

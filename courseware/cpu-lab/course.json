@@ -5,8 +5,8 @@
     "en": "Computer Principles Lab"
   },
   "description": {
-    "zh": "电脑像小工厂：先找货架、大脑、送信小路，再一步步看它怎么拿命令、看懂、去做，最后自己点卡片让屏幕算出 9。",
-    "en": "A computer is a tiny factory: find the shelves, brain, and message path; watch it get an order, understand, and do it; then tap cards so the screen shows 9."
+    "zh": "少文字、强动画：点零件认识电脑，看数据在 CPU 与内存之间飞来飞去，最后自己当 CPU 算出 7+5。",
+    "en": "Less text, more motion: tap parts, watch data fly between CPU and memory, then be the CPU to make 7+5."
   },
   "category": "programming",
   "levels": ["primary", "junior"],

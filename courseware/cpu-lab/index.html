@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="zh-CN" data-theme="light">
+<html lang="zh-CN" data-theme="dark">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>🖥️ 电脑原理实验室 · KidsLab</title>
-  <link rel="stylesheet" href="style.css?v=d5e0bdc0" />
+  <link rel="stylesheet" href="style.css?v=83e6b491" />
   <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
 <script>(()=>{"use strict";const g=window,r=g.cool||{};if(r.sdkVersion)return;try{document.documentElement.style.touchAction="manipulation"}catch{}const w="cpu-lab",b=location.pathname.split("/").filter(Boolean),E=b.at(-1)||"",A=E.includes(".")?b.at(-2):E,d=w.startsWith("__")?A:w,l={get(t,n=null){try{const e=localStorage.getItem(t);return e===null?n:e}catch{return n}},set(t,n){try{return localStorage.setItem(t,n),!0}catch{return!1}},remove(t){try{return localStorage.removeItem(t),!0}catch{return!1}}},f=new Set,S=new Set(["zh","en"]),I=new Set(["light","dark"]),C=(navigator.language||"").toLowerCase().startsWith("zh")?"zh":"en";let m="light";try{m=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch{}let o=l.get("kidslab.lang",C),s=l.get("kidslab.theme",m);S.has(o)||(o=C),I.has(s)||(s=m);function p(){document.documentElement.lang=o==="zh"?"zh-CN":"en",document.documentElement.dataset.theme=s}function T(t,n){const e={kind:t,value:n};for(const c of[...f])c(e);g.dispatchEvent(new CustomEvent(`${t}change`,{detail:{[t]:n}}))}const z={get lang(){return o},get theme(){return s},setLang(t){if(!S.has(t))throw new RangeError(`Unsupported language: ${t}`);t!==o&&(o=t,l.set("kidslab.lang",t),p(),T("lang",t))},setTheme(t){if(!I.has(t))throw new RangeError(`Unsupported theme: ${t}`);t!==s&&(s=t,l.set("kidslab.theme",t),p(),T("theme",t))},toggleLang(){this.setLang(o==="zh"?"en":"zh")},toggleTheme(){this.setTheme(s==="light"?"dark":"light")},subscribe(t){if(typeof t!="function")throw new TypeError("Preference listener must be a function");return f.add(t),()=>f.delete(t)}};function D(t,n={}){if(!t||typeof t!="object")throw new TypeError("Messages must be an object");const e=n.root||document;if(!e.querySelectorAll&&!e.matches)throw new TypeError("i18n root must be a Document or Element");function c(a,...h){const u=t[o]?.[a]??t.zh?.[a]??t.en?.[a];return typeof u=="function"?u(...h):u??a}function y(a="lang"){const h=[];e.matches?.("[data-t]")&&h.push(e),e.querySelectorAll&&h.push(...e.querySelectorAll("[data-t]"));for(const u of h){const L=c(u.dataset.t);typeof L=="string"&&(u.textContent=L)}n.onChange?.({kind:a,lang:o,theme:s,t:c})}const $=z.subscribe(({kind:a})=>{a==="lang"?y("lang"):n.onChange?.({kind:a,lang:o,theme:s,t:c})});return y("init"),{t:c,render:y,destroy:$}}const i=d?`kidslab.progress.${d}`:"";function _(){if(!i)return null;try{const t=JSON.parse(l.get(i,"null"));return!t||!["played","completed"].includes(t.status)?null:t}catch{return null}}function k(t,n){if(!i)return null;const e=_()||{},c={status:e.status==="completed"?"completed":t,stage:n||e.stage||"",updatedAt:Date.now()};return l.set(i,JSON.stringify(c)),c}const P={get:_,clear(){return i?l.remove(i):!1}};r.sdkVersion=2,r.courseId=d,r.storage=l,r.preferences=z,r.bindI18n=D,r.progress=P,typeof r.track!="function"&&(r.track=()=>{}),r.stage=t=>{typeof t!="string"||!t||k("played",t.slice(0,48))},r.complete=()=>k("completed"),g.cool=r,p()})();
 </script>
@@ -18,81 +18,48 @@
       <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭音效" aria-pressed="false">🔊</button>
       <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
       <button class="pill" id="langBtn" type="button">EN</button>
+      <button class="pill pill--icon" id="resetBtn" type="button" aria-label="重新开始">↻</button>
     </div>
   </header>
 
-  <main class="wrap">
-    <section class="brief">
-      <div>
-        <p class="eyebrow" data-t="eyebrow">电脑小工厂</p>
-        <p class="tip" id="tip">电脑像一座小工厂。听上面的问题，去点对的零件。</p>
+  <main class="lab">
+    <section class="mission" aria-labelledby="missionTitle">
+      <div class="mission__meta">
+        <nav class="dots" id="levelDots" aria-label="关卡"></nav>
+        <strong class="mission__chip" id="phaseChip">1 / 3</strong>
       </div>
-      <div class="range-chip">
-        <span data-t="labLabel">第几关</span>
-        <strong id="phaseChip">1 / 3</strong>
-      </div>
+      <p class="mission__label" id="watchLabel">第 1 关</p>
+      <h2 class="mission__title" id="missionTitle">数字和命令放在哪里？</h2>
+      <p class="mission__cue" id="missionCue">点正确的零件</p>
     </section>
 
-    <nav class="level-strip" id="levelStrip" aria-label="关卡"></nav>
+    <section class="arena" id="arena" aria-live="polite"></section>
 
-    <section class="game-shell">
-      <section class="stage-card" aria-labelledby="missionTitle">
-        <div class="card-heading">
-          <div>
-            <p class="section-label" id="watchLabel">第 1 关 · 找零件</p>
-            <h2 id="missionTitle">东西都放在哪里？点那个像货架的。</h2>
-          </div>
-          <button class="round-button" id="hintBtn" type="button" aria-label="提示">💡</button>
-        </div>
-
-        <div class="machine" id="machine" aria-live="polite"></div>
-
-        <div class="feedback" id="feedback" role="status" aria-live="polite">
-          问题：东西都放在哪？去点像货架的那个。
-        </div>
-      </section>
-
-      <aside class="control-card">
-        <div class="card-heading">
-          <div>
-            <p class="section-label" data-t="controlLabel">怎么玩</p>
-            <h2 id="controlTitle">听问题再点零件</h2>
-          </div>
-          <button class="round-button round-button--reset" id="resetBtn" type="button" aria-label="重新开始">↻</button>
-        </div>
-
-        <div class="control-workspace" id="controlWorkspace"></div>
-
-        <div class="meter-board" id="meterBoard" hidden>
-          <div class="meter"><span data-t="pcLabel">书签</span><strong id="pcReadout">0</strong></div>
-          <div class="meter"><span data-t="irLabel">正在做</span><code id="irReadout">—</code></div>
-          <div class="meter"><span data-t="aLabel">草稿纸</span><strong id="aReadout">0</strong></div>
-          <div class="meter"><span data-t="outLabel">屏幕</span><strong id="outReadout">—</strong></div>
-        </div>
-
-        <div class="action-row">
-          <button class="ghost-button" id="secondaryBtn" type="button" hidden>
-            <span id="secondaryLabel">全部清空</span>
-          </button>
-          <button class="primary-button" id="actionBtn" type="button" hidden>
-            <span aria-hidden="true">👉</span>
-            <span id="actionLabel">下一步</span>
-          </button>
-        </div>
-      </aside>
+    <section class="dock">
+      <p class="dock__prompt" id="prompt" role="status">👉 点零件回答</p>
+      <div class="dock__row" id="dockRow">
+        <button class="btn btn--primary" id="actionBtn" type="button" hidden>
+          <span aria-hidden="true">👉</span>
+          <span id="actionLabel">下一步</span>
+        </button>
+      </div>
+      <div class="choice-row" id="choiceRow" hidden></div>
     </section>
   </main>
 
+  <div class="bubble" id="hintBubble" hidden role="status">💡</div>
+  <div class="fx-layer" id="fxLayer" aria-hidden="true"></div>
+
   <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
-    <section class="modal-card">
+    <section class="modal-card" id="modalCard">
       <div class="modal-magic" id="modalMagic" aria-hidden="true">🖥️✨</div>
       <p class="modal-kicker" data-t="watchPassed">太棒了</p>
       <h2 id="modalTitle">零件都找到啦！</h2>
-      <p id="modalText"></p>
-      <button class="primary-button" id="nextBtn" type="button">下一关</button>
+      <div class="modal-body" id="modalBody"></div>
+      <button class="btn btn--primary" id="nextBtn" type="button">下一关</button>
     </section>
   </div>
 
-  <script src="main.js?v=3841b627"></script>
+  <script src="main.js?v=81846433"></script>
 </body>
 </html>
