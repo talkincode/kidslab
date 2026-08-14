@@ -1,0 +1,18 @@
+{
+  "id": "bet-party",
+  "title": {
+    "zh": "打赌派对",
+    "en": "The Betting Party"
+  },
+  "description": {
+    "zh": "派对魔法师专赌「必然」：先拼命给客人排不同生日月份想赢他，再接过魔法棒，用抽屉原理开出稳赢的袜子与同名赌局。",
+    "en": "A party wizard only bets on sure things. First try to beat him by seating guests with different birth months—then take the wand and open sure-win sock and name bets with the pigeonhole principle."
+  },
+  "category": "logic",
+  "levels": ["primary", "junior"],
+  "grades": ["g5", "g6"],
+  "tags": ["推理", "策略", "益智游戏"],
+  "icon": "🎈",
+  "order": 81,
+  "badge": "new"
+}

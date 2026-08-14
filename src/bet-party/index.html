@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>打赌派对 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="chip chip--back" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1><span aria-hidden="true">🎈</span> <span data-t="title">打赌派对</span></h1>
+    <div class="topbar__actions">
+      <button class="chip chip--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="chip chip--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="chip chip--lang" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="course" id="course">
+    <section class="brief card">
+      <div class="brief__number"><small>BET</small><strong id="missionNumber">01</strong></div>
+      <div class="brief__copy">
+        <p id="missionKicker">挑战魔法师 · 生日月份</p>
+        <h2 id="missionTitle">排开 13 位客人，想办法不让两人同月？</h2>
+        <p id="missionText">点月份抽屉给下一位客人安座位。尽量让每个人月份都不同——魔法师赌你会失败。</p>
+      </div>
+      <nav class="mission-nav" id="missionNav" aria-label="赌局进度"></nav>
+    </section>
+
+    <section class="workspace">
+      <section class="stage card">
+        <div class="hud">
+          <p id="status" role="status" aria-live="polite">点「请来下一位」，再点一个月份抽屉。</p>
+          <div class="meters" aria-label="赌局计数">
+            <div class="meter">
+              <span data-t="meterDrawers">抽屉</span>
+              <strong id="drawerCount">12</strong>
+            </div>
+            <div class="meter">
+              <span data-t="meterPigeons">鸽子</span>
+              <strong id="pigeonCount">0</strong>
+            </div>
+            <div class="meter meter--magic">
+              <span data-t="meterSure">稳赢线</span>
+              <strong id="sureLine">13</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="wizard-row">
+          <div class="wizard" id="wizard" data-mood="smug" aria-hidden="true">
+            <div class="wizard__hat">🪄</div>
+            <div class="wizard__face">🧙</div>
+            <b id="wizardMood">稳赢脸</b>
+          </div>
+          <div class="formula card-soft" id="formulaBox">
+            <span class="formula__label" data-t="formulaLabel">开赌口诀</span>
+            <p id="formulaText">抽屉 12 个 · 想避开成对 · 第 13 只鸽子无处可藏</p>
+          </div>
+        </div>
+
+        <div class="drawers" id="drawers" role="list" aria-label="抽屉区"></div>
+
+        <div class="pending" id="pending" hidden>
+          <span class="pending__guest" id="pendingGuest" aria-hidden="true">🧑</span>
+          <p id="pendingText">下一位客人等你安排月份</p>
+        </div>
+      </section>
+
+      <aside class="desk card">
+        <div class="desk__head">
+          <div>
+            <p id="deskKicker">PARTY DESK / 派对赌台</p>
+            <strong id="deskTitle">安排座位 · 看清必然</strong>
+          </div>
+          <span aria-hidden="true">🎉</span>
+        </div>
+
+        <div class="rule-card">
+          <span aria-hidden="true">📜</span>
+          <p id="ruleText">最坏情况：每个抽屉先尽量只放 1 只。再多一只，就一定有抽屉挤了两人。</p>
+        </div>
+
+        <div class="insight">
+          <span id="lessonIcon" aria-hidden="true">📦</span>
+          <p id="lessonText">抽屉原理：n 个抽屉放 n+1 只鸽子，至少有一格 ≥2。</p>
+        </div>
+
+        <div class="bet-form" id="betForm" hidden>
+          <label class="field">
+            <span data-t="fieldDrawers">几个抽屉？</span>
+            <input id="inputDrawers" type="number" min="1" max="30" step="1" value="3" inputmode="numeric" />
+          </label>
+          <label class="field">
+            <span data-t="fieldNeed">保证几个一样？</span>
+            <input id="inputNeed" type="number" min="2" max="6" step="1" value="2" inputmode="numeric" />
+          </label>
+          <label class="field">
+            <span data-t="fieldPigeons">要几只鸽子才稳？</span>
+            <input id="inputPigeons" type="number" min="2" max="80" step="1" value="4" inputmode="numeric" />
+          </label>
+          <button class="primary" id="openBetBtn" type="button"><span data-t="openBet">说出稳赢数 · 开赌</span> ✨</button>
+        </div>
+
+        <div class="desk__actions">
+          <button class="primary" id="inviteBtn" type="button"><span data-t="invite">请来下一位</span> 🚪</button>
+          <button class="secondary" id="hintBtn" type="button"><span aria-hidden="true">💡</span> <span data-t="hint">轻提示</span></button>
+          <button class="secondary" id="resetBtn" type="button"><span data-t="resetJob">重开本局</span></button>
+          <button class="primary" id="nextBtn" type="button" hidden><span data-t="next">下一场赌局</span> →</button>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal" id="completeModal" hidden>
+    <section class="modal__card" role="dialog" aria-modal="true" aria-labelledby="completeTitle">
+      <div class="medal" aria-hidden="true">🏆</div>
+      <p data-t="finalKicker">派对名人堂 · 必然赌神</p>
+      <h2 id="completeTitle" data-t="finalTitle">数学的「必然」比运气硬！</h2>
+      <p data-t="finalText">最坏情况排到尽头，多出的那一只鸽子无处可放——这就是抽屉原理。</p>
+      <button class="primary" id="playAgainBtn" type="button" data-t="playAgain">再办一场派对</button>
+    </section>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

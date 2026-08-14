@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-14T07:36:52.694Z",
+  "generatedAt": "2026-08-14T15:25:23.607Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -4320,6 +4320,61 @@
         "模拟"
       ],
       "path": "courseware/ice-maker-lab/index.html"
+    },
+    {
+      "id": "bet-party",
+      "title": {
+        "zh": "打赌派对",
+        "en": "The Betting Party"
+      },
+      "description": {
+        "zh": "派对魔法师专赌「必然」：先拼命给客人排不同生日月份想赢他，再接过魔法棒，用抽屉原理开出稳赢的袜子与同名赌局。",
+        "en": "A party wizard only bets on sure things. First try to beat him by seating guests with different birth months—then take the wand and open sure-win sock and name bets with the pigeonhole principle."
+      },
+      "category": "logic",
+      "levels": [
+        "primary",
+        "junior"
+      ],
+      "grades": [
+        "g5",
+        "g6"
+      ],
+      "tags": [
+        "推理",
+        "策略",
+        "益智游戏"
+      ],
+      "icon": "🎈",
+      "order": 81,
+      "badge": "new",
+      "keywords": [
+        "Reasoning",
+        "reasoning",
+        "演绎推理",
+        "deduction",
+        "排除法",
+        "elimination",
+        "逻辑网格",
+        "logic grid",
+        "逆向推理",
+        "backward reasoning",
+        "证据",
+        "evidence",
+        "inference",
+        "Strategy",
+        "strategy",
+        "博弈策略",
+        "game theory",
+        "尼姆游戏",
+        "nim",
+        "Puzzle Game",
+        "puzzle",
+        "game",
+        "益智",
+        "游戏"
+      ],
+      "path": "courseware/bet-party/index.html"
     },
     {
       "id": "cpu-lab",
