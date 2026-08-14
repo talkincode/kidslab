@@ -224,14 +224,14 @@ a:focus-visible {
 .arena {
   min-height: 0;
   position: relative;
-  overflow: hidden;
+  overflow: auto;
   border: 2px solid var(--line);
   border-radius: 20px;
   background: var(--stage-bg);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 6%, transparent);
   display: grid;
   place-items: center;
-  padding: 10px;
+  padding: 12px;
 }
 
 .stage {
@@ -242,6 +242,19 @@ a:focus-visible {
   gap: 10px;
   align-content: center;
   justify-items: center;
+}
+
+.stage--play {
+  width: min(960px, 100%);
+  height: auto;
+  min-height: min(100%, 100%);
+  max-height: none;
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: 8px;
+  align-content: center;
+  justify-items: stretch;
+  margin: auto 0;
 }
 
 /* layout:
@@ -289,6 +302,7 @@ a:focus-visible {
   position: relative;
   width: 100%;
   min-height: 88px;
+  min-width: 0;
   padding: 12px 10px;
   border: 2px solid var(--line);
   border-radius: 18px;
@@ -297,8 +311,10 @@ a:focus-visible {
   display: grid;
   gap: 6px;
   justify-items: center;
+  align-content: start;
   text-align: center;
   cursor: default;
+  overflow: hidden;
   transition: transform 0.15s, box-shadow 0.15s, filter 0.2s, opacity 0.25s;
 }
 
@@ -378,15 +394,23 @@ button.device:active {
 
 .reg {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto minmax(0, 1fr);
   gap: 8px;
   align-items: center;
-  min-height: 34px;
-  padding: 6px 8px;
+  min-height: 32px;
+  padding: 5px 8px;
   border-radius: 12px;
   border: 1.5px solid color-mix(in srgb, var(--line) 50%, transparent);
   background: color-mix(in srgb, var(--card) 70%, transparent);
   text-align: left;
+  min-width: 0;
+}
+
+.reg code, .reg strong {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .reg span {
@@ -413,22 +437,39 @@ button.device:active {
 .reg.is-hot span { color: var(--ink-on-bright); }
 
 .decode-flash {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   margin-top: 2px;
-  min-height: 28px;
+  min-height: 34px;
   padding: 6px 8px;
   border-radius: 10px;
   background: color-mix(in srgb, var(--cpu) 40%, transparent);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 850;
-  line-height: 1.25;
+  line-height: 1.3;
   opacity: 0;
-  transform: scale(0.94);
-  transition: opacity 0.2s, transform 0.2s;
+  transform: none;
+  transition: opacity 0.2s, background-color 0.2s;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  word-break: break-word;
 }
 
 .decode-flash.is-on {
   opacity: 1;
-  transform: scale(1);
+  background: color-mix(in srgb, var(--cpu) 55%, var(--card));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cpu) 65%, transparent);
+}
+
+.decode-flash:not(.is-on) {
+  min-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 0;
+  border: 0;
 }
 
 /* memory cells */
@@ -574,29 +615,72 @@ button.device:active {
 
 .quiz-tile { position: relative; }
 
-/* play stage focus: CPU + MEM only */
+/* play stage focus: CPU + MEM + compact output */
+.play-board {
+  min-height: 0;
+  width: 100%;
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: 10px;
+  align-content: center;
+  justify-items: stretch;
+}
+
 .play-grid {
-  width: min(860px, 100%);
-  height: 100%;
+  width: 100%;
   min-height: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) auto minmax(0, 1fr);
-  gap: 10px;
+  grid-template-columns: minmax(0, 1.1fr) auto minmax(0, 1fr);
+  gap: 12px;
   align-items: stretch;
 }
 
-.play-grid .device { height: 100%; align-content: start; }
+.play-grid .device {
+  height: auto;
+  max-height: none;
+  min-height: 0;
+  align-content: start;
+  overflow: hidden;
+}
+
+.play-grid .device__body {
+  min-width: 0;
+}
+
 .play-link {
   align-self: center;
   font-size: 28px;
   font-weight: 900;
   color: var(--ink-soft);
+  line-height: 1;
+  user-select: none;
 }
 
 .play-link.is-hot {
   color: var(--data);
   text-shadow: 0 0 14px var(--glow-mem);
   animation: pulse 0.7s ease infinite;
+}
+
+.play-out {
+  width: min(220px, 100%);
+  justify-self: center;
+  align-self: end;
+}
+
+.play-out .device {
+  min-height: 0;
+  padding: 10px 12px;
+  gap: 4px;
+}
+
+.play-out .device__icon {
+  font-size: 28px;
+}
+
+.play-out .io-value {
+  min-height: 40px;
+  font-size: 26px;
 }
 
 .phase-bar {
@@ -948,13 +1032,89 @@ button.device:active {
   .slot-out { grid-column: 2; grid-row: 4; max-width: none; }
   .slot-arr-l, .slot-arr-r { display: none; }
 
+  /* Keep MEM | CPU side-by-side on phones to save vertical space */
   .play-grid {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
+    grid-template-columns: minmax(0, 1.05fr) auto minmax(0, 1fr);
+    grid-template-rows: auto;
+    gap: 6px;
   }
   .play-link {
-    transform: rotate(90deg);
+    transform: none;
+    font-size: 18px;
+    justify-self: center;
+  }
+  .play-out {
+    width: min(160px, 70%);
+  }
+  .stage--play {
+    gap: 4px;
+    height: 100%;
+    min-height: 0;
+    align-content: stretch;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  .play-board {
+    min-height: 0;
+    height: 100%;
+    align-content: stretch;
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: 6px;
+  }
+  .play-grid {
+    min-height: 0;
+    align-items: stretch;
+  }
+  .play-grid .device {
+    max-height: 100%;
+    height: 100%;
+    min-height: 0;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 8px 6px;
+    gap: 4px;
+  }
+  .device__icon {
     font-size: 22px;
+  }
+  .device__name {
+    font-size: 14px;
+  }
+  .mem-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 3px;
+  }
+  .cell {
+    min-height: 30px;
+    padding: 3px;
+  }
+  .cell code { font-size: 11px; }
+  .reg {
+    min-height: 28px;
+    padding: 3px 6px;
+  }
+  .reg span { font-size: 12px; }
+  .reg strong, .reg code { font-size: 14px; }
+  .decode-flash {
+    min-height: 28px;
+    font-size: 12px;
+    padding: 4px 6px;
+  }
+  .play-out .device {
+    overflow: hidden;
+    padding: 6px 8px;
+  }
+  .play-out .device__icon { font-size: 20px; }
+  .play-out .device__name { font-size: 13px; }
+  .play-out .io-value {
+    min-height: 30px;
+    font-size: 20px;
+    padding: 2px 8px;
+  }
+  .phase-bar { gap: 4px; margin-bottom: 0; }
+  .phase-pill {
+    min-height: 28px;
+    font-size: 12px;
+    padding: 3px 8px;
   }
 
   .mem-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
@@ -962,6 +1122,8 @@ button.device:active {
 }
 
 @media (max-width: 520px) {
+  .bar { height: 48px; }
+  .lab { height: calc(100dvh - 48px); gap: 6px; padding-bottom: 8px; }
   .bar__title { max-width: 34vw; font-size: 15px; }
   .quiz-grid { gap: 8px; }
   .quiz-tile { min-height: 100px; padding: 14px 8px; }
@@ -969,10 +1131,13 @@ button.device:active {
   .quiz-tile .device__name { font-size: 17px; }
   .choice-row { grid-template-columns: 1fr; }
   .choice { min-height: 48px; }
-  .mission { padding: 8px 10px; }
-  .mission__title { font-size: 18px; }
-  .dock { padding: 8px 10px; }
-  .mem-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .mission { padding: 6px 10px; }
+  .mission__title { font-size: 17px; }
+  .mission__label { font-size: 12px; }
+  .mission__cue { display: none; }
+  .dock { padding: 8px 10px; gap: 6px; }
+  .dock__prompt { font-size: 15px; min-height: 18px; }
+  .btn { min-height: 46px; font-size: 16px; padding: 10px 16px; }
   .btn--primary { width: 100%; }
 }
 
@@ -982,4 +1147,8 @@ button.device:active {
   .quiz-tile { min-height: 88px; }
   .arena { padding: 6px; }
   .lab { gap: 6px; }
+  .device__icon { font-size: 24px; }
+  .play-out .device__icon { font-size: 22px; }
+  .play-out .io-value { min-height: 34px; font-size: 22px; }
+  .phase-pill { min-height: 28px; font-size: 13px; padding: 4px 10px; }
 }

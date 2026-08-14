@@ -64,9 +64,9 @@
       regIr: '正在做',
       regA: '小本本',
       decodeMap: {
-        'LOAD 4': '去第 4 格拿数字',
-        'ADD 5': '把第 5 格加进来',
-        'STORE 6': '把答案存回第 6 格',
+        'LOAD 4': '去第 4 格拿数',
+        'ADD 5': '加上第 5 格',
+        'STORE 6': '存回第 6 格',
         HALT: '做完了，停下',
       },
       opKid: {
@@ -172,9 +172,9 @@
       regIr: 'Doing',
       regA: 'Notebook',
       decodeMap: {
-        'LOAD 4': 'Get the number in box 4',
-        'ADD 5': 'Add the number in box 5',
-        'STORE 6': 'Save the answer in box 6',
+        'LOAD 4': 'Get box 4',
+        'ADD 5': 'Add box 5',
+        'STORE 6': 'Save to box 6',
         HALT: 'Done — stop',
       },
       opKid: {
@@ -575,29 +575,33 @@
     const linkHot = machine.linkHot ? 'is-hot' : '';
     const outVal = machine.out === null || machine.out === undefined ? t('outDash') : machine.out;
     return `
-      <div class="stage">
+      <div class="stage stage--play">
         <div class="phase-bar" aria-hidden="true">
           <span class="phase-pill ${phase === 'fetch' ? 'is-active' : ''} ${['decode', 'execute', 'done'].includes(phase) || fdeInstrIndex > 0 ? 'is-done' : ''}">${t('phaseFetch')}</span>
           <span class="phase-pill ${phase === 'decode' ? 'is-active' : ''} ${['execute', 'done'].includes(phase) ? 'is-done' : ''}">${t('phaseDecode')}</span>
           <span class="phase-pill ${phase === 'execute' ? 'is-active' : ''} ${phase === 'done' ? 'is-done' : ''}">${t('phaseExecute')}</span>
         </div>
-        <div class="play-grid">
-          <div class="${deviceClass('mem')}" data-part="mem">
-            <span class="device__icon" aria-hidden="true">${icons.mem}</span>
-            <span class="device__name">${names.mem}</span>
-            <div class="device__body">${renderMemGrid()}</div>
+        <div class="play-board">
+          <div class="play-grid">
+            <div class="${deviceClass('mem')}" data-part="mem">
+              <span class="device__icon" aria-hidden="true">${icons.mem}</span>
+              <span class="device__name">${names.mem}</span>
+              <div class="device__body">${renderMemGrid()}</div>
+            </div>
+            <div class="play-link ${linkHot}" aria-hidden="true">↔</div>
+            <div class="${deviceClass('cpu')}" data-part="cpu">
+              <span class="device__icon" aria-hidden="true">${icons.cpu}</span>
+              <span class="device__name">${names.cpu}</span>
+              <div class="device__body">${renderCpuBody()}</div>
+            </div>
           </div>
-          <div class="play-link ${linkHot}" aria-hidden="true">↔</div>
-          <div class="${deviceClass('cpu')}" data-part="cpu">
-            <span class="device__icon" aria-hidden="true">${icons.cpu}</span>
-            <span class="device__name">${names.cpu}</span>
-            <div class="device__body">${renderCpuBody()}</div>
+          <div class="play-out">
+            <div class="${deviceClass('output')}" data-part="output">
+              <span class="device__icon" aria-hidden="true">${icons.output}</span>
+              <span class="device__name">${names.output}</span>
+              <div class="io-value ${machine.outLit ? 'is-lit' : ''}" data-io="out">${outVal}</div>
+            </div>
           </div>
-        </div>
-        <div class="${deviceClass('output')}" data-part="output" style="width:min(220px,100%);margin-top:4px">
-          <span class="device__icon" aria-hidden="true">${icons.output}</span>
-          <span class="device__name">${names.output}</span>
-          <div class="io-value ${machine.outLit ? 'is-lit' : ''}" data-io="out">${outVal}</div>
         </div>
       </div>`;
   }
