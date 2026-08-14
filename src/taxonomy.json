@@ -52,6 +52,7 @@
     "营养": { "en": "Nutrition", "kind": "knowledge", "aliases": ["nutrition"] },
     "观察": { "en": "Observation", "kind": "knowledge", "aliases": ["observation", "五感", "five senses", "特征"] },
     "编程启蒙": { "en": "Coding Basics", "kind": "knowledge", "aliases": ["coding basics", "coding", "编程"] },
+    "计算机原理": { "en": "Computer Principles", "kind": "knowledge", "aliases": ["computer architecture", "computer principles", "cpu", "von neumann", "冯诺依曼", "冯·诺依曼", "取指", "译码", "执行", "fetch decode execute", "寄存器", "register", "alu", "内存", "memory", "总线", "bus", "硬件", "computer organization", "微机原理"] },
     "二进制": { "en": "Binary", "kind": "knowledge", "aliases": ["binary", "bits", "bit", "base 2", "位", "信息编码", "data representation"] },
     "顺序执行": { "en": "Sequencing", "kind": "knowledge", "aliases": ["sequencing", "指令", "instructions"] },
     "循环": { "en": "Loops", "kind": "knowledge", "aliases": ["loop", "loops", "嵌套循环", "nested loops"] },

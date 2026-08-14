@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-13T18:17:54.047Z",
+  "generatedAt": "2026-08-14T01:31:14.160Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -231,6 +231,10 @@
     },
     "观察": {
       "en": "Observation",
+      "kind": "knowledge"
+    },
+    "计算机原理": {
+      "en": "Computer Principles",
       "kind": "knowledge"
     },
     "计量单位": {
@@ -4316,6 +4320,69 @@
         "模拟"
       ],
       "path": "courseware/ice-maker-lab/index.html"
+    },
+    {
+      "id": "cpu-lab",
+      "title": {
+        "zh": "电脑原理实验室",
+        "en": "Computer Principles Lab"
+      },
+      "description": {
+        "zh": "电脑像小工厂：先找货架、大脑、送信小路，再一步步看它怎么拿命令、看懂、去做，最后自己点卡片让屏幕算出 9。",
+        "en": "A computer is a tiny factory: find the shelves, brain, and message path; watch it get an order, understand, and do it; then tap cards so the screen shows 9."
+      },
+      "category": "programming",
+      "levels": [
+        "primary",
+        "junior"
+      ],
+      "grades": [
+        "g4",
+        "g5",
+        "g6",
+        "g7"
+      ],
+      "tags": [
+        "计算机原理",
+        "编程启蒙",
+        "实验"
+      ],
+      "icon": "🖥️",
+      "order": 81,
+      "badge": "new",
+      "keywords": [
+        "Computer Principles",
+        "computer architecture",
+        "computer principles",
+        "cpu",
+        "von neumann",
+        "冯诺依曼",
+        "冯·诺依曼",
+        "取指",
+        "译码",
+        "执行",
+        "fetch decode execute",
+        "寄存器",
+        "register",
+        "alu",
+        "内存",
+        "memory",
+        "总线",
+        "bus",
+        "硬件",
+        "computer organization",
+        "微机原理",
+        "Coding Basics",
+        "coding basics",
+        "coding",
+        "编程",
+        "Experiment",
+        "experiment",
+        "simulation",
+        "lab",
+        "模拟"
+      ],
+      "path": "courseware/cpu-lab/index.html"
     }
   ]
 }

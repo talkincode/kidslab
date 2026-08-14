@@ -1,0 +1,18 @@
+{
+  "id": "cpu-lab",
+  "title": {
+    "zh": "电脑原理实验室",
+    "en": "Computer Principles Lab"
+  },
+  "description": {
+    "zh": "电脑像小工厂：先找货架、大脑、送信小路，再一步步看它怎么拿命令、看懂、去做，最后自己点卡片让屏幕算出 9。",
+    "en": "A computer is a tiny factory: find the shelves, brain, and message path; watch it get an order, understand, and do it; then tap cards so the screen shows 9."
+  },
+  "category": "programming",
+  "levels": ["primary", "junior"],
+  "grades": ["g4", "g5", "g6", "g7"],
+  "tags": ["计算机原理", "编程启蒙", "实验"],
+  "icon": "🖥️",
+  "order": 81,
+  "badge": "new"
+}
