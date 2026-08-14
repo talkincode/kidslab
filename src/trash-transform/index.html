@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>垃圾变形记 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <div class="factory-bg" aria-hidden="true">
+    <i></i><i></i><i></i><i></i>
+  </div>
+
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title"><span aria-hidden="true">♻️</span> <span data-t="title">垃圾变形记</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="app">
+    <section class="brief card">
+      <div class="brief__shift">
+        <small data-t="shiftLabel">班次</small>
+        <strong id="shiftNumber">01</strong>
+      </div>
+      <div class="brief__copy">
+        <p class="eyebrow" id="shiftKicker">第一班 · 新手分拣</p>
+        <h2 id="shiftTitle">按材料把废品送进变形舱</h2>
+        <p id="status" role="status" aria-live="polite">点起传送带上的废品，再点对应的变形舱。</p>
+      </div>
+      <div class="progress-chip">
+        <span data-t="sorted">已变形</span>
+        <strong id="progressText">0/4</strong>
+      </div>
+    </section>
+
+    <nav class="shift-nav" id="shiftNav" aria-label="回收班次"></nav>
+
+    <section class="workspace">
+      <section class="line card" aria-labelledby="lineTitle">
+        <div class="line__head">
+          <div>
+            <p class="section-label" data-t="conveyor">传送带</p>
+            <h2 id="lineTitle" data-t="incoming">下一件废品</h2>
+          </div>
+          <button class="ghost-btn" id="hintBtn" type="button"><span aria-hidden="true">💡</span> <span data-t="hint">轻提示</span></button>
+        </div>
+
+        <div class="belt" id="belt">
+          <div class="belt__rails" aria-hidden="true"></div>
+          <button class="scrap" id="scrap" type="button" aria-grabbed="false" hidden>
+            <span class="scrap__icon" id="scrapIcon" aria-hidden="true">🧴</span>
+            <span class="scrap__name" id="scrapName">塑料瓶</span>
+            <span class="scrap__tag" id="scrapTag">可回收</span>
+          </button>
+          <div class="belt__empty" id="beltEmpty" hidden>
+            <span aria-hidden="true">✨</span>
+            <p id="beltEmptyText">本班废品全变形啦！</p>
+          </div>
+        </div>
+
+        <div class="transform-stage" id="transformStage" hidden>
+          <div class="transform-stage__beam" aria-hidden="true"></div>
+          <div class="transform-stage__from" id="transformFrom">🧴</div>
+          <div class="transform-stage__arrow" aria-hidden="true">➜</div>
+          <div class="transform-stage__to" id="transformTo">🧥</div>
+          <p id="transformText">塑料瓶熔成纤维，织出抓绒外套！</p>
+        </div>
+
+        <p class="lesson" id="lessonText">同一类材料才能一起进变形舱，分对了才会变身。</p>
+      </section>
+
+      <aside class="pods card">
+        <div class="pods__head">
+          <div>
+            <p class="section-label" data-t="podsLabel">变形舱</p>
+            <h2 data-t="choosePod">按材料投放</h2>
+          </div>
+          <span class="crew" aria-hidden="true">SORT</span>
+        </div>
+        <div class="pod-grid" id="podGrid"></div>
+        <div class="codex">
+          <div class="codex__head">
+            <span data-t="codex">变身图鉴</span>
+            <strong id="codexCount">0/5</strong>
+          </div>
+          <div class="codex__list" id="codexList"></div>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal" id="completeModal" hidden>
+    <section class="modal__card" role="dialog" aria-modal="true" aria-labelledby="completeTitle">
+      <div class="modal__burst" aria-hidden="true">♻️✨🧥</div>
+      <p class="modal__kicker" data-t="finalKicker">三班回收任务完成</p>
+      <h2 id="completeTitle" data-t="finalTitle">变形工厂开足马力！</h2>
+      <p data-t="finalText">你按材料分拣废品，让塑料、金属、纸张、玻璃和厨余各自找到新生命。</p>
+      <button class="action" id="playAgainBtn" type="button" data-t="playAgain">再开一班流水线</button>
+    </section>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

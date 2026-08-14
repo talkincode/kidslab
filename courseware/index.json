@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-14T15:25:23.607Z",
+  "generatedAt": "2026-08-14T18:39:05.140Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -3199,6 +3199,50 @@
         "模拟"
       ],
       "path": "courseware/magnet-hockey/index.html"
+    },
+    {
+      "id": "trash-transform",
+      "title": {
+        "zh": "垃圾变形记",
+        "en": "Trash Transformers"
+      },
+      "description": {
+        "zh": "在回收工厂当分拣员：按材料把废品送进变形舱，看塑料瓶变外套、易拉罐变车架、废纸变新绘本。",
+        "en": "Work the recycling line: sort scrap by material into transform pods and watch bottles become fleece, cans become bike frames, and paper become new books."
+      },
+      "category": "science",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g1",
+        "g2",
+        "g3"
+      ],
+      "tags": [
+        "分类",
+        "观察",
+        "益智游戏"
+      ],
+      "icon": "♻️",
+      "order": 69,
+      "badge": "new",
+      "keywords": [
+        "Classification",
+        "classification",
+        "categorize",
+        "Observation",
+        "observation",
+        "五感",
+        "five senses",
+        "特征",
+        "Puzzle Game",
+        "puzzle",
+        "game",
+        "益智",
+        "游戏"
+      ],
+      "path": "courseware/trash-transform/index.html"
     },
     {
       "id": "hanoi-tower",
