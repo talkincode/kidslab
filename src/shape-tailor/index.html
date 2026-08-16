@@ -32,7 +32,7 @@
       <div class="mission-card__copy">
         <p id="missionKicker">客人来了 · 平行四边形布</p>
         <h2 id="missionTitle">只会给长方形报价</h2>
-        <p id="missionPrompt">裁一刀，把斜角挪到另一头，变成好算的长方形。</p>
+        <p id="missionPrompt" hidden>裁一刀，把斜角挪到另一头，变成好算的长方形。</p>
       </div>
       <nav class="mission-nav" id="missionNav" aria-label="订单进度"></nav>
     </section>
@@ -68,9 +68,9 @@
           <span class="console__badge" aria-hidden="true">🪡</span>
         </div>
 
-        <p class="status" id="status" role="status" aria-live="polite">客人拿来一块平行四边形布。裁缝铺只会算长方形价钱——动手裁一刀吧。</p>
+        <p class="status" id="status" role="status" aria-live="polite">动手裁一刀。</p>
 
-        <section class="formula-card">
+        <section class="formula-card" id="formulaCard" hidden>
           <span data-t="think">墙上公式</span>
           <strong id="formulaText">先变成会算的图形</strong>
         </section>
@@ -87,7 +87,7 @@
           <small id="unitLabel">平方厘米</small>
         </section>
 
-        <div class="hint-card">
+        <div class="hint-card" id="hintCard" hidden>
           <span aria-hidden="true">🧵</span>
           <p id="lessonText">割下来的角平移到另一头，面积一点不少。</p>
         </div>

@@ -30,7 +30,7 @@
       <div class="case-copy">
         <p id="caseKicker">旋转木马旁 · 幸运转盘</p>
         <h2 id="caseTitle">“一半的人都能中大奖！”是真的吗？</h2>
-        <p id="casePrompt">先数大奖区，再启动千次试验仪，用证据判断摊主有没有夸大。</p>
+        <p id="casePrompt" hidden>先数大奖区，再启动千次试验仪，用证据判断摊主有没有夸大。</p>
       </div>
       <nav class="case-nav" id="caseNav" aria-label="调查进度"></nav>
     </section>
@@ -59,9 +59,9 @@
           <span class="badge" aria-hidden="true">🔎</span>
         </div>
 
-        <p class="status" id="status" role="status" aria-live="polite">转盘有 12 个等大的格子，只有 1 个是大奖区。</p>
+        <p class="status" id="status" role="status" aria-live="polite">转一转，看证据。</p>
 
-        <section class="formula-card">
+        <section class="formula-card" id="formulaCard" hidden>
           <span data-t="formula">先算一算</span>
           <strong id="formulaText">1 个大奖区 ÷ 12 个等大格 = 1/12</strong>
         </section>
@@ -82,7 +82,7 @@
           <button type="button" data-verdict="dishonest"><span>!</span><b data-t="dishonest">夸大中奖率</b></button>
         </section>
 
-        <div class="hint-card">
+        <div class="hint-card" id="hintCard" hidden>
           <span aria-hidden="true">🎟️</span>
           <p id="lessonText">格子一样大时，中奖概率 = 大奖格数 ÷ 总格数。试验频率会在理论概率附近摇摆。</p>
         </div>

@@ -86,28 +86,28 @@
       m1Lesson: '四个领地两两相邻时，正好需要四种颜色。',
       m1Hint: '中间王城先上色；东、西、南三块外环彼此也相邻，必须再各用一色。',
       m1Rule: '共享边界的领地不能同色；只碰角点的可以同色。',
-      m1Ready: '先点王城或任意空白领地，再选一种颜料。',
+      m1Ready: '点领地，再点颜料。',
       m2Kicker: '紧预算 · 三桶够不够？',
       m2Title: '国库只批了三桶颜料',
       m2Text: '这张图看起来花，其实三色就能涂满。超预算交不了卷。',
       m2Lesson: '不是每张图都要四色——有的图三色就够。',
       m2Hint: '先涂中心镜湖，外圈四个领地隔一个涂同色——像棋盘，第三色留给和两边都挨着的冲突处。',
       m2Rule: '预算 3 桶：用到第 4 色就超支，呈卷会被退回。',
-      m2Ready: '预算只有 3 桶。试试看，别急着开第四桶。',
+      m2Ready: '三桶够不够？',
       m3Kicker: '刁民领主 · 指定天空蓝',
       m3Title: '领主城必须是天空蓝',
       m3Text: '有一块领地被点名了。从固定色开始，把邻居全部排开。',
       m3Lesson: '固定一色等于加约束：先锁定它，再给邻居让路。',
       m3Hint: '领主城已是天空蓝。先把它的邻居涂成另外三种，再填远处。',
       m3Rule: '领主城已锁定天空蓝，不能改色，邻居也不能再用蓝。',
-      m3Ready: '领主城已经刷成天空蓝。从它的邻居开始规划。',
+      m3Ready: '从领主城的邻居开始。',
       m4Kicker: '终极图 · 四色永远够',
       m4Title: '这张图逼你掏第五桶吗？',
       m4Text: '看起来很挤。先别开超额桶——重排之后，四色一定够。',
       m4Lesson: '平面地图最多四色就够：这是四色定理的手感。',
       m4Hint: '超额的葡萄紫先别碰。把地图分成「棋盘块」，冲突处再插入第 3、第 4 色。',
       m4Rule: '预算 4 桶。第五桶（葡萄紫）是诱饵——真正的解用不到它。',
-      m4Ready: '魔鬼地图登场。四色一定够，别被第五桶骗走金币。',
+      m4Ready: '四色够不够？',
       paintedRegion: (name, color) => `${name} 刷成了${color}。`,
       erasedRegion: (name) => `${name} 的颜色擦掉了。`,
       fixedBlock: '领主城被法令锁住了，不能改色。',
@@ -197,28 +197,28 @@
       m1Lesson: 'When four regions all touch each other, you need exactly four colors.',
       m1Hint: 'Color Crown City first. East, West, and South all touch each other too, so each needs its own color.',
       m1Rule: 'Shared borders need different colors. Touching only at a corner is fine.',
-      m1Ready: 'Tap Crown City or any blank land, then pick a paint color.',
+      m1Ready: 'Tap land, then paint.',
       m2Kicker: 'TIGHT BUDGET · ONLY THREE?',
       m2Title: 'The Treasury Approved Three Buckets',
       m2Text: 'This map looks busy, but three colors are enough. Over budget maps get rejected.',
       m2Lesson: 'Not every map needs four colors — some are happy with three.',
       m2Hint: 'Paint Mirror Lake first, then alternate the four outer lands like a checkerboard. Use the third color only where both neighbors block you.',
       m2Rule: 'Budget: 3 buckets. A fourth color overspends and fails the review.',
-      m2Ready: 'Only three buckets. Try not to open a fourth.',
+      m2Ready: 'Can three colors do it?',
       m3Kicker: 'STUBBORN LORD · SKY BLUE ONLY',
       m3Title: "The Lord's Keep Must Stay Sky Blue",
       m3Text: 'One region is locked. Start from that fixed color and push neighbors apart.',
       m3Lesson: 'A fixed color is a constraint: lock it first, then free the neighbors.',
       m3Hint: "The keep is sky blue. Color its neighbors with the other three, then fill the far lands.",
       m3Rule: "The keep is locked sky blue. Neighbors cannot reuse blue.",
-      m3Ready: "The keep is already sky blue. Plan outward from its neighbors.",
+      m3Ready: 'Start with the keep’s neighbors.',
       m4Kicker: 'FINAL MAP · FOUR ALWAYS WORK',
       m4Title: 'Will This Map Force a Fifth Bucket?',
       m4Text: 'It looks cramped. Skip the extra bucket — with a better plan, four colors always work.',
       m4Lesson: 'Every planar map needs at most four colors. That is the four-color theorem feel.',
       m4Hint: 'Leave grape alone. Block the map into groups, then insert a 3rd and 4th color only at conflicts.',
       m4Rule: 'Budget: 4 buckets. The fifth grape bucket is bait — real solutions never need it.',
-      m4Ready: 'Devil map time. Four colors are enough. Do not spend coins on a fifth bucket.',
+      m4Ready: 'Are four colors enough?',
       paintedRegion: (name, color) => `${name} is now ${color}.`,
       erasedRegion: (name) => `${name} is blank again.`,
       fixedBlock: "The lord's decree locks this keep. Color cannot change.",
@@ -486,6 +486,8 @@
     deskKicker: $('#deskKicker'),
     deskTitle: $('#deskTitle'),
     palette: $('#palette'),
+    ruleCard: $('#ruleCard'),
+    insightCard: $('#insightCard'),
     ruleText: $('#ruleText'),
     lessonIcon: $('#lessonIcon'),
     lessonText: $('#lessonText'),
@@ -510,6 +512,8 @@
   let selectedColor = 'rose';
   let statusMessage = { key: 'm1Ready', tone: '', args: [] };
   let flashConflicts = new Set();
+  let showRule = false;
+  let showLesson = false;
 
   try {
     const saved = JSON.parse(localStorage.getItem(SAVE_KEY) || '{}');
@@ -676,6 +680,8 @@
     const available = availableColors();
     selectedColor = available[0]?.id || 'rose';
     flashConflicts = new Set();
+    showRule = false;
+    showLesson = false;
     if (!keepStatus) {
       setStatus(currentMission().ready);
     }
@@ -797,6 +803,7 @@
     if (pairs.length) {
       flashConflicts = new Set(pairs.flat());
       sound.error();
+      showRule = true;
       setStatus('conflictSubmit', 'bad');
       render();
       return false;
@@ -812,6 +819,7 @@
     const map = currentMap();
     const used = usedColorSet().size;
     const coins = Math.max(0, map.startCoins - used);
+    showLesson = true;
     setStatus('success', 'good', used, map.budget, coins);
     selectedRegion = null;
     flashConflicts = new Set();
@@ -998,6 +1006,8 @@
     el.missionText.textContent = t(mission.text);
     el.ruleText.textContent = t(mission.rule);
     el.lessonText.textContent = t(mission.lesson);
+    if (el.ruleCard) el.ruleCard.hidden = !showRule;
+    if (el.insightCard) el.insightCard.hidden = !showLesson;
     el.lessonIcon.textContent = String(map.budget);
     el.deskTitle.textContent = done ? t('deskTitleDone') : t('deskTitlePaint');
 
@@ -1024,7 +1034,10 @@
 
   el.hint.addEventListener('click', () => {
     sound.pick();
+    showRule = true;
+    showLesson = true;
     setStatus(currentMission().hint);
+    render();
   });
   el.clear.addEventListener('click', clearMap);
   el.check.addEventListener('click', checkMap);

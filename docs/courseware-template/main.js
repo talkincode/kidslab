@@ -11,14 +11,14 @@
       doc: '✏️ 课件名 · KidsLab',
       back: '返回平台',
       title: '✏️ 课件名',
-      tip0: '✏️ 一句 30 秒能看懂的上手提示',
+      tip0: '点一下，开始玩',
       /* ✏️ 静态文案 key…；动态文案用函数：score: (n) => `得分 ${n}` */
     },
     en: {
       doc: '✏️ Course Title · KidsLab',
       back: 'Back to platform',
       title: '✏️ Course Title',
-      tip0: '✏️ A one-line hint anyone gets in 30 seconds',
+      tip0: 'Tap once and play',
     },
   };
 

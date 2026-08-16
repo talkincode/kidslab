@@ -50,28 +50,28 @@
       m1Text: '把金币放到左右托盘，按下称量。天平会说：左沉、右沉，还是平衡。',
       m1Rule: '假币比真币轻一点点。天平有三种话：左沉、右沉、平衡。',
       m1Lesson: '最好的称法：左右放一样多，剩下的先看着。一次就能砍掉三分之二嫌疑！',
-      m1Ready: '点一枚金币，再点左盘或右盘。试试左右各放 3 枚。',
+      m1Ready: '点金币，放到盘上。',
       m1Hint: '先别 4 对 4。试 1·2·3 对 4·5·6，剩下 7·8·9 先旁观——天平三种结果，正好对应三组。',
       m2Kicker: '赏金合约 · 两次内破案',
       m2Title: '9 枚币，最多称 2 次',
       m2Text: '佣金很贵。用三分法，两次就够抓住假币。',
       m2Rule: '假币更轻。称量上限 2 次；超次未指认就亏本。',
       m2Lesson: '3³？不对——每次 3 种结果，2 次最多分出 9 种可能，刚好够 9 枚币。',
-      m2Ready: '目标：两次称量内指认假币。先把嫌疑均分成三组。',
+      m2Ready: '两次内找出假币。',
       m2Hint: '第一称左右各 3 枚。看结果只留一组 3 枚嫌疑；第二称在这 3 枚里再 1 对 1。',
       m3Kicker: '宝库夜班 · 27 枚金币',
       m3Title: '27 枚币，三次传奇',
       m3Text: '箱子更大了。仍然假币更轻——三次称量的战绩会刻上名人堂。',
       m3Rule: '假币更轻。称量上限 3 次。每次尽量把嫌疑分成三等份。',
       m3Lesson: '3×3×3 = 27。三次三分，就能在 27 枚里锁定那一枚。',
-      m3Ready: '27 枚金币登场。第一次左右各放 9 枚试试。',
+      m3Ready: '点金币，放到盘上。',
       m3Hint: '每次把当前嫌疑大致分成三组：左盘、右盘、不称。平衡就查未称的那组。',
       m4Kicker: '风暴谜题 · 不知轻重',
       m4Title: '12 枚币，假币或轻或重',
       m4Text: '这一票更刁：假币可能更轻，也可能更重。三次内找出它，并判断轻重。',
       m4Rule: '只有一枚假币，可能轻也可能重。称量上限 3 次。',
       m4Lesson: '12 枚 × 2 种 = 24 种可能；3 次称量有 27 种结果，刚好罩得住。',
-      m4Ready: '先按 4 对 4 称一次。记住：沉下去的那边，也可能是真币被假的“轻”托起来了。',
+      m4Ready: '点金币，放到盘上。',
       m4Hint: '第一次左右各 4 枚。平衡则假币在未称的 4 枚；不平衡则假币在已称的 8 枚，并记下哪边沉。',
       selected: (n) => `已选中第 ${n} 号。点左盘或右盘放上去，或再点取消。`,
       placed: (n, side) => `第 ${n} 号放进了${side === 'left' ? '左' : '右'}盘。`,
@@ -145,28 +145,28 @@
       m1Text: 'Load both pans and weigh. The scale answers: left down, right down, or balance.',
       m1Rule: 'The fake is a bit lighter. A balance scale has three answers.',
       m1Lesson: 'Best move: put equal counts on both sides and leave some out. One weighing cuts suspects by about two-thirds!',
-      m1Ready: 'Tap a coin, then a pan. Try 3 vs 3 first.',
+      m1Ready: 'Tap a coin, then a pan.',
       m1Hint: 'Skip 4 vs 4. Try 1·2·3 vs 4·5·6 and leave 7·8·9 out — three outcomes, three groups.',
       m2Kicker: 'BOUNTY CONTRACT · TWO WEIGHS',
       m2Title: '9 Coins, At Most 2 Weighings',
       m2Text: 'Fees are steep. With ternary splits, two weighings are enough.',
       m2Rule: 'Fake is lighter. Limit: 2 weighings.',
       m2Lesson: 'Each weighing has 3 results, so 2 weighings separate up to 9 cases — perfect for 9 coins.',
-      m2Ready: 'Goal: accuse within two weighings. Split suspects into three groups.',
+      m2Ready: 'Find the fake in two weighings.',
       m2Hint: 'First: 3 vs 3. Keep only one group of 3. Second: weigh 1 vs 1 inside that group.',
       m3Kicker: 'VAULT NIGHT · 27 COINS',
       m3Title: '27 Coins, Three-Weigh Legend',
       m3Text: 'Bigger chest, still a lighter fake — three perfect weighings earn hall-of-fame bragging rights.',
       m3Rule: 'Fake is lighter. Limit: 3 weighings. Trisect suspects each time.',
       m3Lesson: '3×3×3 = 27. Three ternary cuts pin one coin among twenty-seven.',
-      m3Ready: '27 coins aboard. Start with 9 vs 9.',
+      m3Ready: 'Tap a coin, then a pan.',
       m3Hint: 'Each time split current suspects into left, right, and off-scale. Balance means the fake is off-scale.',
       m4Kicker: 'STORM RIDDLE · UNKNOWN BIAS',
       m4Title: '12 Coins, Fake May Be Light or Heavy',
       m4Text: 'Hard mode: the fake might be lighter or heavier. Find it and its bias in three weighs.',
       m4Rule: 'One fake coin, light or heavy. Limit: 3 weighings.',
       m4Lesson: '12 coins × 2 biases = 24 cases; 3 weighings give 27 outcomes — just enough.',
-      m4Ready: 'Try 4 vs 4 first. A side can sink because it is heavy — or because the other side is light.',
+      m4Ready: 'Tap a coin, then a pan.',
       m4Hint: 'First: 4 vs 4. Balance → fake in the 4 left out. Tilt → fake among the 8 weighed; remember which side sank.',
       selected: (n) => `Coin ${n} selected. Tap a pan, or tap again to cancel.`,
       placed: (n, side) => `Coin ${n} placed on the ${side} pan.`,
@@ -290,7 +290,9 @@
     deskTitle: document.getElementById('deskTitle'),
     targetLeft: document.getElementById('targetLeft'),
     targetRight: document.getElementById('targetRight'),
+    ruleCard: document.getElementById('ruleCard'),
     ruleText: document.getElementById('ruleText'),
+    insightCard: document.getElementById('insightCard'),
     lessonIcon: document.getElementById('lessonIcon'),
     lessonText: document.getElementById('lessonText'),
     hintBtn: document.getElementById('hintBtn'),
@@ -331,6 +333,8 @@
   let won = false;
   let lost = false;
   let statusKey = { type: 'ready' };
+  let showRule = false;
+  let showLesson = false;
   let sawTrim = false;
   let lastTilt = 'flat';
 
@@ -476,6 +480,8 @@
     el.beamWrap.classList.remove('is-weighing');
     el.resultChip.hidden = true;
     statusKey = { type: 'ready' };
+    showRule = false;
+    showLesson = false;
     el.nextBtn.hidden = true;
     el.completeModal.hidden = true;
     el.course.inert = false;
@@ -647,6 +653,7 @@
         ? t('markedUnknown', kept)
         : t('markedLight', suspectCount(), Math.max(0, trim.before - trim.after));
 
+      showLesson = true;
       if (sawTrim && weighCount === 1) {
         setStatus('magicMoment');
       } else if (outcome === 'left') {
@@ -686,6 +693,7 @@
     if (id === fakeId) {
       won = true;
       accuseMode = false;
+      showLesson = true;
       sound.ok();
       setStatus('correctAccuse', { n: id, w: weighCount, kind: fakeKind });
       completed.add(missionIndex);
@@ -708,6 +716,7 @@
     }
 
     sound.bad();
+    showRule = true;
     setStatus('wrongAccuse', { n: id });
     // mild penalty: mark nothing, stay
     if (mission().strict && weighCount >= mission().maxWeigh) {
@@ -789,6 +798,8 @@
     el.missionText.textContent = t(`m${n}Text`);
     el.ruleText.textContent = t(`m${n}Rule`);
     el.lessonText.textContent = t(`m${n}Lesson`);
+    if (el.ruleCard) el.ruleCard.hidden = !showRule;
+    if (el.insightCard) el.insightCard.hidden = !showLesson;
     el.lessonIcon.textContent = m.icon;
     el.suspectText.textContent = t('suspectCount', mission().unknownBias ? possibilityCount() : suspectCount());
     el.weighUsed.textContent = String(weighCount);
@@ -858,6 +869,8 @@
   el.accuseBtn.addEventListener('click', toggleAccuseMode);
   el.hintBtn.addEventListener('click', () => {
     sound.pick();
+    showRule = true;
+    showLesson = true;
     setStatus('hint');
   });
   el.resetBtn.addEventListener('click', () => startMission(missionIndex));

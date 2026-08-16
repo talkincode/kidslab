@@ -32,7 +32,7 @@
       <div class="mission-card__copy">
         <p id="missionKicker">元宵夜 · 两端都挂</p>
         <h2 id="missionTitle">100 米长街，每 10 米一盏</h2>
-        <p id="missionPrompt">先报数领货，再把灯笼挂上街。多了尴尬，少了发黑。</p>
+        <p id="missionPrompt" hidden>先报数领货，再把灯笼挂上街。多了尴尬，少了发黑。</p>
       </div>
       <nav class="mission-nav" id="missionNav" aria-label="关卡进度"></nav>
     </section>
@@ -68,9 +68,9 @@
           <span class="console__badge" aria-hidden="true">🏮</span>
         </div>
 
-        <p class="status" id="status" role="status" aria-live="polite">100 米街道，每隔 10 米挂一盏，两端都要挂。你先领几盏？</p>
+        <p class="status" id="status" role="status" aria-live="polite">先领几盏？</p>
 
-        <section class="formula-card">
+        <section class="formula-card" id="formulaCard" hidden>
           <span data-t="think">先想一想</span>
           <strong id="formulaText">间隔数 = 总长 ÷ 间距</strong>
         </section>
@@ -85,7 +85,7 @@
           <small id="unitLabel">盏灯笼</small>
         </section>
 
-        <div class="hint-card">
+        <div class="hint-card" id="hintCard" hidden>
           <span aria-hidden="true">🧵</span>
           <p id="lessonText">先数清楚有几段间隔，再问两端要不要算进去。</p>
         </div>

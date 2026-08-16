@@ -52,7 +52,7 @@
           claim: '1/2',
           theory: '1/12',
           expected: 'dishonest',
-          start: '转盘有 12 个等大的格子，只有 1 个是大奖区。',
+          start: '转一转，看证据。',
           formula: '1 个大奖区 ÷ 12 个等大格 = 1/12',
           lesson: '格子一样大时，中奖概率 = 大奖格数 ÷ 总格数。试验频率会在理论概率附近摇摆。',
           hintText: '先比较 1/2 和 1/12：摊主承诺的中奖率远高于转盘真正能给出的中奖率。',
@@ -71,7 +71,7 @@
           claim: '1/5',
           theory: '2/10',
           expected: 'honest',
-          start: '机器里有 2 个金球、3 个蓝球和 5 个红球，每次摸完都会放回。',
+          start: '摸一千次，看金球。',
           formula: '2 个金球 ÷ 10 个球 = 2/10 = 1/5',
           lesson: '公平调查不是“全都查封”。公开承诺和理论概率一致，就应该给摊位盖可信章。',
           hintText: '把 2/10 约分：分子分母同时除以 2，正好得到 1/5。',
@@ -89,7 +89,7 @@
           wins: 4,
           claim: '公开概率',
           theory: '4/12',
-          start: '现在有 4 个大奖格，中奖率是 1/3，还是太容易中了。',
+          start: '大奖格太多了？改一改。',
           formula: '4 个大奖区 ÷ 12 个等大格 = 4/12 = 1/3',
           lesson: '设计低概率游戏也要诚实：大奖格可以少，但必须让顾客看清真实概率。',
           hintText: '目标是 2 个大奖格：2/12 约分后是 1/6，约等于 16.7%。',
@@ -150,7 +150,7 @@
           claim: '1/2',
           theory: '1/12',
           expected: 'dishonest',
-          start: 'The wheel has 12 equal sectors, and only 1 is a grand-prize sector.',
+          start: 'Spin it. Look at the evidence.',
           formula: '1 prize sector ÷ 12 equal sectors = 1/12',
           lesson: 'For equal sectors, probability = prize sectors ÷ all sectors. Trial frequency wobbles around that probability.',
           hintText: 'Compare 1/2 with 1/12. The booth promises far more wins than its wheel can produce.',
@@ -169,7 +169,7 @@
           claim: '1/5',
           theory: '2/10',
           expected: 'honest',
-          start: 'The machine holds 2 gold, 3 blue, and 5 red balls. Every drawn ball is replaced.',
+          start: 'Draw a thousand times. Watch the gold.',
           formula: '2 gold balls ÷ 10 balls = 2/10 = 1/5',
           lesson: 'A fair audit does not close every booth. When the public claim matches the theoretical probability, approve it.',
           hintText: 'Simplify 2/10 by dividing top and bottom by 2. It becomes exactly 1/5.',
@@ -187,7 +187,7 @@
           wins: 4,
           claim: 'Publish odds',
           theory: '4/12',
-          start: 'There are 4 prize sectors now, so the chance is 1/3—still too easy.',
+          start: 'Too many prize sectors? Change it.',
           formula: '4 prize sectors ÷ 12 equal sectors = 4/12 = 1/3',
           lesson: 'A low-odds game can still be honest: use fewer prize sectors, but publish the real probability.',
           hintText: 'Set 2 prize sectors. 2/12 simplifies to 1/6, or about 16.7%.',
@@ -220,12 +220,14 @@
     sealText: $('#sealText'),
     panelInstruction: $('#panelInstruction'),
     status: $('#status'),
+    formulaCard: $('#formulaCard'),
     formulaText: $('#formulaText'),
     designer: $('#designer'),
     prizeSlots: $('#prizeSlots'),
     minusBtn: $('#minusBtn'),
     plusBtn: $('#plusBtn'),
     verdicts: $('#verdicts'),
+    hintCard: $('#hintCard'),
     lessonText: $('#lessonText'),
     hintBtn: $('#hintBtn'),
     trialBtn: $('#trialBtn'),
@@ -521,6 +523,10 @@
         : `${activeWins} prize sectors ÷ 12 equal sectors = ${activeWins}/12 = ${simplified}`)
       : current.formula;
     elements.lessonText.textContent = state.feedback === 'hint' ? current.hintText : current.lesson;
+    const showFormula = state.solved || ['hint', 'trialReady', 'correct', 'staleTrial'].includes(state.feedback);
+    const showLesson = state.solved || ['hint', 'correct'].includes(state.feedback);
+    if (elements.formulaCard) elements.formulaCard.hidden = !showFormula;
+    if (elements.hintCard) elements.hintCard.hidden = !showLesson;
     elements.status.textContent = statusText(current);
     elements.status.className = `status${['wrong', 'wrongDesign', 'staleTrial', 'missingTrial', 'missingVerdict'].includes(state.feedback) ? ' is-wrong' : ''}${state.feedback === 'correct' ? ' is-correct' : ''}`;
     elements.evidenceStage.dataset.result = state.feedback === 'correct' ? 'correct' : (['wrong', 'wrongDesign'].includes(state.feedback) ? 'wrong' : 'idle');

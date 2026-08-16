@@ -27,7 +27,7 @@
       <div class="brief__copy">
         <p id="missionKicker">迎宾图 · 先会分邻居</p>
         <h2 id="missionTitle">相邻领地，不能同色</h2>
-        <p id="missionText">点一块领地，再点颜料桶。共享边界的邻居必须换颜色。</p>
+        <p id="missionText" hidden>点一块领地，再点颜料桶。共享边界的邻居必须换颜色。</p>
       </div>
       <nav class="mission-nav" id="missionNav" aria-label="王国地图任务"></nav>
     </section>
@@ -35,7 +35,7 @@
     <section class="workspace">
       <section class="atlas card">
         <div class="atlas__status">
-          <p id="status" role="status" aria-live="polite">先点一块空白领地，再选一种颜料。</p>
+          <p id="status" role="status" aria-live="polite">点领地，再点颜料。</p>
           <div class="meters" aria-label="上色进度">
             <div class="meter">
               <span data-t="painted">已上色</span>
@@ -70,15 +70,15 @@
           <span aria-hidden="true">👑</span>
         </div>
 
-        <p class="panel-label" id="paletteLabel" data-t="paletteGuide">点领地，再点颜料桶。预算内越少越好。</p>
+        <p class="panel-label" id="paletteLabel" data-t="paletteGuide" hidden>点领地，再点颜料桶。预算内越少越好。</p>
         <div class="palette" id="palette" role="listbox" aria-label="颜料桶"></div>
 
-        <div class="rule-card" id="ruleCard">
+        <div class="rule-card" id="ruleCard" hidden>
           <span aria-hidden="true">📜</span>
           <p id="ruleText">共享边界的领地不能同色；只碰角点的可以同色。</p>
         </div>
 
-        <div class="insight">
+        <div class="insight" id="insightCard" hidden>
           <span id="lessonIcon" aria-hidden="true">4</span>
           <p id="lessonText">先给中间的领地上色，邻居就自动被「挤」开。</p>
         </div>
@@ -103,6 +103,6 @@
     </section>
   </div>
 
-  <script src="main.js?v=985dfbb6"></script>
+  <script src="main.js?v=3a536d58"></script>
 </body>
 </html>

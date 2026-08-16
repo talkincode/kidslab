@@ -24,7 +24,7 @@
       <div class="brief__copy">
         <p id="missionKicker">挑战魔法师 · 生日月份</p>
         <h2 id="missionTitle">排开 13 位客人，想办法不让两人同月？</h2>
-        <p id="missionText">点月份抽屉给下一位客人安座位。尽量让每个人月份都不同——魔法师赌你会失败。</p>
+        <p id="missionText" hidden>点月份抽屉给下一位客人安座位。尽量让每个人月份都不同——魔法师赌你会失败。</p>
       </div>
       <nav class="mission-nav" id="missionNav" aria-label="赌局进度"></nav>
     </section>
@@ -32,7 +32,7 @@
     <section class="workspace">
       <section class="stage card">
         <div class="hud">
-          <p id="status" role="status" aria-live="polite">点「请来下一位」，再点一个月份抽屉。</p>
+          <p id="status" role="status" aria-live="polite">请来下一位。</p>
           <div class="meters" aria-label="赌局计数">
             <div class="meter">
               <span data-t="meterDrawers">抽屉</span>
@@ -55,7 +55,7 @@
             <div class="wizard__face">🧙</div>
             <b id="wizardMood">稳赢脸</b>
           </div>
-          <div class="formula card-soft" id="formulaBox">
+          <div class="formula card-soft" id="formulaBox" hidden>
             <span class="formula__label" data-t="formulaLabel">开赌口诀</span>
             <p id="formulaText">抽屉 12 个 · 想避开成对 · 第 13 只鸽子无处可藏</p>
           </div>
@@ -78,12 +78,12 @@
           <span aria-hidden="true">🎉</span>
         </div>
 
-        <div class="rule-card">
+        <div class="rule-card" id="ruleCard" hidden>
           <span aria-hidden="true">📜</span>
           <p id="ruleText">最坏情况：每个抽屉先尽量只放 1 只。再多一只，就一定有抽屉挤了两人。</p>
         </div>
 
-        <div class="insight">
+        <div class="insight" id="insightCard" hidden>
           <span id="lessonIcon" aria-hidden="true">📦</span>
           <p id="lessonText">抽屉原理：n 个抽屉放 n+1 只鸽子，至少有一格 ≥2。</p>
         </div>

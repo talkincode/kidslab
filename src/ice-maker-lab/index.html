@@ -38,7 +38,7 @@
       <div class="brief__copy">
         <p id="missionKicker">第一关 · 结出第一块冰</p>
         <h2 id="missionTitle">给模盒灌水，打开压缩机</h2>
-        <p id="missionText">水变冷、结冰——热被蒸发器吸走了。</p>
+        <p id="missionText" hidden>水变冷、结冰——热被蒸发器吸走了。</p>
       </div>
       <nav class="mission-nav" id="missionNav" aria-label="实验关卡"></nav>
     </section>
@@ -46,7 +46,7 @@
     <section class="lab">
       <section class="stage card">
         <div class="stage__top">
-          <p class="status" id="status" role="status" aria-live="polite">先点「灌水」，再打开压缩机。</p>
+          <p class="status" id="status" role="status" aria-live="polite">先灌水。</p>
           <div class="badge-row">
             <span class="live" id="powerBadge"><i></i><span data-t="powerOff">待机</span></span>
             <span class="live live--door" id="doorBadge" hidden><i></i><span data-t="doorOpen">门开着</span></span>
@@ -101,7 +101,7 @@
           <p class="pin-detail__body" id="pinDetailBody">—</p>
           <p class="pin-detail__live" id="pinDetailLive" hidden></p>
         </aside>
-        <p class="pin-hint" id="pinHint" data-t="pinHint">点场景边缘的编号圆点，查看部件原理（不会挡住机器）。</p>
+        <p class="pin-hint" id="pinHint" data-t="pinHint" hidden>点场景边缘的编号圆点，查看部件原理（不会挡住机器）。</p>
 
         <div class="meters" aria-label="实时读数">
           <div><span data-t="moldTemp">模盒温度</span><strong id="moldValue">18 <small>°C</small></strong></div>
@@ -110,7 +110,7 @@
           <div><span data-t="cubes">收获冰块</span><strong id="cubeValue">0 <small>/ 6</small></strong></div>
         </div>
 
-        <div class="legend" aria-hidden="true">
+        <div class="legend" id="legend" hidden aria-hidden="true">
           <span data-t="legendCold">蓝箭头 = 吸热</span>
           <span data-t="legendHot">橙箭头 = 放热</span>
           <span data-t="legendLoop">彩色环 = 冷媒回路</span>
@@ -149,12 +149,12 @@
           </div>
         </section>
 
-        <div class="lesson-card">
+        <div class="lesson-card" id="lessonCard" hidden>
           <span aria-hidden="true" id="lessonIcon">❄️</span>
           <p id="lessonText">冷媒在蒸发器里吸热汽化，模盒才会变冷。</p>
         </div>
 
-        <div class="loop-card" aria-label="制冷回路">
+        <div class="loop-card" id="loopCard" hidden aria-label="制冷回路">
           <p class="loop-card__title" data-t="loopTitle">冷媒四步旅行</p>
           <ol class="loop-steps" id="loopSteps">
             <li data-step="comp"><b data-t="stepComp">① 压缩机</b><span data-t="stepCompD">加压升温</span></li>

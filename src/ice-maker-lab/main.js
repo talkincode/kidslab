@@ -56,7 +56,7 @@
       roomWarm: '微暖',
       roomHot: '变热',
       roomToasty: '热乎乎',
-      tip0: '先点「灌水」，再打开压缩机。',
+      tip0: '先灌水。',
       filled: '模盒灌满清水啦。关好门，打开压缩机开始搬热。',
       alreadyFilled: '模盒里已经有水了。',
       needWater: '模盒是空的——先灌水再制冷。',
@@ -229,7 +229,7 @@
       roomWarm: 'Warmish',
       roomHot: 'Warmer',
       roomToasty: 'Toasty',
-      tip0: 'Tap Fill water, then start the compressor.',
+      tip0: 'Fill the molds first.',
       filled: 'Molds are full. Shut the door and start the compressor to move heat.',
       alreadyFilled: 'The molds already have water.',
       needWater: 'Molds are empty — fill water first.',
@@ -409,8 +409,11 @@
     hint: $('#hintBtn'),
     check: $('#checkBtn'),
     next: $('#nextBtn'),
+    lessonCard: $('#lessonCard'),
     lessonIcon: $('#lessonIcon'),
     lessonText: $('#lessonText'),
+    loopCard: $('#loopCard'),
+    legend: $('#legend'),
     loopSteps: [...document.querySelectorAll('#loopSteps li')],
     sound: $('#soundBtn'),
     theme: $('#themeBtn'),
@@ -441,6 +444,7 @@
   let raf = 0;
   let selectedPin = '';
   let lastLoopStage = '';
+  let showCoach = false;
 
   const state = {
     power: false,
@@ -739,6 +743,7 @@
     });
     if (opts.track !== false) window.cool?.track?.(`pin_${id}`);
     if (opts.sound !== false) sound.click();
+    syncCoach();
   }
 
   function closePin() {
@@ -751,6 +756,7 @@
       if (el.lessonIcon) el.lessonIcon.textContent = m.icon;
       if (el.lessonText) el.lessonText.textContent = t(m.lesson);
     } catch { /* boot */ }
+    syncCoach();
   }
 
   function updatePinLiveChrome() {
@@ -855,8 +861,10 @@
     setStatus(t('filled'), 'good');
     // Suggest opening the molds / evaporator pin, but do not auto-spam
     if (!selectedPin) {
+      showCoach = true;
       el.lessonIcon.textContent = '💧';
       el.lessonText.textContent = t('tipEvapText');
+      syncCoach();
     }
     window.cool?.track?.('fill_water');
     idleTimer = 0;
@@ -979,9 +987,19 @@
     }
   }
 
+  function syncCoach() {
+    if (el.lessonCard) el.lessonCard.hidden = !showCoach && !selectedPin;
+    if (el.loopCard) el.loopCard.hidden = !showCoach && !state.power;
+    if (el.legend) el.legend.hidden = !showCoach && !state.power;
+    if (el.pinHint) el.pinHint.hidden = true;
+  }
+
   function goMission(index) {
     if (index > unlocked) return;
     missionIndex = index;
+    showCoach = false;
+    selectedPin = '';
+    if (el.pinDetail) el.pinDetail.hidden = true;
     resetSim(missionIndex === 3 && state.cubes > 0);
     if (missionIndex < 3) {
       state.cubes = 0;
@@ -993,6 +1011,7 @@
     setStatus(t('tip0'));
     applyMissionCopy();
     renderChrome();
+    syncCoach();
     window.cool?.stage?.(`mission${missionIndex + 1}`);
   }
 
@@ -1063,6 +1082,7 @@
 
     updatePinLiveChrome();
     if (el.pinDetailClose) el.pinDetailClose.setAttribute('aria-label', t('pinClose'));
+    syncCoach();
   }
 
   /* ---------------- Simulation ---------------- */
@@ -1618,6 +1638,8 @@
   });
   el.hint.addEventListener('click', () => {
     sound.click();
+    showCoach = true;
+    syncCoach();
     setStatus(t(mission().hint));
     // Open the most relevant pin, kid can read at leisure
     if (state.ice >= 0.98) openPin('molds', { sound: false });

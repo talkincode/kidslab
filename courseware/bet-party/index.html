@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>打赌派对 · KidsLab</title>
-  <link rel="stylesheet" href="style.css?v=cee13293" />
+  <link rel="stylesheet" href="style.css?v=b44ef11b" />
   <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
 <script>(()=>{"use strict";const g=window,r=g.cool||{};if(r.sdkVersion)return;try{document.documentElement.style.touchAction="manipulation"}catch{}const w="bet-party",b=location.pathname.split("/").filter(Boolean),E=b.at(-1)||"",A=E.includes(".")?b.at(-2):E,d=w.startsWith("__")?A:w,l={get(t,n=null){try{const e=localStorage.getItem(t);return e===null?n:e}catch{return n}},set(t,n){try{return localStorage.setItem(t,n),!0}catch{return!1}},remove(t){try{return localStorage.removeItem(t),!0}catch{return!1}}},f=new Set,S=new Set(["zh","en"]),I=new Set(["light","dark"]),C=(navigator.language||"").toLowerCase().startsWith("zh")?"zh":"en";let m="light";try{m=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch{}let o=l.get("kidslab.lang",C),s=l.get("kidslab.theme",m);S.has(o)||(o=C),I.has(s)||(s=m);function p(){document.documentElement.lang=o==="zh"?"zh-CN":"en",document.documentElement.dataset.theme=s}function T(t,n){const e={kind:t,value:n};for(const c of[...f])c(e);g.dispatchEvent(new CustomEvent(`${t}change`,{detail:{[t]:n}}))}const z={get lang(){return o},get theme(){return s},setLang(t){if(!S.has(t))throw new RangeError(`Unsupported language: ${t}`);t!==o&&(o=t,l.set("kidslab.lang",t),p(),T("lang",t))},setTheme(t){if(!I.has(t))throw new RangeError(`Unsupported theme: ${t}`);t!==s&&(s=t,l.set("kidslab.theme",t),p(),T("theme",t))},toggleLang(){this.setLang(o==="zh"?"en":"zh")},toggleTheme(){this.setTheme(s==="light"?"dark":"light")},subscribe(t){if(typeof t!="function")throw new TypeError("Preference listener must be a function");return f.add(t),()=>f.delete(t)}};function D(t,n={}){if(!t||typeof t!="object")throw new TypeError("Messages must be an object");const e=n.root||document;if(!e.querySelectorAll&&!e.matches)throw new TypeError("i18n root must be a Document or Element");function c(a,...h){const u=t[o]?.[a]??t.zh?.[a]??t.en?.[a];return typeof u=="function"?u(...h):u??a}function y(a="lang"){const h=[];e.matches?.("[data-t]")&&h.push(e),e.querySelectorAll&&h.push(...e.querySelectorAll("[data-t]"));for(const u of h){const L=c(u.dataset.t);typeof L=="string"&&(u.textContent=L)}n.onChange?.({kind:a,lang:o,theme:s,t:c})}const $=z.subscribe(({kind:a})=>{a==="lang"?y("lang"):n.onChange?.({kind:a,lang:o,theme:s,t:c})});return y("init"),{t:c,render:y,destroy:$}}const i=d?`kidslab.progress.${d}`:"";function _(){if(!i)return null;try{const t=JSON.parse(l.get(i,"null"));return!t||!["played","completed"].includes(t.status)?null:t}catch{return null}}function k(t,n){if(!i)return null;const e=_()||{},c={status:e.status==="completed"?"completed":t,stage:n||e.stage||"",updatedAt:Date.now()};return l.set(i,JSON.stringify(c)),c}const P={get:_,clear(){return i?l.remove(i):!1}};r.sdkVersion=2,r.courseId=d,r.storage=l,r.preferences=z,r.bindI18n=D,r.progress=P,typeof r.track!="function"&&(r.track=()=>{}),r.stage=t=>{typeof t!="string"||!t||k("played",t.slice(0,48))},r.complete=()=>k("completed"),g.cool=r,p()})();
 </script>
@@ -27,7 +27,7 @@
       <div class="brief__copy">
         <p id="missionKicker">挑战魔法师 · 生日月份</p>
         <h2 id="missionTitle">排开 13 位客人，想办法不让两人同月？</h2>
-        <p id="missionText">点月份抽屉给下一位客人安座位。尽量让每个人月份都不同——魔法师赌你会失败。</p>
+        <p id="missionText" hidden>点月份抽屉给下一位客人安座位。尽量让每个人月份都不同——魔法师赌你会失败。</p>
       </div>
       <nav class="mission-nav" id="missionNav" aria-label="赌局进度"></nav>
     </section>
@@ -35,7 +35,7 @@
     <section class="workspace">
       <section class="stage card">
         <div class="hud">
-          <p id="status" role="status" aria-live="polite">点「请来下一位」，再点一个月份抽屉。</p>
+          <p id="status" role="status" aria-live="polite">请来下一位。</p>
           <div class="meters" aria-label="赌局计数">
             <div class="meter">
               <span data-t="meterDrawers">抽屉</span>
@@ -58,7 +58,7 @@
             <div class="wizard__face">🧙</div>
             <b id="wizardMood">稳赢脸</b>
           </div>
-          <div class="formula card-soft" id="formulaBox">
+          <div class="formula card-soft" id="formulaBox" hidden>
             <span class="formula__label" data-t="formulaLabel">开赌口诀</span>
             <p id="formulaText">抽屉 12 个 · 想避开成对 · 第 13 只鸽子无处可藏</p>
           </div>
@@ -81,12 +81,12 @@
           <span aria-hidden="true">🎉</span>
         </div>
 
-        <div class="rule-card">
+        <div class="rule-card" id="ruleCard" hidden>
           <span aria-hidden="true">📜</span>
           <p id="ruleText">最坏情况：每个抽屉先尽量只放 1 只。再多一只，就一定有抽屉挤了两人。</p>
         </div>
 
-        <div class="insight">
+        <div class="insight" id="insightCard" hidden>
           <span id="lessonIcon" aria-hidden="true">📦</span>
           <p id="lessonText">抽屉原理：n 个抽屉放 n+1 只鸽子，至少有一格 ≥2。</p>
         </div>
@@ -127,6 +127,6 @@
     </section>
   </div>
 
-  <script src="main.js?v=02a54d8a"></script>
+  <script src="main.js?v=88e4ab98"></script>
 </body>
 </html>

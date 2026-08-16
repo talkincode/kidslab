@@ -24,7 +24,7 @@
       <div class="brief__copy">
         <p id="missionKicker">新手船舱 · 9 枚金币</p>
         <h2 id="missionTitle">找出那枚轻一点的假币</h2>
-        <p id="missionText">把金币放到左右托盘，按下称量。天平会告诉你：左沉、右沉，还是平衡。</p>
+        <p id="missionText" hidden>把金币放到左右托盘，按下称量。天平会告诉你：左沉、右沉，还是平衡。</p>
       </div>
       <nav class="mission-nav" id="missionNav" aria-label="验金任务"></nav>
     </section>
@@ -32,7 +32,7 @@
     <section class="workspace">
       <section class="deck card">
         <div class="hud">
-          <p id="status" role="status" aria-live="polite">点一枚金币，再点左盘或右盘放上去。</p>
+          <p id="status" role="status" aria-live="polite">点金币，放到盘上。</p>
           <div class="meters" aria-label="验金进度">
             <div class="meter">
               <span data-t="suspects">嫌疑</span>
@@ -79,7 +79,7 @@
         <div class="tray-block">
           <div class="tray-head">
             <strong id="trayTitle">金币箱</strong>
-            <span id="trayHint">点金币选中，再点左盘/右盘</span>
+            <span id="trayHint" hidden>点金币选中，再点左盘/右盘</span>
           </div>
           <div class="tray" id="tray" role="list" aria-label="金币箱"></div>
         </div>
@@ -99,12 +99,12 @@
           <button class="side-btn" id="targetRight" type="button" data-target="right"><span data-t="toRight">放右盘</span> →</button>
         </div>
 
-        <div class="rule-card">
+        <div class="rule-card" id="ruleCard" hidden>
           <span aria-hidden="true">📜</span>
           <p id="ruleText">假币比真币轻一点点。天平有三种话：左沉、右沉、平衡。</p>
         </div>
 
-        <div class="insight">
+        <div class="insight" id="insightCard" hidden>
           <span id="lessonIcon" aria-hidden="true">⅓</span>
           <p id="lessonText">最好的称法：左右放一样多，剩下的先看着。一次就能砍掉三分之二嫌疑！</p>
         </div>

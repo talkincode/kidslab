@@ -70,11 +70,11 @@
         '数的是层与层之间。先报层数，再点亮楼梯。',
       ],
       starts: [
-        '100 米街道，每隔 10 米挂一盏，两端都要挂。你先领几盏？',
-        '50 米石桥，每隔 10 米立一根柱，桥两头不立。你先备几根？',
-        '湖边一圈 60 米，每隔 10 米挂一盏，首尾是同一点。你先领几盏？',
-        '要把圆木锯成 5 段，每次只锯一刀。你准备下几刀？',
-        '从 3 楼爬到 8 楼，要经过几层台阶？先报一个数。',
+        '先领几盏？',
+        '先备几根？',
+        '先领几盏？',
+        '先下几刀？',
+        '先报层数？',
       ],
       lengthTexts: ['100 m', '50 m', '60 m', '1 根圆木', '3 → 8 楼'],
       gapTexts: ['10 m', '10 m', '10 m', '等长段', '1 层'],
@@ -192,11 +192,11 @@
         'Count the floors between. Choose a number, then light the stairs.',
       ],
       starts: [
-        'A 100 m street gets one lantern every 10 m, including both ends. How many do you order?',
-        'A 50 m bridge gets one post every 10 m, with no posts on either end. How many do you prepare?',
-        'A 60 m lakeside loop gets one lantern every 10 m, and the start is the finish. How many do you order?',
-        'You want 5 equal pieces from one log, one cut at a time. How many cuts?',
-        'From floor 3 to floor 8, how many floors do you climb?',
+        'How many lanterns?',
+        'How many posts?',
+        'How many lanterns?',
+        'How many cuts?',
+        'How many floors?',
       ],
       lengthTexts: ['100 m', '50 m', '60 m', '1 log', '3 → 8'],
       gapTexts: ['10 m', '10 m', '10 m', 'equal parts', '1 floor'],
@@ -335,10 +335,12 @@
     glowSeal: $('#glowSeal'),
     sealText: $('#sealText'),
     status: $('#status'),
+    formulaCard: $('#formulaCard'),
     formulaText: $('#formulaText'),
     stepperLabel: $('#stepperLabel'),
     guessValue: $('#guessValue'),
     unitLabel: $('#unitLabel'),
+    hintCard: $('#hintCard'),
     lessonText: $('#lessonText'),
     controlTitle: $('#controlTitle'),
     hintBtn: $('#hintBtn'),
@@ -559,6 +561,9 @@
     elements.unitLabel.textContent = t('units')[state.mission];
     elements.formulaText.textContent = t('formulas')[state.mission];
     elements.lessonText.textContent = t('lessons')[state.mission];
+    const showCoach = state.solved || ['hint', 'short', 'extra', 'correct'].includes(state.feedback);
+    if (elements.formulaCard) elements.formulaCard.hidden = !showCoach;
+    if (elements.hintCard) elements.hintCard.hidden = !showCoach;
     elements.lengthReadout.textContent = t('lengthTexts')[state.mission];
     elements.gapReadout.textContent = t('gapTexts')[state.mission];
     elements.intervalReadout.textContent = t('intervalTexts')[state.mission];

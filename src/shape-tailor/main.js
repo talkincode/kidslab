@@ -52,9 +52,9 @@
         '上下底相加再除以 2，就是「平均底」，乘高得面积。',
       ],
       starts: [
-        '客人拿来一块平行四边形布。裁缝铺只会算长方形价钱——动手裁一刀吧。',
-        '三角形头巾来了。先变出一块同样的，拼成平行四边形再报价。',
-        '梯形桌布最考验手艺：裁开拼合后，用上下底平均乘高。',
+        '动手裁一刀。',
+        '先变出一块同样的。',
+        '裁开，再拼合。',
       ],
       afterCut: [
         '剪刀咔嚓！拖动粉色角片，或点「平移拼合」，把它挪到另一头。',
@@ -144,9 +144,9 @@
         'Average the top and bottom bases, then multiply by height.',
       ],
       starts: [
-        'A parallelogram arrives. This shop only prices rectangles—make the first cut.',
-        'A triangle scarf is here. Make a twin, join a parallelogram, then quote.',
-        'Trapezoid tablecloth time: cut, join, then use average base × height.',
+        'Make the first cut.',
+        'Make a matching twin first.',
+        'Cut, then join.',
       ],
       afterCut: [
         'Snip! Drag the pink piece, or tap “Slide to join”, to the other side.',
@@ -249,12 +249,14 @@
     glowSeal: $('#glowSeal'),
     sealText: $('#sealText'),
     status: $('#status'),
+    formulaCard: $('#formulaCard'),
     formulaText: $('#formulaText'),
     stepsList: $('#stepsList'),
     quoteCard: $('#quoteCard'),
     stepperLabel: $('#stepperLabel'),
     guessValue: $('#guessValue'),
     unitLabel: $('#unitLabel'),
+    hintCard: $('#hintCard'),
     lessonText: $('#lessonText'),
     controlTitle: $('#controlTitle'),
     hintBtn: $('#hintBtn'),
@@ -537,6 +539,10 @@
       state.solved || state.phase === 'solved' ? t('money', m.answer * m.unitPrice) : '—';
     elements.formulaText.textContent = open || state.solved ? t('formulasOpen')[state.mission] : t('formulasLocked')[state.mission];
     elements.lessonText.textContent = t('lessons')[state.mission];
+    const showFormula = state.phase !== 'ready' || state.solved || state.feedback === 'hint';
+    const showLesson = state.solved || ['hint', 'snapped', 'correct', 'wrong-low', 'wrong-high'].includes(state.feedback);
+    if (elements.formulaCard) elements.formulaCard.hidden = !showFormula;
+    if (elements.hintCard) elements.hintCard.hidden = !showLesson;
     elements.stepperLabel.textContent = t('stepperLabels')[state.mission];
     elements.unitLabel.textContent = t('unit');
     elements.guessValue.textContent = String(state.guess);

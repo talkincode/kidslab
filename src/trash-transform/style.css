@@ -97,21 +97,25 @@ body {
 }
 
 .bar {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  justify-content: space-between;
-  gap: 10px;
+  gap: 8px;
   height: 58px;
   padding: 8px clamp(12px, 2.5vw, 28px);
 }
 .bar__title {
   margin: 0;
-  font-size: clamp(17px, 2.4vw, 22px);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: clamp(15px, 3.4vw, 22px);
   font-weight: 800;
   white-space: nowrap;
 }
 .bar__actions {
   display: flex;
+  flex-shrink: 0;
   gap: 8px;
 }
 

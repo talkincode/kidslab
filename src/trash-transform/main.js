@@ -73,7 +73,7 @@
         {
           kicker: '第一班 · 新手分拣',
           title: '按材料把废品送进变形舱',
-          ready: '点起传送带上的废品，再点对应的变形舱。',
+          ready: '点废品，丢进舱。',
           lesson: '同一类材料才能一起进变形舱，分对了才会变身。',
           hint: '先看废品是塑料、金属还是纸。瓶子去塑料舱，罐子去金属舱。',
           done: '第一班完成！塑料、金属和纸张都找到了新去处。',
@@ -81,7 +81,7 @@
         {
           kicker: '第二班 · 玻璃入厂',
           title: '别把玻璃瓶扔进塑料舱',
-          ready: '玻璃舱已上线。透明瓶罐要走玻璃通道。',
+          ready: '玻璃瓶走玻璃舱。',
           lesson: '玻璃看起来像塑料，但它更重、会碎，要单独回收重熔。',
           hint: '玻璃罐和玻璃瓶进玻璃舱；塑料瓶仍然进塑料舱。',
           done: '第二班完成！玻璃也成功重生成新瓶子。',
@@ -89,7 +89,7 @@
         {
           kicker: '第三班 · 堆肥上线',
           title: '厨余也能变形',
-          ready: '果皮菜叶不要进回收舱，请送去堆肥舱。',
+          ready: '果皮去堆肥舱。',
           lesson: '厨余不是垃圾终点：堆肥后会变成能养土壤的养分。',
           hint: '香蕉皮和菜叶走堆肥；其余仍按塑料、金属、纸、玻璃分。',
           done: '第三班完成！可回收物和厨余都各自变形成功。',
@@ -173,7 +173,7 @@
         {
           kicker: 'Shift 1 · Rookie sort',
           title: 'Send each scrap into the right material pod',
-          ready: 'Pick up the scrap on the belt, then tap the matching pod.',
+          ready: 'Pick scrap. Drop it in a pod.',
           lesson: 'Only matching materials share a pod. Sort right to transform.',
           hint: 'Look for plastic, metal, or paper. Bottles go plastic; cans go metal.',
           done: 'Shift 1 clear! Plastic, metal, and paper all found new jobs.',
@@ -181,7 +181,7 @@
         {
           kicker: 'Shift 2 · Glass online',
           title: 'Do not drop glass into the plastic pod',
-          ready: 'The glass pod is open. Clear jars and bottles take the glass path.',
+          ready: 'Glass bottles go in the glass pod.',
           lesson: 'Glass can look like plastic, but it is heavier and recycles by remelting alone.',
           hint: 'Glass jars and bottles go to glass. Plastic bottles still go to plastic.',
           done: 'Shift 2 clear! Glass transformed into new bottles too.',
@@ -189,7 +189,7 @@
         {
           kicker: 'Shift 3 · Compost line',
           title: 'Food scraps can transform too',
-          ready: 'Peels and leaves skip the recycle pods. Send them to compost.',
+          ready: 'Peels go in compost.',
           lesson: 'Food scraps are not the end: compost turns them into soil food.',
           hint: 'Banana peels and leaves go to compost; everything else still sorts by material.',
           done: 'Shift 3 clear! Recyclables and organics each transformed.',
@@ -291,6 +291,7 @@
     codex: [],
     finished: false,
     drag: null,
+    coachLesson: false,
   };
 
   function cssVar(name) {
@@ -550,6 +551,7 @@
     els.shiftTitle.textContent = copy.title;
     els.progressText.textContent = `${state.sorted}/${state.total}`;
     els.lessonText.textContent = copy.lesson;
+    els.lessonText.hidden = !state.coachLesson;
   }
 
   function render() {
@@ -569,6 +571,7 @@
     state.unlocked = Math.max(state.unlocked, index);
     state.held = false;
     state.drag = null;
+    state.coachLesson = false;
     clearHeld();
     els.transformStage.hidden = true;
     const plan = SHIFTS[index];
@@ -627,6 +630,8 @@
       playSound('bad');
       track('sort_wrong');
       setStatus(t('wrong')[materialId]);
+      state.coachLesson = true;
+      els.lessonText.hidden = false;
       state.held = true;
       els.scrap.classList.add('is-held');
       els.scrap.setAttribute('aria-grabbed', 'true');
@@ -653,6 +658,7 @@
     podBtn?.classList.add('is-success');
     window.setTimeout(() => podBtn?.classList.remove('is-success'), 450);
     setStatus(t('transforms')[materialId]);
+    state.coachLesson = true;
     save();
     renderScrap();
     renderPods();
@@ -756,6 +762,8 @@
 
   function onHint() {
     playSound('tap');
+    state.coachLesson = true;
+    els.lessonText.hidden = false;
     setStatus(shiftCopy().hint);
     track('hint');
   }

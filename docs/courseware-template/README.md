@@ -25,6 +25,7 @@ npm run build   # 必须通过（退出码 0）
 | 事项 | 约定 |
 |---|---|
 | 文案 | 一律进 `I18N.zh` / `I18N.en`，静态节点挂 `data-t="key"`，动态文案用 `t('key')` 或函数 key |
+| 文字密度 | 首屏只留一句动作邀请；规则卡、公式、知识点默认隐藏，由交互、轻提示或卡住后再出现，开局不报答案 |
 | SDK | `index.html` 保留带 `data-kidslab-sdk` 的源码脚本；构建时会替换为内联 SDK，产物不依赖外部目录 |
 | 语言切换 | `#langBtn`，按钮文字显示「对方语言」（当前中文则显示 `EN`） |
 | 主题切换 | `#themeBtn`，light 显示 `🌙`、dark 显示 `☀️`；`<html data-theme="light|dark">` |

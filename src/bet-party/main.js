@@ -45,7 +45,7 @@
       pendingSeat: '下一位客人等你点一个抽屉',
       pendingSock: '下一只袜子等你丢进颜色抽屉',
       pendingLetter: '下一位嘉宾等你选首字母',
-      needPending: '先点「请来下一位」，再点抽屉。',
+      needPending: '先请来下一位。',
       placed: (label, n) => `放进「${label}」。这个抽屉现在有 ${n} 只。`,
       collide: (label, n) => `撞上了！「${label}」已经有 ${n} 只——最坏情况也挡不住必然。`,
       fullSpread: (n) => `漂亮：${n} 个抽屉各 1 只，暂时没人成对。再来一位呢？`,
@@ -64,7 +64,7 @@
       m0Text: '点「请来下一位」，再点月份抽屉。尽量每人不同月——魔法师赌第 13 位必撞车。',
       m0Rule: '一年 12 个月 = 12 个抽屉。最坏情况：12 人各占一月；第 13 人无处可藏。',
       m0Lesson: '抽屉原理：n 个抽屉放 n+1 只鸽子，至少有一格 ≥2。',
-      m0Ready: '派对开始！先请来第一位客人，塞进一个月份。',
+      m0Ready: '请来第一位客人。',
       m0Hint: '先把 12 个月都放满 1 人，再请第 13 位——无论点哪个抽屉都会成对。',
       m0Formula: '抽屉 12 · 目标成对 · 稳赢线 13',
       m0Win: '魔法时刻：你挖空心思排的最坏情况，还是挡不住第 13 位。必然比运气硬！',
@@ -73,7 +73,7 @@
       m1Text: '先说出：几个抽屉、保证几个一样、要几只鸽子。开赌后看最坏情况表演。',
       m1Rule: '3 种颜色。最坏：先各摸 1 只仍无对；再摸 1 只必定成对。',
       m1Lesson: '稳赢数 = 抽屉 × (需要个数 − 1) + 1。这里 3×1+1=4。',
-      m1Ready: '接过魔法棒：填好三个数，点「开赌」。正确答案是 4。',
+      m1Ready: '填三个数，开赌。',
       m1Hint: '抽屉=3，保证≥2。最坏先 3 只各一色，第 4 只必然配对 → 3×1+1=4。',
       m1Formula: '抽屉 ? · 保证成对 · 稳赢线 ?',
       m2Kicker: '升级赌注 · 三人同月',
@@ -81,7 +81,7 @@
       m2Text: '还是 12 个月份抽屉。先写出抽屉数、保证个数、稳赢鸽子数。',
       m2Rule: '每个月先放 2 人仍可“没有三人同月”；再多 1 人，必有某月 ≥3。',
       m2Lesson: '推广式：n 个抽屉保证至少 k 个一样，需要 n(k−1)+1。12×2+1=25。',
-      m2Ready: '抽屉 12，保证 ≥3。算出稳赢线再开赌。',
+      m2Ready: '算出稳赢线，开赌。',
       m2Hint: '最坏：12 个月各 2 人=24，无人达 3；第 25 人必让某月变成 3。',
       m2Formula: '抽屉 12 · 保证 ≥3 · 稳赢线 ?',
       m3Kicker: '终场巡演 · 同名首字母',
@@ -89,7 +89,7 @@
       m3Text: '说出抽屉、保证个数与稳赢数。开赌后看最坏情况被第 27 人打破。',
       m3Rule: '26 个字母抽屉。26 人可各占一字母；第 27 人必撞车。',
       m3Lesson: '又是基本形式：抽屉 n=26，稳赢线 n+1=27。',
-      m3Ready: '终场：26 个字母抽屉，保证两人同字母。',
+      m3Ready: '26 个字母，开赌。',
       m3Hint: '和生日月同一逻辑：抽屉数 + 1。',
       m3Formula: '抽屉 26 · 保证成对 · 稳赢线 ?',
     },
@@ -128,7 +128,7 @@
       pendingSeat: 'Next guest waits — tap a bin',
       pendingSock: 'Next sock waits — drop it in a color bin',
       pendingLetter: 'Next guest waits — pick a first letter',
-      needPending: 'Tap “Invite next”, then tap a bin.',
+      needPending: 'Invite the next guest first.',
       placed: (label, n) => `Into “${label}”. That bin now holds ${n}.`,
       collide: (label, n) => `Collision! “${label}” has ${n} — even the worst case cannot stop the must.`,
       fullSpread: (n) => `Nice: ${n} bins with 1 each, no pair yet. Invite one more?`,
@@ -147,7 +147,7 @@
       m0Text: 'Tap “Invite next”, then a month bin. Keep months unique — the wizard bets #13 collides.',
       m0Rule: '12 months = 12 bins. Worst case: 12 people, one each. #13 has nowhere new.',
       m0Lesson: 'Pigeonhole: n bins and n+1 pigeons ⇒ some bin has ≥2.',
-      m0Ready: 'Party time! Invite the first guest into a month.',
+      m0Ready: 'Invite the first guest.',
       m0Hint: 'Fill all 12 months with 1 person, then invite #13 — any bin makes a pair.',
       m0Formula: 'Bins 12 · aim for a pair · sure line 13',
       m0Win: 'Magic moment: your carefully built worst case still loses to guest #13. Must beats luck!',
@@ -156,7 +156,7 @@
       m1Text: 'First state bins, how many alike, and pigeons. Then watch the worst-case demo.',
       m1Rule: '3 colors. Worst case: one of each (still no pair); the 4th must match.',
       m1Lesson: 'Sure number = bins × (need − 1) + 1. Here 3×1+1=4.',
-      m1Ready: 'Take the wand: fill three numbers, then Bet. Answer is 4.',
+      m1Ready: 'Fill three numbers, then bet.',
       m1Hint: 'Bins=3, guarantee ≥2. Worst: 3 singles, 4th pairs → 3×1+1=4.',
       m1Formula: 'Bins ? · guarantee a pair · sure line ?',
       m2Kicker: 'Raise the stakes · Triple month',
@@ -164,7 +164,7 @@
       m2Text: 'Still 12 month bins. Write bins, need-count, and the sure pigeon count.',
       m2Rule: 'Two per month (24) can avoid triples; #25 forces some month to 3.',
       m2Lesson: 'General form: n bins, guarantee k alike → n(k−1)+1. 12×2+1=25.',
-      m2Ready: 'Bins 12, guarantee ≥3. Compute the sure line, then bet.',
+      m2Ready: 'Find the sure line, then bet.',
       m2Hint: 'Worst: 12×2=24 with no triple; #25 makes a triple.',
       m2Formula: 'Bins 12 · guarantee ≥3 · sure line ?',
       m3Kicker: 'Finale · Same first letter',
@@ -172,7 +172,7 @@
       m3Text: 'State bins, need-count, and sure number. Watch #27 break the worst case.',
       m3Rule: '26 letter bins. 26 people can take every letter; #27 collides.',
       m3Lesson: 'Basic form again: n=26 bins, sure line n+1=27.',
-      m3Ready: 'Finale: 26 letter bins, guarantee a shared letter.',
+      m3Ready: '26 letters. Place your bet.',
       m3Hint: 'Same logic as months: bins + 1.',
       m3Formula: 'Bins 26 · guarantee a pair · sure line ?',
     },
@@ -294,13 +294,16 @@
     sureLine: document.getElementById('sureLine'),
     wizard: document.getElementById('wizard'),
     wizardMood: document.getElementById('wizardMood'),
+    formulaBox: document.getElementById('formulaBox'),
     formulaText: document.getElementById('formulaText'),
     drawers: document.getElementById('drawers'),
     pending: document.getElementById('pending'),
     pendingGuest: document.getElementById('pendingGuest'),
     pendingText: document.getElementById('pendingText'),
     deskTitle: document.getElementById('deskTitle'),
+    ruleCard: document.getElementById('ruleCard'),
     ruleText: document.getElementById('ruleText'),
+    insightCard: document.getElementById('insightCard'),
     lessonIcon: document.getElementById('lessonIcon'),
     lessonText: document.getElementById('lessonText'),
     betForm: document.getElementById('betForm'),
@@ -352,6 +355,9 @@
     statusArgs: [],
     collideIndex: -1,
     betOpened: false,
+    showRule: false,
+    showLesson: false,
+    showFormula: false,
   };
 
   while (state.cleared.length < MISSIONS.length) state.cleared.push(false);
@@ -392,6 +398,9 @@
     state.wizardMood = m.mode === 'bet' ? 'cheer' : 'smug';
     state.collideIndex = -1;
     state.betOpened = false;
+    state.showRule = false;
+    state.showLesson = false;
+    state.showFormula = false;
     state.pendingEmoji = m.kind === 'sock' ? SOCK_EMOJI[0] : GUEST_EMOJI[0];
     if (m.mode === 'bet') {
       el.inputDrawers.value = String(m.drawers);
@@ -437,6 +446,8 @@
       state.collideIndex = index;
       state.phase = 'won';
       state.wizardMood = 'wow';
+      state.showLesson = true;
+      state.showFormula = true;
       setStatus('collide', label, n);
       state.cleared[state.mission] = true;
       persist();
@@ -514,6 +525,7 @@
     const right = sureNumber(m.drawers, m.need);
 
     if (!Number.isFinite(d) || !Number.isFinite(need) || !Number.isFinite(p)) {
+      state.showRule = true;
       setStatus('wrongBet', m.need, right);
       sound.bad();
       render();
@@ -521,6 +533,7 @@
     }
 
     if (d !== m.drawers || need !== m.need || p !== right) {
+      state.showRule = true;
       setStatus('wrongBet', m.need, right);
       sound.bad();
       window.cool?.track?.('wrong_bet');
@@ -531,6 +544,8 @@
     state.betOpened = true;
     state.phase = 'play';
     state.wizardMood = 'cheer';
+    state.showFormula = true;
+    state.showLesson = true;
     setStatus('rightBet', m.drawers, m.need, right);
     sound.ok();
     window.cool?.track?.('open_bet');
@@ -670,6 +685,9 @@
     el.formulaText.textContent = state.betOpened || m.mode === 'construct'
       ? `${t('meterDrawers')} ${m.drawers} · ≥${m.need} · ${t('meterSure')} ${sure}`
       : t(`m${idx}Formula`);
+    if (el.formulaBox) el.formulaBox.hidden = !state.showFormula;
+    if (el.ruleCard) el.ruleCard.hidden = !state.showRule;
+    if (el.insightCard) el.insightCard.hidden = !state.showLesson;
 
     el.drawerCount.textContent = String(m.drawers);
     el.pigeonCount.textContent = String(state.total);
@@ -729,6 +747,9 @@
   el.inviteBtn.addEventListener('click', invite);
   el.openBetBtn.addEventListener('click', openBet);
   el.hintBtn.addEventListener('click', () => {
+    state.showRule = true;
+    state.showLesson = true;
+    state.showFormula = true;
     setStatus(`m${state.mission}Hint`);
     sound.tap();
     render();

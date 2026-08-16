@@ -93,6 +93,7 @@ input:focus-visible {
 
 .topbar__actions { display: flex; gap: 8px; }
 
+button,
 .chip {
   min-height: 44px;
   min-width: 44px;
@@ -199,8 +200,8 @@ input:focus-visible {
 }
 
 .mission-nav button {
-  min-width: 44px;
-  min-height: 44px;
+  min-width: 46px;
+  min-height: 46px;
   border-radius: 12px;
   border: 2px solid var(--line);
   background: var(--paper);
