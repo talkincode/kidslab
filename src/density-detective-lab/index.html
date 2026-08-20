@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>密度侦探实验室 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill back-pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title"><span aria-hidden="true">⚖️</span> <span data-t="title">密度侦探实验室</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill lang-pill" id="langBtn" type="button" aria-label="Switch to English">EN</button>
+    </div>
+  </header>
+
+  <nav class="mobile-nav" aria-label="实验区切换">
+    <button class="mobile-nav__button is-active" type="button" data-mobile-panel="case" aria-pressed="true">
+      <span aria-hidden="true">01</span><span data-t="caseNav">案件</span>
+    </button>
+    <button class="mobile-nav__button" type="button" data-mobile-panel="bench" aria-pressed="false">
+      <span aria-hidden="true">02</span><span data-t="benchNav">实验台</span>
+    </button>
+    <button class="mobile-nav__button" type="button" data-mobile-panel="evidence" aria-pressed="false">
+      <span aria-hidden="true">03</span><span data-t="evidenceNav">证据</span>
+    </button>
+  </nav>
+
+  <main class="app" id="app" data-mobile-panel="case">
+    <section class="panel case-panel" aria-labelledby="caseTitle">
+      <p class="section-code">CASE 01 · <span data-t="caseCode">未知合金案</span></p>
+      <h2 id="caseTitle" data-t="caseTitle">三块银色金属，是同一种材料吗？</h2>
+      <p class="panel-intro" data-t="caseIntro">不要凭大小或重量猜。用数据找出不随样本大小改变的证据。</p>
+
+      <div class="prediction-card">
+        <div class="step-title">
+          <span class="step-number">1</span>
+          <span data-t="predictionTitle">先留下预测</span>
+        </div>
+        <p data-t="predictionPrompt">如果三块金属来自同一种材料，哪一个量最可能保持相同？</p>
+        <div class="prediction-grid" role="group" aria-label="预测选择">
+          <button class="prediction-choice" type="button" data-prediction="mass">
+            <span class="choice-symbol" aria-hidden="true">m</span>
+            <span data-t="predictionMass">质量</span>
+          </button>
+          <button class="prediction-choice" type="button" data-prediction="volume">
+            <span class="choice-symbol" aria-hidden="true">V</span>
+            <span data-t="predictionVolume">体积</span>
+          </button>
+          <button class="prediction-choice" type="button" data-prediction="density">
+            <span class="choice-symbol" aria-hidden="true">ρ</span>
+            <span data-t="predictionDensity">密度</span>
+          </button>
+        </div>
+        <p class="feedback" id="predictionFeedback" role="status" aria-live="polite"></p>
+      </div>
+
+      <div class="specimen-shelf">
+        <div class="shelf-head">
+          <div>
+            <div class="step-title">
+              <span class="step-number">2</span>
+              <span data-t="specimenTitle">挑选证物</span>
+            </div>
+            <p data-t="specimenHint">每块只测一次；改变体积，材料保持不变。</p>
+          </div>
+          <span class="count-badge" id="recordCount">0 / 3</span>
+        </div>
+        <div class="specimen-grid" role="group" aria-label="未知金属样本">
+          <button class="specimen-card specimen-card--light is-selected" type="button" data-specimen="specimen-a">
+            <span class="specimen-shape" aria-hidden="true"></span>
+            <span class="specimen-name" data-t="specimenA">证物 A</span>
+            <span class="specimen-sub" data-t="smallPiece">小块</span>
+          </button>
+          <button class="specimen-card specimen-card--mid" type="button" data-specimen="specimen-b">
+            <span class="specimen-shape" aria-hidden="true"></span>
+            <span class="specimen-name" data-t="specimenB">证物 B</span>
+            <span class="specimen-sub" data-t="middlePiece">中块</span>
+          </button>
+          <button class="specimen-card specimen-card--deep" type="button" data-specimen="specimen-c">
+            <span class="specimen-shape" aria-hidden="true"></span>
+            <span class="specimen-name" data-t="specimenC">证物 C</span>
+            <span class="specimen-sub" data-t="largePiece">大块</span>
+          </button>
+        </div>
+      </div>
+
+      <aside class="control-note">
+        <span class="control-note__icon" aria-hidden="true">↔</span>
+        <p><strong data-t="controlLabel">控制变量：</strong> <span data-t="controlText">同种材料、同一量筒、同样的初始水位。</span></p>
+      </aside>
+    </section>
+
+    <section class="panel bench-panel" aria-labelledby="benchTitle">
+      <div class="bench-heading">
+        <div>
+          <p class="section-code">MEASUREMENT BENCH</p>
+          <h2 id="benchTitle" data-t="benchTitle">让仪器说话</h2>
+        </div>
+        <span class="lab-state" id="labState">等待测量</span>
+      </div>
+
+      <p class="selected-line"><span data-t="selectedLabel">当前证物</span><strong id="selectedSpecimen">证物 A</strong></p>
+
+      <div class="bench-scene">
+        <article class="instrument balance-instrument" aria-label="电子天平">
+          <div class="instrument-label"><span aria-hidden="true">⚖</span><span data-t="balanceTitle">电子天平</span></div>
+          <div class="balance-body">
+            <div class="balance-screen">
+              <span id="balanceReading">—</span><small>g</small>
+            </div>
+            <div class="balance-pan">
+              <span class="bench-specimen" id="balanceSpecimen" aria-hidden="true"></span>
+            </div>
+            <div class="balance-feet" aria-hidden="true"><i></i><i></i></div>
+          </div>
+          <p class="instrument-readout"><span data-t="massReadout">质量读数</span><strong id="massReadout">—</strong></p>
+        </article>
+
+        <div class="transfer-line" aria-hidden="true">
+          <span class="transfer-dot"></span><span></span><span></span>
+        </div>
+
+        <article class="instrument cylinder-instrument" aria-label="量筒">
+          <div class="instrument-label"><span aria-hidden="true">🧪</span><span data-t="cylinderTitle">量筒</span></div>
+          <div class="cylinder-rig">
+            <div class="cylinder-scale" aria-hidden="true">
+              <span>70</span><span>60</span><span>50</span><span>40</span><span>30</span>
+            </div>
+            <div class="cylinder">
+              <span class="water-fill" id="waterFill"></span>
+              <span class="water-shine" aria-hidden="true"></span>
+              <span class="water-specimen" id="waterSpecimen" aria-hidden="true"></span>
+            </div>
+          </div>
+          <div class="water-readings">
+            <span><small data-t="initialLevel">初液面</small><strong id="initialReading">40.0 mL</strong></span>
+            <span><small data-t="finalLevel">末液面</small><strong id="finalReading">—</strong></span>
+          </div>
+        </article>
+      </div>
+
+      <div class="instrument-actions">
+        <button class="instrument-button" id="weighBtn" type="button">
+          <span aria-hidden="true">1</span><span data-t="weigh">放上天平</span>
+        </button>
+        <button class="instrument-button instrument-button--water" id="submergeBtn" type="button">
+          <span aria-hidden="true">2</span><span data-t="submerge">浸没入水</span>
+        </button>
+      </div>
+      <p class="feedback bench-feedback" id="benchFeedback" role="status" aria-live="polite"></p>
+
+      <div class="method-ribbon">
+        <span data-t="methodVolume">体积 = 末液面 − 初液面</span>
+        <span aria-hidden="true">·</span>
+        <span data-t="methodUnit">1 mL = 1 cm³</span>
+      </div>
+    </section>
+
+    <section class="panel evidence-panel" aria-labelledby="evidenceTitle">
+      <div class="evidence-heading">
+        <div>
+          <p class="section-code">EVIDENCE LOG</p>
+          <h2 id="evidenceTitle" data-t="evidenceTitle">记录，再下结论</h2>
+        </div>
+        <button class="reset-button" id="resetBtn" type="button" data-t="reset">重开案件</button>
+      </div>
+
+      <div class="entry-card">
+        <div class="entry-head">
+          <span class="step-number">3</span>
+          <div>
+            <strong data-t="entryTitle">抄下仪器读数</strong>
+            <p data-t="entryHint">先量，再算。输入质量和排开水的体积。</p>
+          </div>
+        </div>
+        <div class="entry-fields">
+          <label>
+            <span data-t="entryMass">质量 m (g)</span>
+            <input id="massEntry" type="number" inputmode="decimal" step="0.1" placeholder="—" disabled />
+          </label>
+          <label>
+            <span data-t="entryVolume">排水体积 V (cm³)</span>
+            <input id="volumeEntry" type="number" inputmode="decimal" step="0.1" placeholder="—" disabled />
+          </label>
+          <button class="record-button" id="recordBtn" type="button" disabled data-t="record">写入证据</button>
+        </div>
+        <p class="feedback entry-feedback" id="entryFeedback" role="status" aria-live="polite"></p>
+      </div>
+
+      <div class="data-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th data-t="tableSpecimen">证物</th>
+              <th data-t="tableMass">m / g</th>
+              <th data-t="tableVolume">V / cm³</th>
+              <th data-t="tableDensity">ρ / g·cm⁻³</th>
+            </tr>
+          </thead>
+          <tbody id="recordBody"></tbody>
+        </table>
+      </div>
+
+      <div class="graph-card">
+        <div class="graph-head">
+          <span data-t="graphTitle">质量—体积图</span>
+          <strong id="densityEstimate">ρ = —</strong>
+        </div>
+        <svg class="evidence-graph" viewBox="0 0 280 180" role="img" aria-label="质量和体积关系图">
+          <g class="graph-grid" aria-hidden="true">
+            <path d="M34 18V150H260 M34 117H260 M34 84H260 M34 51H260 M34 18H260 M109 18V150 M184 18V150 M260 18V150"></path>
+          </g>
+          <path class="graph-fit" id="graphFit" d=""></path>
+          <g class="graph-points" id="graphPoints"></g>
+          <text class="axis-title axis-title--y" x="11" y="84" transform="rotate(-90 11 84)">m / g</text>
+          <text class="axis-title" x="237" y="174">V / cm³</text>
+          <text class="axis-tick" x="26" y="154">0</text>
+          <text class="axis-tick" x="98" y="164">10</text>
+          <text class="axis-tick" x="173" y="164">20</text>
+          <text class="axis-tick" x="249" y="164">30</text>
+          <text class="axis-tick" x="15" y="120">20</text>
+          <text class="axis-tick" x="15" y="87">40</text>
+          <text class="axis-tick" x="15" y="54">60</text>
+          <text class="axis-tick" x="15" y="21">80</text>
+        </svg>
+        <p class="graph-empty" id="graphEmpty" data-t="graphEmpty">记录第一组数据，图上就会出现一个坐标点。</p>
+        <p class="formula-strip" id="formulaStrip" hidden>ρ = m ÷ V</p>
+      </div>
+
+      <div class="material-check">
+        <div class="entry-head">
+          <span class="step-number">4</span>
+          <div>
+            <strong data-t="identifyTitle">锁定材料</strong>
+            <p data-t="identifyHint">三组证据齐全后，用图像斜率和参考卡比对。</p>
+          </div>
+        </div>
+        <div class="material-grid" role="group" aria-label="材料参考卡">
+          <button class="material-card" id="material-aluminum" type="button" data-material="aluminum" disabled>
+            <span data-t="aluminum">铝</span><strong>2.70</strong><small>g/cm³</small>
+          </button>
+          <button class="material-card" id="material-iron" type="button" data-material="iron" disabled>
+            <span data-t="iron">铁</span><strong>7.87</strong><small>g/cm³</small>
+          </button>
+          <button class="material-card" id="material-copper" type="button" data-material="copper" disabled>
+            <span data-t="copper">铜</span><strong>8.96</strong><small>g/cm³</small>
+          </button>
+        </div>
+        <p class="conclusion" id="conclusionStatus" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

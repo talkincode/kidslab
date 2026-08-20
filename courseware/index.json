@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-16T06:02:35.695Z",
+  "generatedAt": "2026-08-20T17:25:41.617Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -100,6 +100,10 @@
     "实验": {
       "en": "Experiment",
       "kind": "form"
+    },
+    "密度": {
+      "en": "Density",
+      "kind": "knowledge"
     },
     "小数": {
       "en": "Decimals",
@@ -243,6 +247,10 @@
     },
     "调试": {
       "en": "Debugging",
+      "kind": "knowledge"
+    },
+    "质量": {
+      "en": "Mass",
       "kind": "knowledge"
     },
     "运算": {
@@ -1838,6 +1846,63 @@
         "游戏"
       ],
       "path": "courseware/carnival-truth/index.html"
+    },
+    {
+      "id": "density-detective-lab",
+      "title": {
+        "zh": "密度侦探实验室",
+        "en": "Density Detective Lab"
+      },
+      "description": {
+        "zh": "用天平和量筒测量三块未知金属，绘制质量—体积关系并锁定材料。",
+        "en": "Measure three mystery metal pieces with a balance and graduated cylinder, graph mass against volume, and identify the material."
+      },
+      "category": "physics",
+      "levels": [
+        "junior"
+      ],
+      "grades": [
+        "g8"
+      ],
+      "tags": [
+        "密度",
+        "质量",
+        "体积",
+        "实验"
+      ],
+      "icon": "⚖️",
+      "order": 34,
+      "badge": "new",
+      "keywords": [
+        "Density",
+        "density",
+        "密度公式",
+        "rho",
+        "ρ",
+        "m/v",
+        "质量体积比",
+        "g/cm³",
+        "g/cm3",
+        "Mass",
+        "mass",
+        "质量",
+        "克",
+        "grams",
+        "balance",
+        "天平",
+        "Volume",
+        "volume",
+        "容积",
+        "capacity",
+        "排水法",
+        "displacement",
+        "Experiment",
+        "experiment",
+        "simulation",
+        "lab",
+        "模拟"
+      ],
+      "path": "courseware/density-detective-lab/index.html"
     },
     {
       "id": "lantern-lane",

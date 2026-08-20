@@ -15,6 +15,8 @@
     "周长": { "en": "Perimeter", "kind": "knowledge", "aliases": ["perimeter", "圆的周长", "circumference"] },
     "面积": { "en": "Area", "kind": "knowledge", "aliases": ["area", "圆的面积"] },
     "体积": { "en": "Volume", "kind": "knowledge", "aliases": ["volume", "容积", "capacity", "排水法", "displacement"] },
+    "质量": { "en": "Mass", "kind": "knowledge", "aliases": ["mass", "质量", "克", "grams", "balance", "天平"] },
+    "密度": { "en": "Density", "kind": "knowledge", "aliases": ["density", "密度公式", "rho", "ρ", "m/v", "质量体积比", "g/cm³", "g/cm3"] },
     "平面图形": { "en": "2D Shapes", "kind": "knowledge", "aliases": ["2d shapes", "长方形", "rectangle"] },
     "立体图形": { "en": "3D Shapes", "kind": "knowledge", "aliases": ["3d shapes", "长方体", "圆柱", "cylinder", "圆锥", "cone", "旋转体", "solids of revolution", "voxels"] },
     "三视图": { "en": "Three Views", "kind": "knowledge", "aliases": ["three views", "观察物体"] },

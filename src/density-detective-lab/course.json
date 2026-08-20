@@ -1,0 +1,27 @@
+{
+  "id": "density-detective-lab",
+  "title": {
+    "zh": "密度侦探实验室",
+    "en": "Density Detective Lab"
+  },
+  "description": {
+    "zh": "用天平和量筒测量三块未知金属，绘制质量—体积关系并锁定材料。",
+    "en": "Measure three mystery metal pieces with a balance and graduated cylinder, graph mass against volume, and identify the material."
+  },
+  "category": "physics",
+  "levels": [
+    "junior"
+  ],
+  "grades": [
+    "g8"
+  ],
+  "tags": [
+    "密度",
+    "质量",
+    "体积",
+    "实验"
+  ],
+  "icon": "⚖️",
+  "order": 34,
+  "badge": "new"
+}

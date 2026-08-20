@@ -1,6 +1,6 @@
 # KidsLab 计划状态清单
 
-最后核验：2026-08-15
+最后核验：2026-08-21
 
 事实来源：`src/*/course.json`、`docs/courseware-plan/*.md`、`README.md`、`AGENT.md`。本文件负责回答“哪些已完成、哪些未实现、后续 Agent 完成计划后要更新哪里”。
 
@@ -31,7 +31,7 @@ KidsLab 应该是一组孩子打开就想玩的交互课件，而不是题库或
 
 - 主站课程浏览：`index.html`、`assets/js/app.js` 支持学段、年级、分类、搜索、双语、主题、强调色与置顶课件。
 - 静态构建发布：`scripts/build.mjs` 校验 `course.json`、压缩资源、生成 `courseware/index.json`；GitHub Pages workflow 在 `main` 推送后构建发布。
-- 课件源码库：当前 `src/` 下有 89 个课件目录，其中小学规划内按 ID 直接完成 77 个。
+- 课件源码库：当前 `src/` 下有 90 个课件目录，其中小学规划内按 ID 直接完成 77 个。
 - 小学课件规划：`docs/courseware-plan/` 覆盖数学、编程、逻辑、科学 84 个小学目标课件。
 - 课件模板：`docs/courseware-template/` 提供双语、主题、静态独立课件起点。
 - 交互音效：当前游戏课件含语义交互音效与静音控制（含新建 `cpu-lab`）；`huarong-dao` 与 `venn-port` 使用 ScoreKit 循环配乐和通关短曲；存量改进优先级见 `docs/courseware-audio-audit.md`。
@@ -72,6 +72,16 @@ Agent 每次完成计划项后必须同步更新：
 | 逻辑 | 15 | 15 | 0 | P0 已完成；规划项已全部完成；`magic-cube`、`huarong-dao` 为规划外补充 |
 | 科学 | 22 | 15 | 7 | `plant-lab` 可能对应 `plant-xray`，但 ID/标题未对齐 |
 | 合计 | 84 | 77 | 7 | 另有 11 个规划外已上线课件 |
+
+初高中采用独立规划口径，详见 [`secondary-labs.md`](./secondary-labs.md)：共 26 个目标课件，6 个存量课件纳入统一实验合同并待复核，20 个为新增规划，不计入上方小学汇总。
+
+| 初高中实验规划 | 目标数 | 源码已存在 | 新增待实现 | 备注 |
+| --- | ---: | ---: | ---: | --- |
+| 数学 | 4 | 2 | 2 | 函数、平方根、动态几何、抽样统计 |
+| 物理 | 12 | 3 | 9 | `electric-mouse` 当前分类为 `science`，但纳入初中物理学习路径；`density-detective-lab` 已完成 |
+| 化学 | 7 | 1 | 6 | `ph-lab` 需从观察型 L1 升级到测量型 L3 |
+| 生物/科学 | 3 | 1 | 2 | 暂沿用 `science` 分类，不新增 `biology` |
+| 合计 | 26 | 7 | 19 | 存量存在不等于已通过新实验合同复核 |
 
 ## 已完成（规划内）
 
@@ -164,6 +174,10 @@ Agent 每次完成计划项后必须同步更新：
 - [x] 彩虹舞台 `rainbow-stage`
 - [x] 垃圾变形记 `trash-transform`
 
+### 初高中实验型
+
+- [x] 密度侦探实验室 `density-detective-lab`（物理 · `g8`；天平、排水测体积、数据表、质量—体积图和材料识别构成 L3 实验闭环）
+
 ## 未实现（规划内）
 
 ### 数学
@@ -190,7 +204,7 @@ Agent 每次完成计划项后必须同步更新：
 
 ## 已上线但不在小学规划 ID 内
 
-这些课件已在 `src/` 存在，但不是当前小学规划清单的直接 ID。不要用它们自动勾掉规划内条目，除非同步修改规划 ID 或明确记录替代关系。
+这些课件已在 `src/` 存在，但不是当前小学规划清单的直接 ID。部分已纳入初高中独立规划；不要用它们自动勾掉小学规划内条目，除非同步修改规划 ID 或明确记录替代关系。
 
 | 课件 | 分类 | 学段 | 处理建议 |
 | --- | --- | --- | --- |
@@ -199,11 +213,11 @@ Agent 每次完成计划项后必须同步更新：
 | `magic-cube` 魔方小达人 | logic | primary/junior/senior | 作为逻辑扩展课件，若纳入规划需补条目 |
 | `pyramid-cube` 金属金字塔魔方 | logic | primary/junior/senior | 魔方小达人姊妹篇：三阶 Pyraminx，金属材质，三档难度，一步提示与还原演示 |
 | `huarong-dao` 华容道 · 木关智局 | logic | primary/junior/senior | 作为空间规划与滑块算法扩展课件；含经典阵、十二步练习与求解演示 |
-| `function-grapher` 函数变形记 | math | junior/senior | 初高中扩展，不计入小学规划 |
-| `square-root-lab` 平方根建筑师 | math | junior/senior | 初高中平方根扩展，不计入小学规划 |
-| `pendulum-lab` 单摆实验室 | physics | junior/senior | 初高中物理扩展 |
-| `optics-lab` 光学实验室 | physics | junior/senior | 初高中几何光学扩展 |
-| `ph-lab` 酸碱魔法水 | chemistry | junior/senior | 初高中化学扩展 |
+| `function-grapher` 函数变形记 | math | junior/senior | 已纳入初高中实验规划；补 `grades` 并按实验合同复核 |
+| `square-root-lab` 平方根建筑师 | math | junior/senior | 已纳入初高中实验规划；按实验合同复核 |
+| `pendulum-lab` 单摆实验室 | physics | junior/senior | 已纳入初高中实验规划；补 `grades` 与重复测量 |
+| `optics-lab` 光学实验室 | physics | junior/senior | 已纳入初高中实验规划；补记录与归纳闭环 |
+| `ph-lab` 酸碱魔法水 | chemistry | junior/senior | 已纳入初高中实验规划；从 L1 观察升级到 L3 测量 |
 | `ice-maker-lab` 制冰实验室 | physics | primary/junior | 蒸汽压缩制冷/制冰机原理扩展，不计入小学 84 项规划 ID |
 | `cpu-lab` 电脑原理实验室 | programming | primary/junior | 计算机组成/冯·诺依曼与取指-译码-执行扩展，不计入小学 84 项规划 ID |
 
@@ -213,7 +227,7 @@ Agent 每次完成计划项后必须同步更新：
 - 对 `plant-lab` 与 `plant-xray` 做一次命名和目标对齐，避免科学清单长期出现“已做但未勾”的歧义。
 - 为主站过滤、课件核心交互和构建发布补充可重复验收证据；当前主要依赖 `npm run build` 与人工走查。
 - 按 `docs/courseware-audio-audit.md` 的 P0 → P1 → P2 顺序补齐交互音效；先消除高频堆叠音源，再统一静音控制，最后分批覆盖无音频课件。
-- 初高中扩展课件应单独建立规划清单，不要混入小学 84 项状态。
+- 初高中扩展按 `secondary-labs.md` 独立维护，不混入小学 84 项状态；优先完成 P0，并同步扩充 taxonomy 与模型单测。
 
 ## 完成的样子
 
@@ -245,6 +259,7 @@ Agent 每次完成计划项后必须同步更新：
 | 课件构建与 manifest 生成 | 中 | 部分：`npm run build` | 部分：`scripts/build.mjs` 校验非法 `course.json` | 不适用：本地构建无角色 | 部分：构建失败不应写入错误 manifest，需补回归验证 | `scripts/build.mjs`、`.github/workflows/deploy.yml` |
 | PWA 壳与课件离线缓存 | 高 | 已覆盖：manifest 合法性 + SW 激活预缓存 + cache-on-visit 角标 | 已覆盖：杀死服务器后离线回放已玩课件与主站壳 | 不适用：纯静态无角色 | 已覆盖：断网时 SW 缓存兜底，联网 network-first 自动恢复最新内容 | `tests/e2e/pwa.spec.js` |
 | 电工鼠开放电路实验室 | 高 | 已覆盖：桌面与触屏完成端口接线、合闸点亮、实时电流读数和触屏放置 | 已覆盖：制造短路并显示故障 | 不适用：纯静态无角色 | 已覆盖：撤销短路恢复通路；保存后清空并加载恢复作品 | `tests/e2e/electric-mouse.spec.js`；`tests/unit/electric-lab.test.mjs` |
+| 密度侦探实验室 | 高 | 已覆盖：桌面与触屏完成预测、三次天平/排水测量、数据入表、质量—体积图和铝材料识别 | 已覆盖：错误质量读数被拒绝后可原地改正 | 不适用：纯静态无角色 | 已覆盖：静音选择重载后保持；错误读数不写入数据表 | `tests/e2e/density-detective-lab.spec.js`；`tests/unit/density-lab.test.mjs` |
 | 三角形实验室 | 中 | 已覆盖：桌面与触屏完成货架稳定性、内角和与三边关系三项实验，并验证拖动顶点后内角和仍为 180° | 已覆盖：无斜撑加载导致货架变形、三边关系误判后保留原题重试，以及两边和等于第三边时不能成三角形 | 不适用：纯静态无角色 | 已覆盖：错误状态可原地修正；实验进度、完成状态可重载恢复并支持重新开始 | `tests/e2e/triangle-lab.spec.js` |
 | 外星农场 | 中 | 已覆盖：桌面与触屏完成固定总数试调、假设法一次替换和眼腿双传感器反推三夜任务 | 已覆盖：错误腿数与错误眼腿组合保留原题和当前数量，可原地继续调整 | 不适用：纯静态无角色 | 已覆盖：任务状态、假设步骤和最终完成状态可重载恢复，并支持重新开始 | `tests/e2e/alien-farm.spec.js` |
 | 平衡马戏团 | 中 | 已覆盖：桌面与触屏用等式两边同时减常数、减未知数和除以同一非零整数完成三场方程表演 | 已覆盖：只动一边触发倾翻反馈且原方程不变；不可执行的成对操作保持状态 | 不适用：纯静态无角色 | 已覆盖：倾翻后可原地继续；合法步骤、最终完成状态可重载恢复并支持重新开始 | `tests/e2e/balance-circus.spec.js` |
