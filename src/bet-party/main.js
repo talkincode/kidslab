@@ -380,8 +380,7 @@
 
   function statusText() {
     if (!state.statusKey) return '';
-    const value = t(state.statusKey);
-    return typeof value === 'function' ? value(...state.statusArgs) : value;
+    return t(state.statusKey, ...state.statusArgs);
   }
 
   function maxInBins() {

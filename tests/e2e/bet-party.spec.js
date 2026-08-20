@@ -52,6 +52,9 @@ test.describe('bet party', () => {
     for (let i = 0; i < 12; i += 1) {
       await page.locator('#inviteBtn').click();
       await page.locator(`[data-drawer="${i}"]`).click();
+      if (i === 0) {
+        await expect(page.locator('#status')).toHaveText('放进「1月」。这个抽屉现在有 1 只。');
+      }
     }
     await expect.poll(() => page.evaluate(() => window.__BET_PARTY__.getState().total)).toBe(12);
     await expect(page.locator('#status')).toContainText('各 1');
