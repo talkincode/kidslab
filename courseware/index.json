@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-24T15:25:29.674Z",
+  "generatedAt": "2026-08-24T18:11:36.752Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -61,6 +61,10 @@
       "en": "Addition & Subtraction",
       "kind": "knowledge"
     },
+    "化石": {
+      "en": "Fossils",
+      "kind": "knowledge"
+    },
     "单摆": {
       "en": "Pendulum",
       "kind": "knowledge"
@@ -75,6 +79,10 @@
     },
     "圆": {
       "en": "Circles",
+      "kind": "knowledge"
+    },
+    "地层": {
+      "en": "Rock Layers",
       "kind": "knowledge"
     },
     "地球运动": {
@@ -3516,6 +3524,63 @@
         "游戏"
       ],
       "path": "courseware/magic-cube/index.html"
+    },
+    {
+      "id": "strata-dig",
+      "title": {
+        "zh": "地层挖掘队",
+        "en": "Strata Dig Team"
+      },
+      "description": {
+        "zh": "一层层往下挖：塑料玩具、陶罐、猛犸牙、恐龙骨。深度就是时光机，再把骨头拼活，对齐错位的断层。",
+        "en": "Dig down through toys, pottery, a mammoth tusk, and dinosaur bone. Depth is a time machine — then rebuild the fossil and match a faulted pit."
+      },
+      "category": "science",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g3",
+        "g4"
+      ],
+      "tags": [
+        "化石",
+        "地层",
+        "观察",
+        "实验"
+      ],
+      "icon": "🦖",
+      "order": 71,
+      "badge": "new",
+      "keywords": [
+        "Fossils",
+        "fossil",
+        "fossils",
+        "古生物",
+        "遗骸",
+        "骨骼化石",
+        "Rock Layers",
+        "strata",
+        "stratigraphy",
+        "沉积",
+        "叠加原理",
+        "law of superposition",
+        "断层",
+        "fault",
+        "岩石层",
+        "地质",
+        "Observation",
+        "observation",
+        "五感",
+        "five senses",
+        "特征",
+        "Experiment",
+        "experiment",
+        "simulation",
+        "lab",
+        "模拟"
+      ],
+      "path": "courseware/strata-dig/index.html"
     },
     {
       "id": "huarong-dao",

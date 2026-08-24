@@ -1,0 +1,18 @@
+{
+  "id": "strata-dig",
+  "title": {
+    "zh": "地层挖掘队",
+    "en": "Strata Dig Team"
+  },
+  "description": {
+    "zh": "一层层往下挖：塑料玩具、陶罐、猛犸牙、恐龙骨。深度就是时光机，再把骨头拼活，对齐错位的断层。",
+    "en": "Dig down through toys, pottery, a mammoth tusk, and dinosaur bone. Depth is a time machine — then rebuild the fossil and match a faulted pit."
+  },
+  "category": "science",
+  "levels": ["primary"],
+  "grades": ["g3", "g4"],
+  "tags": ["化石", "地层", "观察", "实验"],
+  "icon": "🦖",
+  "order": 71,
+  "badge": "new"
+}

@@ -43,6 +43,8 @@
     "天文": { "en": "Astronomy", "kind": "knowledge", "aliases": ["astronomy"] },
     "宇宙": { "en": "Space & Cosmos", "kind": "knowledge", "aliases": ["space", "cosmos", "星空", "光年", "light year", "宇宙尺度"] },
     "星座": { "en": "Constellations", "kind": "knowledge", "aliases": ["constellations", "北极星", "polaris", "导航", "navigation", "星空运动", "stars"] },
+    "化石": { "en": "Fossils", "kind": "knowledge", "aliases": ["fossil", "fossils", "古生物", "遗骸", "骨骼化石"] },
+    "地层": { "en": "Rock Layers", "kind": "knowledge", "aliases": ["strata", "stratigraphy", "沉积", "叠加原理", "law of superposition", "断层", "fault", "岩石层", "地质"] },
     "地球运动": { "en": "Earth's Motion", "kind": "knowledge", "aliases": ["自转", "rotation", "公转", "revolution", "昼夜交替", "day and night", "四季", "seasons", "地轴倾斜", "axial tilt", "极昼极夜", "时差", "earth"] },
     "水循环": { "en": "Water Cycle", "kind": "knowledge", "aliases": ["water cycle", "蒸发", "evaporation", "凝结", "condensation", "降水"] },
     "天气": { "en": "Weather", "kind": "knowledge", "aliases": ["weather"] },

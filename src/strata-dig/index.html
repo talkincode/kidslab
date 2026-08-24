@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>地层挖掘队 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <div class="site-bg" aria-hidden="true">
+    <i class="dune"></i>
+    <i class="dune dune--2"></i>
+    <i class="sun"></i>
+  </div>
+
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title"><span aria-hidden="true">🦖</span> <span data-t="title">地层挖掘队</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="app">
+    <section class="brief card">
+      <div class="brief__camp">
+        <small data-t="campLabel">营地</small>
+        <strong id="campNumber">01</strong>
+      </div>
+      <div class="brief__copy">
+        <p class="eyebrow" id="campKicker">第一营 · 下挖</p>
+        <h2 id="campTitle">一层层往下刷，越深越古老</h2>
+        <p id="status" role="status" aria-live="polite">先用毛刷扫开表层土。</p>
+      </div>
+      <div class="meters" aria-label="挖掘仪表">
+        <div class="meter">
+          <span data-t="depth">深度</span>
+          <strong id="depthValue">0</strong>
+        </div>
+        <div class="meter">
+          <span data-t="finds">出土</span>
+          <strong id="findsValue">0/4</strong>
+        </div>
+        <div class="lamp" id="eraLamp" data-state="now">
+          <span class="lamp__dot" aria-hidden="true"></span>
+          <strong id="eraText">今天</strong>
+        </div>
+      </div>
+    </section>
+
+    <nav class="camp-nav" id="campNav" aria-label="挖掘营地"></nav>
+
+    <section class="workspace">
+      <section class="scene card" aria-labelledby="sceneTitle">
+        <div class="scene__head">
+          <div>
+            <p class="section-label" data-t="sceneLabel">发掘现场</p>
+            <h2 id="sceneTitle" data-t="sceneTitle">探方剖面</h2>
+          </div>
+          <button class="ghost-btn" id="hintBtn" type="button"><span aria-hidden="true">💡</span> <span data-t="hint">轻提示</span></button>
+        </div>
+
+        <div class="stage" id="stage" data-camp="0">
+          <div class="pit-wrap" id="digYard">
+            <div class="ruler" id="ruler" aria-hidden="true"></div>
+            <div class="pit" id="pit"></div>
+            <div class="dust" id="dust" hidden></div>
+          </div>
+
+          <div class="assemble" id="assembleYard" hidden>
+            <div class="silhouette" id="silhouette" data-awake="false">
+              <button class="slot" data-slot="skull" type="button">🦴</button>
+              <button class="slot" data-slot="ribs" type="button">🦴</button>
+              <button class="slot" data-slot="hips" type="button">🦴</button>
+              <button class="slot" data-slot="legs" type="button">🦴</button>
+              <button class="slot" data-slot="tail" type="button">🦴</button>
+              <div class="dino-run" id="dinoRun" hidden>
+                <span aria-hidden="true">🦖</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="fault" id="faultYard" hidden>
+            <div class="fault__col">
+              <p class="fault__name" id="westLabel">西坑</p>
+              <div class="fault__stack" id="westStack"></div>
+            </div>
+            <div class="fault__col">
+              <p class="fault__name" id="eastLabel">东坑</p>
+              <div class="fault__stack" id="eastStack"></div>
+            </div>
+          </div>
+        </div>
+
+        <p class="lesson" id="lessonText" hidden>先沉下去的土层在下面。越深，通常越古老。</p>
+      </section>
+
+      <aside class="tools card">
+        <div class="tools__head">
+          <div>
+            <p class="section-label" data-t="toolsLabel">工具箱</p>
+            <h2 id="toolsTitle" data-t="toolsTitle">动手发掘</h2>
+          </div>
+          <button class="ghost-btn" id="restartBtn" type="button" data-t="restart">重新开坑</button>
+        </div>
+        <div class="tool-grid" id="toolGrid"></div>
+        <div class="tray" id="tray" aria-label="出土托盘"></div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal" id="completeModal" hidden>
+    <section class="modal__card" role="dialog" aria-modal="true" aria-labelledby="completeTitle">
+      <div class="modal__burst" aria-hidden="true">🦴⏳🦖</div>
+      <p class="modal__kicker" data-t="finalKicker">三营发掘完成</p>
+      <h2 id="completeTitle" data-t="finalTitle">化石站起来跑了两步！</h2>
+      <p data-t="finalText">越深越古老。同一层被断层错开后，对上颜色和化石，仍是同一个时代。</p>
+      <button class="action" id="playAgainBtn" type="button" data-t="playAgain">再挖一座坑</button>
+    </section>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
