@@ -1,0 +1,18 @@
+{
+  "id": "island-water",
+  "title": {
+    "zh": "荒岛净水师",
+    "en": "Island Water Master"
+  },
+  "description": {
+    "zh": "用岛上材料搭净水流水线：沉淀、过滤、再蒸馏。清澈见底的水也可能是咸的。",
+    "en": "Build a survival water line: settle, filter, then distill. Crystal-clear water can still be salty."
+  },
+  "category": "science",
+  "levels": ["primary"],
+  "grades": ["g3", "g4"],
+  "tags": ["溶液", "混合物", "观察", "实验"],
+  "icon": "🏝️",
+  "order": 70,
+  "badge": "new"
+}

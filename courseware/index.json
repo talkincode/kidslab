@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-20T17:25:41.617Z",
+  "generatedAt": "2026-08-24T15:25:29.674Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -183,6 +183,10 @@
     },
     "消化系统": {
       "en": "Digestive System",
+      "kind": "knowledge"
+    },
+    "混合物": {
+      "en": "Mixtures",
       "kind": "knowledge"
     },
     "溶液": {
@@ -2091,6 +2095,13 @@
         "Solutions",
         "solution",
         "solutions",
+        "溶解",
+        "dissolve",
+        "dissolved",
+        "soluble",
+        "insoluble",
+        "可溶",
+        "不溶",
         "Experiment",
         "experiment",
         "simulation",
@@ -3353,6 +3364,70 @@
         "游戏"
       ],
       "path": "courseware/hanoi-tower/index.html"
+    },
+    {
+      "id": "island-water",
+      "title": {
+        "zh": "荒岛净水师",
+        "en": "Island Water Master"
+      },
+      "description": {
+        "zh": "用岛上材料搭净水流水线：沉淀、过滤、再蒸馏。清澈见底的水也可能是咸的。",
+        "en": "Build a survival water line: settle, filter, then distill. Crystal-clear water can still be salty."
+      },
+      "category": "science",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g3",
+        "g4"
+      ],
+      "tags": [
+        "溶液",
+        "混合物",
+        "观察",
+        "实验"
+      ],
+      "icon": "🏝️",
+      "order": 70,
+      "badge": "new",
+      "keywords": [
+        "Solutions",
+        "solution",
+        "solutions",
+        "溶解",
+        "dissolve",
+        "dissolved",
+        "soluble",
+        "insoluble",
+        "可溶",
+        "不溶",
+        "Mixtures",
+        "mixture",
+        "mixtures",
+        "过滤",
+        "filtration",
+        "沉淀",
+        "sedimentation",
+        "蒸馏",
+        "distillation",
+        "分离",
+        "separation",
+        "净水",
+        "water treatment",
+        "Observation",
+        "observation",
+        "五感",
+        "five senses",
+        "特征",
+        "Experiment",
+        "experiment",
+        "simulation",
+        "lab",
+        "模拟"
+      ],
+      "path": "courseware/island-water/index.html"
     },
     {
       "id": "cipher-club",
