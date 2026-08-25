@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>植物透视园 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <div class="garden-bg" aria-hidden="true">
+    <i class="blob blob--sun"></i>
+    <i class="blob blob--leaf"></i>
+    <i class="blob blob--soil"></i>
+  </div>
+
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title"><span aria-hidden="true">🌱</span> <span data-t="title">植物透视园</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="app">
+    <section class="brief card">
+      <div class="brief__camp">
+        <small data-t="campLabel">园地</small>
+        <strong id="campNumber">01</strong>
+      </div>
+      <div class="brief__copy">
+        <p class="eyebrow" id="campKicker">第一园 · 透视发芽</p>
+        <h2 id="campTitle">把豆子埋下去，看谁先往下钻</h2>
+        <p id="status" role="status" aria-live="polite">点「下种」，再浇一小口水。</p>
+      </div>
+      <div class="meters" aria-label="生长仪">
+        <div class="meter">
+          <span data-t="dayLabel">日子</span>
+          <strong id="dayValue">0</strong>
+        </div>
+        <div class="meter">
+          <span data-t="waterLabel">水分</span>
+          <strong id="waterValue">干</strong>
+        </div>
+        <div class="lamp" id="growLamp" data-state="off">
+          <span class="lamp__dot" aria-hidden="true"></span>
+          <strong id="growText">还在睡</strong>
+        </div>
+      </div>
+    </section>
+
+    <nav class="camp-nav" id="campNav" aria-label="透视园地"></nav>
+
+    <section class="workspace">
+      <section class="scene card" aria-labelledby="sceneTitle">
+        <div class="scene__head">
+          <div>
+            <p class="section-label" data-t="bedLabel">X 光花床</p>
+            <h2 id="sceneTitle" data-t="bedTitle">土里藏着什么</h2>
+          </div>
+          <button class="ghost-btn" id="hintBtn" type="button"><span aria-hidden="true">💡</span> <span data-t="hint">轻提示</span></button>
+        </div>
+
+        <div class="stage" id="stage" data-camp="0">
+          <div class="sky" aria-hidden="true">
+            <span class="sun" id="sun"></span>
+            <span class="cloud c1"></span>
+            <span class="cloud c2"></span>
+          </div>
+
+          <div class="plots" id="plots">
+            <article class="plot" id="plotA" data-look="surface" data-role="a">
+              <p class="plot__tag" id="plotATag">A 床</p>
+              <div class="plant" id="plantA">
+                <button class="organ organ--fruit" data-organ="fruit" type="button" hidden>🍓</button>
+                <button class="organ organ--flower" data-organ="flower" type="button" hidden>🌸</button>
+                <button class="organ organ--leaf organ--leaf-l" data-organ="leaf" type="button" hidden>🍃</button>
+                <button class="organ organ--leaf organ--leaf-r" data-organ="leaf" type="button" hidden>🍃</button>
+                <span class="shoot" aria-hidden="true"></span>
+                <span class="leaves" aria-hidden="true"></span>
+              </div>
+              <div class="soil">
+                <span class="scan" aria-hidden="true"></span>
+                <span class="seed" aria-hidden="true"></span>
+                <span class="root" aria-hidden="true"></span>
+                <span class="pebbles" aria-hidden="true"></span>
+                <button class="organ organ--root-hit" data-organ="root" type="button" hidden>🪵</button>
+              </div>
+            </article>
+
+            <article class="plot" id="plotB" data-look="seedling" data-role="b" hidden>
+              <p class="plot__tag" id="plotBTag">B 床</p>
+              <div class="plant" id="plantB">
+                <span class="shoot" aria-hidden="true"></span>
+                <span class="leaves" aria-hidden="true"></span>
+              </div>
+              <div class="soil" aria-hidden="true">
+                <span class="scan"></span>
+                <span class="seed"></span>
+                <span class="root"></span>
+                <span class="pebbles"></span>
+              </div>
+            </article>
+          </div>
+
+          <ol class="atlas" id="atlas" hidden></ol>
+        </div>
+
+        <p class="lesson" id="lessonText" hidden>胚根先往下钻，嫩芽再往上顶。水和光都要刚刚好。</p>
+      </section>
+
+      <aside class="tools card">
+        <div class="tools__head">
+          <div>
+            <p class="section-label" data-t="toolsLabel">园丁工具</p>
+            <h2 id="toolsTitle" data-t="toolsTitle">动手照顾</h2>
+          </div>
+          <button class="ghost-btn" id="restartBtn" type="button" data-t="restart">再种一园</button>
+        </div>
+        <div class="tool-grid" id="toolGrid"></div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal" id="completeModal" hidden>
+    <section class="modal__card" role="dialog" aria-modal="true" aria-labelledby="completeTitle">
+      <div class="modal__burst" aria-hidden="true">🌱☀️🫘</div>
+      <p class="modal__kicker" data-t="finalKicker">三园透视完成</p>
+      <h2 id="completeTitle" data-t="finalTitle">胚根先向下，整株植物站起来了！</h2>
+      <p data-t="finalText">种子先往下扎根，再往上追光。缺水、不见光、泡太久，都会让对照田讲出不同的故事。</p>
+      <button class="action" id="playAgainBtn" type="button" data-t="playAgain">再种一园</button>
+    </section>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

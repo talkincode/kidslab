@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>植物透视园 · KidsLab</title>
+  <link rel="stylesheet" href="style.css?v=3ed0431f" />
+  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<script>(()=>{"use strict";const g=window,r=g.cool||{};if(r.sdkVersion)return;try{document.documentElement.style.touchAction="manipulation"}catch{}const w="plant-xray",b=location.pathname.split("/").filter(Boolean),E=b.at(-1)||"",A=E.includes(".")?b.at(-2):E,d=w.startsWith("__")?A:w,l={get(t,n=null){try{const e=localStorage.getItem(t);return e===null?n:e}catch{return n}},set(t,n){try{return localStorage.setItem(t,n),!0}catch{return!1}},remove(t){try{return localStorage.removeItem(t),!0}catch{return!1}}},f=new Set,S=new Set(["zh","en"]),I=new Set(["light","dark"]),C=(navigator.language||"").toLowerCase().startsWith("zh")?"zh":"en";let m="light";try{m=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch{}let o=l.get("kidslab.lang",C),s=l.get("kidslab.theme",m);S.has(o)||(o=C),I.has(s)||(s=m);function p(){document.documentElement.lang=o==="zh"?"zh-CN":"en",document.documentElement.dataset.theme=s}function T(t,n){const e={kind:t,value:n};for(const c of[...f])c(e);g.dispatchEvent(new CustomEvent(`${t}change`,{detail:{[t]:n}}))}const z={get lang(){return o},get theme(){return s},setLang(t){if(!S.has(t))throw new RangeError(`Unsupported language: ${t}`);t!==o&&(o=t,l.set("kidslab.lang",t),p(),T("lang",t))},setTheme(t){if(!I.has(t))throw new RangeError(`Unsupported theme: ${t}`);t!==s&&(s=t,l.set("kidslab.theme",t),p(),T("theme",t))},toggleLang(){this.setLang(o==="zh"?"en":"zh")},toggleTheme(){this.setTheme(s==="light"?"dark":"light")},subscribe(t){if(typeof t!="function")throw new TypeError("Preference listener must be a function");return f.add(t),()=>f.delete(t)}};function D(t,n={}){if(!t||typeof t!="object")throw new TypeError("Messages must be an object");const e=n.root||document;if(!e.querySelectorAll&&!e.matches)throw new TypeError("i18n root must be a Document or Element");function c(a,...h){const u=t[o]?.[a]??t.zh?.[a]??t.en?.[a];return typeof u=="function"?u(...h):u??a}function y(a="lang"){const h=[];e.matches?.("[data-t]")&&h.push(e),e.querySelectorAll&&h.push(...e.querySelectorAll("[data-t]"));for(const u of h){const L=c(u.dataset.t);typeof L=="string"&&(u.textContent=L)}n.onChange?.({kind:a,lang:o,theme:s,t:c})}const $=z.subscribe(({kind:a})=>{a==="lang"?y("lang"):n.onChange?.({kind:a,lang:o,theme:s,t:c})});return y("init"),{t:c,render:y,destroy:$}}const i=d?`kidslab.progress.${d}`:"";function _(){if(!i)return null;try{const t=JSON.parse(l.get(i,"null"));return!t||!["played","completed"].includes(t.status)?null:t}catch{return null}}function k(t,n){if(!i)return null;const e=_()||{},c={status:e.status==="completed"?"completed":t,stage:n||e.stage||"",updatedAt:Date.now()};return l.set(i,JSON.stringify(c)),c}const P={get:_,clear(){return i?l.remove(i):!1}};r.sdkVersion=2,r.courseId=d,r.storage=l,r.preferences=z,r.bindI18n=D,r.progress=P,typeof r.track!="function"&&(r.track=()=>{}),r.stage=t=>{typeof t!="string"||!t||k("played",t.slice(0,48))},r.complete=()=>k("completed"),g.cool=r,p()})();
+</script>
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <div class="garden-bg" aria-hidden="true">
+    <i class="blob blob--sun"></i>
+    <i class="blob blob--leaf"></i>
+    <i class="blob blob--soil"></i>
+  </div>
+
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title"><span aria-hidden="true">🌱</span> <span data-t="title">植物透视园</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="app">
+    <section class="brief card">
+      <div class="brief__camp">
+        <small data-t="campLabel">园地</small>
+        <strong id="campNumber">01</strong>
+      </div>
+      <div class="brief__copy">
+        <p class="eyebrow" id="campKicker">第一园 · 透视发芽</p>
+        <h2 id="campTitle">把豆子埋下去，看谁先往下钻</h2>
+        <p id="status" role="status" aria-live="polite">点「下种」，再浇一小口水。</p>
+      </div>
+      <div class="meters" aria-label="生长仪">
+        <div class="meter">
+          <span data-t="dayLabel">日子</span>
+          <strong id="dayValue">0</strong>
+        </div>
+        <div class="meter">
+          <span data-t="waterLabel">水分</span>
+          <strong id="waterValue">干</strong>
+        </div>
+        <div class="lamp" id="growLamp" data-state="off">
+          <span class="lamp__dot" aria-hidden="true"></span>
+          <strong id="growText">还在睡</strong>
+        </div>
+      </div>
+    </section>
+
+    <nav class="camp-nav" id="campNav" aria-label="透视园地"></nav>
+
+    <section class="workspace">
+      <section class="scene card" aria-labelledby="sceneTitle">
+        <div class="scene__head">
+          <div>
+            <p class="section-label" data-t="bedLabel">X 光花床</p>
+            <h2 id="sceneTitle" data-t="bedTitle">土里藏着什么</h2>
+          </div>
+          <button class="ghost-btn" id="hintBtn" type="button"><span aria-hidden="true">💡</span> <span data-t="hint">轻提示</span></button>
+        </div>
+
+        <div class="stage" id="stage" data-camp="0">
+          <div class="sky" aria-hidden="true">
+            <span class="sun" id="sun"></span>
+            <span class="cloud c1"></span>
+            <span class="cloud c2"></span>
+          </div>
+
+          <div class="plots" id="plots">
+            <article class="plot" id="plotA" data-look="surface" data-role="a">
+              <p class="plot__tag" id="plotATag">A 床</p>
+              <div class="plant" id="plantA">
+                <button class="organ organ--fruit" data-organ="fruit" type="button" hidden>🍓</button>
+                <button class="organ organ--flower" data-organ="flower" type="button" hidden>🌸</button>
+                <button class="organ organ--leaf organ--leaf-l" data-organ="leaf" type="button" hidden>🍃</button>
+                <button class="organ organ--leaf organ--leaf-r" data-organ="leaf" type="button" hidden>🍃</button>
+                <span class="shoot" aria-hidden="true"></span>
+                <span class="leaves" aria-hidden="true"></span>
+              </div>
+              <div class="soil">
+                <span class="scan" aria-hidden="true"></span>
+                <span class="seed" aria-hidden="true"></span>
+                <span class="root" aria-hidden="true"></span>
+                <span class="pebbles" aria-hidden="true"></span>
+                <button class="organ organ--root-hit" data-organ="root" type="button" hidden>🪵</button>
+              </div>
+            </article>
+
+            <article class="plot" id="plotB" data-look="seedling" data-role="b" hidden>
+              <p class="plot__tag" id="plotBTag">B 床</p>
+              <div class="plant" id="plantB">
+                <span class="shoot" aria-hidden="true"></span>
+                <span class="leaves" aria-hidden="true"></span>
+              </div>
+              <div class="soil" aria-hidden="true">
+                <span class="scan"></span>
+                <span class="seed"></span>
+                <span class="root"></span>
+                <span class="pebbles"></span>
+              </div>
+            </article>
+          </div>
+
+          <ol class="atlas" id="atlas" hidden></ol>
+        </div>
+
+        <p class="lesson" id="lessonText" hidden>胚根先往下钻，嫩芽再往上顶。水和光都要刚刚好。</p>
+      </section>
+
+      <aside class="tools card">
+        <div class="tools__head">
+          <div>
+            <p class="section-label" data-t="toolsLabel">园丁工具</p>
+            <h2 id="toolsTitle" data-t="toolsTitle">动手照顾</h2>
+          </div>
+          <button class="ghost-btn" id="restartBtn" type="button" data-t="restart">再种一园</button>
+        </div>
+        <div class="tool-grid" id="toolGrid"></div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal" id="completeModal" hidden>
+    <section class="modal__card" role="dialog" aria-modal="true" aria-labelledby="completeTitle">
+      <div class="modal__burst" aria-hidden="true">🌱☀️🫘</div>
+      <p class="modal__kicker" data-t="finalKicker">三园透视完成</p>
+      <h2 id="completeTitle" data-t="finalTitle">胚根先向下，整株植物站起来了！</h2>
+      <p data-t="finalText">种子先往下扎根，再往上追光。缺水、不见光、泡太久，都会让对照田讲出不同的故事。</p>
+      <button class="action" id="playAgainBtn" type="button" data-t="playAgain">再种一园</button>
+    </section>
+  </div>
+
+  <script type="module" src="main.js?v=36befb00"></script>
+</body>
+</html>

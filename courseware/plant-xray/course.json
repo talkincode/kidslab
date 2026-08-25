@@ -1,0 +1,18 @@
+{
+  "id": "plant-xray",
+  "title": {
+    "zh": "植物透视园",
+    "en": "Plant X-Ray Garden"
+  },
+  "description": {
+    "zh": "打开土壤 X 光：看胚根往下钻、对照田比命运、点亮根茎叶花果图鉴。",
+    "en": "Switch on soil X-ray: watch the radicle drill down, compare two plots, and light up root, stem, leaf, flower, and fruit."
+  },
+  "category": "science",
+  "levels": ["primary"],
+  "grades": ["g1", "g2", "g3"],
+  "tags": ["植物", "观察", "实验"],
+  "icon": "🌱",
+  "order": 72,
+  "badge": "new"
+}

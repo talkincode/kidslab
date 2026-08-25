@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-25T09:00:14.199Z",
+  "generatedAt": "2026-08-25T15:13:21.913Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -3734,6 +3734,51 @@
         "游戏"
       ],
       "path": "courseware/ice-bridges/index.html"
+    },
+    {
+      "id": "plant-xray",
+      "title": {
+        "zh": "植物透视园",
+        "en": "Plant X-Ray Garden"
+      },
+      "description": {
+        "zh": "打开土壤 X 光：看胚根往下钻、对照田比命运、点亮根茎叶花果图鉴。",
+        "en": "Switch on soil X-ray: watch the radicle drill down, compare two plots, and light up root, stem, leaf, flower, and fruit."
+      },
+      "category": "science",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g1",
+        "g2",
+        "g3"
+      ],
+      "tags": [
+        "植物",
+        "观察",
+        "实验"
+      ],
+      "icon": "🌱",
+      "order": 72,
+      "badge": "new",
+      "keywords": [
+        "Plants",
+        "plants",
+        "生长",
+        "growth",
+        "Observation",
+        "observation",
+        "五感",
+        "five senses",
+        "特征",
+        "Experiment",
+        "experiment",
+        "simulation",
+        "lab",
+        "模拟"
+      ],
+      "path": "courseware/plant-xray/index.html"
     },
     {
       "id": "pyramid-cube",
