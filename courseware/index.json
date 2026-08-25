@@ -3615,6 +3615,56 @@
       "path": "courseware/strata-dig/index.html"
     },
     {
+      "id": "eco-island",
+      "title": {
+        "zh": "生态小岛",
+        "en": "Eco Island"
+      },
+      "description": {
+        "zh": "在上帝视角的小岛上投放草、兔、狐、蘑菇和蚯蚓，看种群曲线实时起伏。移走一种动物，让整座岛在连锁反应里复苏或崩溃——食物链，一环都别断。",
+        "en": "Stock a tiny island with grass, rabbits, foxes, mushrooms, and earthworms, then watch the population curves swing in real time. Remove one species and the whole island blooms or collapses — every link in the food web matters."
+      },
+      "category": "science",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g3",
+        "g4",
+        "g5"
+      ],
+      "tags": [
+        "生态",
+        "观察",
+        "实验",
+        "植物"
+      ],
+      "icon": "🌿",
+      "order": 72,
+      "badge": "new",
+      "keywords": [
+        "Ecology",
+        "ecology",
+        "biology",
+        "生物",
+        "Observation",
+        "observation",
+        "五感",
+        "five senses",
+        "特征",
+        "Experiment",
+        "experiment",
+        "simulation",
+        "lab",
+        "模拟",
+        "Plants",
+        "plants",
+        "生长",
+        "growth"
+      ],
+      "path": "courseware/eco-island/index.html"
+    },
+    {
       "id": "huarong-dao",
       "title": {
         "zh": "华容道 · 木关智局",

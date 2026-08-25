@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>生态小岛 · KidsLab</title>
+  <link rel="stylesheet" href="style.css?v=a1b9789d" />
+  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<script>(()=>{"use strict";const g=window,r=g.cool||{};if(r.sdkVersion)return;try{document.documentElement.style.touchAction="manipulation"}catch{}const w="eco-island",b=location.pathname.split("/").filter(Boolean),E=b.at(-1)||"",A=E.includes(".")?b.at(-2):E,d=w.startsWith("__")?A:w,l={get(t,n=null){try{const e=localStorage.getItem(t);return e===null?n:e}catch{return n}},set(t,n){try{return localStorage.setItem(t,n),!0}catch{return!1}},remove(t){try{return localStorage.removeItem(t),!0}catch{return!1}}},f=new Set,S=new Set(["zh","en"]),I=new Set(["light","dark"]),C=(navigator.language||"").toLowerCase().startsWith("zh")?"zh":"en";let m="light";try{m=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch{}let o=l.get("kidslab.lang",C),s=l.get("kidslab.theme",m);S.has(o)||(o=C),I.has(s)||(s=m);function p(){document.documentElement.lang=o==="zh"?"zh-CN":"en",document.documentElement.dataset.theme=s}function T(t,n){const e={kind:t,value:n};for(const c of[...f])c(e);g.dispatchEvent(new CustomEvent(`${t}change`,{detail:{[t]:n}}))}const z={get lang(){return o},get theme(){return s},setLang(t){if(!S.has(t))throw new RangeError(`Unsupported language: ${t}`);t!==o&&(o=t,l.set("kidslab.lang",t),p(),T("lang",t))},setTheme(t){if(!I.has(t))throw new RangeError(`Unsupported theme: ${t}`);t!==s&&(s=t,l.set("kidslab.theme",t),p(),T("theme",t))},toggleLang(){this.setLang(o==="zh"?"en":"zh")},toggleTheme(){this.setTheme(s==="light"?"dark":"light")},subscribe(t){if(typeof t!="function")throw new TypeError("Preference listener must be a function");return f.add(t),()=>f.delete(t)}};function D(t,n={}){if(!t||typeof t!="object")throw new TypeError("Messages must be an object");const e=n.root||document;if(!e.querySelectorAll&&!e.matches)throw new TypeError("i18n root must be a Document or Element");function c(a,...h){const u=t[o]?.[a]??t.zh?.[a]??t.en?.[a];return typeof u=="function"?u(...h):u??a}function y(a="lang"){const h=[];e.matches?.("[data-t]")&&h.push(e),e.querySelectorAll&&h.push(...e.querySelectorAll("[data-t]"));for(const u of h){const L=c(u.dataset.t);typeof L=="string"&&(u.textContent=L)}n.onChange?.({kind:a,lang:o,theme:s,t:c})}const $=z.subscribe(({kind:a})=>{a==="lang"?y("lang"):n.onChange?.({kind:a,lang:o,theme:s,t:c})});return y("init"),{t:c,render:y,destroy:$}}const i=d?`kidslab.progress.${d}`:"";function _(){if(!i)return null;try{const t=JSON.parse(l.get(i,"null"));return!t||!["played","completed"].includes(t.status)?null:t}catch{return null}}function k(t,n){if(!i)return null;const e=_()||{},c={status:e.status==="completed"?"completed":t,stage:n||e.stage||"",updatedAt:Date.now()};return l.set(i,JSON.stringify(c)),c}const P={get:_,clear(){return i?l.remove(i):!1}};r.sdkVersion=2,r.courseId=d,r.storage=l,r.preferences=z,r.bindI18n=D,r.progress=P,typeof r.track!="function"&&(r.track=()=>{}),r.stage=t=>{typeof t!="string"||!t||k("played",t.slice(0,48))},r.complete=()=>k("completed"),g.cool=r,p()})();
+</script>
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <div class="site-bg" aria-hidden="true">
+    <i class="sun"></i>
+    <i class="cloud cloud--1"></i>
+    <i class="cloud cloud--2"></i>
+    <i class="sea"></i>
+  </div>
+
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title"><span aria-hidden="true">🌿</span> <span data-t="title">生态小岛</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="app">
+    <section class="brief card">
+      <div class="brief__camp">
+        <small data-t="islandLabel">岛</small>
+        <strong id="islandNumber">01</strong>
+      </div>
+      <div class="brief__copy">
+        <p class="eyebrow" id="islandKicker">第一岛 · 光秃秃</p>
+        <h2 id="islandTitle">这座岛怎么没有草？</h2>
+        <p id="status" role="status" aria-live="polite">从台子上把草种到岛上，看看会发生什么。</p>
+      </div>
+      <div class="health" aria-label="生态环境健康度">
+        <span class="health__ring" id="healthRing" data-pct="0">
+          <strong id="healthValue">0%</strong>
+        </span>
+        <div class="health__goals" id="goalList" aria-label="康复目标"></div>
+      </div>
+    </section>
+
+    <nav class="camp-nav" id="campNav" aria-label="小岛关卡"></nav>
+
+    <section class="workspace">
+      <section class="scene card" aria-labelledby="sceneTitle">
+        <div class="scene__head">
+          <div>
+            <p class="section-label" data-t="sceneLabel">小岛</p>
+            <h2 id="sceneTitle" data-t="sceneTitle">上帝视角</h2>
+          </div>
+          <button class="ghost-btn" id="hintBtn" type="button"><span aria-hidden="true">💡</span> <span data-t="hint">轻提示</span></button>
+        </div>
+
+        <div class="stage" id="stage">
+          <canvas id="island" aria-label="生态小岛画布"></canvas>
+          <div class="legend" id="legend" aria-hidden="true"></div>
+          <p class="lesson" id="lessonText" hidden>植物先长出来，动物才有东西吃。</p>
+        </div>
+
+        <div class="meters" aria-label="种群仪表">
+          <div class="meter" data-species="grass">
+            <span class="meter__dot dot--grass">🌱</span>
+            <strong id="mGrass">0</strong>
+            <small data-t="grass">草</small>
+          </div>
+          <div class="meter" data-species="rabbit">
+            <span class="meter__dot">🐇</span>
+            <strong id="mRabbit">0</strong>
+            <small data-t="rabbit">兔</small>
+          </div>
+          <div class="meter" data-species="fox">
+            <span class="meter__dot">🦊</span>
+            <strong id="mFox">0</strong>
+            <small data-t="fox">狐</small>
+          </div>
+          <div class="meter" data-species="carcasses">
+            <span class="meter__dot">🦴</span>
+            <strong id="mCarcass">0</strong>
+            <small data-t="carcass">尸体</small>
+          </div>
+        </div>
+      </section>
+
+      <aside class="tools card">
+        <div class="tools__head">
+          <div>
+            <p class="section-label" data-t="toolsLabel">投放台</p>
+            <h2 id="toolsTitle" data-t="toolsTitle">放谁上岛</h2>
+          </div>
+          <button class="ghost-btn" id="restartBtn" type="button" data-t="restart">重新放</button>
+        </div>
+        <div class="species-grid" id="speciesGrid" aria-label="可投放的物种"></div>
+        <p class="nutrient-line">
+          <span class="nutrient-bar" id="nutrientBar" aria-hidden="true"></span>
+          <span id="nutrientLabel" data-t="nutrient">土壤养分</span>
+        </p>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal" id="completeModal" hidden>
+    <section class="modal__card" role="dialog" aria-modal="true" aria-labelledby="completeTitle">
+      <div class="modal__burst" aria-hidden="true">🌿🐇🦊🍄</div>
+      <p class="modal__kicker" data-t="finalKicker">全岛复苏完成</p>
+      <h2 id="completeTitle" data-t="finalTitle">小岛绿了，动物回来了！</h2>
+      <p data-t="finalText">生产者、消费者、分解者各司其职，食物链一环不缺，整座岛才站得稳。</p>
+      <button class="action" id="nextBtn" type="button" data-t="nextIsland">下一座岛</button>
+    </section>
+  </div>
+
+  <script type="module" src="main.js?v=42ac1699"></script>
+</body>
+</html>
