@@ -19,9 +19,11 @@ async function pickElement(page, element) {
 /** 每个原子只暴露一个键位，所以「点第一个键位」就是确定性地接到下一个空方向上 */
 async function fillSlot(page, host) {
   await selectMobilePanel(page, 'stage');
-  const slot = host === undefined
-    ? page.locator('.scene-marker--slot').first()
-    : page.locator(`.scene-marker--slot[data-slot-host="${host}"]`);
+  const slot = (host === undefined
+    ? page.locator('.scene-marker--slot')
+    : page.locator(`.scene-marker--slot[data-slot-host="${host}"]`))
+    .filter({ visible: true })
+    .first();
   await expect(slot).toBeVisible();
   /* 放上原子后场景标记会整批重建，等分子式真的变了再进行下一步 */
   const before = await page.locator('#readFormula').textContent();
@@ -40,8 +42,21 @@ async function raiseBond(page, kind) {
   const bond = page.locator(`.scene-marker--bond[data-bond-kind="${kind}"]`).first();
   await expect(bond).toBeVisible();
   const before = await page.locator('#readFree').textContent();
-  await bond.click();
+  /* 小屏上键位和空键标记会叠在一起，force 点到键本身，避免被空键位拦住 */
+  await bond.click({ force: true });
   await expect(page.locator('#readFree')).not.toHaveText(before);
+}
+
+async function testReagent(page, reagent) {
+  await selectMobilePanel(page, 'task');
+  await page.locator('[data-station="react"]').click();
+  await page.locator(`[data-reagent="${reagent}"]`).click();
+  const guess = page.locator('[data-guess="yes"]');
+  await expect(guess).toBeEnabled();
+  await guess.click();
+  await expect(page.locator('#testBtn')).toBeEnabled();
+  await page.locator('#testBtn').click();
+  await expect(page.locator('#reactFeedback')).not.toHaveText('');
 }
 
 async function measureAngle(page) {
@@ -221,6 +236,7 @@ test.describe('organic builder lab', () => {
   });
 
   test('the isomer challenge separates ethanol from dimethyl ether by wiring alone', async ({ page }) => {
+    test.setTimeout(90000);
     await selectMobilePanel(page, 'task');
     await page.locator('[data-station="isomer"]').click();
     await expect(page.locator('#isomerFormula')).toHaveText('C₂H₆O');
@@ -251,29 +267,19 @@ test.describe('organic builder lab', () => {
   });
 
   test('completing every station marks the courseware finished', async ({ page }) => {
+    /* 四个分子的拼装 + 量角 + 16 格试剂在 CI 软件 WebGL 下会超过默认 60s */
+    test.setTimeout(180000);
     await selectMobilePanel(page, 'task');
     await page.locator('[data-prediction="tetra"]').click();
 
+    /* 拼好一个就地测试剂，避免再整桌重拼一遍 */
     for (const build of [buildMethane, buildEthene, buildEthanol, buildAceticAcid]) {
       await build(page);
       await measureAngle(page);
+      for (const reagent of REAGENTS) await testReagent(page, reagent);
     }
     await selectMobilePanel(page, 'log');
     await expect(page.locator('#archiveBody tr')).toHaveCount(4);
-
-    /* 四个分子 × 四瓶试剂 = 16 格反应矩阵 */
-    const molecules = [buildMethane, buildEthene, buildEthanol, buildAceticAcid];
-    for (const build of molecules) {
-      await build(page);
-      await selectMobilePanel(page, 'task');
-      await page.locator('[data-station="react"]').click();
-      for (const reagent of REAGENTS) {
-        await page.locator(`[data-reagent="${reagent}"]`).click();
-        await page.locator('[data-guess="yes"]').click();
-        await page.locator('#testBtn').click();
-      }
-    }
-    await selectMobilePanel(page, 'log');
     await expect(page.locator('#matrixCount')).toHaveText('16 / 16');
 
     await selectMobilePanel(page, 'task');
