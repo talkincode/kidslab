@@ -28,6 +28,8 @@
     "集合": { "en": "Sets", "kind": "knowledge", "aliases": ["sets", "维恩图", "venn diagram", "交集", "intersection"] },
     "分类": { "en": "Classification", "kind": "knowledge", "aliases": ["classification", "categorize"] },
     "植物": { "en": "Plants", "kind": "knowledge", "aliases": ["plants", "生长", "growth"] },
+    "动物": { "en": "Animals", "kind": "knowledge", "aliases": ["animals", "animal", "野兽", "creature", "栖息地", "habitat", "habitats"] },
+    "适应": { "en": "Adaptation", "kind": "knowledge", "aliases": ["adaptation", "adapt", "结构与功能", "structure and function", "自然选择", "natural selection"] },
     "光合作用": { "en": "Photosynthesis", "kind": "knowledge", "aliases": ["photosynthesis"] },
     "生态": { "en": "Ecology", "kind": "knowledge", "aliases": ["ecology", "biology", "生物"] },
     "遗传": { "en": "Heredity", "kind": "knowledge", "aliases": ["heredity", "genetics", "遗传学", "基因", "gene", "genes", "染色体", "chromosome", "性状", "trait"] },

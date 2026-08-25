@@ -1,0 +1,18 @@
+{
+  "id": "creature-workshop",
+  "title": {
+    "zh": "造兽工坊",
+    "en": "Creature Workshop"
+  },
+  "description": {
+    "zh": "给沙漠、暴风雪和湿地各拼一只活得下去的动物：同一零件换个地方，就可能从神器变成累赘。",
+    "en": "Build a creature that can live in desert, blizzard, and wetland. The same part can be a gift in one place and trouble in another."
+  },
+  "category": "science",
+  "levels": ["primary"],
+  "grades": ["g2", "g3", "g4"],
+  "tags": ["动物", "适应", "实验"],
+  "icon": "🦎",
+  "order": 85,
+  "badge": "new"
+}

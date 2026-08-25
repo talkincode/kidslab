@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-25T15:13:21.913Z",
+  "generatedAt": "2026-08-25T18:12:24.113Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -67,6 +67,10 @@
     },
     "加减法": {
       "en": "Addition & Subtraction",
+      "kind": "knowledge"
+    },
+    "动物": {
+      "en": "Animals",
       "kind": "knowledge"
     },
     "化石": {
@@ -287,6 +291,10 @@
     },
     "运算": {
       "en": "Arithmetic",
+      "kind": "knowledge"
+    },
+    "适应": {
+      "en": "Adaptation",
       "kind": "knowledge"
     },
     "透镜": {
@@ -4965,6 +4973,57 @@
         "three.js"
       ],
       "path": "courseware/dna-replication-lab/index.html"
+    },
+    {
+      "id": "creature-workshop",
+      "title": {
+        "zh": "造兽工坊",
+        "en": "Creature Workshop"
+      },
+      "description": {
+        "zh": "给沙漠、暴风雪和湿地各拼一只活得下去的动物：同一零件换个地方，就可能从神器变成累赘。",
+        "en": "Build a creature that can live in desert, blizzard, and wetland. The same part can be a gift in one place and trouble in another."
+      },
+      "category": "science",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g2",
+        "g3",
+        "g4"
+      ],
+      "tags": [
+        "动物",
+        "适应",
+        "实验"
+      ],
+      "icon": "🦎",
+      "order": 85,
+      "badge": "new",
+      "keywords": [
+        "Animals",
+        "animals",
+        "animal",
+        "野兽",
+        "creature",
+        "栖息地",
+        "habitat",
+        "habitats",
+        "Adaptation",
+        "adaptation",
+        "adapt",
+        "结构与功能",
+        "structure and function",
+        "自然选择",
+        "natural selection",
+        "Experiment",
+        "experiment",
+        "simulation",
+        "lab",
+        "模拟"
+      ],
+      "path": "courseware/creature-workshop/index.html"
     }
   ]
 }
