@@ -1,0 +1,27 @@
+{
+  "id": "dna-replication-lab",
+  "title": {
+    "zh": "DNA 复制实验室",
+    "en": "DNA Replication Lab"
+  },
+  "description": {
+    "zh": "在三维双螺旋上解旋、按 A-T 与 G-C 配对补出新链，看半保留复制留下的老链，再换掉一个碱基追踪密码子和氨基酸的变化。",
+    "en": "Unwind a 3D double helix, pair new bases by A-T and G-C, see which parental strands survive semi-conservative replication, then swap one base and track the codon and amino acid."
+  },
+  "category": "science",
+  "levels": [
+    "senior"
+  ],
+  "grades": [
+    "g12"
+  ],
+  "tags": [
+    "DNA",
+    "遗传",
+    "实验",
+    "3D"
+  ],
+  "icon": "🧬",
+  "order": 84,
+  "badge": "new"
+}

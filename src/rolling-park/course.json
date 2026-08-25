@@ -5,8 +5,8 @@
     "en": "Rolling Wheel Park"
   },
   "description": {
-    "zh": "拖着蘸了颜料的车轮滚一圈：画出的线总是直径的 3.14 倍——这个倍数就是 π！再把圆切成小片、拼成长方形，圆面积公式 πr² 一看就明白。",
-    "en": "Roll a paint-dipped wheel one full turn: the line is always about 3.14 diameters long — that's π! Then slice a circle into pieces and rebuild it as a rectangle to see why area = πr²."
+    "zh": "拖着蘸了颜料的车轮滚一圈，量出这条线有多长。换三种大小的轮子比一比，圆周率 π 会自己从你的记录表里冒出来。再把圆切成小片拼成长方形，就看懂了圆面积公式 πr²。",
+    "en": "Roll a paint-dipped wheel one full turn and measure the line it paints. Compare three wheel sizes and π emerges from your own data table. Then slice a circle and rebuild it as a rectangle to see where area = πr² comes from."
   },
   "category": "math",
   "levels": [

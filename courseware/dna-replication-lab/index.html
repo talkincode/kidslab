@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>DNA 复制实验室 · KidsLab</title>
+  <link rel="stylesheet" href="style.css?v=19db515e" />
+  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<script>(()=>{"use strict";const g=window,r=g.cool||{};if(r.sdkVersion)return;try{document.documentElement.style.touchAction="manipulation"}catch{}const w="dna-replication-lab",b=location.pathname.split("/").filter(Boolean),E=b.at(-1)||"",A=E.includes(".")?b.at(-2):E,d=w.startsWith("__")?A:w,l={get(t,n=null){try{const e=localStorage.getItem(t);return e===null?n:e}catch{return n}},set(t,n){try{return localStorage.setItem(t,n),!0}catch{return!1}},remove(t){try{return localStorage.removeItem(t),!0}catch{return!1}}},f=new Set,S=new Set(["zh","en"]),I=new Set(["light","dark"]),C=(navigator.language||"").toLowerCase().startsWith("zh")?"zh":"en";let m="light";try{m=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch{}let o=l.get("kidslab.lang",C),s=l.get("kidslab.theme",m);S.has(o)||(o=C),I.has(s)||(s=m);function p(){document.documentElement.lang=o==="zh"?"zh-CN":"en",document.documentElement.dataset.theme=s}function T(t,n){const e={kind:t,value:n};for(const c of[...f])c(e);g.dispatchEvent(new CustomEvent(`${t}change`,{detail:{[t]:n}}))}const z={get lang(){return o},get theme(){return s},setLang(t){if(!S.has(t))throw new RangeError(`Unsupported language: ${t}`);t!==o&&(o=t,l.set("kidslab.lang",t),p(),T("lang",t))},setTheme(t){if(!I.has(t))throw new RangeError(`Unsupported theme: ${t}`);t!==s&&(s=t,l.set("kidslab.theme",t),p(),T("theme",t))},toggleLang(){this.setLang(o==="zh"?"en":"zh")},toggleTheme(){this.setTheme(s==="light"?"dark":"light")},subscribe(t){if(typeof t!="function")throw new TypeError("Preference listener must be a function");return f.add(t),()=>f.delete(t)}};function D(t,n={}){if(!t||typeof t!="object")throw new TypeError("Messages must be an object");const e=n.root||document;if(!e.querySelectorAll&&!e.matches)throw new TypeError("i18n root must be a Document or Element");function c(a,...h){const u=t[o]?.[a]??t.zh?.[a]??t.en?.[a];return typeof u=="function"?u(...h):u??a}function y(a="lang"){const h=[];e.matches?.("[data-t]")&&h.push(e),e.querySelectorAll&&h.push(...e.querySelectorAll("[data-t]"));for(const u of h){const L=c(u.dataset.t);typeof L=="string"&&(u.textContent=L)}n.onChange?.({kind:a,lang:o,theme:s,t:c})}const $=z.subscribe(({kind:a})=>{a==="lang"?y("lang"):n.onChange?.({kind:a,lang:o,theme:s,t:c})});return y("init"),{t:c,render:y,destroy:$}}const i=d?`kidslab.progress.${d}`:"";function _(){if(!i)return null;try{const t=JSON.parse(l.get(i,"null"));return!t||!["played","completed"].includes(t.status)?null:t}catch{return null}}function k(t,n){if(!i)return null;const e=_()||{},c={status:e.status==="completed"?"completed":t,stage:n||e.stage||"",updatedAt:Date.now()};return l.set(i,JSON.stringify(c)),c}const P={get:_,clear(){return i?l.remove(i):!1}};r.sdkVersion=2,r.courseId=d,r.storage=l,r.preferences=z,r.bindI18n=D,r.progress=P,typeof r.track!="function"&&(r.track=()=>{}),r.stage=t=>{typeof t!="string"||!t||k("played",t.slice(0,48))},r.complete=()=>k("completed"),g.cool=r,p()})();
+</script>
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill back-pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title"><span aria-hidden="true">🧬</span> <span data-t="title">DNA 复制实验室</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill lang-pill" id="langBtn" type="button" aria-label="Switch to English">EN</button>
+    </div>
+  </header>
+
+  <nav class="mobile-nav" aria-label="实验区切换">
+    <button class="mobile-nav__button is-active" type="button" data-mobile-panel="task" aria-pressed="true">
+      <span aria-hidden="true">01</span><span data-t="navTask">任务</span>
+    </button>
+    <button class="mobile-nav__button" type="button" data-mobile-panel="stage" aria-pressed="false">
+      <span aria-hidden="true">02</span><span data-t="navStage">复制叉</span>
+    </button>
+    <button class="mobile-nav__button" type="button" data-mobile-panel="log" aria-pressed="false">
+      <span aria-hidden="true">03</span><span data-t="navLog">记录</span>
+    </button>
+  </nav>
+
+  <main class="app" id="app" data-mobile-panel="task">
+    <section class="panel task-panel" aria-labelledby="taskTitle">
+      <p class="section-code" id="stationCode">STATION 01</p>
+      <h2 id="taskTitle" data-t="stationCopyTitle">一条链，怎么长出完整的两条？</h2>
+
+      <div class="station-tabs" role="group" aria-label="实验站">
+        <button class="station-tab is-active" type="button" data-station="copy" aria-pressed="true" data-t="tabCopy">复制</button>
+        <button class="station-tab" type="button" data-station="mutate" aria-pressed="false" data-t="tabMutate">突变</button>
+        <button class="station-tab" type="button" data-station="silent" aria-pressed="false" data-t="tabSilent">挑战</button>
+      </div>
+
+      <div class="station-body" id="stationCopy">
+        <div class="prediction-card">
+          <div class="step-title">
+            <span class="step-number">1</span>
+            <span data-t="predictionTitle">先猜一猜</span>
+          </div>
+          <p id="predictionPrompt" data-t="predictionPrompt">一条双链复制成两条双链。新的两条里，一共还剩几条是原来的老链？</p>
+          <p class="prediction-verdict" id="predictionVerdict" hidden></p>
+          <div class="prediction-grid" id="predictionGrid" role="group" aria-label="老链数量预测">
+            <button class="prediction-choice" type="button" data-prediction="zero">
+              <span class="choice-symbol" aria-hidden="true">0</span>
+              <span data-t="predictionZero">一条都不剩</span>
+            </button>
+            <button class="prediction-choice" type="button" data-prediction="two">
+              <span class="choice-symbol" aria-hidden="true">2</span>
+              <span data-t="predictionTwo">各留一条</span>
+            </button>
+            <button class="prediction-choice" type="button" data-prediction="four">
+              <span class="choice-symbol" aria-hidden="true">4</span>
+              <span data-t="predictionFour">全是老链</span>
+            </button>
+          </div>
+          <p class="feedback" id="predictionFeedback" role="status" aria-live="polite"></p>
+        </div>
+
+        <div class="copy-card">
+          <div class="shelf-head">
+            <div class="step-title">
+              <span class="step-number">2</span>
+              <span data-t="copyTitle">给露出来的碱基配对</span>
+            </div>
+            <span class="count-badge" id="copyCount">0 / 9</span>
+          </div>
+          <p class="copy-hint" id="copyHint" data-t="copyHintStart">看模型上闪着的那个碱基，选出能跟它配对的。</p>
+          <div class="strand-strip" id="strandStrip" role="list" aria-label="模板链与新链"></div>
+        </div>
+
+        <aside class="control-note">
+          <span class="control-note__icon" aria-hidden="true">↔</span>
+          <p><strong data-t="controlLabel">规则：</strong> <span data-t="controlCopy">A 只和 T 配，G 只和 C 配。配错就搭不上去。</span></p>
+        </aside>
+      </div>
+
+      <div class="station-body" id="stationMutate" hidden>
+        <div class="mutate-card">
+          <div class="step-title">
+            <span class="step-number">1</span>
+            <span data-t="mutateSpotTitle">挑一个位点动手改</span>
+          </div>
+          <p class="mutate-hint" id="mutateHint" data-t="mutateNeedCopy">先把上一站的链配完，才有东西可改。</p>
+          <div class="spot-grid" id="spotGrid" role="group" aria-label="模板链位点"></div>
+        </div>
+        <div class="mutate-card">
+          <div class="step-title">
+            <span class="step-number">2</span>
+            <span data-t="mutateBaseTitle">换成哪个碱基</span>
+          </div>
+          <div class="swap-grid" id="swapGrid" role="group" aria-label="替换碱基"></div>
+          <button class="wide-btn" id="mutateBtn" type="button" disabled data-t="applyMutation">强行换掉它</button>
+          <button class="ghost-btn" id="restoreBtn" type="button" hidden data-t="restoreSequence">还原原始序列</button>
+          <p class="feedback" id="mutateFeedback" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <div class="station-body" id="stationSilent" hidden>
+        <div class="silent-card">
+          <div class="step-title">
+            <span class="step-number">L4</span>
+            <span data-t="silentTitle">改了碱基，蛋白却没变</span>
+          </div>
+          <p data-t="silentPrompt">有些位置换掉一个碱基，密码子变了，可翻译出来的氨基酸一模一样。找出这样的一次替换。</p>
+          <p class="target-strip"><span data-t="silentTargetLabel">目标蛋白</span><strong id="silentTarget">—</strong></p>
+          <div class="silent-progress" id="silentProgress"></div>
+          <p class="feedback" id="silentFeedback" role="status" aria-live="polite"></p>
+        </div>
+        <aside class="control-note">
+          <span class="control-note__icon" aria-hidden="true">?</span>
+          <p data-t="silentHint">线索：一种氨基酸常常对应好几个密码子。</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="panel stage-panel" aria-labelledby="stageTitle">
+      <div class="stage-head">
+        <div>
+          <p class="section-code">REPLICATION FORK</p>
+          <h2 id="stageTitle" data-t="stageTitle">复制叉</h2>
+        </div>
+        <span class="lab-state" id="labState">待解旋</span>
+      </div>
+
+      <div class="readout-strip">
+        <span><small data-t="readExposed">露出的碱基</small><strong id="readExposed">—</strong></span>
+        <span><small data-t="readNew">已配好的新链</small><strong id="readNew">—</strong></span>
+        <span><small data-t="readFork">复制叉</small><strong id="readFork">0 / 9</strong></span>
+      </div>
+
+      <div class="scene-wrap">
+        <canvas id="scene" aria-label="三维 DNA 双螺旋与复制叉"></canvas>
+        <div class="scene-markers" id="sceneMarkers"></div>
+        <p class="scene-hint" id="sceneHint" data-t="hintOrbit">拖动可以转动螺旋</p>
+        <p class="nogl" id="nogl" hidden data-t="nogl">这台设备暂时打不开 3D，换个浏览器就能看双螺旋了。</p>
+        <p class="toast" id="toast" hidden role="status" aria-live="polite"></p>
+      </div>
+
+      <div class="base-pool" role="group" aria-label="碱基池" id="basePool"></div>
+
+      <div class="stage-actions">
+        <button class="stage-btn" id="undoBtn" type="button">
+          <span aria-hidden="true">↶</span><span data-t="undo">拆掉一个</span>
+        </button>
+        <button class="stage-btn" id="viewBtn" type="button">
+          <span aria-hidden="true">◎</span><span data-t="recenter">正视螺旋</span>
+        </button>
+        <button class="stage-btn stage-btn--ghost" id="restartBtn" type="button">
+          <span aria-hidden="true">↺</span><span data-t="restart">重开复制</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="panel log-panel" aria-labelledby="logTitle">
+      <div class="log-head">
+        <div>
+          <p class="section-code">LAB NOTEBOOK</p>
+          <h2 id="logTitle" data-t="logTitle">序列与记录</h2>
+        </div>
+        <button class="reset-button" id="resetBtn" type="button" data-t="reset">重开实验</button>
+      </div>
+
+      <div class="log-scroll">
+        <div class="sequence-card">
+          <div class="sequence-row">
+            <span data-t="seqTemplate">模板链</span><code id="seqTemplate">—</code>
+          </div>
+          <div class="sequence-row">
+            <span data-t="seqCoding">新配出的链</span><code id="seqCoding">—</code>
+          </div>
+          <div class="sequence-row">
+            <span data-t="seqRna">mRNA</span><code id="seqRna">—</code>
+          </div>
+          <div class="protein-row" id="proteinRow"></div>
+        </div>
+
+        <div class="data-table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th data-t="colSpot">位点</th>
+                <th data-t="colChange">替换</th>
+                <th data-t="colCodon">密码子</th>
+                <th data-t="colAcid">氨基酸</th>
+                <th data-t="colKind">类型</th>
+              </tr>
+            </thead>
+            <tbody id="mutationBody"></tbody>
+          </table>
+        </div>
+
+        <p class="conclusion" id="conclusion" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="main.js?v=04df59a1"></script>
+</body>
+</html>

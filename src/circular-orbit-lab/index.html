@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>圆周与卫星实验室 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill back-pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title"><span aria-hidden="true">🛰️</span> <span data-t="title">圆周与卫星实验室</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill lang-pill" id="langBtn" type="button" aria-label="Switch to English">EN</button>
+    </div>
+  </header>
+
+  <nav class="mobile-nav" aria-label="实验区切换">
+    <button class="mobile-nav__button is-active" type="button" data-mobile-panel="task" aria-pressed="true">
+      <span aria-hidden="true">01</span><span data-t="navTask">任务</span>
+    </button>
+    <button class="mobile-nav__button" type="button" data-mobile-panel="stage" aria-pressed="false">
+      <span aria-hidden="true">02</span><span data-t="navStage">发射台</span>
+    </button>
+    <button class="mobile-nav__button" type="button" data-mobile-panel="log" aria-pressed="false">
+      <span aria-hidden="true">03</span><span data-t="navLog">数据</span>
+    </button>
+  </nav>
+
+  <main class="app" id="app" data-mobile-panel="task">
+    <section class="panel task-panel" aria-labelledby="taskTitle">
+      <p class="section-code" id="stationCode">STATION 01</p>
+      <h2 id="taskTitle" data-t="stationLaunchTitle">同一个高度，速度决定命运</h2>
+
+      <div class="station-tabs" role="group" aria-label="实验站">
+        <button class="station-tab is-active" type="button" data-station="launch" aria-pressed="true" data-t="tabLaunch">发射</button>
+        <button class="station-tab" type="button" data-station="analyse" aria-pressed="false" data-t="tabAnalyse">分析</button>
+        <button class="station-tab" type="button" data-station="design" aria-pressed="false" data-t="tabDesign">挑战</button>
+      </div>
+
+      <div class="station-body" id="stationLaunch">
+        <div class="prediction-card">
+          <div class="step-title">
+            <span class="step-number">1</span>
+            <span data-t="predictionTitle">先猜一猜</span>
+          </div>
+          <p id="predictionPrompt" data-t="predictionPrompt">卫星正好圆着转的时候，把速度再加大一点点，会发生什么？</p>
+          <p class="prediction-verdict" id="predictionVerdict" hidden></p>
+          <div class="prediction-grid" id="predictionGrid" role="group" aria-label="轨道预测">
+            <button class="prediction-choice" type="button" data-prediction="fall">
+              <span class="choice-symbol" aria-hidden="true">↓</span>
+              <span data-t="predictionFall">掉得更快</span>
+            </button>
+            <button class="prediction-choice" type="button" data-prediction="higher">
+              <span class="choice-symbol" aria-hidden="true">◯</span>
+              <span data-t="predictionHigher">跑得更远更慢</span>
+            </button>
+            <button class="prediction-choice" type="button" data-prediction="away">
+              <span class="choice-symbol" aria-hidden="true">↗</span>
+              <span data-t="predictionAway">立刻飞走</span>
+            </button>
+          </div>
+          <p class="feedback" id="predictionFeedback" role="status" aria-live="polite"></p>
+        </div>
+
+        <div class="mission-card">
+          <div class="shelf-head">
+            <div class="step-title">
+              <span class="step-number">2</span>
+              <span data-t="missionTitle">三种结局都做一次</span>
+            </div>
+            <span class="count-badge" id="missionCount">0 / 3</span>
+          </div>
+          <p class="mission-hint" id="missionHint" data-t="missionHintDefault">只改速度，高度先别动。</p>
+          <div class="mission-grid" id="missionGrid" role="list"></div>
+        </div>
+
+        <aside class="control-note">
+          <span class="control-note__icon" aria-hidden="true">↔</span>
+          <p><strong data-t="controlLabel">控制变量：</strong> <span data-t="controlLaunch">同一个高度、同一个地球、发射方向始终水平。</span></p>
+        </aside>
+      </div>
+
+      <div class="station-body" id="stationAnalyse" hidden>
+        <div class="analyse-card">
+          <div class="step-title">
+            <span class="step-number">1</span>
+            <span data-t="bandTitle">速度带</span>
+          </div>
+          <p data-t="bandIntro">把每次发射按「高度—速度」点上去，看它掉进哪一条带子。</p>
+          <svg class="band-chart" id="bandChart" viewBox="0 0 300 200" role="img" aria-labelledby="bandChartTitle">
+            <title id="bandChartTitle" data-t="bandChartTitle">高度与速度的轨道分区图</title>
+            <g id="bandFills"></g>
+            <path class="band-line band-line--circular" id="circularCurve" d=""></path>
+            <path class="band-line band-line--escape" id="escapeCurve" d=""></path>
+            <g class="band-axes" aria-hidden="true">
+              <path d="M40 12V168H288"></path>
+            </g>
+            <g id="bandPoints"></g>
+            <text class="axis-title axis-title--y" x="13" y="90" transform="rotate(-90 13 90)" data-t="axisSpeed">v / km·s⁻¹</text>
+            <text class="axis-title" x="222" y="192" data-t="axisAltitude">高度 / 千 km</text>
+            <text class="axis-tick" x="30" y="172">0</text>
+            <text class="axis-tick" x="34" y="130">4</text>
+            <text class="axis-tick" x="34" y="91">8</text>
+            <text class="axis-tick" x="30" y="52">12</text>
+            <text class="axis-tick" x="120" y="182">10</text>
+            <text class="axis-tick" x="200" y="182">20</text>
+            <text class="axis-tick" x="278" y="182">30</text>
+          </svg>
+          <div class="band-legend">
+            <span class="legend-swatch legend-swatch--crash" aria-hidden="true"></span><span data-t="legendCrash">坠回</span>
+            <span class="legend-swatch legend-swatch--ellipse" aria-hidden="true"></span><span data-t="legendEllipse">椭圆</span>
+            <span class="legend-swatch legend-swatch--escape" aria-hidden="true"></span><span data-t="legendEscape">逃逸</span>
+          </div>
+        </div>
+        <aside class="control-note">
+          <span class="control-note__icon" aria-hidden="true">≈</span>
+          <p data-t="bandNote">两条线分别是环绕速度和逃逸速度。它们都随高度升高而变小。</p>
+        </aside>
+      </div>
+
+      <div class="station-body" id="stationDesign" hidden>
+        <div class="design-card">
+          <div class="step-title">
+            <span class="step-number">L4</span>
+            <span data-t="designTitle">挂在同一个地方不动</span>
+          </div>
+          <p data-t="designPrompt">通信卫星要一直停在同一片天空上方，所以它绕一圈的时间必须正好等于地球自转一圈。</p>
+          <p class="target-strip"><span data-t="designTargetLabel">目标周期</span><strong id="designTarget">23 h 56 min</strong></p>
+          <p data-t="designHow">自己选高度，再把速度对准环绕速度，然后发射验证。</p>
+          <p class="feedback" id="designFeedback" role="status" aria-live="polite"></p>
+        </div>
+        <aside class="control-note">
+          <span class="control-note__icon" aria-hidden="true">?</span>
+          <p data-t="designHintFormula">线索：周期只跟轨道半径有关，半径越大，一圈越久。</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="panel stage-panel" aria-labelledby="stageTitle">
+      <div class="stage-head">
+        <div>
+          <p class="section-code">LAUNCH BENCH</p>
+          <h2 id="stageTitle" data-t="stageTitle">发射控制台</h2>
+        </div>
+        <span class="lab-state" id="labState">待发射</span>
+      </div>
+
+      <div class="readout-strip">
+        <span><small data-t="readAltitude">高度</small><strong id="readAltitude">400 km</strong></span>
+        <span><small data-t="readSpeed">速度</small><strong id="readSpeed">7.67 km/s</strong></span>
+        <span><small data-t="readClock">任务时钟</small><strong id="readClock">0.0 min</strong></span>
+      </div>
+
+      <div class="scene-wrap">
+        <canvas id="scene" aria-label="三维地球与卫星轨道"></canvas>
+        <p class="scene-hint" id="sceneHint" data-t="hintOrbit">拖动可以转动视角</p>
+        <p class="nogl" id="nogl" hidden data-t="nogl">这台设备暂时打不开 3D，换个浏览器就能看轨道了。</p>
+        <p class="toast" id="toast" hidden role="status" aria-live="polite"></p>
+        <p class="rate-chip" id="rateChip">×1</p>
+      </div>
+
+      <div class="console">
+        <div class="console-row">
+          <label class="slider-label" for="altitudeRange">
+            <span data-t="altitudeLabel">发射高度</span>
+            <strong id="altitudeValue">400 km</strong>
+          </label>
+          <input id="altitudeRange" type="range" min="200" max="40000" step="100" value="400"
+            aria-describedby="altitudeValue" />
+          <div class="preset-row" id="presetRow" role="group" aria-label="高度预设"></div>
+        </div>
+
+        <div class="console-row">
+          <label class="slider-label" for="speedRange">
+            <span data-t="speedLabel">水平速度</span>
+            <strong id="speedValue">7.67 km/s</strong>
+          </label>
+          <div class="slider-with-nudge">
+            <button class="nudge-btn" id="speedDown" type="button" aria-label="速度减小一点">−</button>
+            <input id="speedRange" type="range" min="600" max="1600" step="2" value="1000"
+              aria-describedby="speedValue" />
+            <button class="nudge-btn" id="speedUp" type="button" aria-label="速度增大一点">+</button>
+          </div>
+          <p class="speed-marks">
+            <span data-t="markCircular">环绕</span><b id="markCircular">7.67</b>
+            <span data-t="markEscape">逃逸</span><b id="markEscape">10.85</b>
+            <small>km/s</small>
+          </p>
+        </div>
+
+        <div class="stage-actions">
+          <button class="stage-btn stage-btn--go" id="launchBtn" type="button">
+            <span aria-hidden="true">🚀</span><span data-t="launch">发射</span>
+          </button>
+          <button class="stage-btn" id="vectorBtn" type="button" aria-pressed="true">
+            <span aria-hidden="true">↘</span><span data-t="vectors">受力箭头</span>
+          </button>
+          <button class="stage-btn stage-btn--ghost" id="abortBtn" type="button">
+            <span aria-hidden="true">↺</span><span data-t="abort">收回</span>
+          </button>
+        </div>
+        <p class="feedback stage-feedback" id="stageFeedback" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <section class="panel log-panel" aria-labelledby="logTitle">
+      <div class="log-head">
+        <div>
+          <p class="section-code">FLIGHT LOG</p>
+          <h2 id="logTitle" data-t="logTitle">飞行记录</h2>
+        </div>
+        <button class="reset-button" id="resetBtn" type="button" data-t="reset">重开实验</button>
+      </div>
+
+      <div class="log-scroll">
+        <div class="entry-card" id="entryCard">
+          <div class="step-title">
+            <span class="step-number">✓</span>
+            <span data-t="entryTitle">抄下这次的读数</span>
+          </div>
+          <p class="entry-hint" id="entryHint" data-t="entryWaiting">发射一次，这里就会出现待记录的读数。</p>
+          <div class="entry-readout" id="entryReadout" hidden>
+            <span><small data-t="colAltitude">高度</small><strong id="entryAltitude">—</strong></span>
+            <span><small data-t="colSpeed">速度</small><strong id="entrySpeed">—</strong></span>
+            <span><small data-t="colKind">轨道</small><strong id="entryKind">—</strong></span>
+            <span><small data-t="colPeriod">周期</small><strong id="entryPeriod">—</strong></span>
+          </div>
+          <button class="wide-btn" id="logBtn" type="button" disabled data-t="logTrial">记入数据表</button>
+        </div>
+
+        <div class="data-table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th data-t="colTrial">#</th>
+                <th data-t="colAltitude">高度</th>
+                <th data-t="colSpeed">速度</th>
+                <th data-t="colKind">轨道</th>
+                <th data-t="colPeriod">周期</th>
+                <th data-t="colPerigee">近地点</th>
+              </tr>
+            </thead>
+            <tbody id="trialBody"></tbody>
+          </table>
+        </div>
+
+        <p class="conclusion" id="conclusion" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

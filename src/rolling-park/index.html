@@ -56,6 +56,14 @@
           <div class="buttons"><button class="btn" id="autoRoll" type="button" data-t="autoRoll">滚一圈</button><button class="btn btn--ghost" id="squareRoll" type="button" data-t="squareRoll">方轮试试</button></div>
           <p class="mini" id="ratioText">—</p>
           <div class="table" id="recordTable"></div>
+          <div class="guess" id="guessCard" hidden>
+            <p class="guess__ask" id="guessAsk">—</p>
+            <div class="guess__row" id="guessRow" hidden>
+              <input class="answer guess__input" id="guessInput" inputmode="decimal" aria-labelledby="guessAsk" />
+              <button class="btn" id="guessBtn" type="button" data-t="guessBtn">就是它！</button>
+            </div>
+            <p class="guess__out" id="guessOut" hidden></p>
+          </div>
         </div>
         <div class="mode-panel" id="areaPanel" hidden>
           <h3 data-t="areaTitle">拼出面积</h3>

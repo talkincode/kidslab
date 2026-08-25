@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>🎡 滚轮乐园 · KidsLab</title>
-  <link rel="stylesheet" href="style.css?v=3afe0f39" />
+  <link rel="stylesheet" href="style.css?v=1bf765dd" />
   <script>
     /* 防闪烁：进 body 前先定好主题与语言（与主站同一套 localStorage 键） */
     (() => {
@@ -60,6 +60,14 @@
           <div class="buttons"><button class="btn" id="autoRoll" type="button" data-t="autoRoll">滚一圈</button><button class="btn btn--ghost" id="squareRoll" type="button" data-t="squareRoll">方轮试试</button></div>
           <p class="mini" id="ratioText">—</p>
           <div class="table" id="recordTable"></div>
+          <div class="guess" id="guessCard" hidden>
+            <p class="guess__ask" id="guessAsk">—</p>
+            <div class="guess__row" id="guessRow" hidden>
+              <input class="answer guess__input" id="guessInput" inputmode="decimal" aria-labelledby="guessAsk" />
+              <button class="btn" id="guessBtn" type="button" data-t="guessBtn">就是它！</button>
+            </div>
+            <p class="guess__out" id="guessOut" hidden></p>
+          </div>
         </div>
         <div class="mode-panel" id="areaPanel" hidden>
           <h3 data-t="areaTitle">拼出面积</h3>
@@ -79,6 +87,6 @@
     </section>
   </main>
 
-  <script src="main.js?v=88d633c4"></script>
+  <script src="main.js?v=c115693f"></script>
 </body>
 </html>

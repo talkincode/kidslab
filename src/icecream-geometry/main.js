@@ -7,15 +7,25 @@ import * as THREE from './vendor/three.module.min.js';
   const I18N = {
     zh: {
       doc: '冰淇淋几何 · KidsLab', back: '返回平台', title: '冰淇淋几何', eyebrow: '六年级 · 圆柱 / 圆锥 / 旋转体',
-      tip0: '欢迎来到冰淇淋工厂！先把纸片转成立体，再揭开圆锥体积“÷3”的秘密。',
+      tip0: '欢迎来到冰淇淋工厂！先把纸片转成立体，再去「三倍之谜」量一量：圆锥杯到底能装多少。',
       stationLathe: '🌀 旋转成型机', stationTriple: '🍦 三倍之谜', stationShop: '🏪 营业挑战',
       hintOrbit: '🖐️ 拖动空白处旋转 · 滚轮缩放',
       latheTitle: '🌀 旋转成型机', latheGoal: '🎯 任务：一张平平的纸片，绕着轴转一圈，就变出一个立体！集齐 4 种立体图鉴。',
       latheStep1: '选一张纸片', latheStep2: '点“转起来！”，或直接拖动纸片', latheStep3: '转满一圈，立体就收进图鉴',
       radius: '半径 r', height: '高 h', spinBtn: '🌀 转起来！', spinAgain: '↺ 再转一次',
-      tripleTitle: '🍦 三倍之谜', tripleGoal: '🎯 任务：圆锥杯和圆柱杯，底一样大、高一样高。猜猜倒几杯，圆柱杯正好满？',
-      tripleStep1: '点“接冰淇淋”，把圆锥杯接满（也可以把杯子拖到机器下）', tripleStep2: '点“倒进圆柱杯”（或把杯子拖过去）', tripleStep3: '数一数：第几杯刚好倒满？',
+      tripleTitle: '🍦 三倍之谜', tripleGoal: '🎯 任务：圆锥杯和圆柱杯，底一样大、高一样高。倒几杯圆柱杯才满？大、中、小三种都做一次。',
+      tripleStep1: '点“接冰淇淋”，把圆锥杯接满（也可以把杯子拖到机器下）', tripleStep2: '点“倒进圆柱杯”（或把杯子拖过去）', tripleStep3: '数一数第几杯刚好满，再换个大小重做一次',
       fillCone: '🍦 接冰淇淋', pourCone: '💧 倒进圆柱杯', resetTriple: '↺ 重来一次', unequal: '🔍 换个小杯子对照',
+      sizeTitle: '杯子大小', sizeS: '小', sizeM: '中', sizeL: '大',
+      sizeSwitched: (n) => `换成${n}号杯子啦，重新倒一次看看。`,
+      colSize: '杯子', colCups: '倒满要几杯', lblFull: '满',
+      needMore: (n) => `再换 ${n} 种大小的杯子倒满一次`,
+      guessAsk: '三种大小都倒满了。看表格——不管杯子多大，都要倒几杯？',
+      guessBtn: '就是它！', guessRetry: '再看看表格右边那一列，三次都是几？',
+      guessOk: '三杯正好装满，所以圆锥装的是圆柱的三分之一：圆锥体积 = 圆柱体积 ÷ 3。',
+      guessDone: '你的发现：等底等高时，圆锥 = 圆柱 ÷ 3',
+      unequalObserve: '这个圆锥杯小一号，倒了 4 杯还是没满。',
+      unequalWhy: '看！杯子不是“等底等高”，倒了 4 杯还是不满——“÷3”只在等底等高时才成立。',
       shopTitle: '🏪 营业挑战', shopGoal: '🎯 任务：客人想要冰淇淋多的那份！用公式帮客人算一算，答对赚金币开分店。',
       shopHintFormula: 'V柱 = πr²h　·　V锥 = πr²h ÷ 3',
       nextOrder: '下一位客人 →', nogl: '你的浏览器暂不支持 WebGL，不过右边的挑战题还可以玩。',
@@ -25,11 +35,10 @@ import * as THREE from './vendor/three.module.min.js';
       made: (n) => `✨ ${n}成型！收进立体图鉴～`, allMade: '🎉 图鉴集齐啦！你已经是旋转体小专家！',
       atlasHint: '图鉴：转出立体来点亮',
       cupsCount: (n) => `🍦 已倒 ${n} 杯`,
-      tripleFull: (n) => `第 ${n} 杯刚好倒满！圆锥 = 圆柱的 ⅓`,
+      roundFull: (n) => `第 ${n} 杯刚好倒满！这一组记进表格了。`,
       coneFull: '接好啦！圆锥杯装满了冰淇淋。', coneEmptyTip: '圆锥杯还是空的，先去机器那里接一杯吧。',
       alreadyFull: '圆锥杯已经满啦，先倒进圆柱杯吧！', cylFullTip: '圆柱杯已经满啦！点“重来一次”再玩一遍。',
-      magic: '🎉 第 3 杯刚好倒满！所以：圆锥体积 = 圆柱体积 ÷ 3', unequalStart: '换了一个小圆锥杯（底和高都不一样了），再试试要几杯？',
-      unequalMsg: '看！杯子不是“等底等高”，倒了 4 杯还是不满——“÷3”只在等底等高时才成立！',
+      unequalStart: '换了一个小圆锥杯（底和高都不一样了），再试试要几杯？',
       equalStart: '换回等底等高的圆锥杯，重新开始！',
       order: (cone, cup) => `我想要多的那份！${cone}，${cup}——哪份多呀？`,
       coneDesc: (r, h) => `🍦 甜筒是圆锥（半径 ${r}、高 ${h}）`, cupDesc: (r, h) => `🥤 杯装是圆柱（半径 ${r}、高 ${h}）`,
@@ -39,21 +48,32 @@ import * as THREE from './vendor/three.module.min.js';
       branchDone: '🎊 金币攒够，分店开张啦！你是冰淇淋大亨！',
       volCyl: (r, h) => `V = π×${r}²×${h} = ${r * r * h}π`,
       volCone: (r, h) => `V = π×${r}²×${h}÷3 = ${Math.round(r * r * h / 3 * 100) / 100}π`,
+      volConeUnknown: (r, h) => `V = π×${r}²×${h} ÷ ？　去「三倍之谜」量出这个数`,
       volSphere: (r) => `V = 4π×${r}³÷3 = ${Math.round(4 * r * r * r / 3 * 100) / 100}π（中学会学到）`,
       volFrustum: '上小下大的圆台（公式中学会学到）',
       idleLathe: '💡 试试点下面的“转起来！”，看纸片变立体', idleTriple: '💡 点“接冰淇淋”，开始解开三倍之谜', idleShop: '💡 用右边的公式算一算，再选答案',
     },
     en: {
       doc: 'Ice Cream Geometry · KidsLab', back: 'Back to platform', title: 'Ice Cream Geometry', eyebrow: 'Grade 6 · cylinder / cone / solids of revolution',
-      tip0: 'Welcome to the ice cream factory! Spin paper into solids, then uncover the secret of “÷3” in cone volume.',
+      tip0: 'Welcome to the ice cream factory! Spin paper into solids, then head to the Triple Mystery and measure how much a cone cup really holds.',
       stationLathe: '🌀 Spin shaper', stationTriple: '🍦 Triple mystery', stationShop: '🏪 Shop challenge',
       hintOrbit: '🖐️ Drag empty space to orbit · scroll to zoom',
       latheTitle: '🌀 Spin shaper', latheGoal: '🎯 Goal: spin a flat piece of paper around the axis and a solid appears! Collect all 4 solids.',
       latheStep1: 'Pick a paper shape', latheStep2: 'Press “Spin!” or drag the paper', latheStep3: 'Finish a full turn to collect the solid',
       radius: 'Radius r', height: 'Height h', spinBtn: '🌀 Spin!', spinAgain: '↺ Spin again',
-      tripleTitle: '🍦 Triple mystery', tripleGoal: '🎯 Goal: the cone cup and cylinder cup share the same base and height. Guess how many cone cups fill the cylinder!',
-      tripleStep1: 'Press “Fill cone” (or drag the cup under the machine)', tripleStep2: 'Press “Pour in” (or drag the cup over)', tripleStep3: 'Count: which pour fills it exactly?',
+      tripleTitle: '🍦 Triple mystery', tripleGoal: '🎯 Goal: the cone cup and cylinder cup share the same base and height. How many cone cups fill the cylinder? Do it once for small, medium and large.',
+      tripleStep1: 'Press “Fill cone” (or drag the cup under the machine)', tripleStep2: 'Press “Pour in” (or drag the cup over)', tripleStep3: 'Count which pour fills it, then switch size and repeat',
       fillCone: '🍦 Fill cone', pourCone: '💧 Pour in', resetTriple: '↺ Start over', unequal: '🔍 Try a smaller cup',
+      sizeTitle: 'Cup size', sizeS: 'Small', sizeM: 'Medium', sizeL: 'Large',
+      sizeSwitched: (n) => `Switched to the ${n.toLowerCase()} cup — pour it again.`,
+      colSize: 'Cup', colCups: 'Cups to fill', lblFull: 'full',
+      needMore: (n) => `Fill ${n} more cup size${n === 1 ? '' : 's'}`,
+      guessAsk: 'All three sizes filled. Look at the table — whatever the size, how many cups does it take?',
+      guessBtn: 'That’s it!', guessRetry: 'Look at the right column again — what was it all three times?',
+      guessOk: 'Three cups fill it exactly, so a cone holds one third of the cylinder: cone volume = cylinder volume ÷ 3.',
+      guessDone: 'Your finding: with equal base and height, cone = cylinder ÷ 3',
+      unequalObserve: 'This cone cup is a size smaller — 4 pours and it is still not full.',
+      unequalWhy: 'See? Without equal base and height, even 4 cups don’t fill it — “÷3” only works with equal base and height.',
       shopTitle: '🏪 Shop challenge', shopGoal: '🎯 Goal: customers want the bigger serving! Use the formulas to help them and earn coins.',
       shopHintFormula: 'V cylinder = πr²h · V cone = πr²h ÷ 3',
       nextOrder: 'Next customer →', nogl: 'WebGL is unavailable, but the challenges on the right still work.',
@@ -63,11 +83,10 @@ import * as THREE from './vendor/three.module.min.js';
       made: (n) => `✨ A ${n} formed! Added to the atlas~`, allMade: '🎉 Atlas complete! You are a solids-of-revolution expert!',
       atlasHint: 'Atlas: spin solids to light up',
       cupsCount: (n) => `🍦 ${n} cup${n === 1 ? '' : 's'} poured`,
-      tripleFull: (n) => `Cup ${n} fills it exactly! Cone = ⅓ cylinder`,
+      roundFull: (n) => `Cup ${n} fills it exactly! This round is in the table.`,
       coneFull: 'Done! The cone cup is full of ice cream.', coneEmptyTip: 'The cone cup is empty — fill it at the machine first.',
       alreadyFull: 'The cone cup is already full. Pour it in first!', cylFullTip: 'The cylinder is full! Press “Start over” to play again.',
-      magic: '🎉 The 3rd cup fills it exactly! So: cone volume = cylinder volume ÷ 3', unequalStart: 'Switched to a smaller cone cup (different base and height). How many cups now?',
-      unequalMsg: 'See? Without equal base & height, even 4 cups don’t fill it — “÷3” only works with equal base and height!',
+      unequalStart: 'Switched to a smaller cone cup (different base and height). How many cups now?',
       equalStart: 'Back to the equal base & height cup. Try again!',
       order: (cone, cup) => `I want the bigger one! ${cone}, ${cup} — which has more?`,
       coneDesc: (r, h) => `🍦 the cone (radius ${r}, height ${h})`, cupDesc: (r, h) => `🥤 the cup, a cylinder (radius ${r}, height ${h})`,
@@ -77,6 +96,7 @@ import * as THREE from './vendor/three.module.min.js';
       branchDone: '🎊 Enough coins — a new branch opens! Ice cream tycoon!',
       volCyl: (r, h) => `V = π×${r}²×${h} = ${r * r * h}π`,
       volCone: (r, h) => `V = π×${r}²×${h}÷3 = ${Math.round(r * r * h / 3 * 100) / 100}π`,
+      volConeUnknown: (r, h) => `V = π×${r}²×${h} ÷ ?　measure it in the Triple Mystery`,
       volSphere: (r) => `V = 4π×${r}³÷3 = ${Math.round(4 * r * r * r / 3 * 100) / 100}π (middle school)`,
       volFrustum: 'A frustum: small top, big bottom (formula comes in middle school)',
       idleLathe: '💡 Try pressing “Spin!” to turn paper into a solid', idleTriple: '💡 Press “Fill cone” to start solving the mystery', idleShop: '💡 Use the formulas on the right, then pick an answer',
@@ -105,18 +125,26 @@ import * as THREE from './vendor/three.module.min.js';
     { cone: [3, 6], cyl: [3, 2], ans: 'equal' }, { cone: [5, 6], cyl: [5, 3], ans: 'cyl' }, { cone: [2, 15], cyl: [2, 5], ans: 'equal' },
   ];
   const CUSTOMERS = ['🧒', '👧', '👦', '👵', '👨‍🦰', '🧑‍🎓'];
-  const CUP = { R: 1.1, H: 2.7 };            // cylinder cup dims
-  const CONE_EQ = { r: 1.1, h: 2.7 };        // equal base & height cone
-  const CONE_NEQ = { r: 0.8, h: 2.0 };       // control cone
+  /* 三组等底等高的杯子：换尺寸重做，才能归纳出「几杯」与大小无关 */
+  const CUP_SETS = [
+    { key: 'S', r: 0.85, h: 2.15 },
+    { key: 'M', r: 1.1, h: 2.7 },
+    { key: 'L', r: 1.35, h: 3.25 },
+  ];
+  const CONE_NEQ = { r: 0.8, h: 2.0 };       // 不等底等高的对照锥
+  const NEED_SIZES = CUP_SETS.length;
   const CONE_HOME = new THREE.Vector3(0, 0, 0.4);
   const FILL_SPOT = new THREE.Vector3(-2.5, 0, 0.4);
   const CYL_SPOT = new THREE.Vector3(2.6, 0, 0);
 
   const state = {
     station: 'lathe', shape: 0, r: 3, h: 6, phi: 0, formed: false,
-    scoops: 0, coneFilled: false, equal: true, busy: false,
+    scoops: 0, coneFilled: false, equal: true, busy: false, sizeIdx: 1,
+    records: [], guessed: false, guessMsgKey: '',
     atlas: new Set(), money: 0, order: 0, answered: false, branchToasted: false,
   };
+  const cupDims = () => CUP_SETS[state.sizeIdx];
+  const coneDims = () => (state.equal ? CUP_SETS[state.sizeIdx] : CONE_NEQ);
 
   /* ============================== three setup ============================== */
   const canvas = $('#scene');
@@ -394,43 +422,41 @@ import * as THREE from './vendor/three.module.min.js';
     streamMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.14, 1, 12), mats.cream);
     streamMesh.visible = false; tripleGroup.add(streamMesh);
     // cone cup
-    const dims = state.equal ? CONE_EQ : CONE_NEQ;
+    const dims = coneDims();
     coneCup = coneCupBuild(dims.r, dims.h); coneCup.position.copy(CONE_HOME); tripleGroup.add(coneCup);
-    // glass cylinder cup with tick rings
+    // glass cylinder cup — 不画三等分刻度，「几杯」要靠孩子自己数
+    const U = cupDims();
     const cyl = new THREE.Group(); cyl.position.copy(CYL_SPOT);
-    const glass = new THREE.Mesh(new THREE.CylinderGeometry(CUP.R, CUP.R, CUP.H, 48, 1, true), mats.glass);
-    glass.position.y = CUP.H / 2; cyl.add(glass);
-    const foot = new THREE.Mesh(new THREE.CylinderGeometry(CUP.R + 0.12, CUP.R + 0.18, 0.14, 48), mats.metal);
+    const glass = new THREE.Mesh(new THREE.CylinderGeometry(U.r, U.r, U.h, 48, 1, true), mats.glass);
+    glass.position.y = U.h / 2; cyl.add(glass);
+    const foot = new THREE.Mesh(new THREE.CylinderGeometry(U.r + 0.12, U.r + 0.18, 0.14, 48), mats.metal);
     foot.position.y = 0.07; foot.castShadow = true; cyl.add(foot);
-    const lip = new THREE.Mesh(new THREE.TorusGeometry(CUP.R, 0.045, 10, 48), mats.metal);
-    lip.rotation.x = Math.PI / 2; lip.position.y = CUP.H; cyl.add(lip);
-    for (let i = 1; i <= 3; i++) {
-      const ring = new THREE.Mesh(new THREE.TorusGeometry(CUP.R + 0.02, 0.022, 8, 48), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.75 }));
-      ring.rotation.x = Math.PI / 2; ring.position.y = (i / 3) * CUP.H; cyl.add(ring);
-      cyl.add(tickLabel(`${i}/3`, CUP.R + 0.75, (i / 3) * CUP.H));
-    }
-    cylCream = new THREE.Mesh(new THREE.CylinderGeometry(CUP.R * 0.93, CUP.R * 0.93, 1, 48), mats.cream);
+    const lip = new THREE.Mesh(new THREE.TorusGeometry(U.r, 0.045, 10, 48), mats.metal);
+    lip.rotation.x = Math.PI / 2; lip.position.y = U.h; cyl.add(lip);
+    cyl.add(tickLabel(t('lblFull'), U.r + 1.15, U.h));
+    cylCream = new THREE.Mesh(new THREE.CylinderGeometry(U.r * 0.93, U.r * 0.93, 1, 48), mats.cream);
     cylCream.scale.y = 0.001; cylCream.position.y = 0; cyl.add(cylCream);
     tripleGroup.add(cyl);
-    // ×1/3 neon sign hanging above
+    // ×1/3 霓虹灯：孩子报出答案之前完全不出现
     signSprite = textSprite('× 1/3', { size: 88, color: '#ffffff', bg: 'rgba(255,93,143,.9)', scale: 2.2 });
-    signSprite.position.set(0, 5.2, -1.8); signSprite.material.opacity = 0.25; tripleGroup.add(signSprite);
+    signSprite.position.set(0, 5.2, -1.8); signSprite.material.opacity = 0; signSprite.visible = state.guessed; tripleGroup.add(signSprite);
     // drop-zone rings on the floor
     fillRing = new THREE.Mesh(new THREE.RingGeometry(0.7, 1.05, 40), mats.ring.clone());
     fillRing.rotation.x = -Math.PI / 2; fillRing.position.set(FILL_SPOT.x, 0.02, FILL_SPOT.z); tripleGroup.add(fillRing);
-    pourRing = new THREE.Mesh(new THREE.RingGeometry(CUP.R + 0.2, CUP.R + 0.55, 40), mats.ring.clone());
+    pourRing = new THREE.Mesh(new THREE.RingGeometry(U.r + 0.2, U.r + 0.55, 40), mats.ring.clone());
     pourRing.rotation.x = -Math.PI / 2; pourRing.position.set(CYL_SPOT.x, 0.02, CYL_SPOT.z); tripleGroup.add(pourRing);
     syncTripleVisuals();
   }
 
   function cupRatio() {
-    const c = state.equal ? CONE_EQ : CONE_NEQ;
-    return (c.r * c.r * c.h / 3) / (CUP.R * CUP.R * CUP.H);
+    const c = coneDims(), u = cupDims();
+    return (c.r * c.r * c.h / 3) / (u.r * u.r * u.h);
   }
   function syncTripleVisuals() {
     if (!renderer || !cylCream) return;
+    const U = cupDims();
     const f = Math.min(1, state.scoops * cupRatio());
-    cylCream.scale.y = Math.max(0.001, f * (CUP.H - 0.08));
+    cylCream.scale.y = Math.max(0.001, f * (U.h - 0.08));
     cylCream.position.y = cylCream.scale.y / 2 + 0.02;
     if (coneCream) coneCream.scale.setScalar(state.coneFilled ? 1 : 0.001);
     if (coneSwirl) coneSwirl.scale.setScalar(state.coneFilled ? 1 : 0.001);
@@ -461,7 +487,7 @@ import * as THREE from './vendor/three.module.min.js';
     state.busy = true; bumpIdle(); renderTriplePanel();
     if (renderer && coneCup) {
       await moveCup(FILL_SPOT);
-      const dims = state.equal ? CONE_EQ : CONE_NEQ;
+      const dims = coneDims();
       const p1 = streamOn(FILL_SPOT.x, FILL_SPOT.z, 2.95, dims.h - 0.1, 0.9);
       const p2 = (async () => { await wait(0.15); await tween(0.85, (k) => { coneCream.scale.setScalar(Math.max(0.001, k)); }); })();
       await Promise.all([p1, p2]);
@@ -479,16 +505,17 @@ import * as THREE from './vendor/three.module.min.js';
     if (state.scoops * cupRatio() >= 0.999) { toast(t('cylFullTip')); return; }
     state.busy = true; bumpIdle(); renderTriplePanel();
     const startScoops = state.scoops;
+    const U = cupDims();
     if (renderer && coneCup) {
-      const over = new THREE.Vector3(CYL_SPOT.x - 2.0, CUP.H + 1.9, CYL_SPOT.z);
+      const over = new THREE.Vector3(CYL_SPOT.x - 2.0, U.h + 1.9, CYL_SPOT.z);
       await moveCup(over, 0.6);
       await tween(0.3, (k) => { coneCup.rotation.z = -k * 2.1; });
       const f0 = Math.min(1, startScoops * cupRatio()), f1 = Math.min(1, (startScoops + 1) * cupRatio());
-      const p1 = streamOn(CYL_SPOT.x + 0.3, CYL_SPOT.z, 3.1, f0 * CUP.H + 0.1, 1.0);
+      const p1 = streamOn(CYL_SPOT.x + 0.3, CYL_SPOT.z, 3.1, f0 * U.h + 0.1, 1.0);
       const p2 = tween(1.0, (k) => {
         const s = Math.max(0.001, 1 - k); coneCream.scale.setScalar(s); coneSwirl.scale.setScalar(s);
         const f = f0 + (f1 - f0) * k;
-        cylCream.scale.y = Math.max(0.001, f * (CUP.H - 0.08)); cylCream.position.y = cylCream.scale.y / 2 + 0.02;
+        cylCream.scale.y = Math.max(0.001, f * (U.h - 0.08)); cylCream.position.y = cylCream.scale.y / 2 + 0.02;
       }, (k) => k);
       await Promise.all([p1, p2]);
       await tween(0.25, (k) => { coneCup.rotation.z = -(1 - k) * 2.1; });
@@ -496,18 +523,38 @@ import * as THREE from './vendor/three.module.min.js';
     }
     state.coneFilled = false; state.scoops += 1;
     const full = state.scoops * cupRatio() >= 0.999;
-    if (state.equal && state.scoops === 3) {
-      toast(t('magic'), true);
-      if (renderer) {
-        burstStars(new THREE.Vector3(CYL_SPOT.x, CUP.H + 1, CYL_SPOT.z), tripleGroup);
-        tween(0.8, (k) => { signSprite.material.opacity = 0.25 + k * 0.75; signSprite.scale.setScalar(2.2 + Math.sin(k * Math.PI) * 0.8); });
-      }
+    if (state.equal && full) {
+      recordRound();
+      toast(t('roundFull')(state.scoops), true);
+      if (renderer) burstStars(new THREE.Vector3(CYL_SPOT.x, U.h + 1, CYL_SPOT.z), tripleGroup);
     } else if (!state.equal && state.scoops === 4 && !full) {
-      toast(t('unequalMsg'), true);
+      toast(t(state.guessed ? 'unequalWhy' : 'unequalObserve'), true);
     } else if (full && !state.equal) {
       toast(t('cupsCount')(state.scoops));
     }
     state.busy = false; renderTriplePanel();
+  }
+
+  /* 每种尺寸只记一行；攒够三种不同大小才开放猜想 */
+  function recordRound() {
+    const set = CUP_SETS[state.sizeIdx];
+    if (!state.records.some((rec) => rec.key === set.key)) {
+      state.records.push({ key: set.key, scoops: state.scoops });
+    }
+  }
+  function revealTriple() {
+    state.guessed = true; state.guessMsgKey = 'guessOk';
+    if (renderer && signSprite) {
+      signSprite.visible = true;   // 脉动透明度由主循环接管
+      tween(0.8, (k) => { signSprite.scale.setScalar(2.2 + Math.sin(k * Math.PI) * 0.8); });
+      burstStars(new THREE.Vector3(CYL_SPOT.x, cupDims().h + 1, CYL_SPOT.z), tripleGroup);
+    }
+  }
+  function submitGuess() {
+    const raw = $('#guessInput').value.trim();
+    if (Number(raw) === 3) revealTriple();
+    else state.guessMsgKey = 'guessRetry';
+    renderTriplePanel();
   }
 
   function resetTriple(unequal) {
@@ -516,6 +563,13 @@ import * as THREE from './vendor/three.module.min.js';
     if (renderer) { clearGroup(tripleGroup); makeTriple(); }
     renderTriplePanel();
     toast(unequal ? t('unequalStart') : t('equalStart'));
+  }
+  function setCupSize(idx) {
+    if (state.busy || idx === state.sizeIdx) return;
+    state.sizeIdx = idx; state.scoops = 0; state.coneFilled = false; state.equal = true;
+    if (renderer) { clearGroup(tripleGroup); makeTriple(); }
+    renderTriplePanel();
+    toast(t('sizeSwitched')(t(`size${CUP_SETS[idx].key}`)));
   }
 
   /* ---------- station 3: shop ---------- */
@@ -611,7 +665,7 @@ import * as THREE from './vendor/three.module.min.js';
     let line = t('spinsInto')(t(sh.id), loc(sh.solidKey));
     if (state.formed) {
       if (sh.id === 'rect') line = `${loc(sh.solidKey)}：${t('volCyl')(state.r, state.h)}`;
-      if (sh.id === 'tri') line = `${loc(sh.solidKey)}：${t('volCone')(state.r, state.h)}`;
+      if (sh.id === 'tri') line = `${loc(sh.solidKey)}：${state.guessed ? t('volCone')(state.r, state.h) : t('volConeUnknown')(state.r, state.h)}`;
       if (sh.id === 'semi') line = `${loc(sh.solidKey)}：${t('volSphere')(state.r)}`;
       if (sh.id === 'trap') line = `${loc(sh.solidKey)}：${t('volFrustum')}`;
     }
@@ -621,9 +675,29 @@ import * as THREE from './vendor/three.module.min.js';
   }
   function renderTriplePanel() {
     const full = state.scoops * cupRatio() >= 0.999;
-    $('#tripleReadout').textContent = (state.equal && full) ? t('tripleFull')(state.scoops) : t('cupsCount')(state.scoops);
+    $('#tripleReadout').textContent = (state.equal && full) ? t('roundFull')(state.scoops) : t('cupsCount')(state.scoops);
     $('#fillCone').disabled = state.busy || state.coneFilled || full;
     $('#pourCone').disabled = state.busy || !state.coneFilled || full;
+    $('#sizeButtons').innerHTML = CUP_SETS.map((s, i) => {
+      const done = state.records.some((rec) => rec.key === s.key);
+      return `<button class="btn btn--ghost ${i === state.sizeIdx ? 'is-active' : ''}" data-size="${i}" type="button">${t(`size${s.key}`)}${done ? ' ✅' : ''}</button>`;
+    }).join('');
+    $('#tripleTable').innerHTML = state.records.length
+      ? `<div class="trow"><b>${t('colSize')}</b><b>${t('colCups')}</b></div>`
+        + state.records.map((rec) => `<div class="trow"><span>${t(`size${rec.key}`)}</span><span>${rec.scoops}</span></div>`).join('')
+      : '';
+    renderGuess();
+  }
+  /* 三种尺寸都倒满过才开放猜想；⅓ 只在孩子报出「3」之后出现 */
+  function renderGuess() {
+    const n = state.records.length;
+    $('#tripleGuess').hidden = n === 0;
+    const ready = n >= NEED_SIZES;
+    $('#guessAsk').textContent = state.guessed ? t('guessDone') : ready ? t('guessAsk') : t('needMore')(NEED_SIZES - n);
+    $('#guessRow').hidden = !ready || state.guessed;
+    $('#guessOut').hidden = !state.guessMsgKey;
+    $('#guessOut').textContent = state.guessMsgKey ? t(state.guessMsgKey) : '';
+    $('#guessOut').classList.toggle('is-ok', state.guessed);
   }
   function renderShopPanel() {
     const o = orders[state.order % orders.length];
@@ -742,7 +816,7 @@ import * as THREE from './vendor/three.module.min.js';
       // idle micro-motions
       if (state.station === 'lathe' && crank && !state.busy && !spinDrag && state.phi === 0) crank.rotation.y -= dt * 0.5;
       if (customerSprite) customerSprite.position.y = 2.1 + Math.sin(now / 600) * 0.08;
-      if (signSprite && state.equal && state.scoops >= 3) signSprite.material.opacity = 0.75 + Math.sin(now / 240) * 0.25;
+      if (signSprite && state.guessed) signSprite.material.opacity = 0.75 + Math.sin(now / 240) * 0.25;
       confetti = confetti.filter((c) => {
         c.position.add(c.userData.v); c.userData.v.y -= 0.0045; c.rotation.x += 0.12; c.rotation.z += 0.08;
         if (c.position.y < -0.3) { c.userData.parent?.remove(c); c.geometry.dispose(); return false; }
@@ -764,6 +838,8 @@ import * as THREE from './vendor/three.module.min.js';
     document.title = t('doc');
     document.querySelectorAll('[data-t]').forEach((n) => { const v = I18N[lang][n.dataset.t]; if (typeof v === 'string') n.textContent = v; });
     if (langBtn) langBtn.textContent = lang === 'zh' ? 'EN' : '中';
+    /* 杯口「满」标签是 3D sprite，切换语言必须重建才会跟着变 */
+    if (renderer && state.station === 'triple') { clearGroup(tripleGroup); makeTriple(); }
     render();
   }
   function applyTheme() {
@@ -797,6 +873,12 @@ import * as THREE from './vendor/three.module.min.js';
   $('#pourCone').addEventListener('click', doPour);
   $('#resetTriple').addEventListener('click', () => resetTriple(false));
   $('#unequal').addEventListener('click', () => resetTriple(true));
+  $('#sizeButtons').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-size]'); if (!b) return;
+    setCupSize(+b.dataset.size);
+  });
+  $('#guessBtn').addEventListener('click', submitGuess);
+  $('#guessInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') submitGuess(); });
 
   let shopTimer = null;
   function advanceOrder() {
@@ -827,5 +909,12 @@ import * as THREE from './vendor/three.module.min.js';
   makeStage();
   if (renderer) { makeLathe(); orbit.tdist = 15; orbit.tpitch = 0.32; }
   render(); resize();
+  /* 深链：?station=lathe|triple|shop、?state=guess 直达三组实测已完成的猜想态 */
+  const qp = new URLSearchParams(location.search);
+  const st0 = qp.get('station');
+  if (qp.get('state') === 'guess') {
+    for (const s of CUP_SETS) state.records.push({ key: s.key, scoops: 3 });
+    setStation('triple');
+  } else if (st0 && ['lathe', 'triple', 'shop'].includes(st0)) setStation(st0);
   requestAnimationFrame(loop);
 })();

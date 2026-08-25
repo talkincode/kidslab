@@ -1,9 +1,17 @@
 {
-  "generatedAt": "2026-08-24T18:11:36.752Z",
+  "generatedAt": "2026-08-25T01:43:02.015Z",
   "tags": {
     "3D": {
       "en": "3D",
       "kind": "form"
+    },
+    "DNA": {
+      "en": "DNA",
+      "kind": "knowledge"
+    },
+    "万有引力": {
+      "en": "Gravitation",
+      "kind": "knowledge"
     },
     "三视图": {
       "en": "Three Views",
@@ -81,6 +89,10 @@
       "en": "Circles",
       "kind": "knowledge"
     },
+    "圆周运动": {
+      "en": "Circular Motion",
+      "kind": "knowledge"
+    },
     "地层": {
       "en": "Rock Layers",
       "kind": "knowledge"
@@ -103,6 +115,10 @@
     },
     "宇宙": {
       "en": "Space & Cosmos",
+      "kind": "knowledge"
+    },
+    "官能团": {
+      "en": "Functional Groups",
       "kind": "knowledge"
     },
     "实验": {
@@ -171,6 +187,10 @@
     },
     "月相": {
       "en": "Moon Phases",
+      "kind": "knowledge"
+    },
+    "有机化合物": {
+      "en": "Organic Compounds",
       "kind": "knowledge"
     },
     "条件判断": {
@@ -275,6 +295,10 @@
     },
     "递归": {
       "en": "Recursion",
+      "kind": "knowledge"
+    },
+    "遗传": {
+      "en": "Heredity",
       "kind": "knowledge"
     },
     "酸碱": {
@@ -711,8 +735,8 @@
         "en": "Rolling Wheel Park"
       },
       "description": {
-        "zh": "拖着蘸了颜料的车轮滚一圈：画出的线总是直径的 3.14 倍——这个倍数就是 π！再把圆切成小片、拼成长方形，圆面积公式 πr² 一看就明白。",
-        "en": "Roll a paint-dipped wheel one full turn: the line is always about 3.14 diameters long — that's π! Then slice a circle into pieces and rebuild it as a rectangle to see why area = πr²."
+        "zh": "拖着蘸了颜料的车轮滚一圈，量出这条线有多长。换三种大小的轮子比一比，圆周率 π 会自己从你的记录表里冒出来。再把圆切成小片拼成长方形，就看懂了圆面积公式 πr²。",
+        "en": "Roll a paint-dipped wheel one full turn and measure the line it paints. Compare three wheel sizes and π emerges from your own data table. Then slice a circle and rebuild it as a rectangle to see where area = πr² comes from."
       },
       "category": "math",
       "levels": [
@@ -904,8 +928,8 @@
         "en": "Ice Cream Geometry"
       },
       "description": {
-        "zh": "长方形纸片一转成圆柱、三角形一转成圆锥——旋转体亲眼看见！再用圆锥杯舀冰淇淋倒进等底等高的圆柱杯：一杯、两杯、三杯刚好满，×1/3 的秘密有了画面。",
-        "en": "Spin a rectangle into a cylinder and a triangle into a cone — solids of revolution before your eyes! Then scoop with a cone cup into a cylinder of equal base and height: one, two, three scoops fill it exactly. The 1/3 finally makes sense."
+        "zh": "长方形纸片一转成圆柱、三角形一转成圆锥——旋转体亲眼看见！再用圆锥杯舀冰淇淋倒进等底等高的圆柱杯，大中小三种杯子各倒一遍：圆锥体积和圆柱的关系，是你自己数出来的。",
+        "en": "Spin a rectangle into a cylinder and a triangle into a cone — solids of revolution before your eyes! Then scoop with a cone cup into a cylinder of equal base and height, once for each of three cup sizes: you count your way to how cone volume relates to cylinder volume."
       },
       "category": "math",
       "levels": [
@@ -4687,6 +4711,215 @@
         "模拟"
       ],
       "path": "courseware/cpu-lab/index.html"
+    },
+    {
+      "id": "organic-builder-lab",
+      "title": {
+        "zh": "有机分子工坊",
+        "en": "Organic Builder Lab"
+      },
+      "description": {
+        "zh": "在三维球棍台上拼出甲烷、乙烯、乙醇和乙酸，用量角器读键角，再用四瓶试剂填满反应矩阵，最后找出同分异构体。",
+        "en": "Build methane, ethene, ethanol and acetic acid on a 3D ball-and-stick bench, read bond angles with a protractor, fill a four-reagent reaction matrix, then hunt down the isomers."
+      },
+      "category": "chemistry",
+      "levels": [
+        "senior"
+      ],
+      "grades": [
+        "g10",
+        "g12"
+      ],
+      "tags": [
+        "有机化合物",
+        "官能团",
+        "实验",
+        "3D"
+      ],
+      "icon": "⚛️",
+      "order": 82,
+      "badge": "new",
+      "keywords": [
+        "Organic Compounds",
+        "organic compounds",
+        "organic chemistry",
+        "有机化学",
+        "烷烃",
+        "alkane",
+        "烯烃",
+        "alkene",
+        "甲烷",
+        "methane",
+        "乙烯",
+        "ethene",
+        "乙醇",
+        "ethanol",
+        "乙酸",
+        "acetic acid",
+        "同分异构",
+        "isomer",
+        "isomers",
+        "碳链",
+        "球棍模型",
+        "ball and stick",
+        "Functional Groups",
+        "functional group",
+        "functional groups",
+        "羟基",
+        "hydroxyl",
+        "羧基",
+        "carboxyl",
+        "碳碳双键",
+        "double bond",
+        "酯化",
+        "esterification",
+        "Experiment",
+        "experiment",
+        "simulation",
+        "lab",
+        "模拟",
+        "3D",
+        "3d",
+        "三维",
+        "three.js"
+      ],
+      "path": "courseware/organic-builder-lab/index.html"
+    },
+    {
+      "id": "circular-orbit-lab",
+      "title": {
+        "zh": "圆周与卫星实验室",
+        "en": "Circular Orbit Lab"
+      },
+      "description": {
+        "zh": "在三维地球旁调高度和水平速度，做出坠回、椭圆、圆轨和逃逸四种结局，读周期、画速度带，最后自己算出同步轨道。",
+        "en": "Dial altitude and horizontal speed beside a 3D Earth to produce re-entry, ellipse, circle and escape, read the periods, map the speed bands, then work out the synchronous orbit yourself."
+      },
+      "category": "physics",
+      "levels": [
+        "senior"
+      ],
+      "grades": [
+        "g11"
+      ],
+      "tags": [
+        "圆周运动",
+        "万有引力",
+        "天文",
+        "实验",
+        "3D"
+      ],
+      "icon": "🛰️",
+      "order": 83,
+      "badge": "new",
+      "keywords": [
+        "Circular Motion",
+        "circular motion",
+        "uniform circular motion",
+        "匀速圆周运动",
+        "向心力",
+        "centripetal force",
+        "向心加速度",
+        "centripetal acceleration",
+        "线速度",
+        "角速度",
+        "angular velocity",
+        "Gravitation",
+        "gravitation",
+        "universal gravitation",
+        "万有引力定律",
+        "卫星",
+        "satellite",
+        "satellites",
+        "环绕速度",
+        "orbital speed",
+        "第一宇宙速度",
+        "逃逸速度",
+        "escape velocity",
+        "开普勒",
+        "kepler",
+        "Astronomy",
+        "astronomy",
+        "Experiment",
+        "experiment",
+        "simulation",
+        "lab",
+        "模拟",
+        "3D",
+        "3d",
+        "三维",
+        "three.js"
+      ],
+      "path": "courseware/circular-orbit-lab/index.html"
+    },
+    {
+      "id": "dna-replication-lab",
+      "title": {
+        "zh": "DNA 复制实验室",
+        "en": "DNA Replication Lab"
+      },
+      "description": {
+        "zh": "在三维双螺旋上解旋、按 A-T 与 G-C 配对补出新链，看半保留复制留下的老链，再换掉一个碱基追踪密码子和氨基酸的变化。",
+        "en": "Unwind a 3D double helix, pair new bases by A-T and G-C, see which parental strands survive semi-conservative replication, then swap one base and track the codon and amino acid."
+      },
+      "category": "science",
+      "levels": [
+        "senior"
+      ],
+      "grades": [
+        "g12"
+      ],
+      "tags": [
+        "DNA",
+        "遗传",
+        "实验",
+        "3D"
+      ],
+      "icon": "🧬",
+      "order": 84,
+      "badge": "new",
+      "keywords": [
+        "DNA",
+        "dna",
+        "双螺旋",
+        "double helix",
+        "脱氧核糖核酸",
+        "碱基配对",
+        "base pairing",
+        "核苷酸",
+        "nucleotide",
+        "半保留复制",
+        "semi-conservative replication",
+        "复制",
+        "replication",
+        "密码子",
+        "codon",
+        "突变",
+        "mutation",
+        "转录",
+        "翻译",
+        "Heredity",
+        "heredity",
+        "genetics",
+        "遗传学",
+        "基因",
+        "gene",
+        "genes",
+        "染色体",
+        "chromosome",
+        "性状",
+        "trait",
+        "Experiment",
+        "experiment",
+        "simulation",
+        "lab",
+        "模拟",
+        "3D",
+        "3d",
+        "三维",
+        "three.js"
+      ],
+      "path": "courseware/dna-replication-lab/index.html"
     }
   ]
 }

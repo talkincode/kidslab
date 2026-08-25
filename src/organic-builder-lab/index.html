@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>有机分子工坊 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill back-pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title"><span aria-hidden="true">⚛️</span> <span data-t="title">有机分子工坊</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill lang-pill" id="langBtn" type="button" aria-label="Switch to English">EN</button>
+    </div>
+  </header>
+
+  <nav class="mobile-nav" aria-label="实验区切换">
+    <button class="mobile-nav__button is-active" type="button" data-mobile-panel="task" aria-pressed="true">
+      <span aria-hidden="true">01</span><span data-t="navTask">任务</span>
+    </button>
+    <button class="mobile-nav__button" type="button" data-mobile-panel="stage" aria-pressed="false">
+      <span aria-hidden="true">02</span><span data-t="navStage">拼装台</span>
+    </button>
+    <button class="mobile-nav__button" type="button" data-mobile-panel="log" aria-pressed="false">
+      <span aria-hidden="true">03</span><span data-t="navLog">记录</span>
+    </button>
+  </nav>
+
+  <main class="app" id="app" data-mobile-panel="task">
+    <section class="panel task-panel" aria-labelledby="taskTitle">
+      <p class="section-code" id="stationCode">STATION 01</p>
+      <h2 id="taskTitle" data-t="stationBuildTitle">碳能搭出什么？</h2>
+
+      <div class="station-tabs" role="group" aria-label="实验站">
+        <button class="station-tab is-active" type="button" data-station="build" aria-pressed="true" data-t="tabBuild">拼装</button>
+        <button class="station-tab" type="button" data-station="react" aria-pressed="false" data-t="tabReact">试剂</button>
+        <button class="station-tab" type="button" data-station="isomer" aria-pressed="false" data-t="tabIsomer">异构</button>
+      </div>
+
+      <div class="station-body" id="stationBuild">
+        <div class="prediction-card" id="predictionCard">
+          <div class="step-title">
+            <span class="step-number">1</span>
+            <span data-t="predictionTitle">先猜一猜</span>
+          </div>
+          <p id="predictionPrompt" data-t="predictionPrompt">一个碳原子接上 4 个氢，这 4 根键会怎样排开？</p>
+          <p class="prediction-verdict" id="predictionVerdict" hidden></p>
+          <div class="prediction-grid" id="predictionGrid" role="group" aria-label="构型预测">
+            <button class="prediction-choice" type="button" data-prediction="flat">
+              <span class="choice-symbol" aria-hidden="true">✚</span>
+              <span data-t="predictionFlat">平面十字</span>
+            </button>
+            <button class="prediction-choice" type="button" data-prediction="tetra">
+              <span class="choice-symbol" aria-hidden="true">▲</span>
+              <span data-t="predictionTetra">撑向四角</span>
+            </button>
+            <button class="prediction-choice" type="button" data-prediction="line">
+              <span class="choice-symbol" aria-hidden="true">━</span>
+              <span data-t="predictionLine">挤成一条线</span>
+            </button>
+          </div>
+          <p class="feedback" id="predictionFeedback" role="status" aria-live="polite"></p>
+        </div>
+
+        <div class="target-card">
+          <div class="shelf-head">
+            <div class="step-title">
+              <span class="step-number">2</span>
+              <span data-t="targetTitle">按订单拼分子</span>
+            </div>
+            <span class="count-badge" id="buildCount">0 / 4</span>
+          </div>
+          <p class="current-target" id="currentTarget">甲烷 CH₄</p>
+          <p class="target-hint" id="targetHint" data-t="targetHintBuild">选一个原子，再点场景里发光的键位。</p>
+          <div class="target-grid" id="targetGrid" role="list"></div>
+        </div>
+
+        <aside class="control-note">
+          <span class="control-note__icon" aria-hidden="true">↔</span>
+          <p><strong data-t="controlLabel">控制变量：</strong> <span data-t="controlBuild">每次只改一处成键，其余原子不动。</span></p>
+        </aside>
+      </div>
+
+      <div class="station-body" id="stationReact" hidden>
+        <div class="react-card">
+          <div class="step-title">
+            <span class="step-number">1</span>
+            <span data-t="reactPickTitle">选一瓶试剂</span>
+          </div>
+          <p class="target-hint" id="reactSample"></p>
+          <div class="reagent-grid" id="reagentGrid" role="group" aria-label="试剂"></div>
+        </div>
+        <div class="react-card">
+          <div class="step-title">
+            <span class="step-number">2</span>
+            <span data-t="reactPredictTitle">先预测，再动手</span>
+          </div>
+          <p id="reactQuestion" data-t="reactPredictHint">这瓶试剂会跟它反应吗？</p>
+          <div class="predict-row" role="group" aria-label="反应预测">
+            <button class="predict-btn" type="button" data-guess="yes" data-t="guessYes">会反应</button>
+            <button class="predict-btn" type="button" data-guess="no" data-t="guessNo">不反应</button>
+          </div>
+          <button class="wide-btn" id="testBtn" type="button" disabled data-t="runTest">滴上去看看</button>
+          <p class="feedback" id="reactFeedback" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <div class="station-body" id="stationIsomer" hidden>
+        <div class="isomer-card">
+          <div class="step-title">
+            <span class="step-number">L4</span>
+            <span data-t="isomerTitle">同一个分子式，几种分子？</span>
+          </div>
+          <p data-t="isomerPrompt">只给你分子式。原子数一样，连法不一样，就是不同的物质。</p>
+          <p class="formula-chip" id="isomerFormula">C₂H₆O</p>
+          <div class="isomer-progress" id="isomerProgress"></div>
+          <button class="wide-btn" id="isomerNextBtn" type="button" hidden data-t="isomerNext">换下一张分子式卡 →</button>
+          <p class="feedback" id="isomerFeedback" role="status" aria-live="polite"></p>
+        </div>
+        <aside class="control-note">
+          <span class="control-note__icon" aria-hidden="true">✓</span>
+          <p data-t="isomerRule">只看谁跟谁相连，摆的角度不算。</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="panel stage-panel" aria-labelledby="stageTitle">
+      <div class="stage-head">
+        <div>
+          <p class="section-code">MODEL BENCH</p>
+          <h2 id="stageTitle" data-t="stageTitle">球棍拼装台</h2>
+        </div>
+        <span class="lab-state" id="labState">空台</span>
+      </div>
+
+      <div class="readout-strip">
+        <span><small data-t="readFormula">分子式</small><strong id="readFormula">—</strong></span>
+        <span><small data-t="readFree">空着的键</small><strong id="readFree">—</strong></span>
+        <span><small data-t="readAngle">键角读数</small><strong id="readAngle">—</strong></span>
+      </div>
+
+      <div class="scene-wrap">
+        <canvas id="scene" aria-label="三维分子球棍模型"></canvas>
+        <div class="scene-markers" id="sceneMarkers"></div>
+        <p class="scene-hint" id="sceneHint" data-t="hintOrbit">拖动空白处转动模型</p>
+        <p class="nogl" id="nogl" hidden data-t="nogl">这台设备暂时打不开 3D，换个浏览器就能拼分子了。</p>
+        <p class="toast" id="toast" hidden role="status" aria-live="polite"></p>
+      </div>
+
+      <div class="atom-tray" role="group" aria-label="原子托盘">
+        <button class="atom-chip atom-chip--c is-selected" type="button" data-element="C" aria-pressed="true">
+          <span class="atom-dot" aria-hidden="true">C</span><span data-t="atomC">碳</span>
+        </button>
+        <button class="atom-chip atom-chip--h" type="button" data-element="H" aria-pressed="false">
+          <span class="atom-dot" aria-hidden="true">H</span><span data-t="atomH">氢</span>
+        </button>
+        <button class="atom-chip atom-chip--o" type="button" data-element="O" aria-pressed="false">
+          <span class="atom-dot" aria-hidden="true">O</span><span data-t="atomO">氧</span>
+        </button>
+      </div>
+
+      <div class="stage-actions">
+        <button class="stage-btn" id="measureBtn" type="button" aria-pressed="false">
+          <span aria-hidden="true">📐</span><span data-t="measure">量键角</span>
+        </button>
+        <button class="stage-btn" id="undoBtn" type="button">
+          <span aria-hidden="true">↶</span><span data-t="undo">拆掉一个</span>
+        </button>
+        <button class="stage-btn stage-btn--ghost" id="clearBtn" type="button">
+          <span aria-hidden="true">↺</span><span data-t="clear">清空</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="panel log-panel" aria-labelledby="logTitle">
+      <div class="log-head">
+        <div>
+          <p class="section-code">LAB NOTEBOOK</p>
+          <h2 id="logTitle" data-t="logTitle">分子档案</h2>
+        </div>
+        <button class="reset-button" id="resetBtn" type="button" data-t="reset">重开实验</button>
+      </div>
+
+      <div class="log-scroll">
+        <div class="data-table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th data-t="colMolecule">分子</th>
+                <th data-t="colFormula">分子式</th>
+                <th data-t="colShape">形状</th>
+                <th data-t="colAngle">键角</th>
+                <th data-t="colGroup">官能团</th>
+              </tr>
+            </thead>
+            <tbody id="archiveBody"></tbody>
+          </table>
+        </div>
+
+        <div class="matrix-card">
+          <div class="matrix-head">
+            <span data-t="matrixTitle">反应矩阵</span>
+            <small id="matrixCount">0 / 16</small>
+          </div>
+          <div class="data-table-wrap">
+            <table class="matrix-table">
+              <thead>
+                <tr id="matrixHead"></tr>
+              </thead>
+              <tbody id="matrixBody"></tbody>
+            </table>
+          </div>
+          <p class="matrix-legend"><span data-t="legendYes">✓ 有变化</span> · <span data-t="legendNo">✗ 没变化</span> · <span data-t="legendUnknown">· 还没试</span></p>
+        </div>
+
+        <p class="conclusion" id="conclusion" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

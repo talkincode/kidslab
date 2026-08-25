@@ -1,0 +1,28 @@
+{
+  "id": "circular-orbit-lab",
+  "title": {
+    "zh": "圆周与卫星实验室",
+    "en": "Circular Orbit Lab"
+  },
+  "description": {
+    "zh": "在三维地球旁调高度和水平速度，做出坠回、椭圆、圆轨和逃逸四种结局，读周期、画速度带，最后自己算出同步轨道。",
+    "en": "Dial altitude and horizontal speed beside a 3D Earth to produce re-entry, ellipse, circle and escape, read the periods, map the speed bands, then work out the synchronous orbit yourself."
+  },
+  "category": "physics",
+  "levels": [
+    "senior"
+  ],
+  "grades": [
+    "g11"
+  ],
+  "tags": [
+    "圆周运动",
+    "万有引力",
+    "天文",
+    "实验",
+    "3D"
+  ],
+  "icon": "🛰️",
+  "order": 83,
+  "badge": "new"
+}

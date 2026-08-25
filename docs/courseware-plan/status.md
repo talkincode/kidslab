@@ -31,7 +31,7 @@ KidsLab 应该是一组孩子打开就想玩的交互课件，而不是题库或
 
 - 主站课程浏览：`index.html`、`assets/js/app.js` 支持学段、年级、分类、搜索、双语、主题、强调色与置顶课件。
 - 静态构建发布：`scripts/build.mjs` 校验 `course.json`、压缩资源、生成 `courseware/index.json`；GitHub Pages workflow 在 `main` 推送后构建发布。
-- 课件源码库：当前 `src/` 下有 92 个课件目录，其中小学规划内按 ID 直接完成 79 个。
+- 课件源码库：当前 `src/` 下有 95 个课件目录，其中小学规划内按 ID 直接完成 79 个，初高中两轮规划内已上线 10 个。
 - 小学课件规划：`docs/courseware-plan/` 覆盖数学、编程、逻辑、科学 84 个小学目标课件。
 - 课件模板：`docs/courseware-template/` 提供双语、主题、静态独立课件起点。
 - 交互音效：当前游戏课件含语义交互音效与静音控制（含新建 `cpu-lab`）；`huarong-dao` 与 `venn-port` 使用 ScoreKit 循环配乐和通关短曲；存量改进优先级见 `docs/courseware-audio-audit.md`。
@@ -73,17 +73,23 @@ Agent 每次完成计划项后必须同步更新：
 | 科学 | 22 | 17 | 5 | `plant-lab` 可能对应 `plant-xray`，但 ID/标题未对齐 |
 | 合计 | 84 | 79 | 5 | 另有 11 个规划外已上线课件 |
 
-初高中采用独立规划口径，详见 [`secondary-labs.md`](./secondary-labs.md)：共 26 个目标课件，6 个存量课件纳入统一实验合同并待复核，20 个为新增规划，不计入上方小学汇总。
+初高中采用独立规划口径，不计入上方小学汇总。第一轮 26 个见 [`secondary-labs.md`](./secondary-labs.md)；第二轮 20 个见 [`secondary-labs-wave2.md`](./secondary-labs-wave2.md)；合计 46 个目标。
 
 小学数学另有探究深度口径，详见 [`primary-math-inquiry.md`](./primary-math-inquiry.md)：定义 A/B/C/D 四类探究模型与 M1–M4 分级，并记录 26 个 `g3-g6` 数学课件的实测等级基线（M1 二十个 / M2 六个 / M3 零个）。该文件只评判「孩子是否自己发现规律」，与上表的上线完成计数是两个正交维度，不改变上表数字。
 
 | 初高中实验规划 | 目标数 | 源码已存在 | 新增待实现 | 备注 |
 | --- | ---: | ---: | ---: | --- |
-| 数学 | 4 | 2 | 2 | 函数、平方根、动态几何、抽样统计 |
-| 物理 | 12 | 3 | 9 | `electric-mouse` 当前分类为 `science`，但纳入初中物理学习路径；`density-detective-lab` 已完成 |
-| 化学 | 7 | 1 | 6 | `ph-lab` 需从观察型 L1 升级到测量型 L3 |
-| 生物/科学 | 3 | 1 | 2 | 暂沿用 `science` 分类，不新增 `biology` |
-| 合计 | 26 | 7 | 19 | 存量存在不等于已通过新实验合同复核 |
+| 第一轮数学 | 4 | 2 | 2 | 函数变形记、平方根、动态几何、抽样统计 |
+| 第一轮物理 | 12 | 3 | 9 | `electric-mouse` 当前分类为 `science`，但纳入初中物理学习路径；`density-detective-lab` 已完成 |
+| 第一轮化学 | 7 | 1 | 6 | `ph-lab` 需从观察型 L1 升级到测量型 L3 |
+| 第一轮生物/科学 | 3 | 1 | 2 | 暂沿用 `science` 分类 |
+| 第一轮小计 | 26 | 7 | 19 | 存量存在不等于已通过新实验合同复核 |
+| 第二轮数学 | 6 | 0 | 6 | 一次函数、二次函数、单位圆、相似测高、数列、导数 |
+| 第二轮物理 | 5 | 1 | 4 | `circular-orbit-lab` 已上线；余比热容、动量、变压器、光电效应 |
+| 第二轮化学 | 4 | 1 | 3 | `organic-builder-lab` 已上线；余原子周期律、反应热、氧化还原账本 |
+| 第二轮生物/科学 | 5 | 1 | 4 | `dna-replication-lab` 已上线；余光合、孟德尔、细胞呼吸、生态能量；满 6 个生物课时升 `biology` 分类 |
+| 第二轮小计 | 20 | 3 | 17 | 不替换第一轮 ID；已上线三项均为 three.js 3D 课件 |
+| 合计 | 46 | 10 | 36 | 两轮独立勾选 |
 
 ## 已完成（规划内）
 
@@ -104,8 +110,8 @@ Agent 每次完成计划项后必须同步更新：
 - [x] 仓鼠围栏 `hamster-fence` · M1 · B
 - [x] 数字宇宙 `zoom-ten` · M1 · D
 - [x] 体积水族馆 `volume-aquarium` · M1 · A
-- [x] 滚轮乐园 `rolling-park` · M2 · A
-- [x] 冰淇淋几何 `icecream-geometry` · M1 · B
+- [x] 滚轮乐园 `rolling-park` · M3 · A
+- [x] 冰淇淋几何 `icecream-geometry` · M3 · B
 - [x] 格子大厦 `grid-tower` · M1 · B
 - [x] 角度高尔夫 `angle-golf` · M1 · A
 - [x] 墨迹怪物 `inkblot-monsters` · M2 · B
@@ -183,6 +189,9 @@ Agent 每次完成计划项后必须同步更新：
 ### 初高中实验型
 
 - [x] 密度侦探实验室 `density-detective-lab`（物理 · `g8`；天平、排水测体积、数据表、质量—体积图和材料识别构成 L3 实验闭环）
+- [x] 有机分子工坊 `organic-builder-lab`（化学 · `g10,g12` · 第二轮 P0；three.js 球棍拼装台按 VSEPR 布点，量角器读出 109.5°/120°，四瓶试剂填满 4×4 反应矩阵，L4 用连通性判定 C₂H₆O 与 C₄H₁₀ 的同分异构）
+- [x] 圆周与卫星实验室 `circular-orbit-lab`（物理 · `g11` · 第二轮 P1；three.js 地球与实时轨道预览，坠回/椭圆/圆轨/逃逸四种结局各记一行数据表，速度带图给出分界线，L4 由周期反推同步轨道半径）
+- [x] DNA 复制实验室 `dna-replication-lab`（科学 · `g12` · 第二轮 P1；three.js 双螺旋沿复制叉解开，错配不成键，两条子代双链以颜色区分半保留，突变站追踪密码子→氨基酸，L4 找出同义突变）
 
 ## 未实现（规划内）
 
@@ -205,6 +214,52 @@ Agent 每次完成计划项后必须同步更新：
 - [ ] 空气车库 `air-garage`
 - [ ] 生态小岛 `eco-island`
 - [ ] 小小金字塔 `mini-pyramid`
+
+### 初高中第一轮（规划内未实现）
+
+清单与实验合同见 [`secondary-labs.md`](./secondary-labs.md)。存量六课已上线，不在此重复；下表只列尚未建 `src/<id>/` 的新增项。
+
+- [ ] 运动追踪实验室 `motion-tracker-lab`
+- [ ] 欧姆定律实验室 `ohms-law-lab`
+- [ ] 质量守恒实验室 `mass-conservation-lab`
+- [ ] 显微细胞实验室 `microscope-cell-lab`
+- [ ] 抛体运动实验室 `projectile-motion-lab`
+- [ ] 电磁感应实验室 `induction-lab`
+- [ ] 反应速率与平衡实验室 `reaction-rate-equilibrium-lab`
+- [ ] 滴定分析实验室 `titration-lab`
+- [ ] 抽样统计实验室 `statistics-sampling-lab`
+- [ ] 力与摩擦实验室 `force-friction-lab`
+- [ ] 压强与浮力实验室 `pressure-buoyancy-lab`
+- [ ] 气体制备实验室 `gas-preparation-lab`
+- [ ] 溶解与结晶实验室 `solubility-crystallization-lab`
+- [ ] 动态几何实验室 `dynamic-geometry-lab`
+- [ ] 机械能实验室 `energy-conservation-lab`
+- [ ] 波与共振实验室 `wave-resonance-lab`
+- [ ] 气体状态实验室 `gas-law-lab`
+- [ ] 电化学实验室 `electrochemistry-lab`
+- [ ] 酶活性实验室 `enzyme-kinetics-lab`
+
+### 初高中第二轮（规划内未实现）
+
+清单、与第一轮分工和课标锚点见 [`secondary-labs-wave2.md`](./secondary-labs-wave2.md)。已上线的 `organic-builder-lab`、`circular-orbit-lab`、`dna-replication-lab` 已移入上方「已完成（规划内）· 初高中实验型」，不在此重复。
+
+- [ ] 一次函数实验室 `linear-function-lab`
+- [ ] 二次函数喷泉 `quadratic-function-lab`
+- [ ] 单位圆正弦实验室 `unit-circle-lab`
+- [ ] 动量碰撞实验室 `momentum-collision-lab`
+- [ ] 比热容实验室 `specific-heat-lab`
+- [ ] 原子与周期律实验室 `atomic-periodic-lab`
+- [ ] 光合作用实验室 `photosynthesis-lab`
+- [ ] 孟德尔豌豆园 `mendel-garden-lab`
+- [ ] 切线斜率实验室 `derivative-slope-lab`
+- [ ] 相似测高实验室 `similar-measure-lab`
+- [ ] 数列生长实验室 `sequence-growth-lab`
+- [ ] 变压器实验室 `transformer-ac-lab`
+- [ ] 光电效应实验室 `photoelectric-lab`
+- [ ] 反应热实验室 `thermochemistry-lab`
+- [ ] 氧化还原电子账本 `redox-electron-lab`
+- [ ] 细胞呼吸实验室 `cell-respiration-lab`
+- [ ] 生态能量金字塔 `ecology-energy-lab`
 
 ## 已上线但不在小学规划 ID 内
 
@@ -231,7 +286,7 @@ Agent 每次完成计划项后必须同步更新：
 - 对 `plant-lab` 与 `plant-xray` 做一次命名和目标对齐，避免科学清单长期出现“已做但未勾”的歧义。
 - 为主站过滤、课件核心交互和构建发布补充可重复验收证据；当前主要依赖 `npm run build` 与人工走查。
 - 按 `docs/courseware-audio-audit.md` 的 P0 → P1 → P2 顺序补齐交互音效；先消除高频堆叠音源，再统一静音控制，最后分批覆盖无音频课件。
-- 初高中扩展按 `secondary-labs.md` 独立维护，不混入小学 84 项状态；优先完成 P0，并同步扩充 taxonomy 与模型单测。
+- 初高中扩展按 `secondary-labs.md` 与 `secondary-labs-wave2.md` 独立维护，不混入小学 84 项状态。优先完成第一轮剩余 P0；若要先补主站数学/生物空洞，可将第二轮 P0 的一次函数、二次函数、单位圆、光合、孟德尔与第一轮 P0 交错。第二轮 P1 的光电效应、DNA、导数不要插队。实现前同步扩充 taxonomy 与模型单测。
 
 ## 完成的样子
 

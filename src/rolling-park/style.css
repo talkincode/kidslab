@@ -92,8 +92,18 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 .table { display: grid; gap: 7px; margin-top: 10px; }
 .row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; padding: 8px; font-size: 13px; font-weight: 800; background: var(--paper-2); border: 2px solid var(--line-strong); border-radius: 14px; box-shadow: 2px 2px 0 var(--line-strong); }
 .answer { width: 100%; margin: 8px 0; padding: 13px 14px; color: var(--ink); background: var(--paper-2); border: 2.5px solid var(--line-strong); border-radius: 14px; font: 900 18px/1 var(--font); box-shadow: 3px 3px 0 var(--line-strong); }
+/* 猜想卡：攒够 3 组记录才出现，孩子报出数值后才揭示 π */
+.guess { margin-top: 12px; padding: 13px; background: var(--paper-2); border: 2.5px solid var(--line-strong); border-radius: 18px; box-shadow: 3px 3px 0 var(--line-strong); animation: guessPop 0.28s ease-out; }
+@keyframes guessPop { from { transform: scale(0.95); opacity: 0; } }
+.guess__ask { margin: 0; font-size: 14.5px; font-weight: 900; line-height: 1.45; color: var(--ink); }
+.guess__row { display: flex; gap: 8px; align-items: center; margin-top: 10px; }
+.guess__input { min-width: 0; margin: 0; }
+.guess__row .btn { flex: 0 0 auto; }
+.guess__out { margin: 10px 0 0; font-size: 13.5px; font-weight: 800; line-height: 1.5; color: var(--ink-soft); }
+.guess__out.is-ok { color: var(--ink); }
+
 @media (max-width: 900px) { .studio { grid-template-columns: 1fr; } .panel { order: -1; } #stage { min-height: 360px; } }
-@media (max-width: 560px) { .intro { align-items: flex-start; } .pi-badge { width: 70px; height: 70px; } .bar { align-items: flex-start; } .pill { padding: 8px 11px; } #stage { min-height: 330px; } .row { font-size: 12px; } }
+@media (max-width: 560px) { .intro { align-items: flex-start; } .pi-badge { width: 70px; height: 70px; } .bar { align-items: flex-start; } .pill { padding: 8px 11px; } #stage { min-height: 330px; } .row { font-size: 12px; } .guess__row { flex-direction: column; align-items: stretch; } }
 
 /* hidden 属性硬保证：任何 display 规则都不得覆盖 */
 [hidden] { display: none !important; }

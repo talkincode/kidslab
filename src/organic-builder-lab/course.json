@@ -1,0 +1,28 @@
+{
+  "id": "organic-builder-lab",
+  "title": {
+    "zh": "有机分子工坊",
+    "en": "Organic Builder Lab"
+  },
+  "description": {
+    "zh": "在三维球棍台上拼出甲烷、乙烯、乙醇和乙酸，用量角器读键角，再用四瓶试剂填满反应矩阵，最后找出同分异构体。",
+    "en": "Build methane, ethene, ethanol and acetic acid on a 3D ball-and-stick bench, read bond angles with a protractor, fill a four-reagent reaction matrix, then hunt down the isomers."
+  },
+  "category": "chemistry",
+  "levels": [
+    "senior"
+  ],
+  "grades": [
+    "g10",
+    "g12"
+  ],
+  "tags": [
+    "有机化合物",
+    "官能团",
+    "实验",
+    "3D"
+  ],
+  "icon": "⚛️",
+  "order": 82,
+  "badge": "new"
+}

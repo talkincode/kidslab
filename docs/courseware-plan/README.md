@@ -10,16 +10,18 @@
 
 | 文件 | 学科 | 规划数量 | 分类值 (`category`) |
 |---|---|---|---|
-| [status.md](./status.md) | 状态清单 | 小学 84 个 + 初高中 26 个目标 | 已完成 / 未实现 / 待对齐 |
+| [status.md](./status.md) | 状态清单 | 小学 84 个 + 初高中 46 个目标 | 已完成 / 未实现 / 待对齐 |
 | [math.md](./math.md) | 数学 | 31 | `math` |
 | [programming.md](./programming.md) | 编程 | 14 | `programming` |
 | [logic.md](./logic.md) | 逻辑 | 13 | `logic` |
 | [science.md](./science.md) | 科学 | 21 | `science` |
-| [secondary-labs.md](./secondary-labs.md) | 初高中实验型课件 | 26（6 个存量纳入 + 20 个新增） | `math` / `physics` / `chemistry` / `science` |
+| [secondary-labs.md](./secondary-labs.md) | 初高中实验型课件 · 第一轮 | 26（6 个存量纳入 + 20 个新增） | `math` / `physics` / `chemistry` / `science` |
+| [secondary-labs-wave2.md](./secondary-labs-wave2.md) | 初高中实验型课件 · 第二轮 | 20（全部新增，补数学/生物/近代物理/结构化学缺口） | `math` / `physics` / `chemistry` / `science` |
+| [primary-math-inquiry.md](./primary-math-inquiry.md) | 小学数学探究深度合同 | 26 个 `g3-g6` 课件的评级基线与改造批次 | `math` |
 
 共规划 **79** 个课件，加上已上线的 5 个小学课件（🍕 分数披萨店、🐢 海龟画室、🪐 太阳系漫游、🗼 汉诺塔挑战、🧩 数独动物园），小学学段合计 84 个。
 
-初高中实验型课件采用独立口径：目标 26 个，不混入小学 84 项汇总；详见 [`secondary-labs.md`](./secondary-labs.md)。
+初高中实验型课件采用独立口径，不混入小学 84 项汇总：第一轮 26 个见 [`secondary-labs.md`](./secondary-labs.md)，第二轮 20 个见 [`secondary-labs-wave2.md`](./secondary-labs-wave2.md)，合计 46 个目标。
 
 ## 🎯 设计原则（每个课件都必须遵守）
 

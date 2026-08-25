@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>🍦 冰淇淋几何 · KidsLab</title>
-  <link rel="stylesheet" href="style.css?v=63b36e2a" />
+  <link rel="stylesheet" href="style.css?v=65106c4d" />
   <script>
     (() => {
       try {
@@ -86,9 +86,20 @@
             <button class="btn" id="fillCone" type="button" data-t="fillCone">🍦 接冰淇淋</button>
             <button class="btn" id="pourCone" type="button" data-t="pourCone">💧 倒进圆柱杯</button>
           </div>
+          <p class="size-label" data-t="sizeTitle">杯子大小</p>
+          <div class="choices" id="sizeButtons"></div>
           <div class="choices">
             <button class="btn btn--ghost" id="resetTriple" type="button" data-t="resetTriple">↺ 重来一次</button>
             <button class="btn btn--ghost" id="unequal" type="button" data-t="unequal">🔍 换个小杯子对照</button>
+          </div>
+          <div class="ttable" id="tripleTable"></div>
+          <div class="guess" id="tripleGuess" hidden>
+            <p class="guess__ask" id="guessAsk">—</p>
+            <div class="guess__row" id="guessRow" hidden>
+              <input class="guess__input" id="guessInput" inputmode="numeric" aria-labelledby="guessAsk" />
+              <button class="btn" id="guessBtn" type="button" data-t="guessBtn">就是它！</button>
+            </div>
+            <p class="guess__out" id="guessOut" hidden></p>
           </div>
         </div>
 
@@ -105,6 +116,6 @@
     </section>
   </main>
 
-  <script type="module" src="main.js?v=1d1b994b"></script>
+  <script type="module" src="main.js?v=e444a080"></script>
 </body>
 </html>

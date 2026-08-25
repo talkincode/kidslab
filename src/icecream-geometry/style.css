@@ -53,6 +53,20 @@ label { display:grid; grid-template-columns:auto 34px 1fr; align-items:center; g
 .atlas { justify-content:flex-start; flex-wrap:wrap; gap:6px; font-size:13px; background:transparent; border:none; box-shadow:none; padding:0; min-height:0; }
 .atlas .chip { display:inline-flex; align-items:center; gap:5px; padding:7px 11px; font-size:13px; font-weight:900; color:var(--ink-faint); background:var(--paper-2); border:2px dashed var(--line); border-radius:999px; transition:all .25s; }
 .atlas .chip.is-got { color:var(--ink-on-accent); background:var(--accent-2); border:2px solid var(--line-strong); box-shadow:2px 2px 0 var(--line-strong); animation:chip-pop .4s cubic-bezier(.34,1.56,.64,1); }
+
+/* 探究记录：三种尺寸的实测并排留存，「三杯」由孩子从表里读出 */
+.size-label { margin:14px 0 6px; font-size:13px; font-weight:900; color:var(--ink-soft); }
+.ttable { display:grid; gap:6px; margin-top:12px; }
+.trow { display:grid; grid-template-columns:1fr 1fr; gap:4px; padding:8px 10px; font-size:13.5px; font-weight:800; background:var(--paper-2); border:2px solid var(--line-strong); border-radius:12px; box-shadow:2px 2px 0 var(--line-strong); }
+.guess { margin-top:12px; padding:12px; background:var(--paper-2); border:2.5px solid var(--line-strong); border-radius:16px; box-shadow:3px 3px 0 var(--line-strong); animation:guess-pop .28s ease-out; }
+@keyframes guess-pop { from { transform:scale(.95); opacity:0; } }
+.guess__ask { margin:0; font-size:14.5px; font-weight:900; line-height:1.45; color:var(--ink); }
+.guess__row { display:flex; gap:8px; align-items:center; margin-top:10px; }
+.guess__input { flex:1 1 auto; min-width:0; padding:12px 14px; font:900 18px/1 var(--font); color:var(--ink); background:var(--card); border:2.5px solid var(--line-strong); border-radius:12px; box-shadow:3px 3px 0 var(--line-strong); }
+.guess__row .btn { flex:0 0 auto; }
+.guess__out { margin:10px 0 0; font-size:13.5px; font-weight:800; line-height:1.5; color:var(--ink-soft); }
+.guess__out.is-ok { color:var(--ink); }
+@media (max-width:560px) { .guess__row { flex-direction:column; align-items:stretch; } }
 @keyframes chip-pop { from { transform:scale(.6); } to { transform:scale(1); } }
 @media (max-width: 880px) { .hero { align-items:flex-start; flex-direction:column; } .game { grid-template-columns:1fr; } .scene-wrap,#scene { min-height:430px; } .panel { order:-1; } }
 @media (max-width: 560px) { .bar { flex-wrap:wrap; } .bar__title { order:3; width:100%; } .card { padding:12px; } label { grid-template-columns:1fr 34px; } label input { grid-column:1/-1; } .scene-wrap,#scene { min-height:360px; } }

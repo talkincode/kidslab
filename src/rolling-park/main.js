@@ -16,9 +16,14 @@
       rollTip: '拖动车轮或点「滚一圈」。轮子转满一圈，地上的颜料线就正好是圆的周长。',
       ratio: (c, d, r) => `颜料线 ${c} ÷ 直径 ${d} = ${r}`,
       tableHead: '直径 / 颜料线 / 线÷直径',
-      piHello: '换了 3 种轮子，颜料线总是直径的 3.14 倍左右——这个固定的倍数就是 π！',
+      needMore: (n) => (n === 1 ? '再换 1 种大小的轮子滚一次，就能比一比了' : `再换 ${n} 种大小的轮子滚滚看`),
+      guessAsk: '三种轮子都滚过了。看表格最后一列——这个倍数大约是几？',
+      guessBtn: '就是它！',
+      guessRetry: '再看看表格最后一列，那三个数字都接近多少？',
+      guessOk: '你自己量出来的这个数，名字叫 π（读作「派」）。不管轮子多大，圆的周长都是直径的 π 倍。',
+      guessDone: '你的发现：周长 ÷ 直径 = π ≈ 3.14',
       squareTip: '方轮子一颠一颠，小人都被甩飞了。圆轮子中心到地面永远一样高（都是半径），滚起来才平稳。',
-      rollDone: '颜料线 ≈ 3.14 个直径，这个倍数就是 π',
+      rollDone: '数数看：这条线有几个直径？',
       lblD: '直径 d', lblPaint: '蘸好颜料啦', lblUnit: '下面每格 = 1 个直径', lblClunk: '哐当！',
       areaTitle: '拼出面积', slices: '切几片', slice: '切开', rearrange: '拼成长方形', unarrange: '变回圆形',
       areaTip: '先点「切开」，再点「拼成长方形」。切的片数越多，拼出来越像长方形。',
@@ -48,9 +53,14 @@
       rollTip: 'Drag the wheel or tap “Roll one turn”. One full turn paints a line exactly one circumference long.',
       ratio: (c, d, r) => `Paint line ${c} ÷ diameter ${d} = ${r}`,
       tableHead: 'Diameter / paint line / line÷diameter',
-      piHello: '3 different wheels, and the line is always about 3.14 diameters long. That fixed number is π!',
+      needMore: (n) => (n === 1 ? 'Roll one more wheel size, then you can compare' : `Try ${n} more wheel sizes`),
+      guessAsk: 'Three wheels rolled. Look at the last column — about what number is it?',
+      guessBtn: 'That’s it!',
+      guessRetry: 'Look at the last column again — what number are those three close to?',
+      guessOk: 'The number you measured is called π (say “pie”). However big the wheel, a circle’s circumference is π times its diameter.',
+      guessDone: 'Your finding: circumference ÷ diameter = π ≈ 3.14',
       squareTip: 'The square wheel bumps along and launches the rider. A round wheel keeps its center at the same height (one radius), so it rolls smoothly.',
-      rollDone: 'Paint line ≈ 3.14 diameters — that number is π',
+      rollDone: 'Count them: how many diameters long is this line?',
       lblD: 'diameter d', lblPaint: 'Paint loaded!', lblUnit: 'each block below = 1 diameter', lblClunk: 'CLUNK!',
       areaTitle: 'Build area', slices: 'Slices', slice: 'Slice it', rearrange: 'Make a rectangle', unarrange: 'Back to circle',
       areaTip: 'Tap “Slice it”, then “Make a rectangle”. More slices make a neater rectangle.',
@@ -128,6 +138,7 @@
   const els = {
     canvas: $('stage'), tip: $('tip'), piBadge: $('piBadge'), radius: $('radius'), autoRoll: $('autoRoll'), squareRoll: $('squareRoll'),
     ratioText: $('ratioText'), recordTable: $('recordTable'), rollPanel: $('rollPanel'), areaPanel: $('areaPanel'), challengePanel: $('challengePanel'),
+    guessCard: $('guessCard'), guessAsk: $('guessAsk'), guessRow: $('guessRow'), guessInput: $('guessInput'), guessBtn: $('guessBtn'), guessOut: $('guessOut'),
     slices: $('slices'), sliceBtn: $('sliceBtn'), rearrangeBtn: $('rearrangeBtn'), formulaText: $('formulaText'),
     questionText: $('questionText'), answer: $('answer'), wheelChoice: $('wheelChoice'), verifyBtn: $('verifyBtn'), nextQBtn: $('nextQBtn'), scoreText: $('scoreText'),
   };
@@ -140,6 +151,10 @@
   let dragging = false;
   let square = { on: false, p: 0 };
   const records = [];
+  /* 探究闭环：π 由孩子从记录表里读出来后才揭示，课件不抢答 */
+  const GUESS_MIN = 2.9, GUESS_MAX = 3.3, GUESS_NEED = 3;
+  let guessed = false;
+  let guessMsgKey = '';
   let slices = 16;
   let areaAnim = 0;        // 0 = 圆形，1 = 拼成长方形
   let areaTarget = 0;
@@ -187,7 +202,31 @@
     const c = Math.PI * d;
     const exists = records.some((r) => Math.abs(r.d - d) < 2);
     if (!exists) records.push({ d, c, ratio: c / d });
-    if (records.length >= 3) { els.piBadge.classList.add('awake'); els.tip.textContent = t('piHello'); sfx.magic(); }
+    if (records.length === GUESS_NEED && !guessed) sfx.roll();
+    renderGuess();
+  }
+  /** 攒够 3 组不同直径才开放猜想；π 这个名字只在孩子自己报出数值之后出现 */
+  function renderGuess() {
+    if (!els.guessCard) return;
+    const n = records.length;
+    const ready = n >= GUESS_NEED;
+    els.guessCard.hidden = n === 0;
+    els.guessAsk.textContent = guessed ? t('guessDone') : ready ? t('guessAsk') : t('needMore')(GUESS_NEED - n);
+    els.guessRow.hidden = !ready || guessed;
+    els.guessOut.hidden = !guessMsgKey;
+    els.guessOut.textContent = guessMsgKey ? t(guessMsgKey) : '';
+    els.guessOut.classList.toggle('is-ok', guessed);
+  }
+  function submitGuess() {
+    startAudio();
+    const v = Number(String(els.guessInput.value).trim().replace(',', '.'));
+    if (Number.isFinite(v) && v >= GUESS_MIN && v <= GUESS_MAX) {
+      guessed = true; guessMsgKey = 'guessOk';
+      els.piBadge.classList.add('awake'); sfx.magic();
+    } else {
+      guessMsgKey = 'guessRetry'; sfx.bonk();
+    }
+    renderGuess();
   }
 
   /* ---------- 通用画笔 ---------- */
@@ -526,6 +565,7 @@
       els.recordTable.innerHTML = `<div class="row"><b>${t('tableHead').split(' / ')[0]}</b><b>${t('tableHead').split(' / ')[1]}</b><b>${t('tableHead').split(' / ')[2]}</b></div>`
         + records.slice(-5).map((r) => `<div class="row"><span>${fmt(r.d)}</span><span>${fmt(r.c)}</span><span>${r.ratio.toFixed(3)}</span></div>`).join('');
     }
+    renderGuess();
     if (els.formulaText) els.formulaText.textContent = t('formula');
     if (els.rearrangeBtn) els.rearrangeBtn.textContent = areaTarget >= 0.5 ? t('unarrange') : t('rearrange');
     if (els.questionText && mode === 'challenge') {
@@ -540,6 +580,8 @@
   });
   els.autoRoll.addEventListener('click', autoRoll);
   els.squareRoll.addEventListener('click', squareRoll);
+  els.guessBtn.addEventListener('click', submitGuess);
+  els.guessInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') submitGuess(); });
   els.sliceBtn.addEventListener('click', sliceCircle);
   els.rearrangeBtn.addEventListener('click', rearrange);
   els.verifyBtn.addEventListener('click', verify);
@@ -556,11 +598,16 @@
   applyTheme();
   applyLang();
   setupQuestion();
-  /* 深链：?mode=roll|area|challenge&state=done|rect，方便分享与教学演示 */
+  /* 深链：?mode=roll|area|challenge&state=done|guess|rect，方便分享与教学演示 */
   const qp = new URLSearchParams(location.search);
   const m0 = qp.get('mode');
   if (m0 && ['roll', 'area', 'challenge'].includes(m0)) switchMode(m0);
   if (qp.get('state') === 'done' && mode === 'roll') roll = 1;
+  /* guess：直接摆好三组实测记录，课堂上可跳过滚轮直接讲「你发现了什么」 */
+  if (qp.get('state') === 'guess' && mode === 'roll') {
+    for (const r of [42, 60, 82]) { const d = r * 2; records.push({ d, c: Math.PI * d, ratio: Math.PI }); }
+    roll = 1;
+  }
   if (qp.get('state') === 'rect' && mode === 'area') { areaSliced = true; areaAnim = 1; areaTarget = 1; }
   resize();
 })();
