@@ -46,14 +46,32 @@ const I18N = {
     winEyebrow: '泊位全部确认',
     nextMission: '下一项任务',
     reviewDemo: '回看本关演示',
-    yes: '有 · YES',
-    no: '没有 · NO',
+    yes: '满足',
+    no: '不满足',
     onlyRule: (rule) => `只满足「${rule}」`,
     zoneNames: {
       left: '只满足规则 A',
       both: '交集：两个都满足',
       right: '只满足规则 B',
       neither: '两个都不满足',
+    },
+    zone3d: {
+      left: '只满足 A · 10',
+      both: '交集 · 11',
+      right: '只满足 B · 01',
+      neither: '都不满足 · 00',
+    },
+    rule3dPrefix: {
+      left: '规则 A',
+      right: '规则 B',
+    },
+    coachIcons: {
+      scan: '核验',
+      retry: '重试',
+      hint: '提示',
+      reset: '重置',
+      auto: '演示',
+      clear: '完成',
     },
     missionNames: ['双重身份', '形状扫描', '星际货运', '空港总考验'],
     missionBriefs: [
@@ -73,9 +91,9 @@ const I18N = {
       star: '星星标志',
     },
     coachReadyTitle: '读取两块规则牌',
-    coachReadyText: '依次回答“有”或“没有”，两个答案会指向唯一泊位。',
+    coachReadyText: '依次回答“满足”或“不满足”，两个答案会指向唯一泊位。',
     coachShipTitle: (index, total) => `第 ${index} / ${total} 艘等待核验`,
-    coachShipText: (left, right) => `扫描完成：A 是“${left}”，B 是“${right}”。`,
+    coachShipText: (left, right) => `扫描完成：规则 A 是“${left}”，规则 B 是“${right}”。`,
     coachWrongTitle: '泊位不匹配，飞船已返航',
     coachWrongText: (code, zone) => `扫描码是 ${code}，它应该去“${zone}”。再试一次。`,
     coachCorrectTitle: '海关放行，停靠成功',
@@ -83,7 +101,7 @@ const I18N = {
     coachHintTitle: '按扫描码找泊位',
     coachHintText: (code, zone) => `${code} 对应“${zone}”，发光平台已经标出来。`,
     coachResetTitle: '任务已重新排队',
-    coachResetText: '从第一艘开始，先读 A，再读 B。',
+    coachResetText: '从第一艘开始，依次核验规则 A 与规则 B。',
     coachDemoStartTitle: '自动塔台接管',
     coachDemoStartText: '观察每艘飞船如何从两次扫描得到唯一泊位。',
     coachDemoMoveTitle: (index, total) => `演示 ${index} / ${total}`,
@@ -167,14 +185,32 @@ const I18N = {
     winEyebrow: 'Every bay confirmed',
     nextMission: 'Next mission',
     reviewDemo: 'Review this demo',
-    yes: 'YES · TRUE',
-    no: 'NO · FALSE',
+    yes: 'YES',
+    no: 'NO',
     onlyRule: (rule) => `Only “${rule}”`,
     zoneNames: {
       left: 'rule A only',
       both: 'intersection: both rules',
       right: 'rule B only',
       neither: 'neither rule',
+    },
+    zone3d: {
+      left: 'A ONLY · 10',
+      both: 'A ∩ B · 11',
+      right: 'B ONLY · 01',
+      neither: 'OUTSIDE · 00',
+    },
+    rule3dPrefix: {
+      left: 'Rule A',
+      right: 'Rule B',
+    },
+    coachIcons: {
+      scan: 'SCAN',
+      retry: 'RETRY',
+      hint: 'HINT',
+      reset: 'RESET',
+      auto: 'DEMO',
+      clear: 'DONE',
     },
     missionNames: ['Double identity', 'Shape scanner', 'Star cargo', 'Spaceport finale'],
     missionBriefs: [
@@ -300,10 +336,12 @@ const ship = () => level().ships[Math.min(shipIndex, level().ships.length - 1)];
 const ruleName = (key) => t().rules[key];
 const zoneName = (zone) => t().zoneNames[zone];
 
-function setCoach(title, text, icon = 'SCAN', tone = '') {
+function setCoach(title, text, icon = 'scan', tone = '') {
   $('#coachTitle').textContent = title;
   $('#coachText').textContent = text;
-  $('#coachIcon').textContent = icon;
+  const key = String(icon).toLowerCase();
+  const iconLabel = t().coachIcons?.[key] || icon;
+  $('#coachIcon').textContent = iconLabel;
   $('#coach').classList.toggle('is-alert', tone === 'alert');
   $('#coach').classList.toggle('is-success', tone === 'success');
 }
@@ -337,6 +375,12 @@ function applyLanguage() {
   });
   $('#langBtn').textContent = lang === 'zh' ? 'EN' : '中';
   updateAudioButtons();
+  game?.setZoneLabels(t().zone3d);
+  const [leftRule, rightRule] = level().rules;
+  game?.setRules(
+    `${t().rule3dPrefix.left} · ${ruleName(leftRule)}`,
+    `${t().rule3dPrefix.right} · ${ruleName(rightRule)}`,
+  );
   updateMissionUi();
   if (mode === 'lesson') renderLesson();
   if (mode === 'demo') updateDemoUi();
@@ -366,7 +410,11 @@ function updateScanner(item) {
   $('#signalValue').textContent = code;
   $('#leftZoneLabel').textContent = t().onlyRule(ruleName(leftRule));
   $('#rightZoneLabel').textContent = t().onlyRule(ruleName(rightRule));
-  game?.setRules(ruleName(leftRule), ruleName(rightRule));
+  game?.setRules(
+    `${t().rule3dPrefix.left} · ${ruleName(leftRule)}`,
+    `${t().rule3dPrefix.right} · ${ruleName(rightRule)}`,
+  );
+  game?.setZoneLabels(t().zone3d);
 }
 
 function updateHud(value = shipIndex) {

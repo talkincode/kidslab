@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>维恩太空港 · 轨道海关 · KidsLab</title>
   <meta name="description" content="在逼真的 3D 轨道太空港中学习集合、交集与分类，扫描飞船并把它们停入正确的维恩区域。" />
-  <link rel="stylesheet" href="style.css?v=4bf8d1f2" />
+  <link rel="stylesheet" href="style.css?v=aa7ba149" />
   <script>
     (() => {
       try {
@@ -56,10 +56,10 @@
   </section>
 
   <section class="coach" id="coach" role="status" aria-live="polite">
-    <span class="coach__icon" id="coachIcon">SCAN</span>
+    <span class="coach__icon" id="coachIcon">核验</span>
     <span>
       <b id="coachTitle">读取两块规则牌</b>
-      <p id="coachText">依次回答“有”或“没有”，两个答案会指向唯一泊位。</p>
+      <p id="coachText">依次回答“满足”或“不满足”，两个答案会指向唯一泊位。</p>
     </span>
   </section>
 
@@ -86,12 +86,12 @@
         <article class="scan-card scan-card--left" id="leftScan">
           <small>A · <span data-t="questionOne">问题一</span></small>
           <strong id="leftRule">有触角</strong>
-          <b id="leftAnswer">有 · YES</b>
+          <b id="leftAnswer">满足</b>
         </article>
         <article class="scan-card scan-card--right" id="rightScan">
           <small>B · <span data-t="questionTwo">问题二</span></small>
           <strong id="rightRule">三只眼</strong>
-          <b id="rightAnswer">没有 · NO</b>
+          <b id="rightAnswer">不满足</b>
         </article>
       </section>
 
@@ -113,7 +113,7 @@
       <section class="action-grid">
         <button class="btn btn--ghost" id="hintBtn" type="button"><span>⌁</span><span data-t="hint">提示泊位</span></button>
         <button class="btn btn--ghost" id="resetBtn" type="button"><span>↻</span><span data-t="reset">重开任务</span></button>
-        <button class="btn btn--lesson" id="lessonBtn" type="button"><span>档</span><span data-t="lesson">交集小课堂</span></button>
+        <button class="btn btn--lesson" id="lessonBtn" type="button"><span>📖</span><span data-t="lesson">交集小课堂</span></button>
       </section>
 
       <div class="rule-strip">
@@ -192,6 +192,6 @@
   </section>
 
   <div class="confetti-layer" id="confettiLayer" aria-hidden="true"></div>
-  <script type="module" src="main.js?v=d0755f72"></script>
+  <script type="module" src="main.js?v=30316412"></script>
 </body>
 </html>

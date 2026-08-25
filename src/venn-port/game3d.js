@@ -33,24 +33,25 @@ function makeLabelTexture(text, {
   foreground = '#f7f1df',
   background = 'rgba(8,20,34,.88)',
   border = '#7ce8df',
-  width = 640,
-  height = 160,
+  width = 512,
+  height = 128,
+  fontSize = 42,
 } = {}) {
   const canvas = Object.assign(document.createElement('canvas'), { width, height });
   const context = canvas.getContext('2d');
   context.clearRect(0, 0, width, height);
   context.fillStyle = background;
   context.strokeStyle = border;
-  context.lineWidth = 7;
+  context.lineWidth = 6;
   context.beginPath();
-  context.roundRect(8, 8, width - 16, height - 16, 28);
+  context.roundRect(6, 6, width - 12, height - 12, 24);
   context.fill();
   context.stroke();
   context.fillStyle = foreground;
   context.textAlign = 'center';
   context.textBaseline = 'middle';
-  context.font = '800 58px "Avenir Next", "PingFang SC", sans-serif';
-  context.fillText(text, width / 2, height / 2 + 2, width - 52);
+  context.font = `800 ${fontSize}px "Avenir Next", "PingFang SC", sans-serif`;
+  context.fillText(text, width / 2, height / 2 + 1, width - 36);
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.needsUpdate = true;
@@ -333,19 +334,56 @@ export function createPort3D({
 
   const zoneMeshes = new Map();
   const zoneHitMeshes = [];
-  const zoneLabelSprites = [];
+  const zoneLabelSprites = new Map();
   const zoneColors = {
     left: [0x39b9c6, 0x54e6df],
     both: [0xd2aa54, 0xffd875],
     right: [0xd96d5e, 0xff9c83],
     neither: [0x657687, 0xa3b7c6],
   };
-  const zoneLabels = {
-    left: 'A ONLY · 10',
-    both: 'A ∩ B · 11',
-    right: 'B ONLY · 01',
-    neither: 'OUTSIDE · 00',
+  const defaultZoneLabels = {
+    left: '只满足 A · 10',
+    both: '交集 · 11',
+    right: '只满足 B · 01',
+    neither: '都不满足 · 00',
   };
+
+  function updateZoneLabel(zone, text) {
+    const [color, emissive] = zoneColors[zone];
+    const oldSprite = zoneLabelSprites.get(zone);
+    const texture = makeLabelTexture(text, {
+      foreground: zone === 'both' ? '#241a0e' : '#f5f9fb',
+      background: zone === 'both' ? 'rgba(255,214,110,.92)' : 'rgba(8,20,32,.86)',
+      border: `#${emissive.toString(16).padStart(6, '0')}`,
+      width: 512,
+      height: 128,
+      fontSize: 42,
+    });
+
+    if (oldSprite) {
+      oldSprite.material.map?.dispose();
+      oldSprite.material.map = texture;
+      oldSprite.material.needsUpdate = true;
+    } else {
+      const label = new THREE.Sprite(new THREE.SpriteMaterial({
+        map: texture,
+        transparent: true,
+        depthTest: false,
+      }));
+      label.position.copy(ZONE_POSITIONS[zone]);
+      label.position.y = zone === 'both' ? 1.02 : 0.98;
+      label.scale.set(zone === 'neither' ? 2.1 : 1.95, 0.48, 1);
+      deck.add(label);
+      zoneLabelSprites.set(zone, label);
+    }
+  }
+
+  function setZoneLabels(labels) {
+    if (!labels) return;
+    for (const [zone, text] of Object.entries(labels)) {
+      updateZoneLabel(zone, text);
+    }
+  }
 
   for (const zone of Object.keys(ZONE_POSITIONS)) {
     const [color, emissive] = zoneColors[zone];
@@ -385,21 +423,7 @@ export function createPort3D({
     deck.add(hit);
     zoneHitMeshes.push(hit);
 
-    const labelTexture = makeLabelTexture(zoneLabels[zone], {
-      foreground: zone === 'both' ? '#22180d' : '#f7f4e9',
-      background: zone === 'both' ? 'rgba(255,211,106,.9)' : 'rgba(7,20,30,.86)',
-      border: `#${emissive.toString(16).padStart(6, '0')}`,
-    });
-    const label = new THREE.Sprite(new THREE.SpriteMaterial({
-      map: labelTexture,
-      transparent: true,
-      depthTest: false,
-    }));
-    label.position.copy(ZONE_POSITIONS[zone]);
-    label.position.y = 1.24;
-    label.scale.set(zone === 'neither' ? 2.7 : 2.35, 0.58, 1);
-    deck.add(label);
-    zoneLabelSprites.push(label);
+    updateZoneLabel(zone, defaultZoneLabels[zone]);
   }
 
   const ruleSprites = [];
@@ -412,17 +436,21 @@ export function createPort3D({
     }
     const isLeft = side === 'left';
     const texture = makeLabelTexture(text, {
-      border: isLeft ? '#6ff1e8' : '#ff9d83',
-      background: 'rgba(4,15,27,.9)',
+      border: isLeft ? '#54e6df' : '#ff9c83',
+      background: isLeft ? 'rgba(5,20,30,.88)' : 'rgba(30,12,16,.88)',
+      foreground: isLeft ? '#e2faf8' : '#ffece8',
+      width: 576,
+      height: 130,
+      fontSize: 40,
     });
     const sprite = new THREE.Sprite(new THREE.SpriteMaterial({
       map: texture,
       transparent: true,
       depthTest: false,
     }));
-    sprite.position.set(isLeft ? -3.35 : 3.35, 1.12, -1.18);
-    sprite.scale.set(3.35, 0.82, 1);
-    sprite.visible = innerWidth >= 720;
+    sprite.position.set(isLeft ? -2.85 : 2.85, 1.95, -1.8);
+    sprite.scale.set(2.4, 0.52, 1);
+    sprite.visible = innerWidth >= 540;
     scene.add(sprite);
     ruleSprites[index] = sprite;
   }
@@ -706,16 +734,27 @@ export function createPort3D({
   };
 
   function updateFraming() {
-    const desktop = innerWidth >= 840;
-    const phone = innerWidth < 520;
+    const desktop = innerWidth >= 960;
+    const tablet = innerWidth >= 680 && innerWidth < 960;
+    const phone = innerWidth < 680;
     const shipWasStaged = shipGroup && !flight && shipGroup.position.distanceTo(staging) < 0.2;
     staging.set(0, phone ? 1.55 : STAGING.y, phone ? 1.35 : STAGING.z);
     if (shipWasStaged) shipGroup.position.copy(staging);
-    if (phone) orbit.targetFocus.set(0, 0.72, 2.08);
-    else orbit.targetFocus.set(desktop ? -0.72 : 0, 0.1, desktop ? 0.2 : 0.32);
-    orbit.targetRadius = desktop ? 12.3 : phone ? 12.6 : 12.9;
-    orbit.targetPhi = phone ? 0.76 : 0.78;
-    const showLabels = innerWidth >= 720;
+
+    if (phone) {
+      orbit.targetFocus.set(0, 0.72, 2.08);
+      orbit.targetRadius = 12.6;
+      orbit.targetPhi = 0.76;
+    } else if (tablet) {
+      orbit.targetFocus.set(-0.4, 0.15, 0.25);
+      orbit.targetRadius = 13.0;
+      orbit.targetPhi = 0.78;
+    } else {
+      orbit.targetFocus.set(-0.95, 0.1, 0.25);
+      orbit.targetRadius = 13.2;
+      orbit.targetPhi = 0.78;
+    }
+    const showLabels = innerWidth >= 540;
     zoneLabelSprites.forEach((label) => { label.visible = showLabels; });
     ruleSprites.forEach((label) => { if (label) label.visible = showLabels; });
   }
@@ -917,6 +956,7 @@ export function createPort3D({
   return {
     setShip,
     setRules,
+    setZoneLabels,
     setHint,
     setInteractive,
     flyToZone,
@@ -926,6 +966,14 @@ export function createPort3D({
     dispose() {
       running = false;
       cancelFlight(false);
+      zoneLabelSprites.forEach((sprite) => {
+        sprite.material.map?.dispose();
+        sprite.material.dispose();
+      });
+      ruleSprites.forEach((sprite) => {
+        sprite?.material.map?.dispose();
+        sprite?.material.dispose();
+      });
       renderer.dispose();
       disposeObject(scene);
     },
