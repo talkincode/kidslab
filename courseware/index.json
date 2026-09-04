@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-04T01:48:44.323Z",
+  "generatedAt": "2026-09-04T22:20:56.274Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -3388,6 +3388,45 @@
         "模拟"
       ],
       "path": "courseware/magnet-hockey/index.html"
+    },
+    {
+      "id": "mini-pyramid",
+      "title": {
+        "zh": "小小金字塔",
+        "en": "Mini Pyramid"
+      },
+      "description": {
+        "zh": "在古埃及工地试用斜面、杠杆和滑轮组：让石块变轻的同时，亲眼看见绳子和路会变长。",
+        "en": "Run an ancient Egyptian worksite with ramps, levers, and pulleys. Make a stone easier to move, then see the path or rope become longer."
+      },
+      "category": "science",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g5",
+        "g6"
+      ],
+      "tags": [
+        "观察",
+        "实验"
+      ],
+      "icon": "🏗️",
+      "order": 68,
+      "badge": "new",
+      "keywords": [
+        "Observation",
+        "observation",
+        "五感",
+        "five senses",
+        "特征",
+        "Experiment",
+        "experiment",
+        "simulation",
+        "lab",
+        "模拟"
+      ],
+      "path": "courseware/mini-pyramid/index.html"
     },
     {
       "id": "trash-transform",

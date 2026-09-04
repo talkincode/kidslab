@@ -1,0 +1,26 @@
+{
+  "id": "mini-pyramid",
+  "title": {
+    "zh": "小小金字塔",
+    "en": "Mini Pyramid"
+  },
+  "description": {
+    "zh": "在古埃及工地试用斜面、杠杆和滑轮组：让石块变轻的同时，亲眼看见绳子和路会变长。",
+    "en": "Run an ancient Egyptian worksite with ramps, levers, and pulleys. Make a stone easier to move, then see the path or rope become longer."
+  },
+  "category": "science",
+  "levels": [
+    "primary"
+  ],
+  "grades": [
+    "g5",
+    "g6"
+  ],
+  "tags": [
+    "观察",
+    "实验"
+  ],
+  "icon": "🏗️",
+  "order": 68,
+  "badge": "new"
+}

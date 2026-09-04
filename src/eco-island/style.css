@@ -52,7 +52,9 @@
 
 body {
   margin: 0;
-  min-height: 100vh;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
   font-family: var(--font);
   color: var(--ink);
   background: var(--paper);
@@ -80,10 +82,10 @@ body {
   opacity: .5; }
 
 /* ---------- 顶栏 ---------- */
-.bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 14px clamp(14px, 3vw, 30px); }
+.bar { height: 66px; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px clamp(14px, 3vw, 30px); }
 .bar__title { margin: 0; font-size: clamp(18px, 2.6vw, 24px); font-weight: 800; }
 .bar__actions { display: flex; gap: 8px; }
-.pill { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; font: 700 13.5px/1 var(--font);
+.pill { display: inline-flex; align-items: center; min-height: 44px; gap: 6px; padding: 8px 16px; font: 700 16px/1 var(--font);
   color: var(--ink); text-decoration: none; background: var(--card); border: 2px solid var(--line-strong);
   border-radius: 99px; box-shadow: 3px 3px 0 var(--line-strong); cursor: pointer;
   transition: transform 0.15s, box-shadow 0.15s, background-color var(--speed); }
@@ -92,13 +94,13 @@ body {
 .pill--icon { padding: 8px 12px; }
 
 /* ---------- 布局 ---------- */
-.app { max-width: 1180px; margin: 0 auto; padding: 0 clamp(14px, 3vw, 30px) 36px; }
+.app { height: calc(100dvh - 66px); max-width: 1180px; margin: 0 auto; padding: 0 clamp(14px, 3vw, 30px) 10px; display: flex; flex-direction: column; min-height: 0; }
 .card { padding: 16px; background: var(--card); border: 2.5px solid var(--line-strong);
   border-radius: var(--radius-lg); box-shadow: 4px 5px 0 var(--line-strong);
   transition: background-color var(--speed); }
 
 /* ---------- 任务简报 ---------- */
-.brief { display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: center; margin-bottom: 14px; }
+.brief { display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: center; flex: 0 0 auto; margin-bottom: 8px; }
 .brief__camp { display: flex; flex-direction: column; align-items: center; justify-content: center;
   min-width: 64px; min-height: 64px; padding: 8px; border-radius: var(--radius-md);
   background: var(--accent); color: var(--ink-on-accent); }
@@ -107,7 +109,7 @@ body {
 .brief__copy { min-width: 0; }
 .eyebrow { margin: 0 0 4px; font-size: 12.5px; font-weight: 800; letter-spacing: .04em; color: var(--accent); text-transform: uppercase; }
 .brief__copy h2 { margin: 0 0 6px; font-size: clamp(17px, 2.1vw, 21px); line-height: 1.2; }
-.brief__copy #status { margin: 0; font-size: 14.5px; color: var(--ink-soft); font-weight: 600; }
+.brief__copy #status { margin: 0; font-size: 16px; color: var(--ink-soft); font-weight: 600; }
 
 /* ---------- 健康度 ---------- */
 .health { display: flex; align-items: center; gap: 14px; }
@@ -124,8 +126,8 @@ body {
 .goal .goal__mark { font-size: 12px; }
 
 /* ---------- 关卡切换 ---------- */
-.camp-nav { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
-.camp-btn { padding: 9px 14px; font: 800 13px/1 var(--font); color: var(--ink-soft);
+.camp-nav { display: flex; flex: 0 0 auto; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+.camp-btn { min-height: 44px; padding: 9px 14px; font: 800 16px/1 var(--font); color: var(--ink-soft);
   background: var(--card); border: 2px solid var(--line); border-radius: 99px; cursor: pointer;
   transition: transform .14s, box-shadow .14s, background-color var(--speed), color var(--speed); }
 .camp-btn:hover { transform: translate(-1px,-1px); }
@@ -133,17 +135,20 @@ body {
 .camp-btn[aria-current="true"] { color: var(--ink-on-accent); background: var(--accent); border-color: var(--line-strong); }
 
 /* ---------- 工作台 ---------- */
-.workspace { display: grid; grid-template-columns: 1fr 300px; gap: 14px; align-items: start; }
+.workspace { min-height: 0; flex: 1 1 auto; display: grid; grid-template-columns: 1fr 300px; gap: 14px; align-items: stretch; }
+.scene, .tools { min-height: 0; }
+.scene { display: flex; flex-direction: column; }
+.tools { overflow-y: auto; }
 .scene__head, .tools__head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
 .section-label { margin: 0 0 2px; font-size: 11.5px; font-weight: 800; letter-spacing: .06em; color: var(--ink-faint); text-transform: uppercase; }
 .scene__head h2, .tools__head h2 { margin: 0; font-size: 17px; }
-.ghost-btn { padding: 7px 12px; font: 700 12.5px/1 var(--font); color: var(--ink-soft);
+.ghost-btn { min-height: 44px; padding: 7px 12px; font: 700 16px/1 var(--font); color: var(--ink-soft);
   background: var(--card); border: 2px solid var(--line); border-radius: 99px; cursor: pointer; }
 .ghost-btn:hover { color: var(--ink); border-color: var(--line-strong); }
 
-.stage { position: relative; border-radius: var(--radius-md); overflow: hidden;
+.stage { position: relative; display: flex; flex: 1 1 auto; flex-direction: column; min-height: 0; border-radius: var(--radius-md); overflow: hidden;
   border: 2px solid var(--line); background: var(--paper-2); }
-canvas#island { display: block; width: 100%; height: min(46vh, 420px); touch-action: none; }
+canvas#island { display: block; width: 100%; height: auto; min-height: 0; flex: 1 1 auto; touch-action: none; }
 
 .legend { display: flex; gap: 10px; flex-wrap: wrap; padding: 8px 10px; font-size: 12px; font-weight: 700;
   color: var(--ink-soft); background: color-mix(in srgb, var(--card) 80%, transparent); border-top: 1px solid var(--line); }
@@ -169,7 +174,7 @@ canvas#island { display: block; width: 100%; height: min(46vh, 420px); touch-act
   margin-bottom: 8px; }
 .species-card__name .count { margin-left: auto; font-size: 15px; }
 .species-card__ctrl { display: flex; gap: 6px; }
-.species-card__ctrl button { flex: 1; padding: 8px 0; font: 800 16px/1 var(--font); color: var(--ink-on-accent);
+.species-card__ctrl button { flex: 1; min-height: 44px; padding: 8px 0; font: 800 16px/1 var(--font); color: var(--ink-on-accent);
   background: var(--accent); border: 2px solid var(--line-strong); border-radius: 10px; cursor: pointer;
   box-shadow: 2px 2px 0 var(--line-strong); transition: transform .12s, box-shadow .12s; }
 .species-card__ctrl button:active { transform: translate(2px,2px); box-shadow: none; }
@@ -190,7 +195,7 @@ canvas#island { display: block; width: 100%; height: min(46vh, 420px); touch-act
 .modal__kicker { margin: 0 0 4px; font-size: 12.5px; font-weight: 800; color: var(--accent); text-transform: uppercase; letter-spacing: .05em; }
 .modal__card h2 { margin: 0 0 10px; font-size: 22px; }
 .modal__card p:not(.modal__kicker) { margin: 0 0 18px; font-size: 14.5px; line-height: 1.55; color: var(--ink-soft); }
-.action { padding: 14px 26px; font: 800 15px/1 var(--font); color: var(--ink-on-accent);
+.action { min-height: 44px; padding: 14px 26px; font: 800 16px/1 var(--font); color: var(--ink-on-accent);
   background: var(--accent); border: 2.5px solid var(--line-strong); border-radius: var(--radius-md);
   box-shadow: 4px 4px 0 var(--line-strong); cursor: pointer; transition: transform .14s, box-shadow .14s; }
 .action:hover { transform: translate(-1px,-2px); box-shadow: 6px 6px 0 var(--line-strong); }
@@ -199,8 +204,27 @@ canvas#island { display: block; width: 100%; height: min(46vh, 420px); touch-act
 [hidden] { display: none !important; }
 
 @media (max-width: 860px) {
+  .bar { height: 62px; gap: 5px; padding: 7px 10px; }
+  .app { height: calc(100dvh - 62px); padding: 0 10px 8px; }
   .workspace { grid-template-columns: 1fr; }
   .brief { grid-template-columns: auto 1fr; }
   .health { grid-column: 1 / -1; justify-content: space-between; }
-  canvas#island { height: min(40vh, 320px); }
+  .workspace { grid-template-rows: minmax(0, 58%) minmax(0, 42%); gap: 8px; }
+  .scene, .tools { overflow-y: auto; }
+  .brief { gap: 8px; margin-bottom: 6px; padding: 10px; }
+  .brief__camp { min-width: 52px; min-height: 52px; }
+  .health__ring { width: 48px; height: 48px; }
+  .health { gap: 8px; }
+  .camp-nav { gap: 5px; margin-bottom: 6px; }
+  .camp-btn { min-height: 44px; padding: 8px 10px; }
+  .scene, .tools { padding: 10px; }
+  .scene__head, .tools__head { margin-bottom: 6px; }
+  .meters { gap: 5px; margin-top: 6px; }
+  .meter { min-width: 0; flex-basis: 43%; padding: 5px 7px; }
+  .meter strong { font-size: 18px; }
+  .lesson { margin-top: 6px; padding: 7px 9px; }
+  .species-grid { gap: 6px; }
+  .species-card { flex-basis: 130px; padding: 7px; }
+  .species-card__name { margin-bottom: 5px; }
+  .nutrient-line { margin-top: 7px; }
 }

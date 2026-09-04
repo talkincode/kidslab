@@ -1,6 +1,6 @@
 # KidsLab 计划状态清单
 
-最后核验：2026-09-04
+最后核验：2026-09-05
 
 事实来源：`src/*/course.json`、`docs/courseware-plan/*.md`、`README.md`、`AGENT.md`。本文件负责回答“哪些已完成、哪些未实现、后续 Agent 完成计划后要更新哪里”。
 
@@ -31,10 +31,10 @@ KidsLab 应该是一组孩子打开就想玩的交互课件，而不是题库或
 
 - 主站课程浏览：`index.html`、`assets/js/app.js` 支持学段、年级、分类、搜索、双语、主题、强调色与置顶课件。
 - 静态构建发布：`scripts/build.mjs` 校验 `course.json`、压缩资源、生成 `courseware/index.json`；GitHub Pages workflow 在 `main` 推送后构建发布。
-- 课件源码库：当前 `src/` 下有 99 个课件目录，其中小学规划内按 ID 直接完成 81 个，初高中两轮规划内已上线 11 个。
+- 课件源码库：当前 `src/` 下有 100 个课件目录，其中小学规划内按 ID 直接完成 83 个，初高中两轮规划内已上线 11 个。
 - 小学课件规划：`docs/courseware-plan/` 覆盖数学、编程、逻辑、科学 84 个小学目标课件。
 - 课件模板：`docs/courseware-template/` 提供双语、主题、静态独立课件起点。
-- 交互音效：当前游戏课件含语义交互音效与静音控制（含新建 `cpu-lab`）；`huarong-dao` 与 `venn-port` 使用 ScoreKit 循环配乐和通关短曲；存量改进优先级见 `docs/courseware-audio-audit.md`。
+- 交互音效：当前游戏课件含语义交互音效与静音控制（含新建 `cpu-lab` 与 `mini-pyramid`）；`huarong-dao` 与 `venn-port` 使用 ScoreKit 循环配乐和通关短曲；存量改进优先级见 `docs/courseware-audio-audit.md`。
 - 行为分析：`docs/analytics.md`、`scripts/track.js`、`cloudflare/analytics/` 提供可选埋点链路。
 
 ## 非目标（铁律）
@@ -70,8 +70,8 @@ Agent 每次完成计划项后必须同步更新：
 | 数学 | 32 | 32 | 0 | P0 已完成；规划项已全部完成 |
 | 编程 | 15 | 15 | 0 | P0 已完成；规划项已全部完成 |
 | 逻辑 | 15 | 15 | 0 | P0 已完成；规划项已全部完成；`magic-cube`、`huarong-dao` 为规划外补充 |
-| 科学 | 22 | 20 | 2 | `plant-xray`、`creature-workshop` 与 `eco-island` 已按规划 ID 上线；`plant-lab` 仍是规划外养成实验 |
-| 合计 | 84 | 82 | 2 | 另有 11 个规划外已上线课件 |
+| 科学 | 22 | 21 | 1 | `plant-xray`、`creature-workshop`、`eco-island` 与 `mini-pyramid` 已按规划 ID 上线；`plant-lab` 仍是规划外养成实验 |
+| 合计 | 84 | 83 | 1 | 另有 11 个规划外已上线课件 |
 
 初高中采用独立规划口径，不计入上方小学汇总。第一轮 26 个见 [`secondary-labs.md`](./secondary-labs.md)；第二轮 20 个见 [`secondary-labs-wave2.md`](./secondary-labs-wave2.md)；合计 46 个目标。
 
@@ -188,6 +188,7 @@ Agent 每次完成计划项后必须同步更新：
 - [x] 植物透视园 `plant-xray`
 - [x] 造兽工坊 `creature-workshop`
 - [x] 生态小岛 `eco-island`
+- [x] 小小金字塔 `mini-pyramid`（`g5,g6`；斜面、杠杆、滑轮组的省力—距离取舍）
 
 ### 初高中实验型
 
@@ -214,7 +215,6 @@ Agent 每次完成计划项后必须同步更新：
 ### 科学
 
 - [ ] 空气车库 `air-garage`
-- [ ] 小小金字塔 `mini-pyramid`
 
 ### 初高中第一轮（规划内未实现）
 
@@ -320,6 +320,7 @@ Agent 每次完成计划项后必须同步更新：
 | 电工鼠开放电路实验室 | 高 | 已覆盖：桌面与触屏完成端口接线、合闸点亮、实时电流读数和触屏放置 | 已覆盖：制造短路并显示故障 | 不适用：纯静态无角色 | 已覆盖：撤销短路恢复通路；保存后清空并加载恢复作品 | `tests/e2e/electric-mouse.spec.js`；`tests/unit/electric-lab.test.mjs` |
 | 密度侦探实验室 | 高 | 已覆盖：桌面与触屏完成预测、三次天平/排水测量、数据入表、质量—体积图和铝材料识别 | 已覆盖：错误质量读数被拒绝后可原地改正 | 不适用：纯静态无角色 | 已覆盖：静音选择重载后保持；错误读数不写入数据表 | `tests/e2e/density-detective-lab.spec.js`；`tests/unit/density-lab.test.mjs` |
 | 运动追踪实验室 | 高 | 已覆盖：桌面与触屏完成匀速/斜面加速逐帧打点、s-t 与 v-t 图生长，以及自选 20° 坡度核对 a = g sinθ；中英与深浅主题切换无控制台错误 | 已覆盖：未点到小车与错误运动类型均保留打点，可原地改判 | 不适用：纯静态无角色 | 已覆盖：错误结论不丢数据；静音选择重载后保持 | `tests/e2e/motion-tracker-lab.spec.js`；`tests/unit/motion-tracker.test.mjs` |
+| 小小金字塔 | 中 | 已覆盖：桌面与触屏依次用 6 米斜面、3 米施力臂与 4 股承重绳完成三项工程，并写入完成进度 | 已覆盖：3 米斜面超出力量上限，石块留在原地且可立即换方案；模型还拒绝无承重绳的滑轮 | 不适用：纯静态无角色 | 已覆盖：首关完成后的工地状态重载恢复；重新规划会清除进度并回到首关 | `tests/e2e/mini-pyramid.spec.js`；`tests/unit/mini-pyramid.test.mjs` |
 | 三角形实验室 | 中 | 已覆盖：桌面与触屏完成货架稳定性、内角和与三边关系三项实验，并验证拖动顶点后内角和仍为 180° | 已覆盖：无斜撑加载导致货架变形、三边关系误判后保留原题重试，以及两边和等于第三边时不能成三角形 | 不适用：纯静态无角色 | 已覆盖：错误状态可原地修正；实验进度、完成状态可重载恢复并支持重新开始 | `tests/e2e/triangle-lab.spec.js` |
 | 外星农场 | 中 | 已覆盖：桌面与触屏完成固定总数试调、假设法一次替换和眼腿双传感器反推三夜任务 | 已覆盖：错误腿数与错误眼腿组合保留原题和当前数量，可原地继续调整 | 不适用：纯静态无角色 | 已覆盖：任务状态、假设步骤和最终完成状态可重载恢复，并支持重新开始 | `tests/e2e/alien-farm.spec.js` |
 | 平衡马戏团 | 中 | 已覆盖：桌面与触屏用等式两边同时减常数、减未知数和除以同一非零整数完成三场方程表演 | 已覆盖：只动一边触发倾翻反馈且原方程不变；不可执行的成对操作保持状态 | 不适用：纯静态无角色 | 已覆盖：倾翻后可原地继续；合法步骤、最终完成状态可重载恢复并支持重新开始 | `tests/e2e/balance-circus.spec.js` |

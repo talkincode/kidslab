@@ -8,9 +8,10 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
-  // 大型 Three.js 页面和 PWA 离线服务器并发时会争抢软件渲染/端口资源，
-  // 表现为无关的 localStorage 轮询或临时服务器恢复超时。CI 串行换稳定性。
-  workers: process.env.CI ? 1 : undefined,
+  // 大型 Three.js 页面和 PWA 离线服务器并发时会争抢软件渲染/端口资源；
+  // 本机默认 12 个 worker 会直接耗尽 Chromium 资源而中止测试。保留适度并发，
+  // CI 仍串行运行以获得可重复的发布门禁。
+  workers: process.env.CI ? 1 : 4,
   reporter: process.env.CI
     ? [
         ['github'],
