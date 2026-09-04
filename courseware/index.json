@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-01T16:50:24.522Z",
+  "generatedAt": "2026-09-04T01:48:44.323Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -67,6 +67,10 @@
     },
     "加减法": {
       "en": "Addition & Subtraction",
+      "kind": "knowledge"
+    },
+    "加速度": {
+      "en": "Acceleration",
       "kind": "knowledge"
     },
     "动物": {
@@ -289,6 +293,10 @@
       "en": "Mass",
       "kind": "knowledge"
     },
+    "运动": {
+      "en": "Motion",
+      "kind": "knowledge"
+    },
     "运算": {
       "en": "Arithmetic",
       "kind": "knowledge"
@@ -303,6 +311,10 @@
     },
     "递归": {
       "en": "Recursion",
+      "kind": "knowledge"
+    },
+    "速度": {
+      "en": "Velocity",
       "kind": "knowledge"
     },
     "遗传": {
@@ -1997,6 +2009,67 @@
         "游戏"
       ],
       "path": "courseware/lantern-lane/index.html"
+    },
+    {
+      "id": "motion-tracker-lab",
+      "title": {
+        "zh": "运动追踪实验室",
+        "en": "Motion Tracker Lab"
+      },
+      "description": {
+        "zh": "给小车录像逐帧打点，画出 s-t、v-t 图，比较匀速和斜面匀加速。",
+        "en": "Mark a cart video frame by frame, grow s–t and v–t graphs, and compare uniform motion with motion down a ramp."
+      },
+      "category": "physics",
+      "levels": [
+        "junior",
+        "senior"
+      ],
+      "grades": [
+        "g8",
+        "g10"
+      ],
+      "tags": [
+        "运动",
+        "速度",
+        "加速度",
+        "实验"
+      ],
+      "icon": "🎬",
+      "order": 35,
+      "badge": "new",
+      "keywords": [
+        "Motion",
+        "motion",
+        "机械运动",
+        "kinematics",
+        "运动学",
+        "打点计时器",
+        "ticker timer",
+        "s-t",
+        "v-t",
+        "逐帧打点",
+        "Velocity",
+        "velocity",
+        "speed",
+        "平均速度",
+        "average velocity",
+        "匀速",
+        "uniform motion",
+        "Acceleration",
+        "acceleration",
+        "匀加速",
+        "uniform acceleration",
+        "g sin",
+        "斜面",
+        "inclined plane",
+        "Experiment",
+        "experiment",
+        "simulation",
+        "lab",
+        "模拟"
+      ],
+      "path": "courseware/motion-tracker-lab/index.html"
     },
     {
       "id": "optics-lab",

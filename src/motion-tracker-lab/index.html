@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>运动追踪实验室 · KidsLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+</head>
+<body>
+  <header class="bar">
+    <a class="pill back-pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title"><span aria-hidden="true">🎬</span> <span data-t="title">运动追踪实验室</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill lang-pill" id="langBtn" type="button" aria-label="Switch to English">EN</button>
+    </div>
+  </header>
+
+  <nav class="mobile-nav" aria-label="实验区切换">
+    <button class="mobile-nav__button is-active" type="button" data-mobile-panel="film" aria-pressed="true">
+      <span aria-hidden="true">01</span><span data-t="filmNav">片场</span>
+    </button>
+    <button class="mobile-nav__button" type="button" data-mobile-panel="data" aria-pressed="false">
+      <span aria-hidden="true">02</span><span data-t="dataNav">图表</span>
+    </button>
+    <button class="mobile-nav__button" type="button" data-mobile-panel="lab" aria-pressed="false">
+      <span aria-hidden="true">03</span><span data-t="labNav">结论</span>
+    </button>
+  </nav>
+
+  <main class="app" id="app" data-mobile-panel="film">
+    <section class="panel film-panel" aria-labelledby="filmTitle">
+      <p class="section-code" id="missionCode">CLIP 01</p>
+      <h2 id="filmTitle" data-t="filmTitle">这段录像里，小车速度在变吗？</h2>
+      <p class="tip" id="tip" data-t="tip0">点小车，给这一帧打点</p>
+
+      <div class="stage-card">
+        <canvas id="stage" width="640" height="280" aria-label="小车逐帧录像"></canvas>
+        <div class="stage-meta">
+          <span id="frameReadout">1 / 6</span>
+          <span id="timeReadout">t = 0.00 s</span>
+          <span id="angleReadout">0°</span>
+        </div>
+      </div>
+
+      <div class="film-actions">
+        <button class="action-button" id="markBtn" type="button" data-t="mark">给这一帧打点</button>
+        <button class="ghost-button" id="resetBtn" type="button" data-t="reset">重拍这一段</button>
+      </div>
+      <p class="feedback" id="filmFeedback" role="status" aria-live="polite"></p>
+
+      <div class="prediction-card" id="predictionCard">
+        <strong data-t="predictionTitle">先猜一下</strong>
+        <div class="choice-row" role="group" aria-label="速度预测">
+          <button class="choice" type="button" data-prediction="steady" data-t="predSteady">速度不变</button>
+          <button class="choice" type="button" data-prediction="changing" data-t="predChanging">速度在变</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel data-panel" aria-labelledby="dataTitle">
+      <div class="panel-head">
+        <div>
+          <p class="section-code">TRACK LOG</p>
+          <h2 id="dataTitle" data-t="dataTitle">点变成图</h2>
+        </div>
+        <span class="count-badge" id="markCount">0 / 6</span>
+      </div>
+      <p class="panel-intro" id="graphHint" data-t="graphEmpty">打出两个点，图就会开始长出来。</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>n</th>
+              <th>t / s</th>
+              <th>s / m</th>
+              <th>v / m·s⁻¹</th>
+            </tr>
+          </thead>
+          <tbody id="recordBody"></tbody>
+        </table>
+      </div>
+
+      <div class="graphs">
+        <figure class="graph-card">
+          <figcaption>s–t</figcaption>
+          <svg class="graph" viewBox="0 0 220 140" role="img" aria-label="s-t graph">
+            <g class="graph-grid" aria-hidden="true">
+              <path d="M36 12V112H204 M36 87H204 M36 62H204 M36 37H204 M36 12H204"></path>
+            </g>
+            <path class="graph-fit" id="stFit" d=""></path>
+            <g id="stPoints"></g>
+            <text class="axis-title" x="8" y="70" transform="rotate(-90 8 70)">s / m</text>
+            <text class="axis-title" x="178" y="132">t / s</text>
+          </svg>
+        </figure>
+        <figure class="graph-card">
+          <figcaption>v–t</figcaption>
+          <svg class="graph" viewBox="0 0 220 140" role="img" aria-label="v-t graph">
+            <g class="graph-grid" aria-hidden="true">
+              <path d="M36 12V112H204 M36 87H204 M36 62H204 M36 37H204 M36 12H204"></path>
+            </g>
+            <path class="graph-fit" id="vtFit" d=""></path>
+            <g id="vtPoints"></g>
+            <text class="axis-title" x="8" y="70" transform="rotate(-90 8 70)">v / m·s⁻¹</text>
+            <text class="axis-title" x="178" y="132">t / s</text>
+          </svg>
+        </figure>
+      </div>
+      <p class="slope-line" id="slopeLine"></p>
+    </section>
+
+    <section class="panel lab-panel" aria-labelledby="labTitle">
+      <p class="section-code">CONCLUSION</p>
+      <h2 id="labTitle" data-t="labTitle">用图像下结论</h2>
+
+      <div class="choice-row" role="group" aria-label="运动类型">
+        <button class="choice choice--big" id="uniformBtn" type="button" data-kind="uniform" data-t="kindUniform">匀速</button>
+        <button class="choice choice--big" id="accelBtn" type="button" data-kind="accelerated" data-t="kindAccel">匀加速</button>
+      </div>
+
+      <div class="design-card" id="designCard" hidden>
+        <strong data-t="designTitle">自己选坡度</strong>
+        <div class="choice-row" role="group" aria-label="斜面角度">
+          <button class="choice" type="button" data-angle="10">10°</button>
+          <button class="choice" type="button" data-angle="20">20°</button>
+          <button class="choice" type="button" data-angle="30">30°</button>
+        </div>
+        <p class="panel-intro" data-t="lawPrompt">测出的斜率更接近哪一条？</p>
+        <div class="choice-row" role="group" aria-label="加速度公式">
+          <button class="choice" type="button" data-law="sin">a = g sinθ</button>
+          <button class="choice" type="button" data-law="cos">a = g cosθ</button>
+          <button class="choice" type="button" data-law="g">a = g</button>
+        </div>
+      </div>
+
+      <p class="formula-strip" id="formulaStrip" hidden></p>
+      <p class="feedback" id="labFeedback" role="status" aria-live="polite"></p>
+      <p class="conclusion" id="conclusionStatus"></p>
+    </section>
+  </main>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
