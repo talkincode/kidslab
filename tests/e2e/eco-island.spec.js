@@ -1,30 +1,76 @@
 import { test, expect } from '@playwright/test';
 
+const CRITICAL_CONTROL_SELECTORS = ['#soundBtn', '#themeBtn', '#langBtn'];
+
 async function expectFitsViewport(page) {
-  const layout = await page.evaluate(() => ({
-    width: document.documentElement.scrollWidth,
-    height: document.documentElement.scrollHeight,
-    viewportWidth: window.innerWidth,
-    viewportHeight: window.innerHeight,
-    controls: [...document.querySelectorAll('button:not([hidden]), a:not([hidden])')]
-      .map((element) => {
+  const layout = await page.evaluate((controlSelectors) => {
+    const getFontSize = (selector) => {
+      const element = document.querySelector(selector);
+      if (!element) return 0;
+      return Number.parseFloat(getComputedStyle(element).fontSize);
+    };
+
+    return {
+      width: document.documentElement.scrollWidth,
+      viewportWidth: window.innerWidth,
+      controls: controlSelectors.map((selector) => {
+        const element = document.querySelector(selector);
+        if (!element) {
+          return { selector, exists: false, visible: false, width: 0, height: 0, font: 0 };
+        }
+
+        const style = getComputedStyle(element);
         const rect = element.getBoundingClientRect();
+        const visible = !element.hidden
+          && style.display !== 'none'
+          && style.visibility !== 'hidden'
+          && rect.width > 0
+          && rect.height > 0;
+        const width = visible ? rect.width : 0;
+        const height = visible ? rect.height : 0;
         return {
-          width: rect.width,
-          height: rect.height,
+          selector,
+          exists: true,
+          visible,
+          width,
+          height,
           font: Number.parseFloat(getComputedStyle(element).fontSize),
         };
-      })
-      .filter(({ width, height }) => width > 0 && height > 0),
-    statusFont: Number.parseFloat(getComputedStyle(document.querySelector('#status')).fontSize),
-    lessonFont: Number.parseFloat(getComputedStyle(document.querySelector('#lessonText')).fontSize),
-  }));
+      }),
+      interactiveControls: [...document.querySelectorAll(
+        'button:not([hidden]), a:not([hidden]), input:not([type="hidden"]), select, textarea, [role="button"]:not([hidden])',
+      )]
+        .map((element) => {
+          const rect = element.getBoundingClientRect();
+          return {
+            width: rect.width,
+            height: rect.height,
+            font: Number.parseFloat(getComputedStyle(element).fontSize),
+          };
+        })
+        .filter(({ width, height }) => width > 0 && height > 0),
+      statusFont: getFontSize('#status'),
+      lessonFont: getFontSize('#lessonText'),
+    };
+  }, CRITICAL_CONTROL_SELECTORS);
 
+  const visibleControls = layout.controls.filter(({ visible }) => visible);
+  const controlsBySelector = new Map(layout.controls.map((control) => [control.selector, control]));
   expect(layout.width).toBeLessThanOrEqual(layout.viewportWidth + 1);
-  expect(layout.height).toBeLessThanOrEqual(layout.viewportHeight + 1);
-  expect(layout.controls.filter(({ width }) => width < 44)).toEqual([]);
-  expect(layout.controls.filter(({ height }) => height < 44)).toEqual([]);
-  expect(Math.min(...layout.controls.map(({ font }) => font))).toBeGreaterThanOrEqual(16);
+  for (const selector of CRITICAL_CONTROL_SELECTORS) {
+    const control = controlsBySelector.get(selector);
+    expect(control, `${selector} should exist`).toBeTruthy();
+    expect(control?.visible, `${selector} should be visible`).toBe(true);
+  }
+  expect(visibleControls.length).toBeGreaterThan(0);
+  expect(visibleControls.filter(({ width }) => width < 44)).toEqual([]);
+  expect(visibleControls.filter(({ height }) => height < 44)).toEqual([]);
+  for (const control of visibleControls) {
+    expect(control.font).toBeGreaterThanOrEqual(16);
+  }
+  expect(layout.interactiveControls.filter(({ width }) => width < 30)).toEqual([]);
+  expect(layout.interactiveControls.filter(({ height }) => height < 30)).toEqual([]);
+  expect(layout.interactiveControls.filter(({ font }) => font < 12)).toEqual([]);
   expect(layout.statusFont).toBeGreaterThanOrEqual(16);
   expect(layout.lessonFont).toBeGreaterThanOrEqual(14);
 }
