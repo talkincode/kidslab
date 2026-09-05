@@ -1,24 +1,33 @@
 import { test, expect } from '@playwright/test';
 
 async function expectFitsViewport(page) {
-  const layout = await page.evaluate(() => ({
-    width: document.documentElement.scrollWidth,
-    viewportWidth: window.innerWidth,
-    controls: [...document.querySelectorAll('#soundBtn, #themeBtn, #langBtn')]
-      .map((element) => {
-        const rect = element.getBoundingClientRect();
-        return {
-          width: rect.width,
-          height: rect.height,
-          font: Number.parseFloat(getComputedStyle(element).fontSize),
-        };
-      })
-      .filter(({ width, height }) => width > 0 && height > 0),
-    statusFont: Number.parseFloat(getComputedStyle(document.querySelector('#status')).fontSize || '0'),
-    lessonFont: Number.parseFloat(getComputedStyle(document.querySelector('#lessonText')).fontSize || '0'),
-  }));
+  const layout = await page.evaluate(() => {
+    const getFontSize = (selector) => {
+      const element = document.querySelector(selector);
+      if (!element) return 0;
+      return Number.parseFloat(getComputedStyle(element).fontSize);
+    };
+
+    return {
+      width: document.documentElement.scrollWidth,
+      viewportWidth: window.innerWidth,
+      controls: [...document.querySelectorAll('#soundBtn, #themeBtn, #langBtn')]
+        .map((element) => {
+          const rect = element.getBoundingClientRect();
+          return {
+            width: rect.width,
+            height: rect.height,
+            font: Number.parseFloat(getComputedStyle(element).fontSize),
+          };
+        })
+        .filter(({ width, height }) => width > 0 && height > 0),
+      statusFont: getFontSize('#status'),
+      lessonFont: getFontSize('#lessonText'),
+    };
+  });
 
   expect(layout.width).toBeLessThanOrEqual(layout.viewportWidth + 1);
+  expect(layout.controls).toHaveLength(3);
   expect(layout.controls.filter(({ width }) => width < 44)).toEqual([]);
   expect(layout.controls.filter(({ height }) => height < 44)).toEqual([]);
   expect(Math.min(...layout.controls.map(({ font }) => font))).toBeGreaterThanOrEqual(14);
