@@ -1,7 +1,9 @@
 import { test, expect } from '@playwright/test';
 
-async function expectFitsViewport(page) {
-  const layout = await page.evaluate(() => {
+const DEFAULT_CONTROL_SELECTORS = ['#soundBtn', '#themeBtn', '#langBtn'];
+
+async function expectFitsViewport(page, selectors = DEFAULT_CONTROL_SELECTORS) {
+  const layout = await page.evaluate((controlSelectors) => {
     const getFontSize = (selector) => {
       const element = document.querySelector(selector);
       if (!element) return 0;
@@ -11,26 +13,35 @@ async function expectFitsViewport(page) {
     return {
       width: document.documentElement.scrollWidth,
       viewportWidth: window.innerWidth,
-      controls: [...document.querySelectorAll('#soundBtn, #themeBtn, #langBtn')]
-        .map((element) => {
-          const rect = element.getBoundingClientRect();
-          return {
-            width: rect.width,
-            height: rect.height,
-            font: Number.parseFloat(getComputedStyle(element).fontSize),
-          };
-        })
-        .filter(({ width, height }) => width > 0 && height > 0),
+      controls: controlSelectors.map((selector) => {
+        const element = document.querySelector(selector);
+        if (!element) {
+          return { selector, exists: false, visible: false, width: 0, height: 0, font: 0 };
+        }
+
+        const visible = !element.hidden;
+        const width = visible ? element.getBoundingClientRect().width : 0;
+        const height = visible ? element.getBoundingClientRect().height : 0;
+        return {
+          selector,
+          exists: true,
+          visible,
+          width,
+          height,
+          font: Number.parseFloat(getComputedStyle(element).fontSize),
+        };
+      }),
       statusFont: getFontSize('#status'),
       lessonFont: getFontSize('#lessonText'),
     };
-  });
+  }, selectors);
 
   expect(layout.width).toBeLessThanOrEqual(layout.viewportWidth + 1);
-  expect(layout.controls).toHaveLength(3);
+  expect(layout.controls.filter(({ exists }) => exists)).toHaveLength(selectors.length);
+  expect(layout.controls.filter(({ visible }) => visible)).toHaveLength(selectors.length);
   expect(layout.controls.filter(({ width }) => width < 44)).toEqual([]);
   expect(layout.controls.filter(({ height }) => height < 44)).toEqual([]);
-  expect(Math.min(...layout.controls.map(({ font }) => font))).toBeGreaterThanOrEqual(14);
+  expect(Math.min(...layout.controls.filter(({ visible }) => visible).map(({ font }) => font))).toBeGreaterThanOrEqual(14);
   expect(layout.statusFont).toBeGreaterThanOrEqual(16);
   expect(layout.lessonFont).toBeGreaterThanOrEqual(14);
 }
