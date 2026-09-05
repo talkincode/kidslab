@@ -37,6 +37,16 @@ async function expectFitsViewport(page) {
           font: Number.parseFloat(getComputedStyle(element).fontSize),
         };
       }),
+      interactiveControls: [...document.querySelectorAll('button:not([hidden]), a:not([hidden])')]
+        .map((element) => {
+          const rect = element.getBoundingClientRect();
+          return {
+            width: rect.width,
+            height: rect.height,
+            font: Number.parseFloat(getComputedStyle(element).fontSize),
+          };
+        })
+        .filter(({ width, height }) => width > 0 && height > 0),
       statusFont: getFontSize('#status'),
       lessonFont: getFontSize('#lessonText'),
     };
@@ -56,6 +66,9 @@ async function expectFitsViewport(page) {
   for (const control of visibleControls) {
     expect(control.font).toBeGreaterThanOrEqual(16);
   }
+  expect(layout.interactiveControls.filter(({ width }) => width < 30)).toEqual([]);
+  expect(layout.interactiveControls.filter(({ height }) => height < 30)).toEqual([]);
+  expect(layout.interactiveControls.filter(({ font }) => font < 12)).toEqual([]);
   expect(layout.statusFont).toBeGreaterThanOrEqual(16);
   expect(layout.lessonFont).toBeGreaterThanOrEqual(14);
 }
