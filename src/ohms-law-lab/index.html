@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f4eb">
+  <title>⚡ 欧姆定律实验室 · KidsLab</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="back" id="backBtn" href="../../index.html" data-t="back">返回平台</a>
+    <div class="brand" aria-hidden="true"><span>⚡</span><strong data-t="title">欧姆定律实验室</strong></div>
+    <div class="topbar__controls">
+      <button class="icon-button" id="soundBtn" type="button" aria-pressed="false" aria-label="关闭声音">🔊</button>
+      <button class="icon-button" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="lang-button" id="langBtn" type="button" aria-label="Switch language">EN</button>
+    </div>
+  </header>
+
+  <nav class="mobile-nav" aria-label="实验分区">
+    <button type="button" class="mobile-nav__button" data-mobile-panel="bench" aria-pressed="true" data-t="benchNav">接线台</button>
+    <button type="button" class="mobile-nav__button" data-mobile-panel="notebook" aria-pressed="false" data-t="notebookNav">数据册</button>
+    <button type="button" class="mobile-nav__button" data-mobile-panel="mission" aria-pressed="false" data-t="missionNav">任务</button>
+  </nav>
+
+  <main id="app" class="lab-grid" data-mobile-panel="bench">
+    <section class="panel bench" data-panel="bench" aria-labelledby="benchTitle">
+      <div class="panel__heading">
+        <div>
+          <p class="eyebrow" data-t="benchEyebrow">安全接线台</p>
+          <h1 id="benchTitle" data-t="benchTitle">让电流穿过电阻</h1>
+        </div>
+        <span class="live-dot" aria-hidden="true"></span>
+      </div>
+
+      <div class="circuit-scene" aria-label="电路和电表教学示意">
+        <div class="battery"><span>+</span><span>−</span><small data-t="battery">电源</small></div>
+        <div class="wire wire--top"></div>
+        <div class="wire wire--bottom"></div>
+        <div class="meter meter--amp"><b>A</b><small id="ampReadout">— A</small></div>
+        <div class="resistor"><i></i><i></i><i></i><i></i><small id="resistorReadout">10 Ω</small></div>
+        <div class="meter meter--volt"><b>V</b><small id="voltReadout">— V</small></div>
+        <div class="spark" aria-hidden="true">✦</div>
+      </div>
+
+      <div class="wiring" role="group" aria-label="电表连接方式">
+        <p class="control-label" data-t="wiringLabel">把电表接在哪里？</p>
+        <div class="choice-row">
+          <button type="button" class="choice" data-wire="series-parallel" aria-pressed="true" data-t="wireRight">A 串联 · V 并联</button>
+          <button type="button" class="choice" data-wire="ammeter-parallel" aria-pressed="false" data-t="wireShort">A 并联</button>
+          <button type="button" class="choice" data-wire="voltmeter-series" aria-pressed="false" data-t="wireOpen">V 串联</button>
+        </div>
+      </div>
+
+      <div class="knobs">
+        <label for="voltageSelect"><span data-t="voltageLabel">电源电压</span>
+          <select id="voltageSelect">
+            <option value="1.5">1.5 V</option>
+            <option value="3">3.0 V</option>
+            <option value="4.5">4.5 V</option>
+            <option value="6">6.0 V</option>
+          </select>
+        </label>
+        <label for="resistanceSelect"><span data-t="resistanceLabel">电阻</span>
+          <select id="resistanceSelect">
+            <option value="10">10 Ω</option>
+            <option value="20">20 Ω</option>
+          </select>
+        </label>
+        <label for="ammeterRange"><span data-t="ammeterRange">电流表量程</span>
+          <select id="ammeterRange">
+            <option value="0.3">0–0.30 A</option>
+            <option value="3">0–3.00 A</option>
+          </select>
+        </label>
+        <label for="voltmeterRange"><span data-t="voltmeterRange">电压表量程</span>
+          <select id="voltmeterRange">
+            <option value="3">0–3.0 V</option>
+            <option value="15">0–15.0 V</option>
+          </select>
+        </label>
+      </div>
+      <button class="primary-button" id="recordBtn" type="button" data-t="record">合上开关，记录读数</button>
+      <p class="instrument-note" id="instrumentNote" aria-live="polite"></p>
+    </section>
+
+    <section class="panel notebook" data-panel="notebook" aria-labelledby="notebookTitle">
+      <div class="panel__heading">
+        <div>
+          <p class="eyebrow" data-t="notebookEyebrow">你的证据</p>
+          <h2 id="notebookTitle" data-t="notebookTitle">U-I 数据册</h2>
+        </div>
+        <span class="trial-count" id="trialCount">0</span>
+      </div>
+      <div class="graph-wrap">
+        <svg id="graph" viewBox="0 0 320 190" role="img" aria-label="电压电流关系图">
+          <line x1="38" y1="156" x2="302" y2="156" class="axis"></line>
+          <line x1="38" y1="156" x2="38" y2="18" class="axis"></line>
+          <line x1="38" y1="87" x2="302" y2="87" class="gridline"></line>
+          <line x1="170" y1="18" x2="170" y2="156" class="gridline"></line>
+          <text x="282" y="180">U / V</text>
+          <text x="4" y="26">I / A</text>
+          <g id="graphLines"></g>
+        </svg>
+        <div class="legend"><span class="legend__ten"></span><span>10 Ω</span><span class="legend__twenty"></span><span>20 Ω</span></div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th data-t="trial">次数</th><th>U (V)</th><th>I (A)</th><th>R (Ω)</th></tr></thead>
+          <tbody id="trialRows"></tbody>
+        </table>
+      </div>
+      <p class="data-note" data-t="dataNote">同一电阻至少留下两组读数，再换另一个电阻。</p>
+    </section>
+
+    <section class="panel mission" data-panel="mission" aria-labelledby="missionTitle">
+      <div class="panel__heading">
+        <div>
+          <p class="eyebrow" id="phaseLabel">实验任务</p>
+          <h2 id="missionTitle">先做一个预测</h2>
+        </div>
+        <button class="reset-button" id="resetBtn" type="button" data-t="reset">重新实验</button>
+      </div>
+      <p class="mission__copy" id="missionText"></p>
+
+      <div id="predictionChoices" class="task-choices">
+        <button id="predictionUp" type="button" class="choice task-choice" data-prediction="current-rises" data-t="predictionUp">电压变大，电流会变大</button>
+        <button id="predictionDown" type="button" class="choice task-choice" data-prediction="current-falls" data-t="predictionDown">电压变大，电流会变小</button>
+      </div>
+      <div id="conclusionChoices" class="task-choices" hidden>
+        <button id="conclusionLower" type="button" class="choice task-choice" data-conclusion="higher-resistance-lower-slope" data-t="conclusionLower">电阻更大，图线更平</button>
+        <button id="conclusionSame" type="button" class="choice task-choice" data-conclusion="same-slope" data-t="conclusionSame">两条图线一样陡</button>
+      </div>
+      <div id="designCard" class="design-card" hidden>
+        <span class="design-card__icon" aria-hidden="true">🎯</span>
+        <div><strong data-t="designTarget">用 20 Ω 电阻做出 0.30 A</strong><p data-t="designPrompt">选好电压和量程后，检验你的设计。</p></div>
+        <button id="designBtn" type="button" class="primary-button" data-t="testDesign">检验设计</button>
+      </div>
+      <div id="completeCard" class="complete-card" hidden>
+        <span aria-hidden="true">⚡</span><strong data-t="complete">两条线都亮起来了！</strong>
+      </div>
+      <p class="feedback" id="feedback" role="status" aria-live="polite"></p>
+      <div class="mission__footer">
+        <button class="hint-button" id="hintBtn" type="button" aria-expanded="false" data-t="hint">给我一点提示</button>
+        <p class="hint-text" id="hintText" hidden></p>
+      </div>
+      <p class="safety-note" data-t="safety">这是理想电阻的虚拟实验；真实电路请在教师指导下操作。</p>
+    </section>
+  </main>
+
+  <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+  <script type="module" src="main.js"></script>
+</body>
+</html>

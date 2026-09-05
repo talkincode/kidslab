@@ -1,0 +1,27 @@
+{
+  "id": "ohms-law-lab",
+  "title": {
+    "zh": "欧姆定律实验室",
+    "en": "Ohm's Law Lab"
+  },
+  "description": {
+    "zh": "给电路换电压和电阻，接对电表、记录 U-I 数据，让两条直线自己说出欧姆定律。",
+    "en": "Change voltage and resistance, wire the meters safely, record U-I data, and let two lines reveal Ohm's law."
+  },
+  "category": "physics",
+  "levels": [
+    "junior",
+    "senior"
+  ],
+  "grades": [
+    "g9",
+    "g11"
+  ],
+  "tags": [
+    "欧姆定律",
+    "电路",
+    "实验"
+  ],
+  "icon": "⚡",
+  "order": 174
+}

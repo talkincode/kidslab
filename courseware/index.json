@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-05T01:32:47.148Z",
+  "generatedAt": "2026-09-05T12:12:13.322Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -207,6 +207,10 @@
     },
     "植物": {
       "en": "Plants",
+      "kind": "knowledge"
+    },
+    "欧姆定律": {
+      "en": "Ohm's Law",
       "kind": "knowledge"
     },
     "水循环": {
@@ -5186,6 +5190,63 @@
         "模拟"
       ],
       "path": "courseware/creature-workshop/index.html"
+    },
+    {
+      "id": "ohms-law-lab",
+      "title": {
+        "zh": "欧姆定律实验室",
+        "en": "Ohm's Law Lab"
+      },
+      "description": {
+        "zh": "给电路换电压和电阻，接对电表、记录 U-I 数据，让两条直线自己说出欧姆定律。",
+        "en": "Change voltage and resistance, wire the meters safely, record U-I data, and let two lines reveal Ohm's law."
+      },
+      "category": "physics",
+      "levels": [
+        "junior",
+        "senior"
+      ],
+      "grades": [
+        "g9",
+        "g11"
+      ],
+      "tags": [
+        "欧姆定律",
+        "电路",
+        "实验"
+      ],
+      "icon": "⚡",
+      "order": 174,
+      "keywords": [
+        "Ohm's Law",
+        "ohm's law",
+        "ohms law",
+        "欧姆",
+        "voltage current resistance",
+        "电压电流电阻",
+        "u/i",
+        "i=u/r",
+        "voltmeter",
+        "ammeter",
+        "伏安法",
+        "Circuits",
+        "circuits",
+        "串联",
+        "series",
+        "并联",
+        "parallel",
+        "短路",
+        "导体",
+        "conductors",
+        "绝缘体",
+        "insulators",
+        "Experiment",
+        "experiment",
+        "simulation",
+        "lab",
+        "模拟"
+      ],
+      "path": "courseware/ohms-law-lab/index.html"
     }
   ]
 }

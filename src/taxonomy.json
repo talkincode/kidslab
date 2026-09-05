@@ -62,6 +62,7 @@
     "物质三态": { "en": "States of Matter", "kind": "knowledge", "aliases": ["states of matter", "熔化", "melting", "沸腾", "boiling", "凝固", "temperature"] },
     "分子运动": { "en": "Particle Model", "kind": "knowledge", "aliases": ["particles", "粒子模型", "molecular motion"] },
     "电路": { "en": "Circuits", "kind": "knowledge", "aliases": ["circuits", "串联", "series", "并联", "parallel", "短路", "导体", "conductors", "绝缘体", "insulators"] },
+    "欧姆定律": { "en": "Ohm's Law", "kind": "knowledge", "aliases": ["ohm's law", "ohms law", "欧姆", "voltage current resistance", "电压电流电阻", "u/i", "i=u/r", "voltmeter", "ammeter", "伏安法"] },
     "磁铁": { "en": "Magnets", "kind": "knowledge", "aliases": ["magnets", "磁极", "磁场", "magnetic field", "同极相斥", "异极相吸"] },
     "人体": { "en": "Human Body", "kind": "knowledge", "aliases": ["human body", "器官", "organs"] },
     "消化系统": { "en": "Digestive System", "kind": "knowledge", "aliases": ["digestive system"] },
