@@ -37,7 +37,9 @@ async function expectFitsViewport(page) {
           font: Number.parseFloat(getComputedStyle(element).fontSize),
         };
       }),
-      interactiveControls: [...document.querySelectorAll('button:not([hidden]), a:not([hidden])')]
+      interactiveControls: [...document.querySelectorAll(
+        'button:not([hidden]), a:not([hidden]), input:not([type="hidden"]), select, textarea, [role="button"]:not([hidden])',
+      )]
         .map((element) => {
           const rect = element.getBoundingClientRect();
           return {
