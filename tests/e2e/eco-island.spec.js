@@ -44,7 +44,6 @@ async function expectFitsViewport(page) {
 
   const visibleControls = layout.controls.filter(({ visible }) => visible);
   expect(layout.width).toBeLessThanOrEqual(layout.viewportWidth + 1);
-  expect(layout.controls.filter(({ exists }) => exists)).toHaveLength(CRITICAL_CONTROL_SELECTORS.length);
   expect(visibleControls).toHaveLength(CRITICAL_CONTROL_SELECTORS.length);
   expect(visibleControls.filter(({ width }) => width < 44)).toEqual([]);
   expect(visibleControls.filter(({ height }) => height < 44)).toEqual([]);
