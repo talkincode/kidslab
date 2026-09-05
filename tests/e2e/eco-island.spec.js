@@ -44,10 +44,12 @@ async function expectFitsViewport(page) {
 
   const visibleControls = layout.controls.filter(({ visible }) => visible);
   expect(layout.width).toBeLessThanOrEqual(layout.viewportWidth + 1);
-  expect(visibleControls).toHaveLength(CRITICAL_CONTROL_SELECTORS.length);
+  for (const selector of CRITICAL_CONTROL_SELECTORS) {
+    expect(layout.controls.find((control) => control.selector === selector)?.visible).toBe(true);
+  }
   expect(visibleControls.filter(({ width }) => width < 44)).toEqual([]);
   expect(visibleControls.filter(({ height }) => height < 44)).toEqual([]);
-  expect(Math.min(...visibleControls.map(({ font }) => font))).toBeGreaterThanOrEqual(14);
+  expect(Math.min(...visibleControls.map(({ font }) => font))).toBeGreaterThanOrEqual(16);
   expect(layout.statusFont).toBeGreaterThanOrEqual(16);
   expect(layout.lessonFont).toBeGreaterThanOrEqual(14);
 }
