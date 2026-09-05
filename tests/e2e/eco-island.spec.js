@@ -50,7 +50,9 @@ async function expectFitsViewport(page) {
   expect(visibleControls.length).toBeGreaterThan(0);
   expect(visibleControls.filter(({ width }) => width < 44)).toEqual([]);
   expect(visibleControls.filter(({ height }) => height < 44)).toEqual([]);
-  expect(Math.min(...visibleControls.map(({ font }) => font))).toBeGreaterThanOrEqual(16);
+  for (const control of visibleControls) {
+    expect(control.font).toBeGreaterThanOrEqual(16);
+  }
   expect(layout.statusFont).toBeGreaterThanOrEqual(16);
   expect(layout.lessonFont).toBeGreaterThanOrEqual(14);
 }
