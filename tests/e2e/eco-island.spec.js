@@ -43,9 +43,10 @@ async function expectFitsViewport(page) {
   }, CRITICAL_CONTROL_SELECTORS);
 
   const visibleControls = layout.controls.filter(({ visible }) => visible);
+  const controlsBySelector = new Map(layout.controls.map((control) => [control.selector, control]));
   expect(layout.width).toBeLessThanOrEqual(layout.viewportWidth + 1);
   for (const selector of CRITICAL_CONTROL_SELECTORS) {
-    expect(layout.controls.find((control) => control.selector === selector)?.visible).toBe(true);
+    expect(controlsBySelector.get(selector)?.visible).toBe(true);
   }
   expect(visibleControls.length).toBeGreaterThan(0);
   expect(visibleControls.filter(({ width }) => width < 44)).toEqual([]);
