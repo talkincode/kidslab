@@ -42,12 +42,13 @@ async function expectFitsViewport(page) {
     };
   }, CRITICAL_CONTROL_SELECTORS);
 
+  const visibleControls = layout.controls.filter(({ visible }) => visible);
   expect(layout.width).toBeLessThanOrEqual(layout.viewportWidth + 1);
   expect(layout.controls.filter(({ exists }) => exists)).toHaveLength(CRITICAL_CONTROL_SELECTORS.length);
-  expect(layout.controls.filter(({ visible }) => visible)).toHaveLength(CRITICAL_CONTROL_SELECTORS.length);
-  expect(layout.controls.filter(({ width }) => width < 44)).toEqual([]);
-  expect(layout.controls.filter(({ height }) => height < 44)).toEqual([]);
-  expect(Math.min(...layout.controls.filter(({ visible }) => visible).map(({ font }) => font))).toBeGreaterThanOrEqual(14);
+  expect(visibleControls).toHaveLength(CRITICAL_CONTROL_SELECTORS.length);
+  expect(visibleControls.filter(({ width }) => width < 44)).toEqual([]);
+  expect(visibleControls.filter(({ height }) => height < 44)).toEqual([]);
+  expect(Math.min(...visibleControls.map(({ font }) => font))).toBeGreaterThanOrEqual(14);
   expect(layout.statusFont).toBeGreaterThanOrEqual(16);
   expect(layout.lessonFont).toBeGreaterThanOrEqual(14);
 }
