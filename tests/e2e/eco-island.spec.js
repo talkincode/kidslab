@@ -47,6 +47,7 @@ async function expectFitsViewport(page) {
   for (const selector of CRITICAL_CONTROL_SELECTORS) {
     expect(layout.controls.find((control) => control.selector === selector)?.visible).toBe(true);
   }
+  expect(visibleControls.length).toBeGreaterThan(0);
   expect(visibleControls.filter(({ width }) => width < 44)).toEqual([]);
   expect(visibleControls.filter(({ height }) => height < 44)).toEqual([]);
   expect(Math.min(...visibleControls.map(({ font }) => font))).toBeGreaterThanOrEqual(16);
