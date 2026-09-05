@@ -115,10 +115,10 @@ button { -webkit-tap-highlight-color: transparent; }
   min-height: 0;
 }
 .mission-strip {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) auto;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+  gap: 14px;
   flex: 0 0 72px;
   padding: 10px 14px;
   border: 2px solid var(--line-strong);
@@ -126,22 +126,23 @@ button { -webkit-tap-highlight-color: transparent; }
   background: var(--card);
   box-shadow: 3px 4px 0 var(--line-strong);
 }
-.mission-intro { min-width: 0; }
+.mission-intro { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
 .eyebrow {
-  margin: 0 0 2px;
+  margin: 0;
   color: var(--ink-soft);
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 900;
-  letter-spacing: .05em;
+  letter-spacing: .06em;
+  text-transform: uppercase;
 }
 .tip {
   overflow: hidden;
   margin: 0;
-  font-size: 16px;
+  max-width: 38ch;
+  font-size: 15px;
   font-weight: 800;
-  line-height: 1.35;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.3;
+  color: var(--ink);
 }
 .route {
   display: flex;
@@ -149,15 +150,16 @@ button { -webkit-tap-highlight-color: transparent; }
   padding: 0;
   margin: 0;
   list-style: none;
+  justify-self: end;
 }
 .route button {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   border: 2px solid var(--line-strong);
   border-radius: 50%;
   color: var(--ink);
   background: var(--paper-2);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 900;
 }
 .route button[aria-current="step"] { background: var(--accent); box-shadow: inset 0 0 0 3px var(--card); }
@@ -216,35 +218,44 @@ canvas {
 .control-card {
   display: flex;
   flex-direction: column;
+  gap: 10px;
   padding: clamp(14px, 2.2vw, 24px);
 }
-.mission-copy { flex: 0 0 auto; }
+.mission-copy {
+  flex: 0 0 auto;
+  display: grid;
+  gap: 6px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+}
 .step-count {
-  margin: 0 0 4px;
+  margin: 0;
   color: var(--ink-soft);
-  font-size: 16px;
+  font-size: 12px;
   font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
 }
 h2 { margin: 0; font-size: clamp(21px, 2.5vw, 28px); line-height: 1.16; }
-#missionText { margin: 7px 0 0; color: var(--ink-soft); font-size: 16px; font-weight: 700; line-height: 1.45; }
+#missionText { margin: 0; color: var(--ink-soft); font-size: 16px; font-weight: 700; line-height: 1.4; }
 .readout {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 7px;
-  margin: 14px 0;
+  gap: 6px;
+  margin: 0;
 }
 .readout div {
   min-width: 0;
-  padding: 8px 7px;
+  padding: 8px 6px;
   border: 1.5px solid var(--line);
   border-radius: 12px;
   background: var(--paper-2);
   text-align: center;
 }
-.readout span { display: block; min-height: 2.4em; color: var(--ink-soft); font-size: 14px; font-weight: 800; line-height: 1.18; }
-.readout strong { display: block; overflow: hidden; margin-top: 3px; font-size: 17px; text-overflow: ellipsis; white-space: nowrap; }
-.control-zone { flex: 1 1 auto; min-height: 0; }
-.choice-label { display: block; margin: 0 0 8px; font-size: 16px; font-weight: 900; }
+.readout span { display: block; min-height: 2.2em; color: var(--ink-soft); font-size: 14px; font-weight: 800; line-height: 1.2; }
+.readout strong { display: block; overflow: hidden; margin-top: 3px; font-size: 16px; text-overflow: ellipsis; white-space: nowrap; }
+.control-zone { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; gap: 8px; }
+.choice-label { display: block; margin: 0; font-size: 15px; font-weight: 900; }
 .choices { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .choice {
   min-width: 0;
@@ -278,12 +289,12 @@ input[type="range"] { width: 100%; min-height: 44px; accent-color: var(--accent)
   box-shadow: 3px 4px 0 var(--line-strong);
 }
 .feedback {
-  min-height: 2.8em;
-  margin: 10px 0 0;
+  min-height: 2.5em;
+  margin: 0;
   color: var(--ink-soft);
   font-size: 16px;
   font-weight: 800;
-  line-height: 1.4;
+  line-height: 1.35;
 }
 .feedback.is-error { color: var(--danger); }
 .feedback.is-win { color: var(--ok); }

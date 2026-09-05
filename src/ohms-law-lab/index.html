@@ -44,42 +44,44 @@
         <div class="spark" aria-hidden="true">✦</div>
       </div>
 
-      <div class="wiring" role="group" aria-label="电表连接方式">
-        <p class="control-label" data-t="wiringLabel">把电表接在哪里？</p>
-        <div class="choice-row">
-          <button type="button" class="choice" data-wire="series-parallel" aria-pressed="true" data-t="wireRight">A 串联 · V 并联</button>
-          <button type="button" class="choice" data-wire="ammeter-parallel" aria-pressed="false" data-t="wireShort">A 并联</button>
-          <button type="button" class="choice" data-wire="voltmeter-series" aria-pressed="false" data-t="wireOpen">V 串联</button>
+      <div class="control-stack">
+        <div class="wiring" role="group" aria-label="电表连接方式">
+          <p class="control-label" data-t="wiringLabel">把电表接在哪里？</p>
+          <div class="choice-row">
+            <button type="button" class="choice" data-wire="series-parallel" aria-pressed="true" data-t="wireRight">A 串联 · V 并联</button>
+            <button type="button" class="choice" data-wire="ammeter-parallel" aria-pressed="false" data-t="wireShort">A 并联</button>
+            <button type="button" class="choice" data-wire="voltmeter-series" aria-pressed="false" data-t="wireOpen">V 串联</button>
+          </div>
         </div>
-      </div>
 
-      <div class="knobs">
-        <label for="voltageSelect"><span data-t="voltageLabel">电源电压</span>
-          <select id="voltageSelect">
-            <option value="1.5">1.5 V</option>
-            <option value="3">3.0 V</option>
-            <option value="4.5">4.5 V</option>
-            <option value="6">6.0 V</option>
-          </select>
-        </label>
-        <label for="resistanceSelect"><span data-t="resistanceLabel">电阻</span>
-          <select id="resistanceSelect">
-            <option value="10">10 Ω</option>
-            <option value="20">20 Ω</option>
-          </select>
-        </label>
-        <label for="ammeterRange"><span data-t="ammeterRange">电流表量程</span>
-          <select id="ammeterRange">
-            <option value="0.3">0–0.30 A</option>
-            <option value="3">0–3.00 A</option>
-          </select>
-        </label>
-        <label for="voltmeterRange"><span data-t="voltmeterRange">电压表量程</span>
-          <select id="voltmeterRange">
-            <option value="3">0–3.0 V</option>
-            <option value="15">0–15.0 V</option>
-          </select>
-        </label>
+        <div class="knobs">
+          <label for="voltageSelect"><span data-t="voltageLabel">电源电压</span>
+            <select id="voltageSelect">
+              <option value="1.5">1.5 V</option>
+              <option value="3">3.0 V</option>
+              <option value="4.5">4.5 V</option>
+              <option value="6">6.0 V</option>
+            </select>
+          </label>
+          <label for="resistanceSelect"><span data-t="resistanceLabel">电阻</span>
+            <select id="resistanceSelect">
+              <option value="10">10 Ω</option>
+              <option value="20">20 Ω</option>
+            </select>
+          </label>
+          <label for="ammeterRange"><span data-t="ammeterRange">电流表量程</span>
+            <select id="ammeterRange">
+              <option value="0.3">0–0.30 A</option>
+              <option value="3">0–3.00 A</option>
+            </select>
+          </label>
+          <label for="voltmeterRange"><span data-t="voltmeterRange">电压表量程</span>
+            <select id="voltmeterRange">
+              <option value="3">0–3.0 V</option>
+              <option value="15">0–15.0 V</option>
+            </select>
+          </label>
+        </div>
       </div>
       <button class="primary-button" id="recordBtn" type="button" data-t="record">合上开关，记录读数</button>
       <p class="instrument-note" id="instrumentNote" aria-live="polite"></p>

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f7f4eb">
   <title>⚡ 欧姆定律实验室 · KidsLab</title>
-  <link rel="stylesheet" href="style.css?v=bc925100">
+  <link rel="stylesheet" href="style.css?v=ed90fdac">
 <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
 <script>(()=>{"use strict";const g=window,r=g.cool||{};if(r.sdkVersion)return;try{document.documentElement.style.touchAction="manipulation"}catch{}const w="ohms-law-lab",b=location.pathname.split("/").filter(Boolean),E=b.at(-1)||"",A=E.includes(".")?b.at(-2):E,d=w.startsWith("__")?A:w,l={get(t,n=null){try{const e=localStorage.getItem(t);return e===null?n:e}catch{return n}},set(t,n){try{return localStorage.setItem(t,n),!0}catch{return!1}},remove(t){try{return localStorage.removeItem(t),!0}catch{return!1}}},f=new Set,S=new Set(["zh","en"]),I=new Set(["light","dark"]),C=(navigator.language||"").toLowerCase().startsWith("zh")?"zh":"en";let m="light";try{m=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch{}let o=l.get("kidslab.lang",C),s=l.get("kidslab.theme",m);S.has(o)||(o=C),I.has(s)||(s=m);function p(){document.documentElement.lang=o==="zh"?"zh-CN":"en",document.documentElement.dataset.theme=s}function T(t,n){const e={kind:t,value:n};for(const c of[...f])c(e);g.dispatchEvent(new CustomEvent(`${t}change`,{detail:{[t]:n}}))}const z={get lang(){return o},get theme(){return s},setLang(t){if(!S.has(t))throw new RangeError(`Unsupported language: ${t}`);t!==o&&(o=t,l.set("kidslab.lang",t),p(),T("lang",t))},setTheme(t){if(!I.has(t))throw new RangeError(`Unsupported theme: ${t}`);t!==s&&(s=t,l.set("kidslab.theme",t),p(),T("theme",t))},toggleLang(){this.setLang(o==="zh"?"en":"zh")},toggleTheme(){this.setTheme(s==="light"?"dark":"light")},subscribe(t){if(typeof t!="function")throw new TypeError("Preference listener must be a function");return f.add(t),()=>f.delete(t)}};function D(t,n={}){if(!t||typeof t!="object")throw new TypeError("Messages must be an object");const e=n.root||document;if(!e.querySelectorAll&&!e.matches)throw new TypeError("i18n root must be a Document or Element");function c(a,...h){const u=t[o]?.[a]??t.zh?.[a]??t.en?.[a];return typeof u=="function"?u(...h):u??a}function y(a="lang"){const h=[];e.matches?.("[data-t]")&&h.push(e),e.querySelectorAll&&h.push(...e.querySelectorAll("[data-t]"));for(const u of h){const L=c(u.dataset.t);typeof L=="string"&&(u.textContent=L)}n.onChange?.({kind:a,lang:o,theme:s,t:c})}const $=z.subscribe(({kind:a})=>{a==="lang"?y("lang"):n.onChange?.({kind:a,lang:o,theme:s,t:c})});return y("init"),{t:c,render:y,destroy:$}}const i=d?`kidslab.progress.${d}`:"";function _(){if(!i)return null;try{const t=JSON.parse(l.get(i,"null"));return!t||!["played","completed"].includes(t.status)?null:t}catch{return null}}function k(t,n){if(!i)return null;const e=_()||{},c={status:e.status==="completed"?"completed":t,stage:n||e.stage||"",updatedAt:Date.now()};return l.set(i,JSON.stringify(c)),c}const P={get:_,clear(){return i?l.remove(i):!1}};r.sdkVersion=2,r.courseId=d,r.storage=l,r.preferences=z,r.bindI18n=D,r.progress=P,typeof r.track!="function"&&(r.track=()=>{}),r.stage=t=>{typeof t!="string"||!t||k("played",t.slice(0,48))},r.complete=()=>k("completed"),g.cool=r,p()})();
 </script>
@@ -48,42 +48,44 @@
         <div class="spark" aria-hidden="true">✦</div>
       </div>
 
-      <div class="wiring" role="group" aria-label="电表连接方式">
-        <p class="control-label" data-t="wiringLabel">把电表接在哪里？</p>
-        <div class="choice-row">
-          <button type="button" class="choice" data-wire="series-parallel" aria-pressed="true" data-t="wireRight">A 串联 · V 并联</button>
-          <button type="button" class="choice" data-wire="ammeter-parallel" aria-pressed="false" data-t="wireShort">A 并联</button>
-          <button type="button" class="choice" data-wire="voltmeter-series" aria-pressed="false" data-t="wireOpen">V 串联</button>
+      <div class="control-stack">
+        <div class="wiring" role="group" aria-label="电表连接方式">
+          <p class="control-label" data-t="wiringLabel">把电表接在哪里？</p>
+          <div class="choice-row">
+            <button type="button" class="choice" data-wire="series-parallel" aria-pressed="true" data-t="wireRight">A 串联 · V 并联</button>
+            <button type="button" class="choice" data-wire="ammeter-parallel" aria-pressed="false" data-t="wireShort">A 并联</button>
+            <button type="button" class="choice" data-wire="voltmeter-series" aria-pressed="false" data-t="wireOpen">V 串联</button>
+          </div>
         </div>
-      </div>
 
-      <div class="knobs">
-        <label for="voltageSelect"><span data-t="voltageLabel">电源电压</span>
-          <select id="voltageSelect">
-            <option value="1.5">1.5 V</option>
-            <option value="3">3.0 V</option>
-            <option value="4.5">4.5 V</option>
-            <option value="6">6.0 V</option>
-          </select>
-        </label>
-        <label for="resistanceSelect"><span data-t="resistanceLabel">电阻</span>
-          <select id="resistanceSelect">
-            <option value="10">10 Ω</option>
-            <option value="20">20 Ω</option>
-          </select>
-        </label>
-        <label for="ammeterRange"><span data-t="ammeterRange">电流表量程</span>
-          <select id="ammeterRange">
-            <option value="0.3">0–0.30 A</option>
-            <option value="3">0–3.00 A</option>
-          </select>
-        </label>
-        <label for="voltmeterRange"><span data-t="voltmeterRange">电压表量程</span>
-          <select id="voltmeterRange">
-            <option value="3">0–3.0 V</option>
-            <option value="15">0–15.0 V</option>
-          </select>
-        </label>
+        <div class="knobs">
+          <label for="voltageSelect"><span data-t="voltageLabel">电源电压</span>
+            <select id="voltageSelect">
+              <option value="1.5">1.5 V</option>
+              <option value="3">3.0 V</option>
+              <option value="4.5">4.5 V</option>
+              <option value="6">6.0 V</option>
+            </select>
+          </label>
+          <label for="resistanceSelect"><span data-t="resistanceLabel">电阻</span>
+            <select id="resistanceSelect">
+              <option value="10">10 Ω</option>
+              <option value="20">20 Ω</option>
+            </select>
+          </label>
+          <label for="ammeterRange"><span data-t="ammeterRange">电流表量程</span>
+            <select id="ammeterRange">
+              <option value="0.3">0–0.30 A</option>
+              <option value="3">0–3.00 A</option>
+            </select>
+          </label>
+          <label for="voltmeterRange"><span data-t="voltmeterRange">电压表量程</span>
+            <select id="voltmeterRange">
+              <option value="3">0–3.0 V</option>
+              <option value="15">0–15.0 V</option>
+            </select>
+          </label>
+        </div>
       </div>
       <button class="primary-button" id="recordBtn" type="button" data-t="record">合上开关，记录读数</button>
       <p class="instrument-note" id="instrumentNote" aria-live="polite"></p>
