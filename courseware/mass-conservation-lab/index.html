@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>⚗️ 质量守恒实验室 · KidsLab</title>
+  <link rel="stylesheet" href="style.css?v=f2217a70">
+  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<script>(()=>{"use strict";const g=window,r=g.cool||{};if(r.sdkVersion)return;try{document.documentElement.style.touchAction="manipulation"}catch{}const w="mass-conservation-lab",b=location.pathname.split("/").filter(Boolean),E=b.at(-1)||"",A=E.includes(".")?b.at(-2):E,d=w.startsWith("__")?A:w,l={get(t,n=null){try{const e=localStorage.getItem(t);return e===null?n:e}catch{return n}},set(t,n){try{return localStorage.setItem(t,n),!0}catch{return!1}},remove(t){try{return localStorage.removeItem(t),!0}catch{return!1}}},f=new Set,S=new Set(["zh","en"]),I=new Set(["light","dark"]),C=(navigator.language||"").toLowerCase().startsWith("zh")?"zh":"en";let m="light";try{m=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch{}let o=l.get("kidslab.lang",C),s=l.get("kidslab.theme",m);S.has(o)||(o=C),I.has(s)||(s=m);function p(){document.documentElement.lang=o==="zh"?"zh-CN":"en",document.documentElement.dataset.theme=s}function T(t,n){const e={kind:t,value:n};for(const c of[...f])c(e);g.dispatchEvent(new CustomEvent(`${t}change`,{detail:{[t]:n}}))}const z={get lang(){return o},get theme(){return s},setLang(t){if(!S.has(t))throw new RangeError(`Unsupported language: ${t}`);t!==o&&(o=t,l.set("kidslab.lang",t),p(),T("lang",t))},setTheme(t){if(!I.has(t))throw new RangeError(`Unsupported theme: ${t}`);t!==s&&(s=t,l.set("kidslab.theme",t),p(),T("theme",t))},toggleLang(){this.setLang(o==="zh"?"en":"zh")},toggleTheme(){this.setTheme(s==="light"?"dark":"light")},subscribe(t){if(typeof t!="function")throw new TypeError("Preference listener must be a function");return f.add(t),()=>f.delete(t)}};function D(t,n={}){if(!t||typeof t!="object")throw new TypeError("Messages must be an object");const e=n.root||document;if(!e.querySelectorAll&&!e.matches)throw new TypeError("i18n root must be a Document or Element");function c(a,...h){const u=t[o]?.[a]??t.zh?.[a]??t.en?.[a];return typeof u=="function"?u(...h):u??a}function y(a="lang"){const h=[];e.matches?.("[data-t]")&&h.push(e),e.querySelectorAll&&h.push(...e.querySelectorAll("[data-t]"));for(const u of h){const L=c(u.dataset.t);typeof L=="string"&&(u.textContent=L)}n.onChange?.({kind:a,lang:o,theme:s,t:c})}const $=z.subscribe(({kind:a})=>{a==="lang"?y("lang"):n.onChange?.({kind:a,lang:o,theme:s,t:c})});return y("init"),{t:c,render:y,destroy:$}}const i=d?`kidslab.progress.${d}`:"";function _(){if(!i)return null;try{const t=JSON.parse(l.get(i,"null"));return!t||!["played","completed"].includes(t.status)?null:t}catch{return null}}function k(t,n){if(!i)return null;const e=_()||{},c={status:e.status==="completed"?"completed":t,stage:n||e.stage||"",updatedAt:Date.now()};return l.set(i,JSON.stringify(c)),c}const P={get:_,clear(){return i?l.remove(i):!1}};r.sdkVersion=2,r.courseId=d,r.storage=l,r.preferences=z,r.bindI18n=D,r.progress=P,typeof r.track!="function"&&(r.track=()=>{}),r.stage=t=>{typeof t!="string"||!t||k("played",t.slice(0,48))},r.complete=()=>k("completed"),g.cool=r,p()})();
+</script>
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1><span aria-hidden="true">⚗️</span> <span data-t="title">质量守恒实验室</span></h1>
+    <div class="topbar__actions">
+      <button class="pill icon" id="soundBtn" type="button" aria-pressed="false" aria-label="关闭声音">🔊</button>
+      <button class="pill icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill language" id="langBtn" type="button" aria-label="Switch to English">EN</button>
+    </div>
+  </header>
+
+  <nav class="mobile-nav" aria-label="实验区域">
+    <button type="button" data-panel="mission" aria-pressed="true"><span>01</span><span data-t="missionNav">任务</span></button>
+    <button type="button" data-panel="bench" aria-pressed="false"><span>02</span><span data-t="benchNav">实验台</span></button>
+    <button type="button" data-panel="notebook" aria-pressed="false"><span>03</span><span data-t="notebookNav">记录册</span></button>
+  </nav>
+
+  <main class="app" id="app" data-mobile-panel="mission">
+    <section class="panel mission" data-section="mission" aria-labelledby="missionTitle">
+      <p class="eyebrow">MISSION 01</p>
+      <h2 id="missionTitle" data-t="missionTitle">气泡跑掉了，质量去哪儿了？</h2>
+      <p class="intro" data-t="missionIntro">先猜一猜，再让天平留下两张对照证据。</p>
+
+      <div class="step-card">
+        <p class="step"><span>1</span><strong data-t="predictionTitle">留下预测</strong></p>
+        <div class="choice-grid" role="group" aria-label="质量预测">
+          <button id="predictionLost" type="button" data-prediction="mass-disappears" data-t="predictionLost">气泡跑掉，质量消失</button>
+          <button id="predictionKept" type="button" data-prediction="mass-conserved" data-t="predictionKept">只要全都称到，质量还在</button>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <p class="step"><span>2</span><strong data-t="vesselTitle">选一个装置</strong></p>
+        <p class="small-copy" data-t="vesselHint">从敞口开始，再给第二杯盖上透明罩。</p>
+        <div class="vessel-grid" role="group" aria-label="装置选择">
+          <button id="openBtn" class="vessel-button is-selected" type="button" data-vessel="open"><span aria-hidden="true">🫗</span><b data-t="open">敞口烧杯</b><small data-t="openHint">气体可以飞走</small></button>
+          <button id="sealedBtn" class="vessel-button" type="button" data-vessel="sealed"><span aria-hidden="true">🔮</span><b data-t="sealed">密闭罩</b><small data-t="sealedHint">每样东西都留在罩里</small></button>
+        </div>
+        <button id="runBtn" class="primary" type="button" data-t="run">倒入醋，开始称量</button>
+      </div>
+
+      <p class="feedback" id="feedback" role="status" aria-live="polite"></p>
+      <div class="hint-row"><button id="hintBtn" class="text-button" type="button" aria-expanded="false" data-t="hint">给我一点提示</button><p id="hintText" hidden data-t="hintText">天平只会称到放在它上面的东西。看看气泡有没有离开系统。</p></div>
+      <button id="resetBtn" class="reset" type="button" data-t="reset">重新实验</button>
+    </section>
+
+    <section class="panel bench" data-section="bench" aria-labelledby="benchTitle">
+      <div class="bench-head"><div><p class="eyebrow">BALANCE BENCH</p><h2 id="benchTitle" data-t="benchTitle">天平正在看着每一克</h2></div><span id="phaseBadge" class="badge" data-t="ready">准备就绪</span></div>
+      <div class="scene" id="scene" data-vessel="open" aria-label="气泡反应和天平的教学示意">
+        <div class="dome" aria-hidden="true"></div>
+        <div class="bubbles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="beaker"><div class="liquid"></div><div class="powder"></div><span class="label" data-t="reactionLabel">醋 + 小苏打</span></div>
+        <div class="balance"><div class="balance-top"></div><div class="balance-screen"><strong id="scaleReading">100.0</strong><small>g</small></div><div class="balance-foot"></div></div>
+        <div class="gas-trail" aria-hidden="true">CO₂ ↑</div>
+      </div>
+      <div class="mass-strip"><span data-t="before">反应前</span><strong>100.0 g</strong><span aria-hidden="true">→</span><span data-t="after">反应后</span><strong id="afterReading">—</strong></div>
+      <p id="benchNote" class="bench-note" data-t="benchReady">选好装置，倒入醋，看气泡和读数一起变化。</p>
+      <aside class="model-note"><span aria-hidden="true">✦</span><span data-t="modelNote">教学示意：气泡代表二氧化碳；真实实验请在教师指导下进行。</span></aside>
+    </section>
+
+    <section class="panel notebook" data-section="notebook" aria-labelledby="notebookTitle">
+      <div class="notebook-head"><div><p class="eyebrow">EVIDENCE LOG</p><h2 id="notebookTitle" data-t="notebookTitle">把两次称量放在一起</h2></div><span id="trialCount" class="count">0 / 2</span></div>
+      <div class="table-wrap"><table><thead><tr><th data-t="tableVessel">装置</th><th data-t="tableBefore">前 / g</th><th data-t="tableAfter">后 / g</th><th data-t="tableGas">逸出 CO₂ / g</th></tr></thead><tbody id="trialRows"><tr><td colspan="4" data-t="empty">先完成第一杯实验。</td></tr></tbody></table></div>
+      <div class="conclusion-card">
+        <p class="step"><span>3</span><strong data-t="conclusionTitle">说出证据支持的结论</strong></p>
+        <p class="small-copy" data-t="conclusionHint">两杯都做完后再选。错了也能立刻换一个。</p>
+        <div class="choice-grid" role="group" aria-label="结论选择">
+          <button id="conclusionLost" type="button" data-conclusion="mass-lost" disabled data-t="conclusionLost">反应让质量消失了</button>
+          <button id="conclusionConserved" type="button" data-conclusion="mass-conserved" disabled data-t="conclusionConserved">把所有物质算进来，总质量不变</button>
+        </div>
+        <p class="conclusion" id="conclusionStatus" role="status" aria-live="polite"></p>
+      </div>
+      <div id="completeCard" class="complete-card" hidden><span aria-hidden="true">✨</span><strong data-t="complete">密闭罩把“跑掉的”质量找回来了！</strong></div>
+    </section>
+  </main>
+  <script type="module" src="main.js?v=aa5e3514"></script>
+</body>
+</html>

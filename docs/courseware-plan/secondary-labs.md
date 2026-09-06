@@ -63,13 +63,15 @@ P0 优先覆盖初高中实验方法主干，并验证十种不同的核心交�
 > 已完成：✅ `density-detective-lab`（`g8` · `physics`）。它以天平、量筒排水、手动读数、数据表和 `m-V` 图完成可重复的 L3 测量闭环；模型与交互验收见 `tests/unit/density-lab.test.mjs` 和 `tests/e2e/density-detective-lab.spec.js`。
 >
 > 已完成：✅ `motion-tracker-lab`（`g8,g10` · `physics`）。它以 0.10 s 逐帧打点、s-t / v-t 图和区间平均速度完成匀速与无摩擦斜面匀加速对照，L4 自选坡度核对 `a = g sinθ`；模型与交互验收见 `tests/unit/motion-tracker.test.mjs` 和 `tests/e2e/motion-tracker-lab.spec.js`。
+>
+> 已完成：✅ `mass-conservation-lab`（`g9` · `chemistry`）。它用小苏打与醋的理想化产气反应比较敞口和密闭称量：前者把逸出 CO₂ 明确记为系统外质量，后者让全部物质留在天平上，以两条记录和可修正结论完成 L3 闭环；模型与交互验收见 `tests/unit/mass-conservation-lab.test.mjs` 和 `tests/e2e/mass-conservation-lab.spec.js`。
 
 | ID / 标题 | 年级·分类 | 核心实验与变量 | 魔法时刻 | 机器验收锚点 |
 | --- | --- | --- | --- | --- |
 | ✅ `motion-tracker-lab` 运动追踪实验室 | `g8,g10` · `physics` | 给小车视频逐帧打点，改变斜面角度；由位置数据生成 `s-t`、`v-t` 图 | 画面里的小车轨迹瞬间变成两张同步生长的图 | 匀速、匀加速基准数据与图线斜率可断言 |
 | `density-detective-lab` 密度侦探实验室 | `g8` · `physics` | 天平测质量、量筒排水测体积，鉴别未知材料；自变量为样品体积 | 大小不同的同材质样品落在同一条 `m-V` 直线上 | 参考材料密度、排水体积和单位换算使用 golden cases |
 | ✅ `ohms-law-lab` 欧姆定律实验室 | `g9,g11` · `physics` | 自选电源、电阻、电表量程和接法，测 `U-I` 关系并比较不同电阻 | 多组读数自动连成直线，换电阻后斜率明显改变 | 节点求解、量程、短路保护和 `R=U/I` 误差可单测 |
-| `mass-conservation-lab` 质量守恒实验室 | `g9` · `chemistry` | 比较开放/密闭装置中的产气反应，称量反应前后总质量 | 看似“消失”的质量在盖上密闭罩后完整回归 | 封闭系统总质量守恒；开放系统逸出质量由模型严格核算 |
+| ✅ `mass-conservation-lab` 质量守恒实验室 | `g9` · `chemistry` | 比较开放/密闭装置中的产气反应，称量反应前后总质量 | 看似“消失”的质量在盖上密闭罩后完整回归 | 封闭系统总质量守恒；开放系统逸出质量由模型严格核算 |
 | `microscope-cell-lab` 显微细胞实验室 | `g7` · `science` | 选择物镜、调光、粗准焦和细准焦，观察植物/动物细胞并测视野尺度 | 模糊光斑穿过焦点后突然显出完整细胞世界 | 放大倍数、视野直径、焦距状态机和操作顺序可断言 |
 | `projectile-motion-lab` 抛体运动实验室 | `g10` · `physics` | 改变初速度、角度和重力，分解水平/竖直运动并记录轨迹 | 平抛球与同高自由落体球同时落地，时间标记完全重合 | 无阻力解析解与数值轨迹逐点比较，容差固定 |
 | `induction-lab` 电磁感应实验室 | `g11` · `physics` | 改变磁铁速度、方向、线圈匝数与面积，观察感应电动势 | 磁铁反向穿线圈时，示波曲线和电流方向同时翻转 | 磁通量变化、符号方向与峰值比例由参考方程验证 |

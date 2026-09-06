@@ -153,13 +153,13 @@ button { -webkit-tap-highlight-color: transparent; }
   justify-self: end;
 }
 .route button {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border: 2px solid var(--line-strong);
   border-radius: 50%;
   color: var(--ink);
   background: var(--paper-2);
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 900;
 }
 .route button[aria-current="step"] { background: var(--accent); box-shadow: inset 0 0 0 3px var(--card); }
@@ -254,7 +254,7 @@ h2 { margin: 0; font-size: clamp(21px, 2.5vw, 28px); line-height: 1.16; }
 }
 .readout span { display: block; min-height: 2.2em; color: var(--ink-soft); font-size: 14px; font-weight: 800; line-height: 1.2; }
 .readout strong { display: block; overflow: hidden; margin-top: 3px; font-size: 16px; text-overflow: ellipsis; white-space: nowrap; }
-.control-zone { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; gap: 8px; }
+.control-zone { flex: 0 1 auto; min-height: 0; display: flex; flex-direction: column; gap: 8px; }
 .choice-label { display: block; margin: 0; font-size: 15px; font-weight: 900; }
 .choices { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .choice {
@@ -362,10 +362,11 @@ input[type="range"] { width: 100%; min-height: 44px; accent-color: var(--accent)
   .tip { font-size: 16px; }
   .route { gap: 4px; }
   .route button { width: 44px; height: 44px; }
-  .game-shell { grid-template-columns: 1fr; grid-template-rows: minmax(112px, .55fr) minmax(0, 1.45fr); gap: 9px; }
+  .game-shell { grid-template-columns: 1fr; grid-template-rows: 112px minmax(0, 1fr); gap: 9px; }
   .stage-label { top: 9px; left: 9px; font-size: 14px; }
   .scene-badge { right: 9px; bottom: 8px; left: 9px; padding: 6px 8px; font-size: 14px; }
-  .control-card { padding: 10px 12px; }
+  .control-card { gap: 6px; padding: 10px 12px; }
+  .mission-copy { gap: 2px; padding-bottom: 4px; }
   .step-count, #missionText { font-size: 16px; }
   h2 { font-size: 20px; }
   .readout { margin: 6px 0; gap: 5px; }
@@ -377,6 +378,6 @@ input[type="range"] { width: 100%; min-height: 44px; accent-color: var(--accent)
   .choice { min-height: 44px; padding: 6px 3px; }
   .primary { margin-top: 8px; min-height: 44px; padding: 7px 12px; }
   .feedback { min-height: 0; margin-top: 6px; }
-  .control-foot { margin-top: 5px; }
+  .control-foot { margin-top: 0; }
   .text-btn { min-height: 44px; padding: 5px 3px; font-size: 16px; }
 }

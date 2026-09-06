@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-05T15:09:46.978Z",
+  "generatedAt": "2026-09-06T12:12:18.178Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -295,6 +295,10 @@
     },
     "质量": {
       "en": "Mass",
+      "kind": "knowledge"
+    },
+    "质量守恒": {
+      "en": "Conservation of Mass",
       "kind": "knowledge"
     },
     "运动": {
@@ -5247,6 +5251,54 @@
         "模拟"
       ],
       "path": "courseware/ohms-law-lab/index.html"
+    },
+    {
+      "id": "mass-conservation-lab",
+      "title": {
+        "zh": "质量守恒实验室",
+        "en": "Mass Conservation Lab"
+      },
+      "description": {
+        "zh": "让小苏打和醋产生气泡：敞口装置变轻，盖上密闭罩后，质量又完整回到天平上。",
+        "en": "Make baking soda and vinegar fizz: an open vessel gets lighter, then a sealed dome brings every gram back to the balance."
+      },
+      "category": "chemistry",
+      "levels": [
+        "junior"
+      ],
+      "grades": [
+        "g9"
+      ],
+      "tags": [
+        "质量",
+        "质量守恒",
+        "实验"
+      ],
+      "icon": "⚗️",
+      "order": 175,
+      "badge": "new",
+      "keywords": [
+        "Mass",
+        "mass",
+        "质量",
+        "克",
+        "grams",
+        "balance",
+        "天平",
+        "Conservation of Mass",
+        "conservation of mass",
+        "mass conservation",
+        "closed system",
+        "封闭系统",
+        "质量守恒定律",
+        "化学反应质量",
+        "Experiment",
+        "experiment",
+        "simulation",
+        "lab",
+        "模拟"
+      ],
+      "path": "courseware/mass-conservation-lab/index.html"
     }
   ]
 }

@@ -1,0 +1,18 @@
+{
+  "id": "mass-conservation-lab",
+  "title": {
+    "zh": "质量守恒实验室",
+    "en": "Mass Conservation Lab"
+  },
+  "description": {
+    "zh": "让小苏打和醋产生气泡：敞口装置变轻，盖上密闭罩后，质量又完整回到天平上。",
+    "en": "Make baking soda and vinegar fizz: an open vessel gets lighter, then a sealed dome brings every gram back to the balance."
+  },
+  "category": "chemistry",
+  "levels": ["junior"],
+  "grades": ["g9"],
+  "tags": ["质量", "质量守恒", "实验"],
+  "icon": "⚗️",
+  "order": 175,
+  "badge": "new"
+}
