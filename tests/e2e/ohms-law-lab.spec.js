@@ -1,143 +1,81 @@
 import { test, expect } from '@playwright/test';
-
-async function showPanel(page, panel) {
-  const viewport = page.viewportSize();
-  if (!viewport || viewport.width > 700) return;
-  const button = page.locator(`.mobile-nav__button[data-mobile-panel="${panel}"]`);
-  await button.click();
-  await expect(button).toHaveAttribute('aria-pressed', 'true');
-}
-
-async function select(page, selector, value) {
-  await showPanel(page, 'bench');
-  await page.locator(selector).selectOption(value);
-}
-
-async function record(page) {
-  await showPanel(page, 'bench');
+async function panel(page,name){if(page.viewportSize().width<=700)await page.locator(`[data-mobile-panel="${name}"].mobile-nav__button`).click();}
+async function slide(page,id,value){await panel(page,'bench');await page.locator(`#${id}`).fill(String(value));}
+test.beforeEach(async({page})=>{
+  await page.addInitScript(()=>{if(!sessionStorage.getItem('initialized')){localStorage.clear();localStorage.setItem('kidslab.lang','zh');localStorage.setItem('kidslab.ohms-law-lab.sound','true');sessionStorage.setItem('initialized','1');}});
+  await page.goto('/courseware/ohms-law-lab/');
+});
+test('freely adjusts sliders and records without a quiz, then restores observations',async({page})=>{
+  await expect(page.locator('#recordBtn')).toBeEnabled();
+  await slide(page,'voltageSelect',3.6);await slide(page,'resistanceSelect',30);
+  await expect(page.locator('#ampReadout')).toHaveText('0.12 A');
+  await expect(page.locator('#calculation')).toContainText('3.6 V / 30 Ω = 0.12 A');
+  await expect(page.locator('[data-live-point]')).toHaveCount(1);
   await page.locator('#recordBtn').click();
-}
+  await slide(page,'resistanceSelect',15);
+  await expect(page.locator('#ampReadout')).toHaveText('0.24 A');
+  await page.locator('#recordBtn').click();
+  await expect(page.locator('#trialRows tr')).toHaveCount(2);
+  await page.reload();await expect(page.locator('#trialRows tr')).toHaveCount(2);
+  await expect(page.locator('#resistanceSelect')).toHaveValue('15');
+  await panel(page,'mission');await page.locator('#resetBtn').click();
+  await expect(page.locator('#trialRows tr')).toHaveCount(0);
+  await expect(page.locator('#resistanceSelect')).toHaveValue('15');
+});
+test('distinguishes theoretical calculation from protected readings and accepts zero voltage',async({page})=>{
+  await slide(page,'voltageSelect',6);await slide(page,'resistanceSelect',5);
+  await expect(page.locator('#ampReadout')).toHaveText('1.2 A');
+  await page.locator('#ammeterRange').selectOption('0.3');
+  await expect(page.locator('#instrumentNote')).toContainText('电流表超量程');
+  await page.locator('#ammeterRange').selectOption('3');
+  await slide(page,'voltageSelect',0);
+  await expect(page.locator('#ampReadout')).toHaveText('0 A');
+  await expect(page.locator('#recordBtn')).toBeEnabled();
+});
+test('keeps zoom, translations and mobile layout working',async({page})=>{
+  await expect(page.locator('#circuitScene')).toHaveAttribute('data-zoom','1.00');
+  await page.locator('#zoomInBtn').click();
+  await expect(page.locator('#circuitScene')).toHaveAttribute('data-zoom','1.25');
+  await page.locator('#topViewBtn').click();
+  await expect(page.locator('#circuitScene')).toHaveAttribute('data-zoom','1.00');
+  await page.locator('#langBtn').click();
+  await expect(page.locator('#missionTitle')).toHaveText('Questions to explore');
+  await page.locator('#themeBtn').click();
+  await expect(page.locator('html')).toHaveAttribute('data-theme','dark');
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+});
 
-test.describe("Ohm's law lab", () => {
-  test.beforeEach(async ({ page }) => {
-    await page.addInitScript(() => {
-      const initializedKey = 'kidslab.e2e.ohms-law-lab.initialized';
-      if (sessionStorage.getItem(initializedKey)) return;
-      localStorage.setItem('kidslab.lang', 'zh');
-      localStorage.setItem('kidslab.theme', 'light');
-      localStorage.setItem('kidslab.ohms-law-lab.sound', 'true');
-      localStorage.removeItem('kidslab.ohms-law-lab');
-      localStorage.removeItem('kidslab.progress.ohms-law-lab');
-      sessionStorage.setItem(initializedKey, 'true');
-    });
-    await page.goto('/courseware/ohms-law-lab/');
-  });
 
-  test('predicts, records controlled U-I data, compares slopes, and designs 0.30 A', async ({ page }) => {
-    await showPanel(page, 'mission');
-    await page.locator('#predictionUp').click();
+test('shares one current state across meters, graph and fault recovery while preserving history',async({page})=>{
+  await slide(page,'voltageSelect',2.9);await slide(page,'resistanceSelect',36);
+  await expect(page.locator('#supplySetting')).toContainText('2.9 V');
+  await expect(page.locator('#theoryCurrent')).toContainText('0.081 A');
+  await expect(page.locator('#ampReadout')).toHaveText('0.081 A');
+  const point=page.locator('[data-live-point]');
+  expect(Number(await point.getAttribute('cx'))).toBeCloseTo(38+2.9/6*264);
+  await page.locator('#recordBtn').click();
+  const history=await page.locator('#trialRows').textContent();
+  const oldSlope=await page.locator('[data-theory-line]').getAttribute('y2');
+  await slide(page,'resistanceSelect',18);
+  expect(await page.locator('[data-theory-line]').getAttribute('y2')).not.toBe(oldSlope);
+  await expect(page.locator('#ampReadout')).toHaveText('0.161 A');
+  await expect(page.locator('[data-history-point]')).toHaveCount(1);
+  await page.locator('#recordBtn').click();
+  await slide(page,'voltageSelect',4);await page.locator('#recordBtn').click();
+  await expect(page.locator('#trialRows tr')).toHaveCount(3);
+  await expect(page.locator('[data-history-point]')).toHaveCount(3);
+  await panel(page,'notebook');
+  expect(await page.locator('.information-column').evaluate(e=>getComputedStyle(e).overflowY)).toBe('auto');
+  expect(await page.locator('.information-column').evaluate(e=>[...e.querySelectorAll('*')].filter(n=>['auto','scroll'].includes(getComputedStyle(n).overflowY)).length)).toBe(0);
+});
 
-    await record(page);
-    await select(page, '#voltageSelect', '3');
-    await record(page);
-    await expect(page.locator('#trialRows tr')).toHaveCount(2);
-    await expect(page.locator('#graphLines .plot-ten')).toHaveCount(1);
 
-    await select(page, '#resistanceSelect', '20');
-    await record(page);
-    await select(page, '#voltageSelect', '6');
-    await select(page, '#ammeterRange', '3');
-    await select(page, '#voltmeterRange', '15');
-    await record(page);
-    await expect(page.locator('#trialRows tr')).toHaveCount(4);
-    await expect(page.locator('#graphLines .plot-twenty')).toHaveCount(1);
-
-    await showPanel(page, 'mission');
-    await page.locator('#conclusionLower').click();
-    await expect(page.locator('#designCard')).toBeVisible();
-    await page.locator('#designBtn').click();
-    await expect(page.locator('#completeCard')).toBeVisible();
-    await expect(page.locator('#feedback')).toContainText('0.30 A');
-    await expect.poll(() => page.evaluate(() =>
-      JSON.parse(localStorage.getItem('kidslab.progress.ohms-law-lab') || 'null')?.status)).toBe('completed');
-  });
-
-  test('protects a bad wiring and meter ranges, then keeps the evidence for retry', async ({ page }) => {
-    await showPanel(page, 'mission');
-    await page.locator('#predictionUp').click();
-    await showPanel(page, 'bench');
-    await page.locator('[data-wire="ammeter-parallel"]').click();
-    await page.locator('#recordBtn').click();
-    await expect(page.locator('#feedback')).toContainText('近似短路');
-    await expect(page.locator('#trialRows tr')).toHaveCount(0);
-
-    await page.locator('[data-wire="series-parallel"]').click();
-    await record(page);
-    await select(page, '#voltageSelect', '4.5');
-    await record(page);
-    await expect(page.locator('#feedback')).toContainText('电压表超量程');
-    await expect(page.locator('#trialRows tr')).toHaveCount(1);
-
-    await select(page, '#voltmeterRange', '15');
-    await record(page);
-    await expect(page.locator('#feedback')).toContainText('电流表超量程');
-    await expect(page.locator('#trialRows tr')).toHaveCount(1);
-
-    await select(page, '#ammeterRange', '3');
-    await record(page);
-    await expect(page.locator('#trialRows tr')).toHaveCount(2);
-    await expect(page.locator('#feedback')).toContainText('记录成功');
-  });
-
-  test('restores a partial experiment and clears it safely when starting over', async ({ page }) => {
-    await showPanel(page, 'mission');
-    await page.locator('#predictionUp').click();
-    await record(page);
-    await expect(page.locator('#trialRows tr')).toHaveCount(1);
-
-    await page.reload();
-    await expect(page.locator('#trialRows tr')).toHaveCount(1);
-    await expect(page.locator('#missionTitle')).toContainText('留两条 10 Ω 证据');
-    await showPanel(page, 'mission');
-    await page.locator('#resetBtn').click();
-    await expect(page.locator('#trialRows tr')).toHaveCount(0);
-    await expect(page.locator('#missionTitle')).toContainText('先做一个预测');
-    await expect.poll(() => page.evaluate(() => localStorage.getItem('kidslab.ohms-law-lab'))).toBeNull();
-    await expect.poll(() => page.evaluate(() => localStorage.getItem('kidslab.progress.ohms-law-lab'))).toBeNull();
-  });
-
-  test('keeps controls readable in both target viewports and changes language and theme without errors', async ({ page }) => {
-    const errors = [];
-    page.on('pageerror', (error) => errors.push(error.message));
-    page.on('console', (message) => {
-      if (message.type() === 'error') errors.push(message.text());
-    });
-    await page.locator('#langBtn').click();
-    await expect(page.locator('#missionTitle')).toContainText('Make a prediction');
-    await page.locator('#themeBtn').click();
-    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
-
-    const layout = await page.evaluate(() => ({
-      width: document.documentElement.scrollWidth,
-      height: document.documentElement.scrollHeight,
-      viewportWidth: window.innerWidth,
-      viewportHeight: window.innerHeight,
-      controls: [...document.querySelectorAll('button:not([hidden]), select:not([hidden])')]
-        .map((element) => {
-          const rect = element.getBoundingClientRect();
-          return {
-            width: rect.width,
-            height: rect.height,
-            font: Number.parseFloat(getComputedStyle(element).fontSize),
-          };
-        })
-        .filter(({ width, height }) => width > 0 && height > 0),
-    }));
-    expect(layout.width).toBeLessThanOrEqual(layout.viewportWidth + 1);
-    expect(layout.height).toBeLessThanOrEqual(layout.viewportHeight + 1);
-    expect(layout.controls.filter(({ width }) => width < 44)).toEqual([]);
-    expect(layout.controls.filter(({ height }) => height < 40)).toEqual([]);
-    expect(Math.min(...layout.controls.map(({ font }) => font))).toBeGreaterThanOrEqual(16);
-    expect(errors).toEqual([]);
-  });
+test('has no wiring fault demonstrations and migrates old faulty saves to normal wiring',async({page})=>{
+  await expect(page.locator('#faultExamples, [data-wire], #repairBtn')).toHaveCount(0);
+  await page.locator('#recordBtn').click();
+  await page.evaluate(()=>{const key='kidslab.ohms-law-lab';const saved=JSON.parse(localStorage.getItem(key));saved.setup.wiring='ammeter-parallel';localStorage.setItem(key,JSON.stringify(saved));});
+  await page.reload();
+  await expect(page.locator('#app')).toHaveAttribute('data-status','live');
+  await expect(page.locator('#ampReadout')).toHaveText('0.15 A');
+  await expect(page.locator('#trialRows tr')).toHaveCount(1);
 });

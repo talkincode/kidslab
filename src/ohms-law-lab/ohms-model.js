@@ -71,8 +71,8 @@ export function measureCircuit({
   wiring,
 } = {}) {
   if (
-    !isOption(voltageV, VOLTAGES_V)
-    || !isOption(resistanceOhm, RESISTANCES_OHM)
+    !(isFiniteNumber(voltageV) && voltageV >= 0 && voltageV <= 6)
+    || !(isFiniteNumber(resistanceOhm) && resistanceOhm >= 5 && resistanceOhm <= 50)
     || !isOption(ammeterRangeA, AMMETER_RANGES_A)
     || !isOption(voltmeterRangeV, VOLTMETER_RANGES_V)
   ) {
@@ -184,4 +184,34 @@ export function restoreLab(saved) {
     lab = designed.lab;
   }
   return lab;
+}
+
+
+// Free observation records are independent of the legacy guided exercise phases.
+export function recordObservation(trials, setup) {
+  const reading = measureCircuit(setup);
+  if (!reading.ok) return reading;
+  if (trials.some(trial => sameTrial(trial, reading))) return { ok: false, reason: 'already-recorded' };
+  return { ok: true, trials: [...trials, { voltageV: reading.voltageV, resistanceOhm: reading.resistanceOhm, currentA: reading.currentA }].slice(-100) };
+}
+
+export function restoreObservations(saved) {
+  const source = saved?.trials ?? saved?.lab?.trials;
+  if (!Array.isArray(source)) return [];
+  return source.filter(trial => {
+    const reading = measureCircuit({ ...trial, ammeterRangeA: 3, voltmeterRangeV: 15, wiring: CORRECT_WIRING });
+    return reading.ok && trial.currentA === reading.currentA;
+  }).slice(-100).map(({voltageV,resistanceOhm,currentA}) => ({voltageV,resistanceOhm,currentA}));
+}
+
+
+// One derived snapshot feeds controls, instruments, scene, graph and history.
+export function deriveExperiment(setup, history) {
+  const measurement = measureCircuit(setup);
+  return {
+    setup: { ...setup }, history,
+    theoreticalCurrentA: setup.voltageV / setup.resistanceOhm,
+    measurement,
+    status: measurement.ok ? 'live' : measurement.reason,
+  };
 }
