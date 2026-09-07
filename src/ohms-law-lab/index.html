@@ -34,40 +34,26 @@
         <span class="live-dot" aria-hidden="true"></span>
       </div>
 
-      <div class="circuit-scene" aria-label="电路和电表教学示意">
-        <div class="battery"><span>+</span><span>−</span><small data-t="battery">电源</small></div>
-        <div class="wire wire--top"></div>
-        <div class="wire wire--bottom"></div>
-        <div class="meter meter--amp"><b>A</b><small id="ampReadout">— A</small></div>
-        <div class="resistor"><i></i><i></i><i></i><i></i><small id="resistorReadout">10 Ω</small></div>
-        <div class="meter meter--volt"><b>V</b><small id="voltReadout">— V</small></div>
-        <div class="spark" aria-hidden="true">✦</div>
+      <div class="scene-toolbar"><span data-t="sceneBadge">可交互 · 3D 实验桌</span><div><button id="zoomInBtn" type="button" data-t="zoomIn">放大</button><button id="zoomOutBtn" type="button" data-t="zoomOut">缩小</button><button id="perspectiveBtn" type="button" data-t="perspective">立体</button><button id="topViewBtn" type="button" data-t="topView">俯视</button></div></div>
+      <div class="circuit-scene" id="circuitScene">
+        <p class="scene-fallback" data-t="fallback">3D 暂不可用，请使用下方读数和接线控件继续实验。</p>
+        <div id="sceneStatus" class="scene-status" role="status"></div>
+        <span class="scene-caption" data-t="sceneHelp">拖动旋转 · 金色光点表示电流方向（非真实速度）</span>
       </div>
+      <div class="live-readings" aria-live="polite"><div><span data-t="measuredU">实测电压</span><strong id="voltReadout">— V</strong></div><div><span data-t="measuredI">实测电流</span><strong id="ampReadout">— A</strong></div><div><span data-t="selectedR">电阻设定</span><strong id="resistorReadout">10 Ω</strong></div><b>I = U / R</b></div>
+      <div class="setting-summary"><span id="supplySetting"></span><span id="theoryCurrent"></span></div>
+      <div class="bench-guide" id="calculation" aria-live="polite"></div>
+      <p class="instrument-note" id="instrumentNote" aria-live="polite"></p>
 
       <div class="control-stack">
-        <div class="wiring" role="group" aria-label="电表连接方式">
-          <p class="control-label" data-t="wiringLabel">把电表接在哪里？</p>
-          <div class="choice-row">
-            <button type="button" class="choice" data-wire="series-parallel" aria-pressed="true" data-t="wireRight">A 串联 · V 并联</button>
-            <button type="button" class="choice" data-wire="ammeter-parallel" aria-pressed="false" data-t="wireShort">A 并联</button>
-            <button type="button" class="choice" data-wire="voltmeter-series" aria-pressed="false" data-t="wireOpen">V 串联</button>
-          </div>
-        </div>
+
 
         <div class="knobs">
           <label for="voltageSelect"><span data-t="voltageLabel">电源电压</span>
-            <select id="voltageSelect">
-              <option value="1.5">1.5 V</option>
-              <option value="3">3.0 V</option>
-              <option value="4.5">4.5 V</option>
-              <option value="6">6.0 V</option>
-            </select>
+            <output id="voltageValue" for="voltageSelect">1.5 V</output><input id="voltageSelect" type="range" min="0" max="6" step="0.1" value="1.5">
           </label>
           <label for="resistanceSelect"><span data-t="resistanceLabel">电阻</span>
-            <select id="resistanceSelect">
-              <option value="10">10 Ω</option>
-              <option value="20">20 Ω</option>
-            </select>
+            <output id="resistanceValue" for="resistanceSelect">10 Ω</output><input id="resistanceSelect" type="range" min="5" max="50" step="1" value="10">
           </label>
           <label for="ammeterRange"><span data-t="ammeterRange">电流表量程</span>
             <select id="ammeterRange">
@@ -84,9 +70,10 @@
         </div>
       </div>
       <button class="primary-button" id="recordBtn" type="button" data-t="record">合上开关，记录读数</button>
-      <p class="instrument-note" id="instrumentNote" aria-live="polite"></p>
+      <p class="feedback" id="feedback" role="status"></p>
     </section>
 
+    <aside class="information-column" aria-label="观测与历史记录">
     <section class="panel notebook" data-panel="notebook" aria-labelledby="notebookTitle">
       <div class="panel__heading">
         <div>
@@ -102,53 +89,32 @@
           <line x1="38" y1="87" x2="302" y2="87" class="gridline"></line>
           <line x1="170" y1="18" x2="170" y2="156" class="gridline"></line>
           <text x="282" y="180">U / V</text>
-          <text x="4" y="26">I / A</text>
+          <text x="4" y="12">I / A</text>
           <g id="graphLines"></g>
         </svg>
-        <div class="legend"><span class="legend__ten"></span><span>10 Ω</span><span class="legend__twenty"></span><span>20 Ω</span></div>
+        <div class="legend" data-t="legend">虚线：当前 R · 空心点：记录 · 实心点：实时</div>
       </div>
+      <div class="panel__heading"><h2 data-t="historyTitle">实验记录 / 历史记录</h2><button class="reset-button" id="resetBtn" type="button" data-t="reset">清空记录</button></div>
+      <p class="data-note" data-t="historyNote">仅保存主动记录的有效测量，切换参数或接线不会修改历史。</p>
       <div class="table-wrap">
         <table>
           <thead><tr><th data-t="trial">次数</th><th>U (V)</th><th>I (A)</th><th>R (Ω)</th></tr></thead>
           <tbody id="trialRows"></tbody>
         </table>
       </div>
-      <p class="data-note" data-t="dataNote">同一电阻至少留下两组读数，再换另一个电阻。</p>
+      <p class="data-note" data-t="dataNote">滑动参数即时观测，也可以记录任意组合进行比较。</p>
     </section>
 
     <section class="panel mission" data-panel="mission" aria-labelledby="missionTitle">
-      <div class="panel__heading">
-        <div>
-          <p class="eyebrow" id="phaseLabel">实验任务</p>
-          <h2 id="missionTitle">先做一个预测</h2>
-        </div>
-        <button class="reset-button" id="resetBtn" type="button" data-t="reset">重新实验</button>
-      </div>
-      <p class="mission__copy" id="missionText"></p>
+      <div class="panel__heading"><div><p class="eyebrow" data-t="observe">自由观测</p><h2 id="missionTitle" data-t="observeTitle">调一调，看看规律</h2></div></div>
+      <p data-t="guideVoltage">固定电阻，慢慢提高电压：电流如何变化？</p>
+      <p data-t="guideResistance">固定电压，增大电阻：电流又如何变化？</p>
+      <p data-t="guideRecord">随时记录感兴趣的读数，对比图上的点。虚线是当前电阻的理论图线，实心点是实时工作点。</p>
+      <h2 data-t="explanation">实验说明</h2>
+      <p class="safety-note" data-t="safety">理想电表与电阻；超量程自动断电保护。光点非真实电荷速度。</p>
 
-      <div id="predictionChoices" class="task-choices">
-        <button id="predictionUp" type="button" class="choice task-choice" data-prediction="current-rises" data-t="predictionUp">电压变大，电流会变大</button>
-        <button id="predictionDown" type="button" class="choice task-choice" data-prediction="current-falls" data-t="predictionDown">电压变大，电流会变小</button>
-      </div>
-      <div id="conclusionChoices" class="task-choices" hidden>
-        <button id="conclusionLower" type="button" class="choice task-choice" data-conclusion="higher-resistance-lower-slope" data-t="conclusionLower">电阻更大，图线更平</button>
-        <button id="conclusionSame" type="button" class="choice task-choice" data-conclusion="same-slope" data-t="conclusionSame">两条图线一样陡</button>
-      </div>
-      <div id="designCard" class="design-card" hidden>
-        <span class="design-card__icon" aria-hidden="true">🎯</span>
-        <div><strong data-t="designTarget">用 20 Ω 电阻做出 0.30 A</strong><p data-t="designPrompt">选好电压和量程后，检验你的设计。</p></div>
-        <button id="designBtn" type="button" class="primary-button" data-t="testDesign">检验设计</button>
-      </div>
-      <div id="completeCard" class="complete-card" hidden>
-        <span aria-hidden="true">⚡</span><strong data-t="complete">两条线都亮起来了！</strong>
-      </div>
-      <p class="feedback" id="feedback" role="status" aria-live="polite"></p>
-      <div class="mission__footer">
-        <button class="hint-button" id="hintBtn" type="button" aria-expanded="false" data-t="hint">给我一点提示</button>
-        <p class="hint-text" id="hintText" hidden></p>
-      </div>
-      <p class="safety-note" data-t="safety">这是理想电阻的虚拟实验；真实电路请在教师指导下操作。</p>
     </section>
+    </aside>
   </main>
 
   <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>

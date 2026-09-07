@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 
 import {
+  CORRECT_WIRING,
   createLab,
   measureCircuit,
   recordTrial,
@@ -82,4 +83,31 @@ test('a student can recover from a wrong conclusion and finish the controlled co
   });
   assert.equal(design.ok, true);
   assert.equal(design.lab.phase, 'complete');
+});
+
+test('all offered U/R pairs obey Ohm law and inclusive range limits', () => {
+  for (const voltageV of [1.5,3,4.5,6]) for (const resistanceOhm of [10,20]) {
+    for (const ammeterRangeA of [.3,3]) for (const voltmeterRangeV of [3,15]) {
+      const setup={voltageV,resistanceOhm,ammeterRangeA,voltmeterRangeV,wiring:CORRECT_WIRING};
+      const result=measureCircuit(setup);
+      const reason=voltageV>voltmeterRangeV?'voltmeter-overload':voltageV/resistanceOhm>ammeterRangeA?'ammeter-overload':null;
+      assert.equal(result.ok,!reason);
+      if(reason) assert.equal(result.reason,reason);
+      else assert.equal(result.currentA,voltageV/resistanceOhm);
+      assert.equal(measureCircuit({...setup,wiring:'ammeter-parallel'}).reason,'short-circuit');
+      assert.equal(measureCircuit({...setup,wiring:'voltmeter-series'}).reason,'open-circuit');
+    }
+  }
+});
+
+test('continuous parameters support observation records and safe restoration', async () => {
+  const {recordObservation,restoreObservations}=await import('../../src/ohms-law-lab/ohms-model.js');
+  const setup={voltageV:3.6,resistanceOhm:30,ammeterRangeA:3,voltmeterRangeV:15,wiring:CORRECT_WIRING};
+  assert.equal(measureCircuit(setup).currentA,.12);
+  const result=recordObservation([],setup);
+  assert.equal(result.ok,true);
+  assert.equal(recordObservation(result.trials,setup).reason,'already-recorded');
+  assert.deepEqual(restoreObservations({trials:[...result.trials,{voltageV:6,resistanceOhm:0,currentA:Infinity}]}),result.trials);
+  assert.equal(measureCircuit({...setup,voltageV:0}).currentA,0);
+  assert.equal(measureCircuit({...setup,resistanceOhm:0}).reason,'invalid-setup');
 });
