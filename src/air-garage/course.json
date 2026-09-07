@@ -1,0 +1,18 @@
+{
+  "id": "air-garage",
+  "title": {
+    "zh": "空气车库",
+    "en": "Air Garage"
+  },
+  "description": {
+    "zh": "用杯子潜水、气球天平和气球赛车，亲手发现空气占地方、有重量，还能把车子推出去。",
+    "en": "Dive a cup, weigh balloons, and race a balloon car to see that air takes up space, has mass, and can push."
+  },
+  "category": "science",
+  "levels": ["primary"],
+  "grades": ["g3", "g4"],
+  "tags": ["空气", "质量", "观察", "实验"],
+  "icon": "🎈",
+  "order": 69,
+  "badge": "new"
+}

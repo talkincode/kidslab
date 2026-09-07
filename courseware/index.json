@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-06T12:12:18.178Z",
+  "generatedAt": "2026-09-07T12:32:34.935Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -251,6 +251,10 @@
     },
     "磁铁": {
       "en": "Magnets",
+      "kind": "knowledge"
+    },
+    "空气": {
+      "en": "Air",
       "kind": "knowledge"
     },
     "空间想象": {
@@ -3435,6 +3439,64 @@
         "模拟"
       ],
       "path": "courseware/mini-pyramid/index.html"
+    },
+    {
+      "id": "air-garage",
+      "title": {
+        "zh": "空气车库",
+        "en": "Air Garage"
+      },
+      "description": {
+        "zh": "用杯子潜水、气球天平和气球赛车，亲手发现空气占地方、有重量，还能把车子推出去。",
+        "en": "Dive a cup, weigh balloons, and race a balloon car to see that air takes up space, has mass, and can push."
+      },
+      "category": "science",
+      "levels": [
+        "primary"
+      ],
+      "grades": [
+        "g3",
+        "g4"
+      ],
+      "tags": [
+        "空气",
+        "质量",
+        "观察",
+        "实验"
+      ],
+      "icon": "🎈",
+      "order": 69,
+      "badge": "new",
+      "keywords": [
+        "Air",
+        "air",
+        "atmosphere",
+        "compressed air",
+        "压缩空气",
+        "空气质量",
+        "air has mass",
+        "air occupies space",
+        "balloon",
+        "气球",
+        "Mass",
+        "mass",
+        "质量",
+        "克",
+        "grams",
+        "balance",
+        "天平",
+        "Observation",
+        "observation",
+        "五感",
+        "five senses",
+        "特征",
+        "Experiment",
+        "experiment",
+        "simulation",
+        "lab",
+        "模拟"
+      ],
+      "path": "courseware/air-garage/index.html"
     },
     {
       "id": "trash-transform",

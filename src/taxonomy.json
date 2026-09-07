@@ -60,6 +60,7 @@
     "地球运动": { "en": "Earth's Motion", "kind": "knowledge", "aliases": ["自转", "rotation", "公转", "revolution", "昼夜交替", "day and night", "四季", "seasons", "地轴倾斜", "axial tilt", "极昼极夜", "时差", "earth"] },
     "水循环": { "en": "Water Cycle", "kind": "knowledge", "aliases": ["water cycle", "蒸发", "evaporation", "凝结", "condensation", "降水"] },
     "天气": { "en": "Weather", "kind": "knowledge", "aliases": ["weather"] },
+    "空气": { "en": "Air", "kind": "knowledge", "aliases": ["air", "atmosphere", "compressed air", "压缩空气", "空气质量", "air has mass", "air occupies space", "balloon", "气球"] },
     "物质三态": { "en": "States of Matter", "kind": "knowledge", "aliases": ["states of matter", "熔化", "melting", "沸腾", "boiling", "凝固", "temperature"] },
     "分子运动": { "en": "Particle Model", "kind": "knowledge", "aliases": ["particles", "粒子模型", "molecular motion"] },
     "电路": { "en": "Circuits", "kind": "knowledge", "aliases": ["circuits", "串联", "series", "并联", "parallel", "短路", "导体", "conductors", "绝缘体", "insulators"] },
