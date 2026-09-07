@@ -1,4 +1,4 @@
-import * as THREE from '../welcome/vendor/three.module.min.js';
+import * as THREE from './vendor/three.module.min.js';
 
 // Ideal circuit visualization; the model remains the single source of readings.
 export function createCircuitScene(host) {
