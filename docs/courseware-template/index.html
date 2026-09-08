@@ -4,28 +4,100 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>✏️ 课件名 · KidsLab</title>
+  <!--
+    THESIS: A 3D observation bench, not an exam sheet. Kids tune live parameters and watch a physical specimen answer back.
+    OWN-WORLD: KidsLab chunky pills, warm paper/ink tokens, fullscreen Three.js stage, right-hand instrument panel.
+    STORY: Drag the scene, drop the marble, read height/speed/energy, fold the panel when it gets in the way.
+    FIRST VIEWPORT: Full-bleed 3D chamber left; HUD chips; collapsible parameter rail on the right; one foot-tip.
+    FORM: Inherit 魔方小达人 / 华容道 lab chrome. Replace the specimen in scene.js and the laws in lab-model.js.
+  -->
   <link rel="stylesheet" href="style.css" />
   <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
+  <script>
+    (() => {
+      try {
+        const theme = localStorage.getItem('kidslab.theme')
+          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        const lang = localStorage.getItem('kidslab.lang')
+          || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+      } catch { /* private mode */ }
+    })();
+  </script>
+  <script type="importmap">
+    { "imports": { "three": "./vendor/three.module.min.js" } }
+  </script>
 </head>
 <body>
+  <canvas id="scene" aria-label="3D observation lab"></canvas>
+  <p class="nogl" id="nogl" hidden data-t="nogl">浏览器暂时跑不了 3D 实验室，换一个新一点的浏览器再来观测吧。</p>
+
   <header class="bar">
     <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
     <h1 class="bar__title">✏️ <span data-t="title">课件名</span></h1>
     <div class="bar__actions">
-      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="theme">🌙</button>
+      <button class="pill pill--icon" id="musicBtn" type="button" aria-pressed="true">♫</button>
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-pressed="true">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button">🌙</button>
       <button class="pill" id="langBtn" type="button">EN</button>
     </div>
   </header>
 
-  <main class="wrap">
-    <!-- ✏️ 首屏先放能玩的舞台，不要先堆说明书 -->
-    <section class="card stage">
-      <!-- 例：<canvas id="stage"></canvas> -->
-    </section>
-    <!-- 只留一句动作邀请；规则/公式/知识点等交互或轻提示后再揭示 -->
-    <p class="tip" id="tip" data-t="tip0">点一下，开始玩</p>
-  </main>
+  <section class="hud" aria-label="live instruments">
+    <div class="hud__chip"><span class="hud__label" data-t="hudHeight">高度</span><b id="heightVal">1.20 m</b></div>
+    <div class="hud__chip"><span class="hud__label" data-t="hudSpeed">速率</span><b id="speedVal">0.00 m/s</b></div>
+    <div class="hud__chip"><span class="hud__label" data-t="hudEnergy">机械能</span><b id="energyVal">2.94 J</b></div>
+  </section>
 
-  <script src="main.js"></script>
+  <p class="coach" id="coach" data-t="tip0">拖空白转视角 · 点「再落一次」开始观测</p>
+
+  <aside class="panel" id="panel">
+    <div class="panel__quick">
+      <button class="btn btn--big" id="dropBtn" type="button">⬇️ <span data-t="btnDrop">再落一次</span></button>
+      <div class="btnrow">
+        <button class="btn btn--ghost btn--sm" id="pauseBtn" type="button" data-t="btnPause">暂停</button>
+        <button class="btn btn--ghost btn--sm" id="recordBtn" type="button" data-t="btnRecord">记下这一刻</button>
+      </div>
+    </div>
+    <button class="panel__handle" id="panelHandle" type="button" aria-expanded="true">
+      <span data-t="panelTitle">参数面板</span><i id="panelArrow">▾</i>
+    </button>
+    <div class="panel__body" id="panelBody">
+      <section class="panel__group">
+        <p class="panel__label"><span data-t="labG">重力 g</span><b id="gVal" class="panel__val">9.8</b></p>
+        <input type="range" id="gRange" min="1.6" max="24.8" step="0.1" value="9.8" />
+      </section>
+      <section class="panel__group">
+        <p class="panel__label"><span data-t="labE">回弹 e</span><b id="eVal" class="panel__val">0.72</b></p>
+        <input type="range" id="eRange" min="0" max="1" step="0.01" value="0.72" />
+      </section>
+      <section class="panel__group">
+        <p class="panel__label"><span data-t="labH">释放高度</span><b id="hVal" class="panel__val">1.20 m</b></p>
+        <input type="range" id="hRange" min="0.2" max="2" step="0.05" value="1.2" />
+      </section>
+      <section class="panel__group">
+        <p class="panel__label"><span data-t="labM">质量</span><b id="mVal" class="panel__val">0.25 kg</b></p>
+        <input type="range" id="mRange" min="0.05" max="2" step="0.05" value="0.25" />
+      </section>
+      <p class="panel__note" id="predictNote" hidden>下一次最高点约 0.62 m</p>
+      <section class="panel__group">
+        <p class="panel__label" data-t="logTitle">观测记录</p>
+        <ol class="log" id="logList"></ol>
+      </section>
+      <section class="panel__group">
+        <button class="lesson__toggle" id="lessonBtn" type="button">
+          <span data-t="lessonTitle">小课堂：为什么越弹越矮</span><i id="lessonArrow">▸</i>
+        </button>
+        <div class="lesson" id="lessonBody" hidden>
+          <p class="lesson__intro" data-t="lessonText">e 是回弹快慢的比例。e=1 会回到原高度；e 越小，动能在落地时丢得越多，最高点大约是 h×e×e。</p>
+        </div>
+      </section>
+    </div>
+  </aside>
+
+  <p class="foot-tip" id="footTip" data-t="footTip">拖空白转视角 · 滚轮缩放 · 右侧调参数，左侧看变化</p>
+
+  <script type="module" src="main.js"></script>
 </body>
 </html>

@@ -2,8 +2,8 @@
   "id": "my-course",
   "title": { "zh": "✏️ 课件名", "en": "✏️ Course Title" },
   "description": {
-    "zh": "✏️ 一句话说清孩子在玩什么、学到什么。",
-    "en": "✏️ One sentence: what kids play and what they learn."
+    "zh": "✏️ 孩子在 3D 场景里调参数、看变化、读数据，而不是做试卷。",
+    "en": "✏️ Kids tune a 3D experiment, watch it respond, and read the instruments — not a quiz."
   },
   "category": "math",
   "levels": ["primary"],

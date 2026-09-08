@@ -38,7 +38,7 @@
 - `docs/courseware-plan/<subject>.md`（如 `science.md`、`math.md`）— 该学科路线图：每条课件的 `G 学段 / P 优先级 / 玩法 / 魔法时刻 / 进阶`。
 - `AGENTS.md` — 工程规范：目录所有权、`courseware/` 不得手改、构建与自检要求、提交前清单。
 - `README.md` — 内置课件列表（新增后需同步）。
-- `docs/courseware-template/` — 新课件应遵循的模板模式。
+- `docs/courseware-template/` — 新课件应遵循的 3D 观测实验模板（左场景右参数面板，禁止考试型）。
 
 ### 步骤 2：自主选型（由规范的优先级驱动）
 
