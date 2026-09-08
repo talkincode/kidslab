@@ -5,13 +5,13 @@
     "en": "Mass Conservation Lab"
   },
   "description": {
-    "zh": "让小苏打和醋产生气泡：敞口装置变轻，盖上密闭罩后，质量又完整回到天平上。",
-    "en": "Make baking soda and vinegar fizz: an open vessel gets lighter, then a sealed dome brings every gram back to the balance."
+    "zh": "在 3D 实验台上倒醋、看气泡：敞口装置变轻，盖上密闭罩后，质量又完整回到天平上。",
+    "en": "Pour vinegar on a 3D bench and watch the bubbles: an open vessel gets lighter, then a sealed dome brings every gram back to the balance."
   },
   "category": "chemistry",
   "levels": ["junior"],
   "grades": ["g9"],
-  "tags": ["质量", "质量守恒", "实验"],
+  "tags": ["质量", "质量守恒", "实验", "3D"],
   "icon": "⚗️",
   "order": 175,
   "badge": "new"

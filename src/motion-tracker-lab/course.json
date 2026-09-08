@@ -5,8 +5,8 @@
     "en": "Motion Tracker Lab"
   },
   "description": {
-    "zh": "给小车录像逐帧打点，画出 s-t、v-t 图，比较匀速和斜面匀加速。",
-    "en": "Mark a cart video frame by frame, grow s–t and v–t graphs, and compare uniform motion with motion down a ramp."
+    "zh": "在 3D 轨道上给小车逐帧打点，画出 s-t、v-t 图，比较匀速和斜面匀加速。",
+    "en": "Mark a 3D cart frame by frame, grow s–t and v–t graphs, and compare uniform motion with motion down a ramp."
   },
   "category": "physics",
   "levels": [
@@ -21,7 +21,8 @@
     "运动",
     "速度",
     "加速度",
-    "实验"
+    "实验",
+    "3D"
   ],
   "icon": "🎬",
   "order": 35,

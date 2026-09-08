@@ -1,6 +1,8 @@
-# AGENT.md — KidsLab
+# AGENTS.md — KidsLab
 
-AI 编码代理工作指南。本项目是纯静态的 K12 互动课件平台，无后端、无框架运行时，由 GitHub Pages 与 Cloudflare Pages 双渠道托管。
+给编码代理的仓库合同。本项目是纯静态的 K12 互动课件平台，无后端、无框架运行时，由 GitHub Pages 与 Cloudflare Pages 双渠道托管。
+
+文件名必须是 `AGENTS.md`（不是 `AGENT.md`）。改课件前先读本文件和 `docs/courseware-plan/status.md`。
 
 ## 常用命令
 
@@ -141,13 +143,25 @@ cloudflare/analytics/  # 埋点接收 Worker(push 时经 deploy-analytics.yml �
 - **逻辑必须可单测**:玩法抽成无 DOM 的 `*-model.js`,在 `tests/unit/<id>.test.mjs` 覆盖恒等式、边界、非法拒绝、失败恢复
 - **进度与行为埋点**:`window.cool?.stage('level2')` 始终把课件记为“玩过”;在最终通关边界调用 `window.cool?.complete?.()`,可无限复玩的课件则在首个完整成功闭环调用;`window.cool?.track('flip')` 仅在配置 analytics 时上报核心动作。给"孩子做了什么"起名而非"点了哪个按钮",每课件 5~10 个即可,详见 `docs/sdk.md` 与 `docs/analytics.md`
 
+## 初高中实验课壳（强制）
+
+参考实现：`src/magic-cube/`、`src/huarong-dao/`、`src/mass-conservation-lab/`。新课不要发明第三种壳。
+
+1. **观测调试，禁止考试型。** 孩子打开就能拧旋钮、倒液体、拖视角。不要用预测题、选择题或「答对才能继续」锁住仪器。规律由现场、读数和对照表自己长出来。
+2. **界面：全屏 3D + 右侧可收拢面板。** 底层铺满 canvas；顶栏返回/静音/主题/语言；左上 HUD 读数；中间一句 coach；右侧 `panel` 可展开/收拢（手机改底部抽屉）。禁止三栏说明书把舞台挤没。
+3. **必须用本地 three.js。** 复制 `src/welcome/vendor/three.module.min.js`、`src/magic-cube/vendor/RoomEnvironment.js`（及需要的 `RoundedBoxGeometry.js`）到本课件 `vendor/`。`importmap` 映射 `"three"`。标配：ACES、软阴影、`MeshStandardMaterial` / `MeshPhysicalMaterial`、环境反射。禁止 CDN。
+4. **仪器必须像真的。** 天平要有不锈钢秤盘，被称的烧杯/砝码必须放在盘上，正面 LCD 写质量和单位；不要做成旁边一个闹钟盒子。孩子 1 秒内要认出「这是什么仪器」。
+5. **Canvas 必须真的全屏。** `<canvas>` 是 replaced element，只写 `position:fixed; inset:0` 会卡在默认 **300×150**，场景等于没画。必须同时 `width:100%; height:100%; z-index:1`，并用 `innerWidth/innerHeight` 调用 `renderer.setSize`；resize 要记住上次宽高，避免 ResizeObserver 死循环把按钮点不了。
+6. **BGM + 音效。** 本地音频，首次用户手势后播放循环 BGM；一个静音键关掉全部声音并写入 `localStorage`。Web Audio 失败时静默降级。
+
 ## 质量规约(每个课件必须达标)
 
 用户是孩子。验收标准只有一条:孩子打开就想玩、30 秒内上手,玩的过程中不被粗糙的细节劝退。
 
 1. **场景要有真实感,拒绝粗糙**
-   - 场景/模型不能停留在"能看出是什么",要让孩子觉得可信、想伸手摸。动手前先想想真实物体长什么样:披萨要像披萨,桥要像桥
+   - 场景/模型不能停留在"能看出是什么",要让孩子觉得可信、想伸手摸。动手前先想想真实物体长什么样:披萨要像披萨,桥要像桥,天平要像天平
    - three.js 场景标配:环境光+方向光、阴影、`antialias: true`、`MeshStandardMaterial`(不用 Basic 材质糊弄);比例、圆角、细节装饰都要打磨
+   - 打开课件必须立刻看见可玩的 3D 舞台,不能是空白画布或 300×150 小块
    - 2D/Canvas 场景:用渐变、投影、动效点缀,禁止"默认灰盒子+黑描边"的程序员美术
 
 2. **文案说人话，而且要克制**
@@ -203,7 +217,8 @@ cloudflare/analytics/  # 埋点接收 Worker(push 时经 deploy-analytics.yml �
 - [ ] `npm run test:e2e` 通过(退出码 0),新增课件已自动纳入桌面/手机 smoke
 - [ ] 以目标学段孩子的身份完整玩一遍:打开就想玩,30 秒内上手,全程无需说明书
 - [ ] 首屏不是说明书:规则/公式/知识点需交互或轻提示才出现,开局文案不报答案
-- [ ] 场景经得起看:光影/材质/比例不粗糙,无默认灰盒、无穿模、无明显违和
+- [ ] 场景经得起看:光影/材质/比例不粗糙,无默认灰盒、无穿模、无明显违和;3D 画布铺满舞台,仪器一眼能认,被测物在正确位置(如烧杯在秤盘上)
+- [ ] 初高中实验课是观测台不是考卷:全屏 3D + 可收拢面板,没有答题锁仪器;有 BGM 与静音键
 - [ ] 文案全部说人话,zh/en 双语齐全,切换语言即时生效且无漏翻
 - [ ] `facts.md` 仅包含课件实际教授/依赖的知识,每条断言已按所引权威来源人工核对
 - [ ] 知识点、公式、单位、方向零错误

@@ -2,121 +2,97 @@
 <html lang="zh-CN" data-theme="light">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f7f4eb">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>⚡ 欧姆定律实验室 · KidsLab</title>
   <link rel="stylesheet" href="style.css">
+  <script type="importmap">{ "imports": { "three": "./vendor/three.module.min.js" } }</script>
 </head>
 <body>
-  <header class="topbar">
-    <a class="back" id="backBtn" href="../../index.html" data-t="back">返回平台</a>
-    <div class="brand" aria-hidden="true"><span>⚡</span><strong data-t="title">欧姆定律实验室</strong></div>
-    <div class="topbar__controls">
-      <button class="icon-button" id="soundBtn" type="button" aria-pressed="false" aria-label="关闭声音">🔊</button>
-      <button class="icon-button" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
-      <button class="lang-button" id="langBtn" type="button" aria-label="Switch language">EN</button>
+  <canvas id="circuitScene" aria-label="3D 电路实验桌"></canvas>
+  <p class="nogl" id="nogl" hidden data-t="fallback">3D 暂不可用，可继续调参观测读数。</p>
+  <main id="app" hidden data-mobile-panel="bench" data-status="live"></main>
+  <span id="sceneStatus" hidden></span>
+
+  <header class="bar">
+    <a class="pill" id="backBtn" href="../../index.html" data-t="back">返回平台</a>
+    <h1 class="bar__title">⚡ <span data-t="title">欧姆定律实验室</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-pressed="false" aria-label="关闭声音">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
     </div>
   </header>
 
-  <nav class="mobile-nav" aria-label="实验分区">
-    <button type="button" class="mobile-nav__button" data-mobile-panel="bench" aria-pressed="true" data-t="benchNav">接线台</button>
-    <button type="button" class="mobile-nav__button" data-mobile-panel="notebook" aria-pressed="false" data-t="notebookNav">数据册</button>
-    <button type="button" class="mobile-nav__button" data-mobile-panel="mission" aria-pressed="false" data-t="missionNav">任务</button>
-  </nav>
+  <section class="hud">
+    <div class="hud__chip"><span class="hud__label" data-t="measuredU">电压</span><b id="voltReadout">— V</b></div>
+    <div class="hud__chip"><span class="hud__label" data-t="measuredI">电流</span><b id="ampReadout">— A</b></div>
+    <div class="hud__chip"><span class="hud__label" data-t="selectedR">电阻</span><b id="resistorReadout">10 Ω</b></div>
+  </section>
 
-  <main id="app" class="lab-grid" data-mobile-panel="bench">
-    <section class="panel bench" data-panel="bench" aria-labelledby="benchTitle">
-      <div class="panel__heading">
-        <div>
-          <p class="eyebrow" data-t="benchEyebrow">安全接线台</p>
-          <h1 id="benchTitle" data-t="benchTitle">让电流穿过电阻</h1>
-        </div>
-        <span class="live-dot" aria-hidden="true"></span>
+  <div class="coach">
+    <span class="coach__icon">◎</span>
+    <div>
+      <b id="missionTitle" data-t="observeTitle">调一调，看看规律</b>
+      <p id="calculation"></p>
+      <p id="instrumentNote"></p>
+    </div>
+  </div>
+
+  <aside class="panel" id="panel">
+    <div class="panel__quick">
+      <button class="btn btn--big" id="recordBtn" type="button" data-t="record">记下这一组读数</button>
+      <div class="btnrow">
+        <button class="btn btn--ghost" id="zoomInBtn" type="button" data-t="zoomIn">放大</button>
+        <button class="btn btn--ghost" id="zoomOutBtn" type="button" data-t="zoomOut">缩小</button>
+        <button class="btn btn--ghost" id="perspectiveBtn" type="button" data-t="perspective">立体</button>
+        <button class="btn btn--ghost" id="topViewBtn" type="button" data-t="topView">俯视</button>
       </div>
-
-      <div class="scene-toolbar"><span data-t="sceneBadge">可交互 · 3D 实验桌</span><div><button id="zoomInBtn" type="button" data-t="zoomIn">放大</button><button id="zoomOutBtn" type="button" data-t="zoomOut">缩小</button><button id="perspectiveBtn" type="button" data-t="perspective">立体</button><button id="topViewBtn" type="button" data-t="topView">俯视</button></div></div>
-      <div class="circuit-scene" id="circuitScene">
-        <p class="scene-fallback" data-t="fallback">3D 暂不可用，请使用下方读数和接线控件继续实验。</p>
-        <div id="sceneStatus" class="scene-status" role="status"></div>
-        <span class="scene-caption" data-t="sceneHelp">拖动旋转 · 金色光点表示电流方向（非真实速度）</span>
-      </div>
-      <div class="live-readings" aria-live="polite"><div><span data-t="measuredU">实测电压</span><strong id="voltReadout">— V</strong></div><div><span data-t="measuredI">实测电流</span><strong id="ampReadout">— A</strong></div><div><span data-t="selectedR">电阻设定</span><strong id="resistorReadout">10 Ω</strong></div><b>I = U / R</b></div>
-      <div class="setting-summary"><span id="supplySetting"></span><span id="theoryCurrent"></span></div>
-      <div class="bench-guide" id="calculation" aria-live="polite"></div>
-      <p class="instrument-note" id="instrumentNote" aria-live="polite"></p>
-
-      <div class="control-stack">
-
-
-        <div class="knobs">
-          <label for="voltageSelect"><span data-t="voltageLabel">电源电压</span>
-            <output id="voltageValue" for="voltageSelect">1.5 V</output><input id="voltageSelect" type="range" min="0" max="6" step="0.1" value="1.5">
-          </label>
-          <label for="resistanceSelect"><span data-t="resistanceLabel">电阻</span>
-            <output id="resistanceValue" for="resistanceSelect">10 Ω</output><input id="resistanceSelect" type="range" min="5" max="50" step="1" value="10">
-          </label>
-          <label for="ammeterRange"><span data-t="ammeterRange">电流表量程</span>
-            <select id="ammeterRange">
-              <option value="0.3">0–0.30 A</option>
-              <option value="3">0–3.00 A</option>
-            </select>
-          </label>
-          <label for="voltmeterRange"><span data-t="voltmeterRange">电压表量程</span>
-            <select id="voltmeterRange">
-              <option value="3">0–3.0 V</option>
-              <option value="15">0–15.0 V</option>
-            </select>
-          </label>
-        </div>
-      </div>
-      <button class="primary-button" id="recordBtn" type="button" data-t="record">合上开关，记录读数</button>
-      <p class="feedback" id="feedback" role="status"></p>
-    </section>
-
-    <aside class="information-column" aria-label="观测与历史记录">
-    <section class="panel notebook" data-panel="notebook" aria-labelledby="notebookTitle">
-      <div class="panel__heading">
-        <div>
-          <p class="eyebrow" data-t="notebookEyebrow">你的证据</p>
-          <h2 id="notebookTitle" data-t="notebookTitle">U-I 数据册</h2>
-        </div>
-        <span class="trial-count" id="trialCount">0</span>
-      </div>
-      <div class="graph-wrap">
+    </div>
+    <button class="panel__handle" id="panelHandle" type="button" aria-expanded="true">
+      <span data-t="panelTitle">观测台</span><i id="panelArrow">▾</i>
+    </button>
+    <div class="panel__body information-column" id="panelBody">
+      <section class="panel__group">
+        <p class="panel__label" data-t="voltageLabel">电源电压 U</p>
+        <output id="voltageValue" for="voltageSelect">1.5 V</output>
+        <input id="voltageSelect" type="range" min="0" max="6" step="0.1" value="1.5">
+        <p class="panel__label" data-t="resistanceLabel">电阻 R</p>
+        <output id="resistanceValue" for="resistanceSelect">10 Ω</output>
+        <input id="resistanceSelect" type="range" min="5" max="50" step="1" value="10">
+      </section>
+      <section class="panel__group">
+        <label class="field"><span data-t="ammeterRange">电流表量程</span>
+          <select id="ammeterRange"><option value="0.3">0–0.30 A</option><option value="3" selected>0–3.00 A</option></select>
+        </label>
+        <label class="field"><span data-t="voltmeterRange">电压表量程</span>
+          <select id="voltmeterRange"><option value="3">0–3.0 V</option><option value="15" selected>0–15.0 V</option></select>
+        </label>
+        <p id="supplySetting" class="panel__hint"></p>
+        <p id="theoryCurrent" class="panel__hint"></p>
+      </section>
+      <section class="panel__group">
+        <p class="panel__label"><span data-t="notebookTitle">U-I 观测图</span><b id="trialCount" class="panel__val">0</b></p>
         <svg id="graph" viewBox="0 0 320 190" role="img" aria-label="电压电流关系图">
           <line x1="38" y1="156" x2="302" y2="156" class="axis"></line>
           <line x1="38" y1="156" x2="38" y2="18" class="axis"></line>
-          <line x1="38" y1="87" x2="302" y2="87" class="gridline"></line>
-          <line x1="170" y1="18" x2="170" y2="156" class="gridline"></line>
-          <text x="282" y="180">U / V</text>
-          <text x="4" y="12">I / A</text>
           <g id="graphLines"></g>
         </svg>
-        <div class="legend" data-t="legend">虚线：当前 R · 空心点：记录 · 实心点：实时</div>
-      </div>
-      <div class="panel__heading"><h2 data-t="historyTitle">实验记录 / 历史记录</h2><button class="reset-button" id="resetBtn" type="button" data-t="reset">清空记录</button></div>
-      <p class="data-note" data-t="historyNote">仅保存主动记录的有效测量，切换参数或接线不会修改历史。</p>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th data-t="trial">次数</th><th>U (V)</th><th>I (A)</th><th>R (Ω)</th></tr></thead>
-          <tbody id="trialRows"></tbody>
-        </table>
-      </div>
-      <p class="data-note" data-t="dataNote">滑动参数即时观测，也可以记录任意组合进行比较。</p>
-    </section>
-
-    <section class="panel mission" data-panel="mission" aria-labelledby="missionTitle">
-      <div class="panel__heading"><div><p class="eyebrow" data-t="observe">自由观测</p><h2 id="missionTitle" data-t="observeTitle">调一调，看看规律</h2></div></div>
-      <p data-t="guideVoltage">固定电阻，慢慢提高电压：电流如何变化？</p>
-      <p data-t="guideResistance">固定电压，增大电阻：电流又如何变化？</p>
-      <p data-t="guideRecord">随时记录感兴趣的读数，对比图上的点。虚线是当前电阻的理论图线，实心点是实时工作点。</p>
-      <h2 data-t="explanation">实验说明</h2>
-      <p class="safety-note" data-t="safety">理想电表与电阻；超量程自动断电保护。光点非真实电荷速度。</p>
-
-    </section>
-    </aside>
-  </main>
-
+        <p class="panel__hint" data-t="legend">虚线：当前 R · 空心点：记录 · 实心点：实时</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th data-t="trial">次数</th><th>U (V)</th><th>I (A)</th><th>R (Ω)</th></tr></thead>
+            <tbody id="trialRows"></tbody>
+          </table>
+        </div>
+        <button class="btn btn--ghost" id="resetBtn" type="button" data-t="reset">清空记录</button>
+      </section>
+      <p class="panel__hint" data-t="guideVoltage">固定电阻，慢慢提高电压：电流如何变化？</p>
+      <p class="panel__hint" data-t="guideResistance">固定电压，增大电阻：电流又如何变化？</p>
+      <p class="model-note" data-t="safety">理想电表与电阻；超量程自动断电保护。光点非真实电荷速度。</p>
+      <p id="feedback" class="panel__hint"></p>
+    </div>
+  </aside>
+  <p class="foot-tip" data-t="sceneHelp">拖动旋转 · 滚轮缩放 · 光点：正极 → 负极</p>
   <script src="../../scripts/sdk/core.js" data-kidslab-sdk></script>
   <script type="module" src="main.js"></script>
 </body>

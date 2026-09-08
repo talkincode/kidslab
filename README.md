@@ -246,7 +246,7 @@ gh secret set CLOUDFLARE_ACCOUNT_ID
 ## 🧭 计划状态与验收
 
 - 小学课件计划的已完成/未实现状态集中维护在 [`docs/courseware-plan/status.md`](docs/courseware-plan/status.md)。
-- 每次完成规划课件后,必须同步更新状态清单、必要的学科规划文档和本 README 的内置课件列表;Agent 规约见 [`AGENT.md`](AGENT.md)。
+- 每次完成规划课件后,必须同步更新状态清单、必要的学科规划文档和本 README 的内置课件列表;Agent 规约见 [`AGENTS.md`](AGENTS.md)。
 - 当前最低自动校验是 `npm run build`;更完整的交互验收缺口记录在状态清单的验收矩阵中。
 
 ## License

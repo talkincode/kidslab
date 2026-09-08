@@ -1,11 +1,7 @@
 import { test, expect } from '@playwright/test';
 
-async function selectMobilePanel(page, panel) {
-  const viewport = page.viewportSize();
-  if (!viewport || viewport.width > 900) return;
-  const button = page.locator(`.mobile-nav__button[data-mobile-panel="${panel}"]`);
-  await button.click();
-  await expect(button).toHaveAttribute('aria-pressed', 'true');
+async function selectMobilePanel() {
+  // Observation shell keeps instruments and the log in one collapsible panel.
 }
 
 async function logTrial(page, specimenId, mass, volume) {
@@ -35,8 +31,6 @@ test.describe('density detective lab', () => {
   });
 
   test('measures three specimens, graphs their density, and identifies aluminum', async ({ page }) => {
-    await page.getByRole('button', { name: '密度', exact: true }).click();
-
     await logTrial(page, 'specimen-a', 27, 10);
     await expect(page.locator('#recordBody tr').first()).toContainText('2.70');
 

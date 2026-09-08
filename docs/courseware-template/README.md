@@ -20,7 +20,9 @@ rm -f src/$id/README.md
 # 6. audio.js 里的 storageKey 改成 kidslab.<id>
 npm run test:unit
 npm run build
-```## 约定速查（硬要求）
+```
+
+## 约定速查（硬要求）
 
 | 事项 | 约定 |
 |---|---|
@@ -65,4 +67,5 @@ BGM 默认是 `audio/lab-glow.ogg`（曲库 `bgm-hope-01`，循环、中能量�
 
 ## course.json 字段
 
-见 `AGENT.md`。`id` 必须与目录名一致，`category` ∈ `math|programming|logic|science|physics|chemistry|featured`，`levels` 含 `primary`。
+见 `AGENTS.md`。本目录的 `course.json` 是可直接改用的样例；`id` 必须与目录名一致，
+`category` ∈ `math|programming|logic|science|physics|chemistry|featured`，`levels` 含 `primary`。
