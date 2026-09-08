@@ -61,5 +61,5 @@ WebGL 不可用时要给出降级文案（参考 `src/welcome/main.js` 的 `nogl
 
 ## course.json 字段
 
-见 `AGENT.md`。本目录的 `course.json` 是可直接改用的样例；`id` 必须与目录名一致，
+见 `AGENTS.md`。本目录的 `course.json` 是可直接改用的样例；`id` 必须与目录名一致，
 `category` ∈ `math|programming|logic|science|physics|chemistry|featured`，`levels` 含 `primary`。

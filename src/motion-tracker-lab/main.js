@@ -11,6 +11,8 @@ import {
   startMission,
   withinRelative,
 } from './motion-model.js';
+import { createLabAudio } from './audio.js';
+import { createMotionScene } from './scene3d.js';
 
 const I18N = {
   zh: {
@@ -24,6 +26,8 @@ const I18N = {
     filmTitleAccel: '斜面上的小车，速度怎么变？',
     filmTitleDesign: '换一个坡度，斜率还会准吗？',
     tip0: '点小车，给这一帧打点',
+    panelTitle: '观测台',
+    footTip: '点橙色小车打点 · 拖空白转视角',
     mark: '给这一帧打点',
     reset: '重拍这一段',
     predictionTitle: '先猜一下',
@@ -73,6 +77,8 @@ const I18N = {
     filmTitleAccel: 'On the ramp, how does the speed change?',
     filmTitleDesign: 'Change the slope. Does the graph still match?',
     tip0: 'Tap the cart to mark this frame',
+    panelTitle: 'Observation deck',
+    footTip: 'Tap the orange cart · drag empty space to orbit',
     mark: 'Mark this frame',
     reset: 'Reshoot this clip',
     predictionTitle: 'Guess first',
@@ -188,7 +194,24 @@ let lang = window.cool?.preferences?.lang || 'zh';
 let t = (key) => key;
 let muted = safeGet(SOUND_KEY) === 'off';
 let audioContext = null;
-const ctx = elements.stage.getContext('2d');
+const labAudio = createLabAudio({
+  bgmUrl: new URL('./audio/bgm-hope-01.ogg', import.meta.url),
+  muted,
+});
+const motion3d = createMotionScene(elements.stage);
+const ctx = motion3d ? null : elements.stage.getContext('2d');
+document.addEventListener('pointerdown', () => { if (!muted) labAudio.unlock(); }, { once: true });
+let panelOpen = true;
+function applyPanel() {
+  const panel = document.querySelector('#panel');
+  if (!panel) return;
+  panel.classList.toggle('is-collapsed', !panelOpen);
+  document.querySelector('#panelBody').hidden = !panelOpen;
+  document.querySelector('#panelHandle')?.setAttribute('aria-expanded', String(panelOpen));
+  const arrow = document.querySelector('#panelArrow');
+  if (arrow) arrow.textContent = panelOpen ? '▾' : '▸';
+}
+document.querySelector('#panelHandle')?.addEventListener('click', () => { panelOpen = !panelOpen; applyPanel(); });
 
 function text(key, ...args) {
   return t(key, ...args);
@@ -230,6 +253,7 @@ function renderNotice(el, notice) {
 function setMuted(next) {
   muted = next;
   safeSet(SOUND_KEY, muted ? 'off' : 'on');
+  labAudio.setMuted(muted);
   if (muted && audioContext?.state === 'running') audioContext.suspend().catch(() => {});
   renderSound();
 }
@@ -273,6 +297,10 @@ function tone(kind) {
 }
 
 function resizeStage() {
+  if (motion3d) {
+    drawStage();
+    return;
+  }
   const canvas = elements.stage;
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   const width = Math.max(280, canvas.clientWidth);
@@ -294,6 +322,16 @@ function drawRoundRect(context, x, y, w, h, r) {
 }
 
 function drawStage() {
+  const frame = currentFrame();
+  if (motion3d) {
+    motion3d.update({
+      angle: game.lab.clip.angleDeg,
+      s: frame?.s ?? 0,
+      markList: game.lab.marks,
+    });
+    Object.assign(scene.cart, motion3d.projectCart());
+    return;
+  }
   const width = elements.stage.clientWidth;
   const height = elements.stage.clientHeight;
   if (!width || !height) return;
@@ -323,7 +361,6 @@ function drawStage() {
   ctx.lineWidth = 3;
   ctx.stroke();
 
-  const frame = currentFrame();
   const along = frame ? frame.s / 1.2 : 0;
   const cartX = x0 + (x1 - x0) * along;
   const cartY = y0 + (y1 - y0) * along;
@@ -479,18 +516,22 @@ function render() {
   elements.formulaStrip.hidden = game.lab.marks.length < 2;
   elements.formulaStrip.textContent = game.lab.marks.length >= 2 ? text(formulaKey()) : '';
   document.querySelectorAll('[data-prediction]').forEach((button) => {
+    button.classList.toggle('is-on', button.dataset.prediction === game.prediction);
     button.classList.toggle('is-selected', button.dataset.prediction === game.prediction);
   });
   document.querySelectorAll('[data-angle]').forEach((button) => {
+    button.classList.toggle('is-on', Number(button.dataset.angle) === game.designAngle);
     button.classList.toggle('is-selected', Number(button.dataset.angle) === game.designAngle);
   });
   document.querySelectorAll('[data-law]').forEach((button) => {
+    button.classList.toggle('is-on', button.dataset.law === game.lawChoice);
     button.classList.toggle('is-selected', button.dataset.law === game.lawChoice);
   });
   renderNotice(elements.filmFeedback, game.filmNotice.key === 'tip0' ? null : game.filmNotice);
   elements.tip.textContent = text('tip0');
   renderNotice(elements.labFeedback, game.labNotice);
   elements.conclusionStatus.textContent = allDone() ? text('allDone') : '';
+  elements.conclusionStatus.hidden = !allDone();
   elements.conclusionStatus.classList.toggle('is-success', allDone());
   elements.app.dataset.mobilePanel = game.mobilePanel;
   document.querySelectorAll('.mobile-nav__button').forEach((button) => {

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-07T12:32:34.935Z",
+  "generatedAt": "2026-09-08T15:22:11.733Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -1922,8 +1922,8 @@
         "en": "Density Detective Lab"
       },
       "description": {
-        "zh": "用天平和量筒测量三块未知金属，绘制质量—体积关系并锁定材料。",
-        "en": "Measure three mystery metal pieces with a balance and graduated cylinder, graph mass against volume, and identify the material."
+        "zh": "在 3D 天平和量筒上测量三块未知金属，绘制质量—体积关系并锁定材料。",
+        "en": "Weigh and dunk three mystery metals on a 3D balance and cylinder, graph mass against volume, and identify the material."
       },
       "category": "physics",
       "levels": [
@@ -1936,7 +1936,8 @@
         "密度",
         "质量",
         "体积",
-        "实验"
+        "实验",
+        "3D"
       ],
       "icon": "⚖️",
       "order": 34,
@@ -1968,7 +1969,11 @@
         "experiment",
         "simulation",
         "lab",
-        "模拟"
+        "模拟",
+        "3D",
+        "3d",
+        "三维",
+        "three.js"
       ],
       "path": "courseware/density-detective-lab/index.html"
     },
@@ -2029,8 +2034,8 @@
         "en": "Motion Tracker Lab"
       },
       "description": {
-        "zh": "给小车录像逐帧打点，画出 s-t、v-t 图，比较匀速和斜面匀加速。",
-        "en": "Mark a cart video frame by frame, grow s–t and v–t graphs, and compare uniform motion with motion down a ramp."
+        "zh": "在 3D 轨道上给小车逐帧打点，画出 s-t、v-t 图，比较匀速和斜面匀加速。",
+        "en": "Mark a 3D cart frame by frame, grow s–t and v–t graphs, and compare uniform motion with motion down a ramp."
       },
       "category": "physics",
       "levels": [
@@ -2045,7 +2050,8 @@
         "运动",
         "速度",
         "加速度",
-        "实验"
+        "实验",
+        "3D"
       ],
       "icon": "🎬",
       "order": 35,
@@ -2079,7 +2085,11 @@
         "experiment",
         "simulation",
         "lab",
-        "模拟"
+        "模拟",
+        "3D",
+        "3d",
+        "三维",
+        "three.js"
       ],
       "path": "courseware/motion-tracker-lab/index.html"
     },
@@ -5264,8 +5274,8 @@
         "en": "Ohm's Law Lab"
       },
       "description": {
-        "zh": "给电路换电压和电阻，接对电表、记录 U-I 数据，让两条直线自己说出欧姆定律。",
-        "en": "Change voltage and resistance, wire the meters safely, record U-I data, and let two lines reveal Ohm's law."
+        "zh": "在 3D 实验桌上改电压和电阻，看着电流光点穿过电阻，记录 U-I 数据，让两条直线自己说出欧姆定律。",
+        "en": "Change voltage and resistance on a 3D bench, watch current spark along the resistor, record U-I data, and let two lines reveal Ohm’s law."
       },
       "category": "physics",
       "levels": [
@@ -5279,7 +5289,8 @@
       "tags": [
         "欧姆定律",
         "电路",
-        "实验"
+        "实验",
+        "3D"
       ],
       "icon": "⚡",
       "order": 174,
@@ -5310,7 +5321,11 @@
         "experiment",
         "simulation",
         "lab",
-        "模拟"
+        "模拟",
+        "3D",
+        "3d",
+        "三维",
+        "three.js"
       ],
       "path": "courseware/ohms-law-lab/index.html"
     },
@@ -5321,8 +5336,8 @@
         "en": "Mass Conservation Lab"
       },
       "description": {
-        "zh": "让小苏打和醋产生气泡：敞口装置变轻，盖上密闭罩后，质量又完整回到天平上。",
-        "en": "Make baking soda and vinegar fizz: an open vessel gets lighter, then a sealed dome brings every gram back to the balance."
+        "zh": "在 3D 实验台上倒醋、看气泡：敞口装置变轻，盖上密闭罩后，质量又完整回到天平上。",
+        "en": "Pour vinegar on a 3D bench and watch the bubbles: an open vessel gets lighter, then a sealed dome brings every gram back to the balance."
       },
       "category": "chemistry",
       "levels": [
@@ -5334,7 +5349,8 @@
       "tags": [
         "质量",
         "质量守恒",
-        "实验"
+        "实验",
+        "3D"
       ],
       "icon": "⚗️",
       "order": 175,
@@ -5358,7 +5374,11 @@
         "experiment",
         "simulation",
         "lab",
-        "模拟"
+        "模拟",
+        "3D",
+        "3d",
+        "三维",
+        "three.js"
       ],
       "path": "courseware/mass-conservation-lab/index.html"
     }

@@ -49,6 +49,15 @@ test('a student can recover from a wrong conclusion after comparing open and sea
   assert.equal(right.lab.phase, 'complete');
 });
 
+test('trials can be recorded without a quiz prediction', () => {
+  let lab = createLab();
+  lab = recordTrial(lab, 'open').lab;
+  lab = recordTrial(lab, 'sealed').lab;
+  assert.equal(lab.trials.length, 2);
+  assert.equal(lab.trials[0].massAfterG, 96);
+  assert.equal(lab.trials[1].massAfterG, 100);
+});
+
 test('invalid vessels cannot create a trial or change the saved experiment', () => {
   const lab = createLab();
   const result = recordTrial(lab, 'leaking');

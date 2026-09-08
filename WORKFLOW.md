@@ -36,7 +36,7 @@
 
 - `docs/courseware-plan/status.md` — **进度唯一事实源**：`已完成（规划内）` 与 `未实现（规划内）` 清单、分科汇总计数、"总结"待办建议。
 - `docs/courseware-plan/<subject>.md`（如 `science.md`、`math.md`）— 该学科路线图：每条课件的 `G 学段 / P 优先级 / 玩法 / 魔法时刻 / 进阶`。
-- `AGENT.md` — 工程规范：目录所有权、`courseware/` 不得手改、构建与自检要求、提交前清单。
+- `AGENTS.md` — 工程规范：目录所有权、`courseware/` 不得手改、构建与自检要求、提交前清单。
 - `README.md` — 内置课件列表（新增后需同步）。
 - `docs/courseware-template/` — 新课件应遵循的模板模式。
 
@@ -48,7 +48,7 @@
 
 ### 步骤 3：开发交付
 
-在 `src/<id>/` 下开发，严格遵循 `AGENT.md`：
+在 `src/<id>/` 下开发，严格遵循 `AGENTS.md`：
 
 - 必需文件：`course.json`（构建校验）、`index.html`（课件入口）、`*.css/*.js`、`facts.md`（知识断言，`test:unit` 门禁）。
 - 只改 `src/`；改完必须 `npm run build` 重新生成 `courseware/<id>/` 与 `index.json`，**源码与产物一起提交**。
@@ -57,7 +57,7 @@
 
 ### 步骤 4：回写状态（版本化，必须 commit）
 
-按 `AGENT.md` 与 `status.md`「状态维护规约」，同步更新并**提交**：
+按 `AGENTS.md` 与 `status.md`「状态维护规约」，同步更新并**提交**：
 
 1. `status.md`：把课件从 `未实现` 移动到对应学科 `已完成`；更新"汇总"表格的分科计数与合计；在「验收矩阵」补充该课件覆盖证据（unit/smoke/E2E，明确缺口）。
 2. `README.md`：为新增课件补一行内置课程列表。

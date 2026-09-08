@@ -1,25 +1,37 @@
-import * as THREE from './vendor/three.module.min.js';
+import * as THREE from 'three';
+import { RoomEnvironment } from './vendor/RoomEnvironment.js';
 
 // Ideal circuit visualization; the model remains the single source of readings.
 export function createCircuitScene(host) {
-  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  const renderer = new THREE.WebGLRenderer({ canvas: host.tagName === 'CANVAS' ? host : undefined, antialias: true, alpha: false });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.05;
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.setClearColor(0x112f39, 1);
-  host.prepend(renderer.domElement);
+  if (host.tagName !== 'CANVAS') host.prepend(renderer.domElement);
   renderer.domElement.setAttribute('aria-label', '3D circuit');
   renderer.domElement.setAttribute('role', 'img');
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(38, 1, .1, 100);
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  pmrem.dispose();
   const target = new THREE.Vector3(0, 0, 0);
   let yaw = .15, elevation = .95, radius = 12, current = 0, running = true;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-  scene.add(new THREE.HemisphereLight(0xe5faff, 0x344342, 3));
-  const light = new THREE.DirectionalLight(0xffffff, 4);
-  light.position.set(-3, 8, 5); scene.add(light);
-  const material = (color) => new THREE.MeshStandardMaterial({ color, roughness: .48, metalness: .15 });
+  scene.add(new THREE.HemisphereLight(0xe5faff, 0x344342, 1.2));
+  const light = new THREE.DirectionalLight(0xffffff, 2.8);
+  light.position.set(-3, 8, 5);
+  light.castShadow = true;
+  light.shadow.mapSize.set(1024, 1024);
+  scene.add(light);
+  const material = (color) => new THREE.MeshStandardMaterial({ color, roughness: .38, metalness: .28, envMapIntensity: 1.15 });
   function box(x,y,z,w,h,d,color) {
     const mesh = new THREE.Mesh(new THREE.BoxGeometry(w,h,d), material(color));
-    mesh.position.set(x,y,z); scene.add(mesh); return mesh;
+    mesh.position.set(x,y,z); mesh.castShadow = true; mesh.receiveShadow = true; scene.add(mesh); return mesh;
   }
   box(0,-.3,0,10,.35,6.7,0x244750);
   const grid = new THREE.GridHelper(10, 20, 0x42656a, 0x35565e);
@@ -182,8 +194,17 @@ export function createCircuitScene(host) {
     bands[1].material.color.setHex(digitColors[setup.resistanceOhm<10?0:setup.resistanceOhm%10]);
     bands[2].material.color.setHex(setup.resistanceOhm<10?0xcb9340:0x171e26);
   }
-  function resize(){const {width,height}=host.getBoundingClientRect();if(!width||!height)return;renderer.setSize(width,height);camera.aspect=width/height;camera.updateProjectionMatrix();}
-  const observer=new ResizeObserver(resize);observer.observe(host);
+  let viewW=0,viewH=0;
+  function resize(){
+    const width=Math.max(1,innerWidth),height=Math.max(1,innerHeight);
+    if(width===viewW&&height===viewH)return;
+    viewW=width;viewH=height;
+    renderer.setSize(width,height,false);
+    renderer.domElement.style.width='100%';
+    renderer.domElement.style.height='100%';
+    camera.aspect=width/height;camera.updateProjectionMatrix();
+  }
+  const observer=new ResizeObserver(resize);observer.observe(host);addEventListener('resize',resize);
   const pointers=new Map();
   const clampRadius=value=>THREE.MathUtils.clamp(value,7,22);
   function zoom(factor){radius=clampRadius(radius*factor);host.dataset.zoom=(12/radius).toFixed(2);}

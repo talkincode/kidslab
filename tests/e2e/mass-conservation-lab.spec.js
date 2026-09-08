@@ -1,13 +1,5 @@
 import { test, expect } from '@playwright/test';
 
-async function showPanel(page, panel) {
-  const viewport = page.viewportSize();
-  if (!viewport || viewport.width > 700) return;
-  const button = page.locator(`.mobile-nav button[data-panel="${panel}"]`);
-  await button.click();
-  await expect(button).toHaveAttribute('aria-pressed', 'true');
-}
-
 test.describe('mass conservation lab', () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {
@@ -23,43 +15,30 @@ test.describe('mass conservation lab', () => {
     await page.goto('/courseware/mass-conservation-lab/');
   });
 
-  test('compares open and sealed reactions, then concludes total mass is conserved', async ({ page }) => {
-    await page.locator('#predictionLost').click();
+  test('compares open and sealed reactions, then observes conservation without a quiz', async ({ page }) => {
     await page.locator('#openBtn').click();
     await page.locator('#runBtn').click();
     await expect(page.locator('#trialRows')).toContainText('96.0 g');
 
-    await showPanel(page, 'mission');
     await page.locator('#sealedBtn').click();
     await page.locator('#runBtn').click();
     await expect(page.locator('#trialRows')).toContainText('100.0 g');
-
-    await showPanel(page, 'notebook');
-    await expect(page.locator('#trialRows tr')).toHaveCount(2);
-    await page.locator('#conclusionConserved').click();
     await expect(page.locator('#completeCard')).toBeVisible();
     await expect(page.locator('#conclusionStatus')).toContainText('总质量不变');
     await expect.poll(() => page.evaluate(() =>
       JSON.parse(localStorage.getItem('kidslab.mass-conservation-lab') || 'null')?.phase)).toBe('complete');
   });
 
-  test('rejects a premature or wrong conclusion and preserves the two comparison records', async ({ page }) => {
-    await page.locator('#predictionKept').click();
+  test('rejects a duplicate vessel and preserves the first record', async ({ page }) => {
     await page.locator('#openBtn').click();
     await page.locator('#runBtn').click();
     await expect(page.locator('#trialRows tr')).toHaveCount(1);
-    await showPanel(page, 'notebook');
-    await expect(page.locator('#conclusionLost')).toBeDisabled();
-
-    await showPanel(page, 'mission');
+    await page.locator('#runBtn').click();
+    await expect(page.locator('#feedback')).toContainText('已经记录');
+    await expect(page.locator('#trialRows tr')).toHaveCount(1);
     await page.locator('#sealedBtn').click();
     await page.locator('#runBtn').click();
     await expect(page.locator('#trialRows tr')).toHaveCount(2);
-    await showPanel(page, 'notebook');
-    await page.locator('#conclusionLost').click();
-    await expect(page.locator('#conclusionStatus')).toContainText('气泡没有消失');
-    await expect(page.locator('#trialRows tr')).toHaveCount(2);
-    await page.locator('#conclusionConserved').click();
     await expect(page.locator('#completeCard')).toBeVisible();
   });
 
@@ -69,20 +48,24 @@ test.describe('mass conservation lab', () => {
     page.on('console', (message) => {
       if (message.type() === 'error') errors.push(message.text());
     });
-    await page.locator('#predictionKept').click();
     await page.locator('#openBtn').click();
     await page.locator('#runBtn').click();
     await expect(page.locator('#trialRows tr')).toHaveCount(1);
     await page.reload();
     await expect(page.locator('#trialRows tr')).toHaveCount(1);
     await page.locator('#langBtn').click();
-    await expect(page.locator('#missionTitle')).toContainText('bubbles');
+    await expect(page.locator('#coachTitle')).toContainText('Watch the balance');
     await page.locator('#themeBtn').click();
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
     await page.locator('#resetBtn').click();
     await expect(page.locator('#trialRows tr')).toHaveCount(1);
-    await expect(page.locator('#trialRows')).toContainText('Finish the first cup');
+    await expect(page.locator('#trialRows')).toContainText('first cup');
     await expect.poll(() => page.evaluate(() => localStorage.getItem('kidslab.mass-conservation-lab'))).toBeNull();
+
+    await page.locator('#panelHandle').click();
+    await expect(page.locator('#panelHandle')).toHaveAttribute('aria-expanded', 'false');
+    await page.locator('#panelHandle').click();
+    await expect(page.locator('#panelHandle')).toHaveAttribute('aria-expanded', 'true');
 
     const layout = await page.evaluate(() => ({
       width: document.documentElement.scrollWidth,

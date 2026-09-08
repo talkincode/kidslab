@@ -7,6 +7,8 @@ import {
   identifyMaterial,
   isMeasurementEntryAccurate,
 } from './density-model.js';
+import { createLabAudio } from './audio.js';
+import { createDensityScene } from './scene3d.js';
 
 const I18N = {
   zh: {
@@ -85,6 +87,8 @@ const I18N = {
     allRecorded: '三组证据已经齐全。观察图像斜率，再选择参考材料。',
     identifyNeedRecords: '先收集三组证据；单次测量还不足以确认材料。',
     identifyWrong: '这个参考密度与图像斜率不符。再比较一次三个数。',
+    panelTitle: '观测台',
+    footTip: '拖空白转视角 · 先称重再浸没 · 用斜率认材料',
     caseClosed: (material, density) => `案件结案：三块样本都是${material}，因为 m-V 图像斜率约为 ${decimal(density, 2)} g/cm³。`,
     resetDone: '案件已重置。重新留下预测，再收集一组新证据。',
     recordedMark: '已记录',
@@ -165,6 +169,8 @@ const I18N = {
     allRecorded: 'All three trials are logged. Read the graph slope, then choose a reference material.',
     identifyNeedRecords: 'Collect all three trials first. One measurement is not enough to identify a material.',
     identifyWrong: 'That reference density does not match the graph slope. Compare all three values again.',
+    panelTitle: 'Observation deck',
+    footTip: 'Drag to orbit · weigh then dunk · read the slope',
     caseClosed: (material, density) => `Case closed: all three pieces are ${material}, because the m–V slope is about ${decimal(density, 2)} g/cm³.`,
     resetDone: 'Case reset. Make a new prediction, then collect fresh evidence.',
     recordedMark: 'Logged',
@@ -230,6 +236,24 @@ let lang = window.cool?.preferences?.lang || 'zh';
 let t = (key) => key;
 let muted = safeGet(SOUND_KEY) === 'off';
 let audioContext = null;
+const labAudio = createLabAudio({
+  bgmUrl: new URL('./audio/bgm-mystery-thinking-01.ogg', import.meta.url),
+  muted,
+});
+const lab3d = createDensityScene($('#scene'));
+if (!lab3d) $('#nogl')?.removeAttribute('hidden');
+let panelOpen = true;
+function applyPanel() {
+  const panel = $('#panel');
+  if (!panel) return;
+  panel.classList.toggle('is-collapsed', !panelOpen);
+  $('#panelBody').hidden = !panelOpen;
+  $('#panelHandle')?.setAttribute('aria-expanded', String(panelOpen));
+  const arrow = $('#panelArrow');
+  if (arrow) arrow.textContent = panelOpen ? '▾' : '▸';
+}
+$('#panelHandle')?.addEventListener('click', () => { panelOpen = !panelOpen; applyPanel(); });
+document.addEventListener('pointerdown', () => { if (!muted) labAudio.unlock(); }, { once: true });
 
 function decimal(value, digits = 1) {
   return Number(value).toLocaleString(lang === 'zh' ? 'zh-CN' : 'en-US', {
@@ -322,6 +346,7 @@ function switchMobilePanel(panel) {
 function setMuted(nextMuted) {
   muted = nextMuted;
   safeSet(SOUND_KEY, muted ? 'off' : 'on');
+  labAudio.setMuted(muted);
   if (muted && audioContext?.state === 'running') audioContext.suspend().catch(() => {});
   renderSoundButton();
 }
@@ -540,6 +565,7 @@ function renderSpecimenShelf() {
   document.querySelectorAll('[data-specimen]').forEach((button) => {
     const recorded = Boolean(recordFor(button.dataset.specimen));
     button.disabled = recorded;
+    button.classList.toggle('is-on', button.dataset.specimen === state.selectedSpecimenId && !recorded);
     button.classList.toggle('is-selected', button.dataset.specimen === state.selectedSpecimenId && !recorded);
     button.classList.toggle('is-complete', recorded);
     if (recorded) button.setAttribute('aria-label', `${button.textContent.trim()} · ${text('recordedMark')}`);
@@ -563,6 +589,14 @@ function renderInstruments() {
   elements.waterFill.style.setProperty('--water-level', String(waterScale));
   elements.balanceSpecimen.className = `bench-specimen ${sampleTone(specimen)}${observation.weighed ? ' is-visible' : ''}`;
   elements.waterSpecimen.className = `water-specimen ${sampleTone(specimen)}${observation.submerged ? ' is-visible' : ''}`;
+  const massText = observation.weighed ? `${decimal(measurement.massG)} g` : '—  g';
+  lab3d?.setSpecimen({ tone: specimen.tone, volumeCm3: specimen.volumeCm3, massText });
+  lab3d?.setState({
+    isWeighed: observation.weighed,
+    isSubmerged: observation.submerged,
+    massText,
+    waterLevelMl: waterLevel,
+  });
   elements.weighBtn.disabled = alreadyRecorded || observation.weighed;
   elements.submergeBtn.disabled = alreadyRecorded || !observation.weighed || observation.submerged;
 

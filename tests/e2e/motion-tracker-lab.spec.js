@@ -1,11 +1,7 @@
 import { test, expect } from '@playwright/test';
 
-async function selectMobilePanel(page, panel) {
-  const viewport = page.viewportSize();
-  if (!viewport || viewport.width > 900) return;
-  const button = page.locator(`.mobile-nav__button[data-mobile-panel="${panel}"]`);
-  await button.click();
-  await expect(button).toHaveAttribute('aria-pressed', 'true');
+async function selectMobilePanel() {
+  // Observation shell keeps the track, graphs and conclusion in one panel.
 }
 
 async function markFrames(page, count = 6) {
@@ -101,30 +97,18 @@ test.describe('motion tracker lab', () => {
     expect(errors).toEqual([]);
   });
 
-  test('auto-switches mobile panels after marking and picking a ramp', async ({ page }) => {
-    const viewport = page.viewportSize();
-    test.skip(!viewport || viewport.width > 900, 'desktop keeps all three panels visible');
-
-    await expect(page.locator('#app')).toHaveAttribute('data-mobile-panel', 'film');
+  test('advances clips from the observation deck after marking and picking a ramp', async ({ page }) => {
     await page.getByRole('button', { name: '速度不变' }).click();
     await markFrames(page);
-    await expect(page.locator('#app')).toHaveAttribute('data-mobile-panel', 'data');
-    await expect(page.locator('.mobile-nav__button[data-mobile-panel="data"]')).toHaveAttribute('aria-pressed', 'true');
     await expect(page.locator('#stPoints circle')).toHaveCount(6);
-
-    await selectMobilePanel(page, 'lab');
     await page.locator('#uniformBtn').click();
-    await expect(page.locator('#app')).toHaveAttribute('data-mobile-panel', 'film');
     await expect(page.locator('#filmTitle')).toContainText('斜面');
 
     await page.getByRole('button', { name: '速度在变' }).click();
     await markFrames(page);
-    await selectMobilePanel(page, 'lab');
     await page.locator('#accelBtn').click();
-    await expect(page.locator('#app')).toHaveAttribute('data-mobile-panel', 'lab');
     await expect(page.locator('#designCard')).toBeVisible();
     await page.locator('[data-angle="20"]').click();
-    await expect(page.locator('#app')).toHaveAttribute('data-mobile-panel', 'film');
     await expect(page.locator('#filmTitle')).toContainText('坡度');
   });
 

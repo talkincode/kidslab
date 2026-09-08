@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-async function panel(page,name){if(page.viewportSize().width<=700)await page.locator(`[data-mobile-panel="${name}"].mobile-nav__button`).click();}
+async function panel(){ /* Observation shell keeps sliders, graph and log in one panel. */ }
 async function slide(page,id,value){await panel(page,'bench');await page.locator(`#${id}`).fill(String(value));}
 test.beforeEach(async({page})=>{
   await page.addInitScript(()=>{if(!sessionStorage.getItem('initialized')){localStorage.clear();localStorage.setItem('kidslab.lang','zh');localStorage.setItem('kidslab.ohms-law-lab.sound','true');sessionStorage.setItem('initialized','1');}});
