@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-08T15:22:11.733Z",
+  "generatedAt": "2026-09-08T17:15:19.146Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -189,6 +189,10 @@
       "en": "Constellations",
       "kind": "knowledge"
     },
+    "显微镜": {
+      "en": "Microscope",
+      "kind": "knowledge"
+    },
     "月球": {
       "en": "The Moon",
       "kind": "knowledge"
@@ -271,6 +275,10 @@
     },
     "算法": {
       "en": "Algorithms",
+      "kind": "knowledge"
+    },
+    "细胞": {
+      "en": "Cell",
       "kind": "knowledge"
     },
     "编程启蒙": {
@@ -5381,6 +5389,86 @@
         "three.js"
       ],
       "path": "courseware/mass-conservation-lab/index.html"
+    },
+    {
+      "id": "microscope-cell-lab",
+      "title": {
+        "zh": "显微细胞实验室",
+        "en": "Microscope Cell Lab"
+      },
+      "description": {
+        "zh": "拧物镜、调光、粗细准焦，看模糊光斑突然变成细胞，再量视野直径，比较洋葱表皮和口腔上皮。",
+        "en": "Pick an objective, light and focus until a blur snaps into cells, then measure the field of view and compare onion skin with cheek cells."
+      },
+      "category": "science",
+      "levels": [
+        "junior"
+      ],
+      "grades": [
+        "g7"
+      ],
+      "tags": [
+        "显微镜",
+        "细胞",
+        "植物",
+        "动物",
+        "实验",
+        "3D"
+      ],
+      "icon": "🔬",
+      "order": 176,
+      "badge": "new",
+      "keywords": [
+        "Microscope",
+        "microscope",
+        "compound microscope",
+        "目镜",
+        "eyepiece",
+        "物镜",
+        "objective",
+        "准焦",
+        "focus",
+        "视野",
+        "field of view",
+        "视野直径",
+        "Cell",
+        "cell",
+        "cells",
+        "细胞壁",
+        "cell wall",
+        "叶绿体",
+        "chloroplast",
+        "液泡",
+        "vacuole",
+        "细胞核",
+        "nucleus",
+        "洋葱表皮",
+        "onion epidermis",
+        "口腔上皮",
+        "cheek cell",
+        "Plants",
+        "plants",
+        "生长",
+        "growth",
+        "Animals",
+        "animals",
+        "animal",
+        "野兽",
+        "creature",
+        "栖息地",
+        "habitat",
+        "habitats",
+        "Experiment",
+        "experiment",
+        "simulation",
+        "lab",
+        "模拟",
+        "3D",
+        "3d",
+        "三维",
+        "three.js"
+      ],
+      "path": "courseware/microscope-cell-lab/index.html"
     }
   ]
 }

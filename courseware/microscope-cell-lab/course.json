@@ -1,0 +1,18 @@
+{
+  "id": "microscope-cell-lab",
+  "title": {
+    "zh": "显微细胞实验室",
+    "en": "Microscope Cell Lab"
+  },
+  "description": {
+    "zh": "拧物镜、调光、粗细准焦，看模糊光斑突然变成细胞，再量视野直径，比较洋葱表皮和口腔上皮。",
+    "en": "Pick an objective, light and focus until a blur snaps into cells, then measure the field of view and compare onion skin with cheek cells."
+  },
+  "category": "science",
+  "levels": ["junior"],
+  "grades": ["g7"],
+  "tags": ["显微镜", "细胞", "植物", "动物", "实验", "3D"],
+  "icon": "🔬",
+  "order": 176,
+  "badge": "new"
+}
