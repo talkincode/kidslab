@@ -1,0 +1,10 @@
+{
+  "id": "bgm-hope-01",
+  "title": "解决方案转亮",
+  "file": "lab-glow.ogg",
+  "loop": true,
+  "seconds": 57.8155,
+  "source": "bgm skill library bgm-hope-01",
+  "volume": 0.22,
+  "notes": "Loopable, medium-energy bed for a 3D observation lab. Unlock only after a user gesture."
+}

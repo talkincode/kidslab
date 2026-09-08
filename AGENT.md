@@ -58,7 +58,7 @@ cloudflare/analytics/  # 埋点接收 Worker(push 时经 deploy-analytics.yml �
 
 ## 添加新课件
 
-1. 从模板起步:复制 `docs/courseware-template/` 五个文件到 `src/<courseware-id>/`(目录名即 `id`),模板通过平台 SDK 复用双语与深浅主题机制,用法见 `docs/courseware-template/README.md`
+1. 从模板起步:把 `docs/courseware-template/` 整目录复制到 `src/<courseware-id>/`(含 3D 场景、参数面板、BGM、vendor),删掉其中的 README。以后所有新课件都做观测/调试/实验,不做考试型。用法见 `docs/courseware-template/README.md`
 2. 编写 `index.html` + 样式脚本
 3. 添加 `course.json`(schema 见下)与 `facts.md`(格式见下),运行 `npm run build` 校验
 
@@ -130,10 +130,15 @@ cloudflare/analytics/  # 埋点接收 Worker(push 时经 deploy-analytics.yml �
 ## 课件编写约定
 
 - **完全独立**:每个课件自带全部资源,只用相对路径,不引用其他课件或主站 assets
-- **无构建依赖**:源码即浏览器可运行的原生 HTML/CSS/JS(ES Module 可用);第三方库以本地 vendor 文件引入(参考 `src/welcome/vendor/`),不用 CDN
+- **无构建依赖**:源码即浏览器可运行的原生 HTML/CSS/JS(ES Module 可用);第三方库以本地 vendor 文件引入(参考 `src/magic-cube/vendor/`),不用 CDN
 - **中英双语**:界面文案提供 zh/en,使用 `window.cool.bindI18n()` 与 `window.cool.preferences` 同步语言偏好
 - **主题适配**:使用 `window.cool.preferences` 切换深浅主题;主站配色变量见 `assets/css/app.css`
 - **面向 K12**:交互直观、文案友好,适合小学到高中学生;质量底线见下方「质量规约」
+- **观测实验,禁止考试型**:新课件必须是观测 / 调试 / 实验。孩子调参数、看 3D 变化、读仪器。禁止选择题、填空通关、开局预测再评分、把知识点做成试卷。对错反馈只服务实验(接线错了、超量程),不是考卷
+- **布局**:全屏 Three.js 场景 + 右侧可展开收拢的参数面板(手机改为底部抽屉)。对齐 `src/magic-cube/`、`src/huarong-dao/` 与 `docs/courseware-template/`
+- **3D 必做**:场景必须 three.js,精细模型(灯光、阴影、Standard/Physical 材质),禁止默认灰盒;WebGL 失败要有 `#nogl`
+- **BGM 必做**:本地可循环背景音乐 + 独立音乐/音效开关;首次用户手势后才播放
+- **逻辑必须可单测**:玩法抽成无 DOM 的 `*-model.js`,在 `tests/unit/<id>.test.mjs` 覆盖恒等式、边界、非法拒绝、失败恢复
 - **进度与行为埋点**:`window.cool?.stage('level2')` 始终把课件记为“玩过”;在最终通关边界调用 `window.cool?.complete?.()`,可无限复玩的课件则在首个完整成功闭环调用;`window.cool?.track('flip')` 仅在配置 analytics 时上报核心动作。给"孩子做了什么"起名而非"点了哪个按钮",每课件 5~10 个即可,详见 `docs/sdk.md` 与 `docs/analytics.md`
 
 ## 质量规约(每个课件必须达标)
@@ -181,7 +186,8 @@ cloudflare/analytics/  # 埋点接收 Worker(push 时经 deploy-analytics.yml �
    - 首次进入不弹长篇教程;引导可跳过、随进度自动消失、不遮挡玩法区
    - 每步关键操作有即时反馈(动画/音效/文案);提示是"递台阶"不是"报答案":先提醒看哪里,再给方向,最后才演示
 
-8. **交互音效有语义,默认可控**
+8. **交互音效有语义,默认可控,必须有 BGM**
+   - 每个课件必须有本地可循环背景音乐,足够吸引孩子但不要盖过音效;音乐开关与音效开关分开,均可持久化
    - 核心玩法必须有交互音效;按玩法中实际存在的状态,至少覆盖直接操作确认(如拿起、落位、切换、发射)、正确/成功、错误/无效操作、关卡或完整闭环通关。普通导航按钮不要求逐个发声,不要为了凑数量制造噪音
    - 同一类声音要表达稳定语义:成功与失败能听出区别,通关反馈明显但不过长;音效不能是唯一反馈,必须同时有动画、文字、图标或形状变化
    - 每个有声音的课件必须提供用户可见的静音开关,命中区 ≥44×44px,并提供随语言变化的 `aria-label` 与正确的 `aria-pressed`;静音后要同时阻止后续一次性音效和循环/环境音,建议用 `localStorage` 持久化偏好
@@ -206,7 +212,9 @@ cloudflare/analytics/  # 埋点接收 Worker(push 时经 deploy-analytics.yml �
 - [ ] 1280×800 与 375×667 下核心区域一屏放下,无纵向滚动条
 - [ ] 拖拽跟手平滑:指针捕获、有反馈、有吸附/归位,触屏可用(`touch-action: none`)
 - [ ] 首次引导 + 操作反馈 + 卡住轻提示齐备,不遮挡玩法区
-- [ ] 核心操作、成功、错误与通关(按玩法实际状态)有语义明确的音效;静音开关可见可访问且能关闭全部声音,连续拖拽/物理循环不会高频堆叠音源,音频失败时可静默降级
+- [ ] 有本地 BGM(可循环、手势后播放、可单独关闭);核心操作、成功、错误与通关(按玩法实际状态)有语义明确的音效;静音开关可见可访问且能关闭全部声音,连续拖拽/物理循环不会高频堆叠音源,音频失败时可静默降级
+- [ ] 形态是观测/调试/实验,不是考试卷;左侧 3D 场景 + 右侧可收拢参数面板
+- [ ] 玩法模型有单测:恒等式、边界、非法输入拒绝、失败后可恢复
 - [ ] 深浅主题切换即时生效(含 Canvas/three.js 重绘),无硬编码颜色
 - [ ] 若完成或新增计划项,已同步更新 `docs/courseware-plan/status.md`、必要的学科规划文档和 README
 

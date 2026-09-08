@@ -1,26 +1,26 @@
-# 课件双语/主题模板 · Bilingual & Theme Courseware Template
+# 3D 观测实验课件模板 · Observation Lab Template
 
-新课件的标准起步模板。复制本目录五个文件到 `src/<courseware-id>/`，改 `course.json` 与 `facts.md`，在标注了
-`✏️` 的位置填入你的玩法即可。模板解决了每个课件都必须做对的三件事：
+新课件的标准起步模板，界面对齐 **魔方小达人** / **华容道**：全屏 Three.js 场景在左，右侧可展开收拢的参数面板。
 
-1. **中英双语**：`I18N` 字典 + `data-t` 属性交给 `window.cool.bindI18n()`，与主站即时同步；
-2. **深浅主题**：两套 CSS token（对齐主站 `assets/css/app.css`），由 `window.cool.preferences`
-   管理偏好，Canvas 通过 `cssVar()` 取色、监听 `themechange` 事件重绘；
-3. **平台外壳**：返回主站的顶栏、语言/主题切换按钮、移动端 viewport 与触屏事件基线。
+以后所有新课件都以 **观测 / 调试 / 实验** 为主，**禁止考试型**（选择题、填空通关、开局预测再评分）。孩子调参数、看 3D 变化、读仪器，把规律玩出来。
+
+模板自带一个可运行的竖直弹跳观测台，用来示范质量线。复制后把 `✏️`、`lab-model.js` 里的定律和 `scene.js` 里的标本换成你的课题。
 
 ## 使用方法
 
 ```bash
-cp docs/courseware-template/{index.html,style.css,main.js,course.json,facts.md} src/my-course/
-# 1. 改 course.json：id 必须等于目录名，title/description 填 zh/en 双语
-# 2. 改 facts.md：标题 id 同目录名，只列实际教授/依赖且可独立核对的知识
-# 3. index.html：改标题 emoji 与 <main> 里的舞台结构
-# 4. main.js：往 I18N 里加文案 key，在“游戏区”写玩法
-# 5. style.css：只用 var(--token) 上色，新增颜色先加进两套主题 token
-npm run build   # 必须通过（退出码 0）
-```
-
-## 约定速查（硬要求）
+id=my-course
+cp -R docs/courseware-template src/$id
+rm -f src/$id/README.md
+# 1. course.json：id 必须等于目录名；title/description 双语；玩法写成观测/实验，不要写成考试
+# 2. facts.md：标题 id 同目录名；只列本课实际教授/依赖的知识
+# 3. lab-model.js：纯函数模型（无 DOM / 无 three），先写单测再接线
+# 4. scene.js：替换 3D 标本；保留灯光、阴影、MeshStandard/Physical、主题背景
+# 5. index.html / main.js：改 I18N 与参数面板控件，不要改成试卷
+# 6. audio.js 里的 storageKey 改成 kidslab.<id>
+npm run test:unit
+npm run build
+```## 约定速查（硬要求）
 
 | 事项 | 约定 |
 |---|---|
@@ -33,33 +33,36 @@ npm run build   # 必须通过（退出码 0）
 | 亮色底上的文字 | 压在 `--accent` / `--accent-2` 等固定亮色上的文字一律用 `var(--ink-on-accent)`（两套主题都是深色），不要用 `--ink`/`--card`，否则暗色主题下白字压亮黄底看不清 |
 | Canvas | 监听 `resize` 与 `themechange`（模板派发的自定义事件）重设尺寸/配色 |
 | 触屏 | 交互用 Pointer Events（`pointerdown/move/up`），画布加 `touch-action: none` |
-| 独立性 | 只用相对路径；第三方库放本课件 `vendor/`（three.js 参考 `src/welcome/vendor/`），禁止 CDN |
+| 独立性 | 只用相对路径；第三方库放本课件 `vendor/`（three.js 参考 `src/magic-cube/vendor/`），禁止 CDN |
 | 知识断言 | `facts.md` 必须写适用范围、带编号断言和权威来源；每条断言至少引用一个 `[S编号]` |
-| 音频 | 核心操作、成功、错误与通关（按玩法实际状态）必须有语义不同的音效；首次用户手势前不得播放；必须提供可见、可访问且能关闭全部声音的静音开关；禁止在 `pointermove`、动画帧或物理帧中无节制创建音源；音频失败时静默降级，音效不能作为唯一反馈 |
-| 进度/埋点 | 关键阶段调 `window.cool?.stage('level2')`，真正最终通关时调 `window.cool?.complete?.()`；核心动作可调 `window.cool?.track('flip')`；详见 `docs/sdk.md` |
+| 形态 | 观测 / 调试 / 实验。禁止选择题、对错打分、开局把答案写进试卷 |
+| 布局 | 全屏 3D 舞台；右侧 `#panel` 可展开收拢；手机改为底部抽屉。不要再做「上说明书、下小画布」 |
+| 3D | 必须 three.js，本地 `vendor/`，禁止 CDN。环境光+方向光、阴影、`antialias`、`MeshStandardMaterial`/`MeshPhysicalMaterial`。WebGL 失败显示 `#nogl` |
+| BGM | 必须有本地可循环 BGM；`#musicBtn` 与 `#soundBtn` 分开；首次手势后才 `unlock()`；隐藏标签页时暂停 |
+| 音频 | 核心操作、成功、错误与发现时刻要有不同音效；静音开关可见可访问且能关闭全部声音；禁止在 `pointermove` / rAF 里无节制创建音源；失败时静默降级 |
+| 进度/埋点 | 开始观测调 `window.cool?.stage('observe')`；完整观测闭环调 `window.cool?.complete?.()`；详见 `docs/sdk.md` |
+| 逻辑验收 | 玩法抽到 `*-model.js`。单测至少覆盖：恒等式、边界、非法输入拒绝且不改状态、失败后可恢复 |
 
 平台 API 与存量迁移步骤见 [`docs/sdk.md`](../sdk.md)。
 
-## three.js 课件补充
+## 逻辑验收清单
 
-```bash
-mkdir src/my-course/vendor
-cp src/welcome/vendor/three.module.min.js src/my-course/vendor/
-```
+复制后的新课件，在提交前必须用单测锁死模型，而不是只靠「我玩了一遍」：
 
-```html
-<script type="module" src="main.js"></script>
-```
+1. **恒等式**：把课件真正依赖的公式写成可断言的等式（本模板：`t=√(2h/g)`、`v=√(2gh)`、`h′=h e²`、`e=1` 机械能守恒）。
+2. **边界**：最小/最大参数、`e=0` 静止、`dt=0` 不变。
+3. **非法拒绝**：`NaN`、负数时间、越界参数返回 `{ ok:false, reason }`，并且不改动原状态/历史。
+4. **可恢复**：暂停后继续、改参数后 `dropAgain()` 仍能玩，不会卡死。
+5. **非考试**：`index.html` / `main.js` 不出现选择题或「正确答案」流程。
 
-```js
-import * as THREE from './vendor/three.module.min.js';
-// 主题切换时同步 scene.background / 材质颜色：
-addEventListener('themechange', () => scene.background.set(cssVar('--paper')));
-```
+参考：`tests/unit/courseware-template.test.mjs`。新课件写 `tests/unit/<id>.test.mjs`。
 
-WebGL 不可用时要给出降级文案（参考 `src/welcome/main.js` 的 `nogl`）。
+## 3D 与 BGM
+
+`index.html` 必须带 importmap 与 `<script type="module" src="main.js">`。场景取色走 `cssVar('--scene-a')` 等 token，监听 `themechange`。模板已内置 `vendor/three.module.min.js`、`RoomEnvironment.js`、`RoundedBoxGeometry.js`。
+
+BGM 默认是 `audio/lab-glow.ogg`（曲库 `bgm-hope-01`，循环、中能量）。换课题时换本地音频，不要 CDN，不要在手势前播放。
 
 ## course.json 字段
 
-见 `AGENT.md`。本目录的 `course.json` 是可直接改用的样例；`id` 必须与目录名一致，
-`category` ∈ `math|programming|logic|science|physics|chemistry|featured`，`levels` 含 `primary`。
+见 `AGENT.md`。`id` 必须与目录名一致，`category` ∈ `math|programming|logic|science|physics|chemistry|featured`，`levels` 含 `primary`。
