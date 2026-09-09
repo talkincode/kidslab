@@ -14,6 +14,7 @@ const HEAVY_WEBGL_COURSES = new Set([
   'optics-lab',
   'solar-explorer',
   'welcome',
+  'statistics-sampling-lab',
 ]);
 
 async function storedValue(page, key) {

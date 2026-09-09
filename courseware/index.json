@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-09T13:22:23.521Z",
+  "generatedAt": "2026-09-09T17:59:02.379Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -283,6 +283,10 @@
     },
     "细胞": {
       "en": "Cell",
+      "kind": "knowledge"
+    },
+    "统计与抽样": {
+      "en": "Statistics & Sampling",
       "kind": "knowledge"
     },
     "编程启蒙": {
@@ -2276,6 +2280,68 @@
         "three.js"
       ],
       "path": "courseware/projectile-motion-lab/index.html"
+    },
+    {
+      "id": "statistics-sampling-lab",
+      "title": {
+        "zh": "抽样统计实验室",
+        "en": "Sampling Statistics Lab"
+      },
+      "description": {
+        "zh": "在迷你城市里用简单随机、分层、整群和便利抽样估通勤时间，看哪种方法会稳定地估错。",
+        "en": "Sample a mini-city with simple random, stratified, cluster, and convenience draws to estimate commute time — and watch which method stays stably wrong."
+      },
+      "category": "math",
+      "levels": [
+        "senior"
+      ],
+      "grades": [
+        "g10",
+        "g11",
+        "g12"
+      ],
+      "tags": [
+        "统计与抽样",
+        "实验",
+        "3D"
+      ],
+      "icon": "📊",
+      "order": 38,
+      "badge": "new",
+      "keywords": [
+        "Statistics & Sampling",
+        "statistics",
+        "sampling",
+        "抽样",
+        "样本",
+        "sample",
+        "总体",
+        "population",
+        "分层抽样",
+        "stratified sampling",
+        "整群抽样",
+        "cluster sampling",
+        "便利抽样",
+        "convenience sampling",
+        "简单随机抽样",
+        "simple random sampling",
+        "标准误",
+        "standard error",
+        "置信区间",
+        "confidence interval",
+        "抽样分布",
+        "sampling distribution",
+        "Experiment",
+        "experiment",
+        "simulation",
+        "lab",
+        "模拟",
+        "3D",
+        "3d",
+        "三维",
+        "three.js"
+      ],
+      "path": "courseware/statistics-sampling-lab/index.html"
     },
     {
       "id": "ph-lab",

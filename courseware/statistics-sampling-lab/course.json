@@ -1,0 +1,18 @@
+{
+  "id": "statistics-sampling-lab",
+  "title": {
+    "zh": "抽样统计实验室",
+    "en": "Sampling Statistics Lab"
+  },
+  "description": {
+    "zh": "在迷你城市里用简单随机、分层、整群和便利抽样估通勤时间，看哪种方法会稳定地估错。",
+    "en": "Sample a mini-city with simple random, stratified, cluster, and convenience draws to estimate commute time — and watch which method stays stably wrong."
+  },
+  "category": "math",
+  "levels": ["senior"],
+  "grades": ["g10", "g11", "g12"],
+  "tags": ["统计与抽样", "实验", "3D"],
+  "icon": "📊",
+  "order": 38,
+  "badge": "new"
+}

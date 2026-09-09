@@ -91,6 +91,7 @@
     "找规律": { "en": "Patterns", "kind": "knowledge", "aliases": ["patterns", "模式识别", "pattern recognition", "逻辑启蒙"] },
     "数独": { "en": "Sudoku", "kind": "knowledge", "aliases": ["sudoku"] },
     "魔方": { "en": "Rubik's Cube", "kind": "knowledge", "aliases": ["rubiks cube", "rubik's cube"] },
+    "统计与抽样": { "en": "Statistics & Sampling", "kind": "knowledge", "aliases": ["statistics", "sampling", "抽样", "样本", "sample", "总体", "population", "分层抽样", "stratified sampling", "整群抽样", "cluster sampling", "便利抽样", "convenience sampling", "简单随机抽样", "simple random sampling", "标准误", "standard error", "置信区间", "confidence interval", "抽样分布", "sampling distribution"] },
     "3D": { "en": "3D", "kind": "form", "aliases": ["3d", "三维", "three.js"] },
     "音乐": { "en": "Music", "kind": "form", "aliases": ["music", "节奏", "rhythm", "music coding"] },
     "实验": { "en": "Experiment", "kind": "form", "aliases": ["experiment", "simulation", "lab", "模拟"] },
