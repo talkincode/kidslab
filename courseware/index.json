@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-08T17:15:19.146Z",
+  "generatedAt": "2026-09-09T13:22:23.521Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -159,6 +159,10 @@
     },
     "投影": {
       "en": "Projection",
+      "kind": "knowledge"
+    },
+    "抛体运动": {
+      "en": "Projectile Motion",
       "kind": "knowledge"
     },
     "排序算法": {
@@ -2201,6 +2205,77 @@
         "游戏"
       ],
       "path": "courseware/shape-tailor/index.html"
+    },
+    {
+      "id": "projectile-motion-lab",
+      "title": {
+        "zh": "抛体运动实验室",
+        "en": "Projectile Motion Lab"
+      },
+      "description": {
+        "zh": "拧大炮的速度和角度，看红球平抛、黄球自由落下，停表对比落地时刻，再瞄准铁环。",
+        "en": "Dial a cannon’s speed and angle, watch a red projectile and a yellow free-fall ball share a clock, then thread a hoop."
+      },
+      "category": "physics",
+      "levels": [
+        "senior"
+      ],
+      "grades": [
+        "g10"
+      ],
+      "tags": [
+        "抛体运动",
+        "运动",
+        "速度",
+        "重力",
+        "实验",
+        "3D"
+      ],
+      "icon": "🎯",
+      "order": 37,
+      "badge": "new",
+      "keywords": [
+        "Projectile Motion",
+        "projectile",
+        "projectile motion",
+        "平抛",
+        "horizontal projectile",
+        "斜抛",
+        "trajectory",
+        "抛体",
+        "射程",
+        "自由落体",
+        "free fall",
+        "Motion",
+        "motion",
+        "机械运动",
+        "kinematics",
+        "运动学",
+        "打点计时器",
+        "ticker timer",
+        "s-t",
+        "v-t",
+        "逐帧打点",
+        "Velocity",
+        "velocity",
+        "speed",
+        "平均速度",
+        "average velocity",
+        "匀速",
+        "uniform motion",
+        "Gravity",
+        "gravity",
+        "Experiment",
+        "experiment",
+        "simulation",
+        "lab",
+        "模拟",
+        "3D",
+        "3d",
+        "三维",
+        "three.js"
+      ],
+      "path": "courseware/projectile-motion-lab/index.html"
     },
     {
       "id": "ph-lab",

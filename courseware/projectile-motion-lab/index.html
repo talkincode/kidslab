@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>🎯 抛体运动实验室 · KidsLab</title>
+  <!--
+    THESIS: A 3D cannon range, not a projectile quiz.
+    OWN-WORLD: KidsLab chunky pills, fullscreen Three.js stage, right-hand instrument panel.
+    STORY: Fire a red ball, drop a yellow one, watch the clocks match, then thread a hoop.
+    FIRST VIEWPORT: Cannon + field + hoop; HUD chips; collapsible panel.
+  -->
+  <link rel="stylesheet" href="style.css?v=0a0faca3" />
+  <script>
+    (() => {
+      try {
+        const theme = localStorage.getItem('kidslab.theme')
+          || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        const lang = localStorage.getItem('kidslab.lang')
+          || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+      } catch { /* private mode */ }
+    })();
+  </script>
+  <script type="importmap">
+    { "imports": { "three": "./vendor/three.module.min.js" } }
+  </script>
+<link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<script>(()=>{"use strict";const g=window,r=g.cool||{};if(r.sdkVersion)return;try{document.documentElement.style.touchAction="manipulation"}catch{}const w="projectile-motion-lab",b=location.pathname.split("/").filter(Boolean),E=b.at(-1)||"",A=E.includes(".")?b.at(-2):E,d=w.startsWith("__")?A:w,l={get(t,n=null){try{const e=localStorage.getItem(t);return e===null?n:e}catch{return n}},set(t,n){try{return localStorage.setItem(t,n),!0}catch{return!1}},remove(t){try{return localStorage.removeItem(t),!0}catch{return!1}}},f=new Set,S=new Set(["zh","en"]),I=new Set(["light","dark"]),C=(navigator.language||"").toLowerCase().startsWith("zh")?"zh":"en";let m="light";try{m=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch{}let o=l.get("kidslab.lang",C),s=l.get("kidslab.theme",m);S.has(o)||(o=C),I.has(s)||(s=m);function p(){document.documentElement.lang=o==="zh"?"zh-CN":"en",document.documentElement.dataset.theme=s}function T(t,n){const e={kind:t,value:n};for(const c of[...f])c(e);g.dispatchEvent(new CustomEvent(`${t}change`,{detail:{[t]:n}}))}const z={get lang(){return o},get theme(){return s},setLang(t){if(!S.has(t))throw new RangeError(`Unsupported language: ${t}`);t!==o&&(o=t,l.set("kidslab.lang",t),p(),T("lang",t))},setTheme(t){if(!I.has(t))throw new RangeError(`Unsupported theme: ${t}`);t!==s&&(s=t,l.set("kidslab.theme",t),p(),T("theme",t))},toggleLang(){this.setLang(o==="zh"?"en":"zh")},toggleTheme(){this.setTheme(s==="light"?"dark":"light")},subscribe(t){if(typeof t!="function")throw new TypeError("Preference listener must be a function");return f.add(t),()=>f.delete(t)}};function D(t,n={}){if(!t||typeof t!="object")throw new TypeError("Messages must be an object");const e=n.root||document;if(!e.querySelectorAll&&!e.matches)throw new TypeError("i18n root must be a Document or Element");function c(a,...h){const u=t[o]?.[a]??t.zh?.[a]??t.en?.[a];return typeof u=="function"?u(...h):u??a}function y(a="lang"){const h=[];e.matches?.("[data-t]")&&h.push(e),e.querySelectorAll&&h.push(...e.querySelectorAll("[data-t]"));for(const u of h){const L=c(u.dataset.t);typeof L=="string"&&(u.textContent=L)}n.onChange?.({kind:a,lang:o,theme:s,t:c})}const $=z.subscribe(({kind:a})=>{a==="lang"?y("lang"):n.onChange?.({kind:a,lang:o,theme:s,t:c})});return y("init"),{t:c,render:y,destroy:$}}const i=d?`kidslab.progress.${d}`:"";function _(){if(!i)return null;try{const t=JSON.parse(l.get(i,"null"));return!t||!["played","completed"].includes(t.status)?null:t}catch{return null}}function k(t,n){if(!i)return null;const e=_()||{},c={status:e.status==="completed"?"completed":t,stage:n||e.stage||"",updatedAt:Date.now()};return l.set(i,JSON.stringify(c)),c}const P={get:_,clear(){return i?l.remove(i):!1}};r.sdkVersion=2,r.courseId=d,r.storage=l,r.preferences=z,r.bindI18n=D,r.progress=P,typeof r.track!="function"&&(r.track=()=>{}),r.stage=t=>{typeof t!="string"||!t||k("played",t.slice(0,48))},r.complete=()=>k("completed"),g.cool=r,p()})();
+</script>
+<script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
+</head>
+<body>
+  <canvas id="scene" aria-label="3D projectile lab"></canvas>
+  <p class="nogl" id="nogl" hidden data-t="nogl">浏览器暂时跑不了 3D 实验室，换一个新一点的浏览器再来观测吧。</p>
+
+  <header class="bar">
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🎯 <span data-t="title">抛体运动实验室</span></h1>
+    <div class="bar__actions">
+      <button class="pill pill--icon" id="musicBtn" type="button" aria-pressed="true">♫</button>
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-pressed="true">🔊</button>
+      <button class="pill pill--icon" id="themeBtn" type="button">🌙</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
+    </div>
+  </header>
+
+  <section class="hud" aria-label="live instruments">
+    <div class="hud__chip"><span class="hud__label" data-t="hudTime">时间</span><b id="timeVal">0.00 s</b></div>
+    <div class="hud__chip"><span class="hud__label" data-t="hudX">水平 x</span><b id="xVal">0.00 m</b></div>
+    <div class="hud__chip"><span class="hud__label" data-t="hudY">高度 y</span><b id="yVal">5.00 m</b></div>
+    <div class="hud__chip"><span class="hud__label" data-t="hudStatus">状态</span><b id="statusVal">就绪</b></div>
+  </section>
+
+  <p class="coach" id="coach" data-t="tip0">按「一起发射」，看红球和黄球谁先落地</p>
+
+  <aside class="panel" id="panel">
+    <div class="panel__quick">
+      <button class="btn btn--big" id="compareBtn" type="button">🔴🟡 <span data-t="btnCompare">一起发射</span></button>
+      <div class="btnrow">
+        <button class="btn btn--ghost btn--sm" id="launchBtn" type="button" data-t="btnLaunch">只发射红球</button>
+        <button class="btn btn--ghost btn--sm" id="pauseBtn" type="button" data-t="btnPause">暂停</button>
+      </div>
+      <div class="btnrow">
+        <button class="btn btn--ghost btn--sm" id="recordBtn" type="button" data-t="btnRecord">记下这次</button>
+        <button class="btn btn--ghost btn--sm" id="resetBtn" type="button" data-t="btnReset">重新实验</button>
+      </div>
+      <p class="panel__note" id="feedback" data-t="feedbackIdle">先看同时落地，再抬炮口瞄准铁环。</p>
+    </div>
+    <button class="panel__handle" id="panelHandle" type="button" aria-expanded="true">
+      <span data-t="panelTitle">大炮面板</span><i id="panelArrow">▾</i>
+    </button>
+    <div class="panel__body" id="panelBody">
+      <section class="panel__group">
+        <p class="panel__label"><span data-t="labH">抛出高度</span><b id="heightVal" class="panel__val">5.00 m</b></p>
+        <input type="range" id="heightRange" min="1" max="12" step="0.1" value="5" />
+      </section>
+      <section class="panel__group">
+        <p class="panel__label"><span data-t="labV">初速度</span><b id="speedVal" class="panel__val">10.0 m/s</b></p>
+        <input type="range" id="speedRange" min="0" max="25" step="0.1" value="10" />
+      </section>
+      <section class="panel__group">
+        <p class="panel__label"><span data-t="labA">仰角</span><b id="angleVal" class="panel__val">0°</b></p>
+        <input type="range" id="angleRange" min="0" max="80" step="1" value="0" />
+      </section>
+      <section class="panel__group">
+        <p class="panel__label"><span data-t="labG">重力 g</span><b id="gVal" class="panel__val">9.80 m/s²</b></p>
+        <input type="range" id="gRange" min="1.6" max="24.8" step="0.1" value="9.8" />
+      </section>
+      <section class="panel__group">
+        <p class="panel__label" data-t="labComp">此刻分量</p>
+        <p class="panel__note"><span data-t="hudVx">水平 vx</span> <b id="vxVal">10.00 m/s</b> · <span data-t="hudVy">竖直 vy</span> <b id="vyVal">0.00 m/s</b></p>
+        <p class="panel__note"><span data-t="hudHoop">离铁环</span> <b id="hoopVal">—</b></p>
+      </section>
+      <section class="panel__group">
+        <p class="panel__label" data-t="logTitle">观测记录</p>
+        <table class="log-table">
+          <thead>
+            <tr>
+              <th data-t="colMode">方式</th>
+              <th data-t="colT">时间</th>
+              <th data-t="colR">射程</th>
+            </tr>
+          </thead>
+          <tbody id="trialRows"></tbody>
+        </table>
+      </section>
+      <section class="panel__group" id="completeCard" hidden>
+        <p class="panel__note" id="conclusionStatus">平抛和自由落体同一时刻落地；抬高炮口，红球穿过了铁环。</p>
+      </section>
+      <section class="panel__group">
+        <button class="lesson__toggle" id="lessonBtn" type="button">
+          <span data-t="lessonTitle">小课堂：为什么两个球一起落地？</span><i id="lessonArrow">▸</i>
+        </button>
+        <div class="lesson" id="lessonBody" hidden>
+          <p class="lesson__intro" data-t="lessonText">水平方向匀速，竖直方向才被重力拉。平抛的竖直部分就是自由落体，所以从同一高度出发，落地时间只看高度和 g，跟水平速度无关。</p>
+        </div>
+      </section>
+    </div>
+  </aside>
+
+  <p class="foot-tip" id="footTip" data-t="footTip">拖空白转视角 · 右侧拧大炮，左侧看轨迹</p>
+
+  <script type="module" src="main.js?v=e59b2149"></script>
+</body>
+</html>

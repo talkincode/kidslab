@@ -1,0 +1,18 @@
+{
+  "id": "projectile-motion-lab",
+  "title": {
+    "zh": "抛体运动实验室",
+    "en": "Projectile Motion Lab"
+  },
+  "description": {
+    "zh": "拧大炮的速度和角度，看红球平抛、黄球自由落下，停表对比落地时刻，再瞄准铁环。",
+    "en": "Dial a cannon’s speed and angle, watch a red projectile and a yellow free-fall ball share a clock, then thread a hoop."
+  },
+  "category": "physics",
+  "levels": ["senior"],
+  "grades": ["g10"],
+  "tags": ["抛体运动", "运动", "速度", "重力", "实验", "3D"],
+  "icon": "🎯",
+  "order": 37,
+  "badge": "new"
+}

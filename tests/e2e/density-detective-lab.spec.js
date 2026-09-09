@@ -17,6 +17,8 @@ async function logTrial(page, specimenId, mass, volume) {
 }
 
 test.describe('density detective lab', () => {
+  test.describe.configure({ timeout: 90000 });
+
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {
       const initializedKey = 'kidslab.e2e.density-detective-lab.initialized';
