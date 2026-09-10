@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-09T17:59:02.379Z",
+  "generatedAt": "2026-09-10T13:18:30.975Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -5423,8 +5423,8 @@
         "en": "Ohm's Law Lab"
       },
       "description": {
-        "zh": "在 3D 实验桌上改电压和电阻，看着电流光点穿过电阻，记录 U-I 数据，让两条直线自己说出欧姆定律。",
-        "en": "Change voltage and resistance on a 3D bench, watch current spark along the resistor, record U-I data, and let two lines reveal Ohm’s law."
+        "zh": "在 3D 实验桌上拧电压和电阻，看着电流光点穿过电阻，记下 U-I 读数，让图线自己说出欧姆定律。",
+        "en": "Twist voltage and resistance on a 3D bench, watch the spark along the resistor, save U-I readings, and let the plot reveal Ohm’s law."
       },
       "category": "physics",
       "levels": [

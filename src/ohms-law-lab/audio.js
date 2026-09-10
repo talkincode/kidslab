@@ -1,37 +1,66 @@
-const MUSIC_LEVEL = 0.2;
+const BGM_URL = new URL('./audio/bgm-calm-tech-01.ogg', import.meta.url);
+const BGM_LEVEL = 0.2;
+const MASTER_LEVEL = 0.74;
 
-export function createLabAudio({ bgmUrl, muted = false } = {}) {
+export function createAudio(storageKey = 'kidslab.ohms-law-lab') {
+  const store = {
+    get(key, fallback) {
+      try {
+        const value = localStorage.getItem(`${storageKey}.${key}`);
+        return value === null ? fallback : value === '1';
+      } catch {
+        return fallback;
+      }
+    },
+    set(key, value) {
+      try { localStorage.setItem(`${storageKey}.${key}`, value ? '1' : '0'); } catch { /* private mode */ }
+    },
+  };
+
+  function legacyMuted() {
+    try {
+      return localStorage.getItem(`${storageKey}.sound`) === 'true';
+    } catch {
+      return false;
+    }
+  }
+
+  const mutedByLegacy = legacyMuted();
   let ctx = null;
+  let master = null;
   let musicGain = null;
   let sfxGain = null;
   let bgmBuffer = null;
   let bgmSource = null;
-  let unlocked = false;
   let loading = null;
-  let isMuted = muted;
+  let unlocked = false;
+  let musicOn = mutedByLegacy ? false : store.get('music', true);
+  let sfxOn = mutedByLegacy ? false : store.get('sfx', true);
 
-  function ensure() {
+  function ensureContext() {
     if (ctx) return true;
     const Ctor = window.AudioContext || window.webkitAudioContext;
     if (!Ctor) return false;
     try {
       ctx = new Ctor();
-      const master = ctx.createGain();
-      master.gain.value = 0.8;
-      const compressor = ctx.createDynamicsCompressor?.();
-      if (compressor) {
-        compressor.threshold.value = -18;
-        compressor.ratio.value = 3;
-        compressor.connect(ctx.destination);
-        master.connect(compressor);
-      } else {
-        master.connect(ctx.destination);
-      }
+      const compressor = ctx.createDynamicsCompressor();
+      compressor.threshold.value = -18;
+      compressor.knee.value = 18;
+      compressor.ratio.value = 3.5;
+      compressor.attack.value = 0.008;
+      compressor.release.value = 0.22;
+      compressor.connect(ctx.destination);
+
+      master = ctx.createGain();
+      master.gain.value = MASTER_LEVEL;
+      master.connect(compressor);
+
       musicGain = ctx.createGain();
       musicGain.gain.value = 0.0001;
       musicGain.connect(master);
+
       sfxGain = ctx.createGain();
-      sfxGain.gain.value = isMuted ? 0 : 0.9;
+      sfxGain.gain.value = sfxOn ? 0.9 : 0.0001;
       sfxGain.connect(master);
       return true;
     } catch {
@@ -41,12 +70,13 @@ export function createLabAudio({ bgmUrl, muted = false } = {}) {
   }
 
   function loadBgm() {
-    if (!ctx || !bgmUrl || loading) return loading;
-    if (typeof ctx.decodeAudioData !== 'function' || typeof ctx.createBufferSource !== 'function') {
-      return Promise.resolve(false);
-    }
-    loading = fetch(bgmUrl)
-      .then((response) => (response.ok ? response.arrayBuffer() : Promise.reject()))
+    if (!ctx) return Promise.resolve(false);
+    if (loading) return loading;
+    loading = fetch(BGM_URL)
+      .then((response) => {
+        if (!response.ok) throw new Error('bgm missing');
+        return response.arrayBuffer();
+      })
       .then((buffer) => ctx.decodeAudioData(buffer))
       .then((decoded) => {
         bgmBuffer = decoded;
@@ -56,100 +86,136 @@ export function createLabAudio({ bgmUrl, muted = false } = {}) {
     return loading;
   }
 
+  function ramp(node, value, seconds = 0.18) {
+    if (!ctx || !node) return;
+    const now = ctx.currentTime;
+    node.gain.cancelScheduledValues(now);
+    node.gain.setValueAtTime(Math.max(0.0001, node.gain.value), now);
+    node.gain.exponentialRampToValueAtTime(Math.max(0.0001, value), now + seconds);
+  }
+
   function startBgm() {
-    if (!ctx || !bgmBuffer || bgmSource || isMuted || !unlocked) return;
+    if (!ctx || !bgmBuffer || bgmSource || !musicOn || !unlocked) return;
     try {
       const source = ctx.createBufferSource();
       source.buffer = bgmBuffer;
       source.loop = true;
       source.connect(musicGain);
-      source.start();
+      source.start(ctx.currentTime + 0.03);
       bgmSource = source;
-      const now = ctx.currentTime;
-      musicGain.gain.cancelScheduledValues(now);
-      musicGain.gain.setValueAtTime(0.0001, now);
-      musicGain.gain.exponentialRampToValueAtTime(MUSIC_LEVEL, now + 1.2);
       source.onended = () => {
         if (bgmSource === source) bgmSource = null;
       };
+      ramp(musicGain, BGM_LEVEL, 1.2);
     } catch {
       bgmSource = null;
     }
   }
 
   async function unlock() {
-    if (!ensure()) return false;
+    if (!ensureContext()) return false;
     unlocked = true;
     try {
       if (ctx.state === 'suspended') await ctx.resume();
     } catch {
       return false;
     }
-    if (isMuted) return true;
-    const ok = await loadBgm();
-    if (ok) startBgm();
+    if (musicOn) {
+      const loaded = await loadBgm();
+      if (loaded) startBgm();
+    }
     return true;
   }
 
-  function beep(kind = 'tap') {
-    if (isMuted || !ensure()) return;
-    try {
-      if (ctx.state === 'suspended') ctx.resume().catch(() => {});
-      const now = ctx.currentTime;
-      const settings = {
-        tap: { notes: [392], type: 'triangle', gain: 0.07, duration: 0.12 },
-        good: { notes: [523, 659], type: 'sine', gain: 0.08, duration: 0.22 },
-        bad: { notes: [180, 140], type: 'sawtooth', gain: 0.05, duration: 0.2 },
-        win: { notes: [523, 659, 784], type: 'sine', gain: 0.09, duration: 0.42 },
-      }[kind] || { notes: [370], type: 'sine', gain: 0.06, duration: 0.14 };
-      settings.notes.forEach((frequency, index) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = settings.type;
-        osc.frequency.setValueAtTime(frequency, now + index * 0.09);
-        gain.gain.setValueAtTime(0.0001, now + index * 0.09);
-        gain.gain.exponentialRampToValueAtTime(settings.gain, now + index * 0.09 + 0.015);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + index * 0.09 + settings.duration);
-        osc.connect(gain).connect(sfxGain);
-        osc.start(now + index * 0.09);
-        osc.stop(now + index * 0.09 + settings.duration + 0.02);
-      });
-    } catch {
-      // Sound is optional.
+  function readyForSfx() {
+    return Boolean(ctx && unlocked && sfxOn && ctx.state === 'running');
+  }
+
+  function tone({ type = 'sine', from, to = from, at, duration, level }) {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(Math.max(30, from), at);
+    osc.frequency.exponentialRampToValueAtTime(Math.max(30, to), at + duration);
+    gain.gain.setValueAtTime(0.0001, at);
+    gain.gain.exponentialRampToValueAtTime(level, at + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, at + duration);
+    osc.connect(gain).connect(sfxGain);
+    osc.start(at);
+    osc.stop(at + duration + 0.02);
+  }
+
+  function click() {
+    if (!readyForSfx()) return;
+    const now = ctx.currentTime;
+    tone({ type: 'triangle', from: 640, to: 420, at: now, duration: 0.05, level: 0.045 });
+  }
+
+  function pickup() {
+    if (!readyForSfx()) return;
+    const now = ctx.currentTime;
+    tone({ type: 'triangle', from: 392, to: 520, at: now, duration: 0.08, level: 0.05 });
+  }
+
+  function record() {
+    if (!readyForSfx()) return;
+    const now = ctx.currentTime;
+    tone({ type: 'sine', from: 660, to: 880, at: now, duration: 0.12, level: 0.06 });
+    tone({ type: 'sine', from: 880, to: 1180, at: now + 0.08, duration: 0.16, level: 0.05 });
+  }
+
+  function error() {
+    if (!readyForSfx()) return;
+    const now = ctx.currentTime;
+    tone({ type: 'square', from: 180, to: 90, at: now, duration: 0.14, level: 0.05 });
+  }
+
+  function success() {
+    if (!readyForSfx()) return;
+    const now = ctx.currentTime;
+    tone({ type: 'sine', from: 520, to: 780, at: now, duration: 0.16, level: 0.06 });
+    tone({ type: 'triangle', from: 780, to: 1040, at: now + 0.07, duration: 0.18, level: 0.045 });
+  }
+
+  function setMusic(value) {
+    musicOn = Boolean(value);
+    store.set('music', musicOn);
+    try { localStorage.setItem(`${storageKey}.sound`, musicOn || sfxOn ? 'false' : 'true'); } catch { /* private mode */ }
+    if (!ctx) return;
+    if (musicOn) {
+      loadBgm().then((ok) => { if (ok) startBgm(); });
+      ramp(musicGain, BGM_LEVEL, 0.6);
+    } else {
+      ramp(musicGain, 0.0001, 0.28);
     }
   }
 
-  function setMuted(next) {
-    isMuted = next;
-    if (!ctx) return;
-    try {
-      if (sfxGain) sfxGain.gain.value = next ? 0 : 0.9;
-      if (musicGain) {
-        const now = ctx.currentTime;
-        musicGain.gain.cancelScheduledValues(now);
-        musicGain.gain.setValueAtTime(Math.max(0.0001, musicGain.gain.value), now);
-        musicGain.gain.exponentialRampToValueAtTime(next ? 0.0001 : MUSIC_LEVEL, now + 0.18);
-      }
-      if (next) ctx.suspend?.().catch(() => {});
-      else if (unlocked) {
-        ctx.resume?.().catch(() => {});
-        startBgm();
-      }
-    } catch {
-      // Mute must never break the lab.
-    }
+  function setSfx(value) {
+    sfxOn = Boolean(value);
+    store.set('sfx', sfxOn);
+    try { localStorage.setItem(`${storageKey}.sound`, musicOn || sfxOn ? 'false' : 'true'); } catch { /* private mode */ }
+    if (sfxGain) ramp(sfxGain, sfxOn ? 0.9 : 0.0001, 0.12);
   }
 
   document.addEventListener('visibilitychange', () => {
     if (!ctx) return;
-    if (document.hidden) ctx.suspend?.().catch(() => {});
-    else if (!isMuted && unlocked) ctx.resume?.().then(() => startBgm()).catch(() => {});
+    if (document.hidden && ctx.state === 'running') {
+      ctx.suspend().catch(() => {});
+    } else if (!document.hidden && unlocked && (musicOn || sfxOn)) {
+      ctx.resume().then(startBgm).catch(() => {});
+    }
   });
 
   return {
     unlock,
-    beep,
-    setMuted,
-    get muted() { return isMuted; },
+    click,
+    pickup,
+    record,
+    error,
+    success,
+    setMusic,
+    setSfx,
+    get musicOn() { return musicOn; },
+    get sfxOn() { return sfxOn; },
   };
 }
