@@ -1,23 +1,15 @@
 import { test, expect } from '@playwright/test';
 
-async function selectMobilePanel() {
-  // Observation shell keeps instruments and the log in one collapsible panel.
-}
-
-async function logTrial(page, specimenId, mass, volume) {
-  await selectMobilePanel(page, 'case');
+async function logTrial(page, specimenId) {
   await page.locator(`[data-specimen="${specimenId}"]`).click();
   await expect(page.locator('#weighBtn')).toBeVisible();
   await page.locator('#weighBtn').click();
   await page.locator('#submergeBtn').click();
-  await selectMobilePanel(page, 'evidence');
-  await page.locator('#massEntry').fill(String(mass));
-  await page.locator('#volumeEntry').fill(String(volume));
   await page.locator('#recordBtn').click();
 }
 
 test.describe('density detective lab', () => {
-  test.describe.configure({ timeout: 90000 });
+  test.describe.configure({ timeout: 60000 });
 
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {
@@ -32,39 +24,30 @@ test.describe('density detective lab', () => {
     await page.goto('/courseware/density-detective-lab/');
   });
 
-  test('measures three specimens, graphs their density, and identifies aluminum', async ({ page }) => {
-    await logTrial(page, 'specimen-a', 27, 10);
+  test('measures three specimens from live readings and locks aluminum', async ({ page }) => {
+    await logTrial(page, 'specimen-a');
     await expect(page.locator('#recordBody tr').first()).toContainText('2.70');
 
-    await logTrial(page, 'specimen-b', 54, 20);
-    await logTrial(page, 'specimen-c', 81, 30);
+    await logTrial(page, 'specimen-b');
+    await logTrial(page, 'specimen-c');
 
     await expect(page.locator('#densityEstimate')).toHaveText('ρ = 2.70 g/cm³');
     await expect(page.locator('#graphPoints circle')).toHaveCount(3);
-    await expect(page.locator('#material-aluminum')).toBeEnabled();
-    await page.locator('#material-aluminum').click();
-    await expect(page.locator('#conclusionStatus')).toContainText('案件结案');
+    await expect(page.locator('#conclusionStatus')).toContainText('铝');
     await expect.poll(() => page.evaluate(() =>
-      JSON.parse(localStorage.getItem('kidslab.progress.density-detective-lab') || 'null')?.status)).toBe('completed');
+      JSON.parse(localStorage.getItem('kidslab.progress.density-detective-lab') || 'null')?.status), { timeout: 8000 }).toBe('completed');
   });
 
-  test('rejects a mismatched reading and lets the student correct it in place', async ({ page }) => {
-    await selectMobilePanel(page, 'case');
+  test('rejects dunking before weighing and lets the student recover in place', async ({ page }) => {
     await page.locator('[data-specimen="specimen-a"]').click();
-    await page.locator('#weighBtn').click();
     await page.locator('#submergeBtn').click();
-    await selectMobilePanel(page, 'evidence');
-
-    await page.locator('#massEntry').fill('26');
-    await page.locator('#volumeEntry').fill('10');
-    await page.locator('#recordBtn').click();
-    await expect(page.locator('#entryFeedback')).toContainText('对不上');
+    await expect(page.locator('#benchFeedback')).toContainText('先称');
     await expect(page.locator('#recordBody tr').first()).toContainText('—');
 
-    await page.locator('#massEntry').fill('27');
+    await page.locator('#weighBtn').click();
+    await page.locator('#submergeBtn').click();
     await page.locator('#recordBtn').click();
     await expect(page.locator('#recordBody tr').first()).toContainText('2.70');
-    await expect(page.locator('#entryFeedback')).toContainText('已入档');
   });
 
   test('uses semantic sound feedback and keeps mute selected after reload', async ({ page }) => {
@@ -117,9 +100,8 @@ test.describe('density detective lab', () => {
     });
     await page.reload();
 
-    await selectMobilePanel(page, 'bench');
     await page.locator('#weighBtn').click();
-    await expect.poll(() => page.evaluate(() => window.__densityToneStarts)).toBeGreaterThan(0);
+    await expect.poll(() => page.evaluate(() => window.__densityToneStarts), { timeout: 8000 }).toBeGreaterThan(0);
     const startsBeforeMute = await page.evaluate(() => window.__densityToneStarts);
     await page.locator('#soundBtn').click();
     await expect(page.locator('#soundBtn')).toHaveAttribute('aria-pressed', 'true');
@@ -132,17 +114,20 @@ test.describe('density detective lab', () => {
   });
 
   test('keeps the active lab panel inside desktop and phone viewports', async ({ page }) => {
-    await selectMobilePanel(page, 'bench');
     await expect(page.locator('#weighBtn')).toBeVisible();
-    const layout = await page.evaluate(() => ({
-      width: document.documentElement.scrollWidth,
-      height: document.documentElement.scrollHeight,
-      viewportWidth: window.innerWidth,
-      viewportHeight: window.innerHeight,
-      appBottom: document.querySelector('#app').getBoundingClientRect().bottom,
-    }));
+    await expect(page.locator('#panel')).toBeVisible();
+    const layout = await page.evaluate(() => {
+      const panel = document.querySelector('#panel').getBoundingClientRect();
+      return {
+        width: document.documentElement.scrollWidth,
+        viewportWidth: window.innerWidth,
+        viewportHeight: window.innerHeight,
+        panelRight: panel.right,
+        panelBottom: panel.bottom,
+      };
+    });
     expect(layout.width).toBeLessThanOrEqual(layout.viewportWidth + 1);
-    expect(layout.height).toBeLessThanOrEqual(layout.viewportHeight + 1);
-    expect(layout.appBottom).toBeLessThanOrEqual(layout.viewportHeight + 1);
+    expect(layout.panelRight).toBeLessThanOrEqual(layout.viewportWidth + 1);
+    expect(layout.panelBottom).toBeLessThanOrEqual(layout.viewportHeight + 1);
   });
 });

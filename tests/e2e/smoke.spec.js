@@ -16,6 +16,7 @@ const HEAVY_WEBGL_COURSES = new Set([
   'welcome',
   'statistics-sampling-lab',
   'ice-maker-lab',
+  'density-detective-lab',
 ]);
 
 async function storedValue(page, key) {

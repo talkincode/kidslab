@@ -71,3 +71,107 @@ export function identifyMaterial(densityGPerCm3, materials = REFERENCE_MATERIALS
   ));
   return Math.abs(nearest.densityGPerCm3 - densityGPerCm3) <= tolerance ? nearest : null;
 }
+
+function cloneLab(lab) {
+  return {
+    selectedSpecimenId: lab.selectedSpecimenId,
+    observation: { weighed: lab.observation.weighed, submerged: lab.observation.submerged },
+    records: lab.records.slice(),
+    identifiedMaterialId: lab.identifiedMaterialId,
+    complete: lab.complete,
+  };
+}
+
+function fail(lab, reason) {
+  return { ok: false, reason, lab: cloneLab(lab) };
+}
+
+function recordFor(lab, specimenId) {
+  return lab.records.find((record) => record.specimenId === specimenId) || null;
+}
+
+export function createLab() {
+  return {
+    selectedSpecimenId: 'specimen-a',
+    observation: { weighed: false, submerged: false },
+    records: [],
+    identifiedMaterialId: null,
+    complete: false,
+  };
+}
+
+export function resetLab() {
+  return createLab();
+}
+
+export function liveReadings(lab) {
+  const sample = getSpecimen(lab?.selectedSpecimenId);
+  if (!sample) {
+    return { massG: null, initialWaterMl: null, finalWaterMl: null, volumeCm3: null };
+  }
+  const measurement = createMeasurement(sample);
+  const weighed = Boolean(recordFor(lab, sample.id) || lab.observation.weighed);
+  const submerged = Boolean(recordFor(lab, sample.id) || lab.observation.submerged);
+  return {
+    massG: weighed ? measurement.massG : null,
+    initialWaterMl: measurement.initialWaterMl,
+    finalWaterMl: submerged ? measurement.finalWaterMl : null,
+    volumeCm3: submerged ? measurement.volumeCm3 : null,
+  };
+}
+
+export function selectSpecimen(lab, specimenId) {
+  if (!lab) return fail(createLab(), 'invalid-lab');
+  if (!getSpecimen(specimenId)) return fail(lab, 'unknown-specimen');
+  const next = cloneLab(lab);
+  next.selectedSpecimenId = specimenId;
+  if (!recordFor(lab, specimenId)) {
+    next.observation = { weighed: false, submerged: false };
+  }
+  return { ok: true, lab: next };
+}
+
+export function weighSpecimen(lab) {
+  if (!lab) return fail(createLab(), 'invalid-lab');
+  const sample = getSpecimen(lab.selectedSpecimenId);
+  if (!sample) return fail(lab, 'unknown-specimen');
+  if (recordFor(lab, sample.id)) return fail(lab, 'already-recorded');
+  const next = cloneLab(lab);
+  next.observation.weighed = true;
+  return { ok: true, lab: next };
+}
+
+export function submergeSpecimen(lab) {
+  if (!lab) return fail(createLab(), 'invalid-lab');
+  const sample = getSpecimen(lab.selectedSpecimenId);
+  if (!sample) return fail(lab, 'unknown-specimen');
+  if (recordFor(lab, sample.id)) return fail(lab, 'already-recorded');
+  if (!lab.observation.weighed) return fail(lab, 'weigh-first');
+  const next = cloneLab(lab);
+  next.observation.submerged = true;
+  return { ok: true, lab: next };
+}
+
+export function logLiveTrial(lab) {
+  if (!lab) return fail(createLab(), 'invalid-lab');
+  const sample = getSpecimen(lab.selectedSpecimenId);
+  if (!sample) return fail(lab, 'unknown-specimen');
+  if (recordFor(lab, sample.id)) return fail(lab, 'already-recorded');
+  if (!lab.observation.weighed || !lab.observation.submerged) {
+    return fail(lab, 'need-both-readings');
+  }
+  const measurement = createMeasurement(sample);
+  const next = cloneLab(lab);
+  next.records.push(measurement);
+  next.observation = { weighed: false, submerged: false };
+  const remaining = DENSITY_CASE.samples.find((entry) => !recordFor(next, entry.id));
+  if (remaining) {
+    next.selectedSpecimenId = remaining.id;
+  } else {
+    const slope = calculateMassVolumeSlope(next.records);
+    const identified = identifyMaterial(slope);
+    next.identifiedMaterialId = identified?.id ?? null;
+    next.complete = Boolean(identified);
+  }
+  return { ok: true, trial: measurement, lab: next };
+}

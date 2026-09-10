@@ -10,15 +10,7 @@
 </head>
 <body>
   <canvas id="scene" aria-label="3D 密度实验台"></canvas>
-  <p class="nogl" id="nogl" hidden>浏览器暂不支持 WebGL，请用右侧读数继续观察。</p>
-  <div id="app" hidden></div>
-  <span id="predictionFeedback" hidden></span>
-  <span id="balanceSpecimen" hidden></span>
-  <span id="waterFill" hidden></span>
-  <span id="waterSpecimen" hidden></span>
-  <span id="graphEmpty" hidden></span>
-  <span id="formulaStrip" hidden></span>
-  <span id="labState" hidden>等待测量</span>
+  <p class="nogl" id="nogl" hidden data-t="nogl">浏览器暂不支持 WebGL，请用右侧读数继续观察。</p>
 
   <header class="bar">
     <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
@@ -31,17 +23,16 @@
   </header>
 
   <section class="hud" aria-label="仪器读数">
-    <div class="hud__chip"><span class="hud__label" data-t="massReadout">质量</span><b id="massReadout">—</b></div>
-    <div class="hud__chip"><span class="hud__label" data-t="initialLevel">初液面</span><b id="initialReading">40.0 mL</b></div>
-    <div class="hud__chip"><span class="hud__label" data-t="finalLevel">末液面</span><b id="finalReading">—</b></div>
+    <div class="hud__chip"><span class="hud__label" data-t="massReadout">有多重</span><b id="massReadout">—</b></div>
+    <div class="hud__chip"><span class="hud__label" data-t="initialLevel">开始水面</span><b id="initialReading">40.0 mL</b></div>
+    <div class="hud__chip"><span class="hud__label" data-t="finalLevel">升高后</span><b id="finalReading">—</b></div>
   </section>
-  <span id="balanceReading" hidden>—</span>
 
-  <div class="coach" id="coach" role="status">
+  <div class="coach" id="coach" role="status" aria-live="polite">
     <span class="coach__icon">◎</span>
     <div>
-      <b id="selectedSpecimen">证物 A</b>
-      <p id="benchFeedback">选一块金属，放上天平，再完全浸没。</p>
+      <b id="selectedSpecimen">小块金属</b>
+      <p id="benchFeedback">选一块金属，先放上天平称一称。</p>
     </div>
   </div>
 
@@ -52,7 +43,7 @@
       </div>
       <div class="btnrow">
         <button class="btn btn--ghost" id="submergeBtn" type="button"><span data-t="submerge">浸没入水</span></button>
-        <button class="btn btn--ghost" id="resetBtn" type="button" data-t="reset">重开案件</button>
+        <button class="btn btn--ghost" id="resetBtn" type="button" data-t="reset">重新实验</button>
       </div>
     </div>
     <button class="panel__handle" id="panelHandle" type="button" aria-expanded="true">
@@ -60,24 +51,24 @@
     </button>
     <div class="panel__body" id="panelBody">
       <section class="panel__group">
-        <p class="panel__label"><span data-t="specimenTitle">证物</span><b id="recordCount" class="panel__val">0 / 3</b></p>
+        <p class="panel__label"><span data-t="specimenTitle">桌上的金属</span><b id="recordCount" class="panel__val">0 / 3</b></p>
         <div class="seg" role="group">
-          <button class="seg__btn is-on" type="button" data-specimen="specimen-a"><span data-t="specimenA">证物 A</span></button>
-          <button class="seg__btn" type="button" data-specimen="specimen-b"><span data-t="specimenB">证物 B</span></button>
-          <button class="seg__btn" type="button" data-specimen="specimen-c"><span data-t="specimenC">证物 C</span></button>
+          <button class="seg__btn is-on" type="button" data-specimen="specimen-a"><span data-t="specimenA">小块</span></button>
+          <button class="seg__btn" type="button" data-specimen="specimen-b"><span data-t="specimenB">中块</span></button>
+          <button class="seg__btn" type="button" data-specimen="specimen-c"><span data-t="specimenC">大块</span></button>
         </div>
+        <p class="panel__hint" data-t="specimenHint">三块看起来一样亮，只是大小不同。</p>
       </section>
 
-      <section class="panel__group">
-        <p class="panel__label" data-t="entryTitle">抄下仪器读数</p>
-        <label class="field"><span data-t="entryMass">质量 m (g)</span><input id="massEntry" type="number" inputmode="decimal" step="0.1" disabled></label>
-        <label class="field"><span data-t="entryVolume">排水体积 V (cm³)</span><input id="volumeEntry" type="number" inputmode="decimal" step="0.1" disabled></label>
-        <button class="btn btn--big" id="recordBtn" type="button" disabled data-t="record">写入证据</button>
+      <section class="panel__group" id="liveGroup">
+        <p class="panel__label" data-t="liveTitle">刚才看到的读数</p>
+        <p class="live-read" id="liveReadout">质量 — · 排水体积 —</p>
+        <button class="btn btn--big" id="recordBtn" type="button" data-t="record">记入数据表</button>
         <p class="panel__hint" id="entryFeedback"></p>
       </section>
 
       <section class="panel__group">
-        <p class="panel__label"><span data-t="graphTitle">质量—体积图</span><b id="densityEstimate" class="panel__val">ρ = —</b></p>
+        <p class="panel__label"><span data-t="graphTitle">质量对着体积</span><b id="densityEstimate" class="panel__val">—</b></p>
         <svg class="evidence-graph" viewBox="0 0 280 180" role="img" aria-label="质量和体积关系图">
           <g class="graph-grid" aria-hidden="true">
             <path d="M34 18V150H260 M34 117H260 M34 84H260 M34 51H260 M34 18H260 M109 18V150 M184 18V150 M260 18V150"></path>
@@ -89,10 +80,10 @@
           <table>
             <thead>
               <tr>
-                <th data-t="tableSpecimen">证物</th>
-                <th data-t="tableMass">m / g</th>
-                <th data-t="tableVolume">V / cm³</th>
-                <th data-t="tableDensity">ρ</th>
+                <th data-t="tableSpecimen">金属</th>
+                <th data-t="tableMass">多重 / g</th>
+                <th data-t="tableVolume">多大 / cm³</th>
+                <th data-t="tableDensity">挤得有多紧</th>
               </tr>
             </thead>
             <tbody id="recordBody"></tbody>
@@ -100,18 +91,15 @@
         </div>
       </section>
 
-      <section class="panel__group">
-        <p class="panel__label" data-t="identifyTitle">对照参考密度</p>
-        <div class="seg" role="group">
-          <button class="seg__btn" id="material-aluminum" type="button" data-material="aluminum" disabled data-t="aluminum">铝</button>
-          <button class="seg__btn" id="material-iron" type="button" data-material="iron" disabled data-t="iron">铁</button>
-          <button class="seg__btn" id="material-copper" type="button" data-material="copper" disabled data-t="copper">铜</button>
-        </div>
-        <p class="panel__hint" id="conclusionStatus"></p>
+      <section class="observe-card" id="completeCard" hidden>
+        <b id="conclusionStatus"></b>
+        <p data-t="densityPlain">同样大的东西，有的轻有的重。这条线有多陡，就是密度。</p>
       </section>
+
+      <p class="panel__hint" data-t="modelNote">教学示意：水面升高的那一截就是金属的体积。1 mL = 1 cm³。</p>
     </div>
   </aside>
-  <p class="foot-tip" data-t="footTip">拖空白转视角 · 先称重再浸没 · 用斜率认材料</p>
+  <p class="foot-tip" data-t="footTip">拖空白转视角 · 先称重再浸没 · 点会自己连成线</p>
   <script type="module" src="main.js"></script>
 </body>
 </html>
