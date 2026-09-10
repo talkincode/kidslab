@@ -16,7 +16,7 @@ npm run vendor    # 更新 three.js 到 src/welcome/vendor/
 npm run icons     # logo.svg 变更后重新生成 PWA 图标(assets/icons/)
 ```
 
-没有 lint;改动后必须运行 `npm run build` 与 `npm run test:e2e` 并确保通过(退出码 0)。课件改动提交前,还必须逐项过一遍下方「提交前自检清单」。
+没有 lint;改动后必须运行 `npm run build` 与 `npm run test:e2e` 并确保通过(退出码 0)。`npm run test:e2e` 是提交前必须在本地跑过的强制自检项,不在 GitHub Actions 中运行(见下方「部署」)。课件改动提交前,还必须逐项过一遍下方「提交前自检清单」。
 
 ## 目录结构与所有权
 
@@ -214,7 +214,7 @@ cloudflare/analytics/  # 埋点接收 Worker(push 时经 deploy-analytics.yml �
 改完课件,逐项确认后再提交;有一项不过就回去修,不要跳过。
 
 - [ ] `npm run build` 通过(退出码 0),`src/` 与 `courseware/` 一起提交
-- [ ] `npm run test:e2e` 通过(退出码 0),新增课件已自动纳入桌面/手机 smoke
+- [ ] `npm run test:e2e` 在本地通过(退出码 0),新增课件已自动纳入桌面/手机 smoke;这是提交前强制自检项,GitHub Actions 不再运行它
 - [ ] 以目标学段孩子的身份完整玩一遍:打开就想玩,30 秒内上手,全程无需说明书
 - [ ] 首屏不是说明书:规则/公式/知识点需交互或轻提示才出现,开局文案不报答案
 - [ ] 场景经得起看:光影/材质/比例不粗糙,无默认灰盒、无穿模、无明显违和;3D 画布铺满舞台,仪器一眼能认,被测物在正确位置(如烧杯在秤盘上)
@@ -235,7 +235,7 @@ cloudflare/analytics/  # 埋点接收 Worker(push 时经 deploy-analytics.yml �
 
 ## 部署
 
-push 到 `main` 自动触发 workflow:`npm ci` → 无 analytics 构建 → 安装 Chromium 并运行 `npm run test:e2e` → 按仓库变量重新生成发布产物 → 组装同一份 `_site`(index.html + manifest.webmanifest + sw.js + assets + courseware)→ 分别发布 GitHub Pages 与 Cloudflare Pages。Cloudflare Pages 项目名固定为 `kidslab-app`（`kidslab` 已被他人占用），自定义入口为 `https://kidslab.talkincode.net/`；首次启用需在 Cloudflare 创建 Pages 项目，Production branch 设为 `main`，配置 `CLOUDFLARE_PAGES_API_TOKEN`（需 Account → Cloudflare Pages → Edit；不要复用仅有 Worker 权限的 analytics token；多账号时同时配置 `CLOUDFLARE_ACCOUNT_ID`），在 Pages 项目 Custom domains 绑定 `kidslab.talkincode.net`，并确认 DNS 记录 `kidslab CNAME kidslab-app.pages.dev` 已生效。国内可达性必须依据多地区/多运营商实测记录更新 README，实测通过前不得承诺“国内稳定访问”。无需手动操作。
+push 到 `main` 自动触发 workflow:`npm ci` → `npm run test:unit` → `npm run build`(快速门禁,仅校验构建是否通过)→ 按仓库变量重新生成发布产物 → 组装同一份 `_site`(index.html + manifest.webmanifest + sw.js + assets + courseware)→ 分别发布 GitHub Pages 与 Cloudflare Pages。`npm run test:e2e`(Playwright 桌面+手机 smoke)不再在 GitHub Actions 中运行,改为提交前必须在本地跑过的强制自检项,不阻塞/参与发布流程;详见上方「常用命令」与「提交前自检清单」。Cloudflare Pages 项目名固定为 `kidslab-app`（`kidslab` 已被他人占用），自定义入口为 `https://kidslab.talkincode.net/`；首次启用需在 Cloudflare 创建 Pages 项目，Production branch 设为 `main`，配置 `CLOUDFLARE_PAGES_API_TOKEN`（需 Account → Cloudflare Pages → Edit；不要复用仅有 Worker 权限的 analytics token；多账号时同时配置 `CLOUDFLARE_ACCOUNT_ID`），在 Pages 项目 Custom domains 绑定 `kidslab.talkincode.net`，并确认 DNS 记录 `kidslab CNAME kidslab-app.pages.dev` 已生效。国内可达性必须依据多地区/多运营商实测记录更新 README，实测通过前不得承诺“国内稳定访问”。无需手动操作。
 
 ## 注意事项
 
