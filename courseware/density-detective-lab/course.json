@@ -5,8 +5,8 @@
     "en": "Density Detective Lab"
   },
   "description": {
-    "zh": "在 3D 天平和量筒上测量三块未知金属，绘制质量—体积关系并锁定材料。",
-    "en": "Weigh and dunk three mystery metals on a 3D balance and cylinder, graph mass against volume, and identify the material."
+    "zh": "在 3D 天平和量筒上称重、排水，用现场读数画出质量—体积线，看斜率锁定材料。",
+    "en": "Weigh and dunk three mystery metals on a 3D balance and cylinder. Live readings draw the mass–volume line and lock the material."
   },
   "category": "physics",
   "levels": [

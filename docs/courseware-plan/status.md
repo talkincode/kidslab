@@ -193,7 +193,7 @@ Agent 每次完成计划项后必须同步更新：
 
 ### 初高中实验型
 
-- [x] 密度侦探实验室 `density-detective-lab`（物理 · `g8`；天平、排水测体积、数据表、质量—体积图和材料识别构成 L3 实验闭环）
+- [x] 密度侦探实验室 `density-detective-lab`（物理 · `g8`；精细 3D 天平与量筒现场称重/排水，读数入表后由 m-V 斜率锁定铝；观测实验，无预测题）
 - [x] 运动追踪实验室 `motion-tracker-lab`（物理 · `g8,g10`；逐帧打点、s-t/v-t 图、匀速与 30° 斜面匀加速，以及自选坡度核对 a = g sinθ）
 - [x] 欧姆定律实验室 `ohms-law-lab`（物理 · `g9,g11`；自由拧电压/电阻与电表量程，3D 实验桌实时读数，U-I 图线由观测记录长出；超量程保护后可改量程恢复；无预测题或通关锁）
 - [x] 质量守恒实验室 `mass-conservation-lab`（化学 · `g9`；预测、敞口/密闭的二氧化碳逸出对照、两次天平记录与可修正结论构成 L3 闭环）
@@ -319,7 +319,7 @@ Agent 每次完成计划项后必须同步更新：
 | 课件构建与 manifest 生成 | 中 | 部分：`npm run build` | 部分：`scripts/build.mjs` 校验非法 `course.json` | 不适用：本地构建无角色 | 部分：构建失败不应写入错误 manifest，需补回归验证 | `scripts/build.mjs`、`.github/workflows/deploy.yml` |
 | PWA 壳与课件离线缓存 | 高 | 已覆盖：manifest 合法性 + SW 激活预缓存 + cache-on-visit 角标 | 已覆盖：杀死服务器后离线回放已玩课件与主站壳 | 不适用：纯静态无角色 | 已覆盖：断网时 SW 缓存兜底，联网 network-first 自动恢复最新内容 | `tests/e2e/pwa.spec.js` |
 | 电工鼠开放电路实验室 | 高 | 已覆盖：桌面与触屏完成端口接线、合闸点亮、实时电流读数和触屏放置 | 已覆盖：制造短路并显示故障 | 不适用：纯静态无角色 | 已覆盖：撤销短路恢复通路；保存后清空并加载恢复作品 | `tests/e2e/electric-mouse.spec.js`；`tests/unit/electric-lab.test.mjs` |
-| 密度侦探实验室 | 高 | 已覆盖：桌面与触屏完成预测、三次天平/排水测量、数据入表、质量—体积图和铝材料识别 | 已覆盖：错误质量读数被拒绝后可原地改正 | 不适用：纯静态无角色 | 已覆盖：静音选择重载后保持；错误读数不写入数据表 | `tests/e2e/density-detective-lab.spec.js`；`tests/unit/density-lab.test.mjs` |
+| 密度侦探实验室 | 高 | 已覆盖：桌面与触屏完成三次天平/排水现场读数、数据入表、质量—体积图，并由斜率锁定铝 | 已覆盖：先浸没被拒绝后可称重并原地改正 | 不适用：纯静态无角色 | 已覆盖：静音选择重载后保持；非法操作不写入数据表 | `tests/e2e/density-detective-lab.spec.js`；`tests/unit/density-detective-lab.test.mjs` |
 | 运动追踪实验室 | 高 | 已覆盖：桌面与触屏完成水平匀速打点、s-t / v-t 图生长、20° 斜面加速对照，以及直播播放让图自己长出来；中英与深浅主题切换无控制台错误 | 已覆盖：未点到小车被拒绝且不写入打点 | 不适用：纯静态无角色 | 已覆盖：打偏后可继续打点；音效静音选择重载后保持 | `tests/e2e/motion-tracker-lab.spec.js`；`tests/unit/motion-tracker-lab.test.mjs` |
 | 欧姆定律实验室 | 高 | 已覆盖：桌面与触屏完成预测、10 Ω/20 Ω 各两组 U-I 读数、两条图线比较、结论与 20 Ω/0.30 A 设计验证；中英/深浅主题、可读控件与无控制台错误均受测 | 已覆盖：电流表并联保护、伏特表/电流表超量程均拒绝记录且给出可修复反馈 | 不适用：纯静态无角色 | 已覆盖：错误接线/量程后保留已有数据；部分实验重载恢复，重新实验清空本课和平台进度 | `tests/e2e/ohms-law-lab.spec.js`；`tests/unit/ohms-law-lab.test.mjs` |
 | 质量守恒实验室 | 高 | 已覆盖：桌面与触屏完成预测、敞口与密闭两次反应称量，并由对照完成质量守恒结论 | 已覆盖：未完成两个装置时结论按钮不可用；错误“质量消失”结论保留两条记录并可原地改正 | 不适用：纯静态无角色 | 已覆盖：实验中途重载恢复；重新实验清空本课状态和平台进度 | `tests/e2e/mass-conservation-lab.spec.js`；`tests/unit/mass-conservation-lab.test.mjs` |

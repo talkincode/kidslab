@@ -98,6 +98,8 @@ export function createLabAudio({ bgmUrl, muted = false } = {}) {
       const now = ctx.currentTime;
       const settings = {
         tap: { notes: [392], type: 'triangle', gain: 0.07, duration: 0.12 },
+        weigh: { notes: [330], type: 'triangle', gain: 0.07, duration: 0.16 },
+        read: { notes: [392, 494], type: 'sine', gain: 0.07, duration: 0.2 },
         good: { notes: [523, 659], type: 'sine', gain: 0.08, duration: 0.22 },
         bad: { notes: [180, 140], type: 'sawtooth', gain: 0.05, duration: 0.2 },
         win: { notes: [523, 659, 784], type: 'sine', gain: 0.09, duration: 0.42 },

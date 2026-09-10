@@ -62,7 +62,7 @@ P0 优先覆盖初高中实验方法主干，并验证十种不同的核心交�
 
 > 已完成：✅ `statistics-sampling-lab`（`g10-g12` · `math`）。它用固定四区通勤总体比较简单随机、分层、整群和便利抽样：便利样本稳定偏倚，分层 n=40 落入真值 ±2 分钟，普查线给出 L3/L4 对照；模型与交互验收见 `tests/unit/statistics-sampling-lab.test.mjs` 和 `tests/e2e/statistics-sampling-lab.spec.js`。
 
-> 已完成：✅ `density-detective-lab`（`g8` · `physics`）。它以天平、量筒排水、手动读数、数据表和 `m-V` 图完成可重复的 L3 测量闭环；模型与交互验收见 `tests/unit/density-lab.test.mjs` 和 `tests/e2e/density-detective-lab.spec.js`。
+> 已完成：✅ `density-detective-lab`（`g8` · `physics`）。它以精细 3D 天平、量筒排水、现场读数入表和 `m-V` 图完成可重复的 L3 观测闭环，斜率自动锁定铝；不是预测题或通关考卷。模型与交互验收见 `tests/unit/density-detective-lab.test.mjs` 和 `tests/e2e/density-detective-lab.spec.js`。
 >
 > 已完成：✅ `motion-tracker-lab`（`g8,g10` · `physics`）。它以气垫导轨上的小车做观测实验：可直播播放或 0.10 s 逐帧打点，s-t / v-t 图随点生长，对照水平匀速与无摩擦斜面匀加速，自选 10°/20°/30° 坡度核对 `a = g sinθ`；不是预测题或通关考卷。模型与交互验收见 `tests/unit/motion-tracker-lab.test.mjs` 和 `tests/e2e/motion-tracker-lab.spec.js`。
 >
@@ -75,7 +75,7 @@ P0 优先覆盖初高中实验方法主干，并验证十种不同的核心交�
 | ID / 标题 | 年级·分类 | 核心实验与变量 | 魔法时刻 | 机器验收锚点 |
 | --- | --- | --- | --- | --- |
 | ✅ `motion-tracker-lab` 运动追踪实验室 | `g8,g10` · `physics` | 给小车视频逐帧打点，改变斜面角度；由位置数据生成 `s-t`、`v-t` 图 | 画面里的小车轨迹瞬间变成两张同步生长的图 | 匀速、匀加速基准数据与图线斜率可断言 |
-| `density-detective-lab` 密度侦探实验室 | `g8` · `physics` | 天平测质量、量筒排水测体积，鉴别未知材料；自变量为样品体积 | 大小不同的同材质样品落在同一条 `m-V` 直线上 | 参考材料密度、排水体积和单位换算使用 golden cases |
+| ✅ `density-detective-lab` 密度侦探实验室 | `g8` · `physics` | 天平测质量、量筒排水测体积，由现场读数锁定材料；自变量为样品体积 | 大小不同的同材质样品落在同一条 `m-V` 直线上 | 参考材料密度、排水体积和单位换算使用 golden cases |
 | ✅ `ohms-law-lab` 欧姆定律实验室 | `g9,g11` · `physics` | 自由拧电源电压、电阻和电表量程，测 `U-I` 关系并比较不同电阻 | 多组读数自动连成直线，换电阻后斜率明显改变 | `I=U/R`、量程保护、非法输入拒绝与失败后恢复可单测 |
 | ✅ `mass-conservation-lab` 质量守恒实验室 | `g9` · `chemistry` | 比较开放/密闭装置中的产气反应，称量反应前后总质量 | 看似“消失”的质量在盖上密闭罩后完整回归 | 封闭系统总质量守恒；开放系统逸出质量由模型严格核算 |
 | ✅ `microscope-cell-lab` 显微细胞实验室 | `g7` · `science` | 选择物镜、调光、粗准焦和细准焦，观察植物/动物细胞并测视野尺度 | 模糊光斑穿过焦点后突然显出完整细胞世界 | 放大倍数、视野直径、焦距状态机和操作顺序可断言 |
