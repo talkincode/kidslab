@@ -195,7 +195,7 @@ Agent 每次完成计划项后必须同步更新：
 
 - [x] 密度侦探实验室 `density-detective-lab`（物理 · `g8`；天平、排水测体积、数据表、质量—体积图和材料识别构成 L3 实验闭环）
 - [x] 运动追踪实验室 `motion-tracker-lab`（物理 · `g8,g10`；逐帧打点、s-t/v-t 图、匀速与 30° 斜面匀加速，以及自选坡度核对 a = g sinθ）
-- [x] 欧姆定律实验室 `ohms-law-lab`（物理 · `g9,g11`；预测、正确接线与量程选择、两组 U-I 对照数据和图线斜率结论构成 L3 闭环；L4 设计 20 Ω、0.30 A 电路）
+- [x] 欧姆定律实验室 `ohms-law-lab`（物理 · `g9,g11`；自由拧电压/电阻与电表量程，3D 实验桌实时读数，U-I 图线由观测记录长出；超量程保护后可改量程恢复；无预测题或通关锁）
 - [x] 质量守恒实验室 `mass-conservation-lab`（化学 · `g9`；预测、敞口/密闭的二氧化碳逸出对照、两次天平记录与可修正结论构成 L3 闭环）
 - [x] 有机分子工坊 `organic-builder-lab`（化学 · `g10,g12` · 第二轮 P0；three.js 球棍拼装台按 VSEPR 布点，量角器读出 109.5°/120°，四瓶试剂填满 4×4 反应矩阵，L4 用连通性判定 C₂H₆O 与 C₄H₁₀ 的同分异构）
 - [x] 圆周与卫星实验室 `circular-orbit-lab`（物理 · `g11` · 第二轮 P1；three.js 地球与实时轨道预览，坠回/椭圆/圆轨/逃逸四种结局各记一行数据表，速度带图给出分界线，L4 由周期反推同步轨道半径）
@@ -278,7 +278,7 @@ Agent 每次完成计划项后必须同步更新：
 | `pendulum-lab` 单摆实验室 | physics | junior/senior | 已纳入初高中实验规划；补 `grades` 与重复测量 |
 | `optics-lab` 光学实验室 | physics | junior/senior | 已纳入初高中实验规划；补记录与归纳闭环 |
 | `ph-lab` 酸碱魔法水 | chemistry | junior/senior | 已纳入初高中实验规划；从 L1 观察升级到 L3 测量 |
-| `ice-maker-lab` 制冰实验室 | physics | primary/junior | 蒸汽压缩制冷/制冰机原理扩展，不计入小学 84 项规划 ID |
+| `ice-maker-lab` 制冰实验室 | physics | primary/junior | 已升级为全屏 three.js 观测实验：灌水/压缩机/开门对照，热账本 Q_h=Q_c+W；不计入小学 84 项规划 ID |
 | `cpu-lab` 电脑原理实验室 | programming | primary/junior | 计算机组成/冯·诺依曼与取指-译码-执行扩展，不计入小学 84 项规划 ID |
 
 ## 方向与意图
