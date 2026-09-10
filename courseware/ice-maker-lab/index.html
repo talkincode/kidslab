@@ -3,188 +3,110 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="description" content="切开制冰机，动手体验蒸汽压缩制冷循环与结冰过程。" />
+  <meta name="description" content="切开制冰机，灌水、开压缩机，观察蒸发器吸热结冰、冷凝器把热搬到房间。" />
   <meta name="color-scheme" content="light dark" />
   <title>制冰实验室 · KidsLab</title>
-  <link rel="stylesheet" href="style.css?v=8e4574e8" />
+  <link rel="stylesheet" href="style.css?v=ff146361" />
   <script>
     (() => {
       try {
-        const t = localStorage.getItem('kidslab.theme')
+        const theme = localStorage.getItem('kidslab.theme')
           || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-        document.documentElement.dataset.theme = t;
-        const l = localStorage.getItem('kidslab.lang')
+        const lang = localStorage.getItem('kidslab.lang')
           || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
-        document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
       } catch { /* private mode */ }
     })();
   </script>
+  <script type="importmap">{ "imports": { "three": "./vendor/three.module.min.js" } }</script>
 <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
 <script>(()=>{"use strict";const g=window,r=g.cool||{};if(r.sdkVersion)return;try{document.documentElement.style.touchAction="manipulation"}catch{}const w="ice-maker-lab",b=location.pathname.split("/").filter(Boolean),E=b.at(-1)||"",A=E.includes(".")?b.at(-2):E,d=w.startsWith("__")?A:w,l={get(t,n=null){try{const e=localStorage.getItem(t);return e===null?n:e}catch{return n}},set(t,n){try{return localStorage.setItem(t,n),!0}catch{return!1}},remove(t){try{return localStorage.removeItem(t),!0}catch{return!1}}},f=new Set,S=new Set(["zh","en"]),I=new Set(["light","dark"]),C=(navigator.language||"").toLowerCase().startsWith("zh")?"zh":"en";let m="light";try{m=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch{}let o=l.get("kidslab.lang",C),s=l.get("kidslab.theme",m);S.has(o)||(o=C),I.has(s)||(s=m);function p(){document.documentElement.lang=o==="zh"?"zh-CN":"en",document.documentElement.dataset.theme=s}function T(t,n){const e={kind:t,value:n};for(const c of[...f])c(e);g.dispatchEvent(new CustomEvent(`${t}change`,{detail:{[t]:n}}))}const z={get lang(){return o},get theme(){return s},setLang(t){if(!S.has(t))throw new RangeError(`Unsupported language: ${t}`);t!==o&&(o=t,l.set("kidslab.lang",t),p(),T("lang",t))},setTheme(t){if(!I.has(t))throw new RangeError(`Unsupported theme: ${t}`);t!==s&&(s=t,l.set("kidslab.theme",t),p(),T("theme",t))},toggleLang(){this.setLang(o==="zh"?"en":"zh")},toggleTheme(){this.setTheme(s==="light"?"dark":"light")},subscribe(t){if(typeof t!="function")throw new TypeError("Preference listener must be a function");return f.add(t),()=>f.delete(t)}};function D(t,n={}){if(!t||typeof t!="object")throw new TypeError("Messages must be an object");const e=n.root||document;if(!e.querySelectorAll&&!e.matches)throw new TypeError("i18n root must be a Document or Element");function c(a,...h){const u=t[o]?.[a]??t.zh?.[a]??t.en?.[a];return typeof u=="function"?u(...h):u??a}function y(a="lang"){const h=[];e.matches?.("[data-t]")&&h.push(e),e.querySelectorAll&&h.push(...e.querySelectorAll("[data-t]"));for(const u of h){const L=c(u.dataset.t);typeof L=="string"&&(u.textContent=L)}n.onChange?.({kind:a,lang:o,theme:s,t:c})}const $=z.subscribe(({kind:a})=>{a==="lang"?y("lang"):n.onChange?.({kind:a,lang:o,theme:s,t:c})});return y("init"),{t:c,render:y,destroy:$}}const i=d?`kidslab.progress.${d}`:"";function _(){if(!i)return null;try{const t=JSON.parse(l.get(i,"null"));return!t||!["played","completed"].includes(t.status)?null:t}catch{return null}}function k(t,n){if(!i)return null;const e=_()||{},c={status:e.status==="completed"?"completed":t,stage:n||e.stage||"",updatedAt:Date.now()};return l.set(i,JSON.stringify(c)),c}const P={get:_,clear(){return i?l.remove(i):!1}};r.sdkVersion=2,r.courseId=d,r.storage=l,r.preferences=z,r.bindI18n=D,r.progress=P,typeof r.track!="function"&&(r.track=()=>{}),r.stage=t=>{typeof t!="string"||!t||k("played",t.slice(0,48))},r.complete=()=>k("completed"),g.cool=r,p()})();
 </script>
 <script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
 </head>
 <body>
+  <canvas id="scene" aria-label="3D 制冰机剖面"></canvas>
+  <p class="nogl" id="nogl" hidden data-t="nogl">这台设备暂时不能显示 3D 制冰机，请换用支持 WebGL 的浏览器。</p>
+
   <header class="bar">
-    <a class="pill pill--back" href="../../index.html">← <span data-t="back">返回平台</span></a>
-    <h1><span aria-hidden="true">🧊</span> <span data-t="title">制冰实验室</span></h1>
+    <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
+    <h1 class="bar__title">🧊 <span data-t="title">制冰实验室</span></h1>
     <div class="bar__actions">
-      <button class="pill pill--icon" id="soundBtn" type="button" aria-label="关闭声音" aria-pressed="false">🔊</button>
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-pressed="false" aria-label="关闭声音">🔊</button>
       <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
-      <button class="pill pill--lang" id="langBtn" type="button">EN</button>
+      <button class="pill" id="langBtn" type="button">EN</button>
     </div>
   </header>
 
-  <main class="course">
-    <section class="brief card">
-      <div class="brief__number" aria-hidden="true"><small>ICE</small><strong id="missionNumber">01</strong></div>
-      <div class="brief__copy">
-        <p id="missionKicker">第一关 · 结出第一块冰</p>
-        <h2 id="missionTitle">给模盒灌水，打开压缩机</h2>
-        <p id="missionText" hidden>水变冷、结冰——热被蒸发器吸走了。</p>
+  <section class="hud" aria-label="仪器读数">
+    <div class="hud__chip"><span class="hud__label" data-t="moldTemp">冰格温度</span><b id="moldReading">22.0 °C</b></div>
+    <div class="hud__chip"><span class="hud__label" data-t="iceProgress">结冰</span><b id="iceReading">0%</b></div>
+    <div class="hud__chip"><span class="hud__label" data-t="roomHeat">搬到房间的热</span><b id="roomReading">0.0 kJ</b></div>
+    <div class="hud__chip"><span class="hud__label" data-t="cubes">冰块</span><b id="cubeReading">0</b></div>
+  </section>
+
+  <div class="coach" id="coach" role="status" aria-live="polite">
+    <span class="coach__icon">◎</span>
+    <div>
+      <b id="coachTitle">先灌水，再开压缩机</b>
+      <p id="feedback">热不会消失，只是被搬走。</p>
+    </div>
+  </div>
+
+  <div class="view-dock" role="group" aria-label="观察视角">
+    <button class="view-btn is-on" type="button" data-view="stage" aria-pressed="true"><span data-t="viewStage">整机</span></button>
+    <button class="view-btn" type="button" data-view="loop" aria-pressed="false"><span data-t="viewLoop">回路</span></button>
+    <button class="view-btn" type="button" data-view="condenser" aria-pressed="false"><span data-t="viewCond">散热</span></button>
+  </div>
+
+  <aside class="panel" id="panel">
+    <div class="panel__quick">
+      <button class="btn btn--big" id="fillBtn" type="button">💧 <span data-t="fill">灌水</span></button>
+      <button class="btn btn--big btn--power" id="powerBtn" type="button" aria-pressed="false">⏻ <span data-t="power">开压缩机</span></button>
+      <div class="btnrow">
+        <button class="btn btn--ghost" id="doorBtn" type="button" aria-pressed="false">🚪 <span data-t="door">打开箱门</span></button>
+        <button class="btn btn--ghost" id="harvestBtn" type="button" disabled>🧊 <span data-t="harvest">取冰</span></button>
       </div>
-      <nav class="mission-nav" id="missionNav" aria-label="实验关卡"></nav>
-    </section>
-
-    <section class="lab">
-      <section class="stage card">
-        <div class="stage__top">
-          <p class="status" id="status" role="status" aria-live="polite">先灌水。</p>
-          <div class="badge-row">
-            <span class="live" id="powerBadge"><i></i><span data-t="powerOff">待机</span></span>
-            <span class="live live--door" id="doorBadge" hidden><i></i><span data-t="doorOpen">门开着</span></span>
-          </div>
-        </div>
-
-        <div class="stage-frame">
-          <canvas id="stage" width="960" height="520" aria-label="制冰机剖面动画"></canvas>
-          <div class="pin-layer" id="pinLayer" aria-label="部件标签">
-            <!-- 圆点停在部件边缘外侧，名字用旁注，避免挡住机器 -->
-            <button class="pin pin--ne" type="button" data-pin="molds" style="left:41%;top:16%" aria-label="冰格">
-              <span class="pin__anchor" aria-hidden="true"></span>
-              <span class="pin__dot">1</span>
-              <span class="pin__name" data-t="pinMolds">冰格</span>
-            </button>
-            <button class="pin pin--w" type="button" data-pin="evap" style="left:7%;top:46%" aria-label="蒸发器">
-              <span class="pin__anchor" aria-hidden="true"></span>
-              <span class="pin__dot">2</span>
-              <span class="pin__name" data-t="pinEvap">蒸发器</span>
-            </button>
-            <button class="pin pin--sw" type="button" data-pin="comp" style="left:12%;top:90%" aria-label="压缩机">
-              <span class="pin__anchor" aria-hidden="true"></span>
-              <span class="pin__dot">3</span>
-              <span class="pin__name" data-t="pinComp">压缩机</span>
-            </button>
-            <button class="pin pin--e" type="button" data-pin="cond" style="left:69%;top:28%" aria-label="冷凝器">
-              <span class="pin__anchor" aria-hidden="true"></span>
-              <span class="pin__dot">4</span>
-              <span class="pin__name" data-t="pinCond">冷凝器</span>
-            </button>
-            <button class="pin pin--s" type="button" data-pin="exp" style="left:48%;top:91%" aria-label="节流阀">
-              <span class="pin__anchor" aria-hidden="true"></span>
-              <span class="pin__dot">5</span>
-              <span class="pin__name" data-t="pinExp">节流阀</span>
-            </button>
-            <button class="pin pin--e" type="button" data-pin="room" style="left:90%;top:18%" aria-label="房间热">
-              <span class="pin__anchor" aria-hidden="true"></span>
-              <span class="pin__dot">6</span>
-              <span class="pin__name" data-t="pinRoom">房间热</span>
-            </button>
-          </div>
-        </div>
-        <aside class="pin-detail" id="pinDetail" hidden>
-          <div class="pin-detail__head">
-            <span class="pin-detail__step" id="pinDetailStep">①</span>
-            <div>
-              <strong id="pinDetailTitle">—</strong>
-              <p id="pinDetailRole">—</p>
-            </div>
-            <button class="pin-detail__close" id="pinDetailClose" type="button" aria-label="关闭">✕</button>
-          </div>
-          <p class="pin-detail__body" id="pinDetailBody">—</p>
-          <p class="pin-detail__live" id="pinDetailLive" hidden></p>
-        </aside>
-        <p class="pin-hint" id="pinHint" data-t="pinHint" hidden>点场景边缘的编号圆点，查看部件原理（不会挡住机器）。</p>
-
-        <div class="meters" aria-label="实时读数">
-          <div><span data-t="moldTemp">模盒温度</span><strong id="moldValue">18 <small>°C</small></strong></div>
-          <div><span data-t="iceProgress">结冰进度</span><strong id="iceValue">0 <small>%</small></strong></div>
-          <div><span data-t="roomHeat">房间热量</span><strong id="roomValue">暖 <small>0</small></strong></div>
-          <div><span data-t="cubes">收获冰块</span><strong id="cubeValue">0 <small>/ 6</small></strong></div>
-        </div>
-
-        <div class="legend" id="legend" hidden aria-hidden="true">
-          <span data-t="legendCold">蓝箭头 = 吸热</span>
-          <span data-t="legendHot">橙箭头 = 放热</span>
-          <span data-t="legendLoop">彩色环 = 冷媒回路</span>
+    </div>
+    <button class="panel__handle" id="panelHandle" type="button" aria-expanded="true">
+      <span data-t="panelTitle">观测台</span><i id="panelArrow">▾</i>
+    </button>
+    <div class="panel__body" id="panelBody">
+      <section class="panel__group">
+        <p class="panel__label" data-t="speed">压缩机快慢</p>
+        <div class="seg" role="group" aria-label="压缩机快慢">
+          <button class="seg__btn" type="button" data-speed="1"><span data-t="slow">慢</span></button>
+          <button class="seg__btn is-on" type="button" data-speed="2"><span data-t="mid">中</span></button>
+          <button class="seg__btn" type="button" data-speed="3"><span data-t="fast">快</span></button>
         </div>
       </section>
 
-      <aside class="console card">
-        <div class="console__head">
-          <div>
-            <p data-t="controlDesk">ICE LAB / 操作台</p>
-            <strong id="consoleTitle">制冰机控制</strong>
-          </div>
-          <span class="on-air" aria-hidden="true">COLD</span>
-        </div>
+      <section class="panel__group">
+        <p class="panel__label" data-t="loopTitle">冷媒四步旅行</p>
+        <ol class="loop" id="loopSteps">
+          <li data-step="comp"><b data-t="stepComp">① 压缩机</b><span data-t="stepCompD">加压变热</span></li>
+          <li data-step="cond"><b data-t="stepCond">② 冷凝器</b><span data-t="stepCondD">向房间放热</span></li>
+          <li data-step="exp"><b data-t="stepExp">③ 节流阀</b><span data-t="stepExpD">降压变冷</span></li>
+          <li data-step="evap"><b data-t="stepEvap">④ 蒸发器</b><span data-t="stepEvapD">吸走水的热</span></li>
+        </ol>
+      </section>
 
-        <section class="control-panel">
-          <div class="button-row">
-            <button class="action" id="fillBtn" type="button"><span aria-hidden="true">💧</span> <span data-t="fill">灌水</span></button>
-            <button class="action action--power" id="powerBtn" type="button" aria-pressed="false"><span aria-hidden="true">⏻</span> <span data-t="power">开压缩机</span></button>
-          </div>
+      <section class="observe-card" id="foundCard" hidden>
+        <b data-t="foundTitle">热被搬走了，不是消失了</b>
+        <p id="foundText" data-t="foundText">冰格变冷结冰时，机器侧面的散热管会变热。水里的热加上压缩机做的功，都去了房间。</p>
+      </section>
 
-          <label class="control" for="speedSlider">
-            <span><b data-t="speed">压缩机功率</b><output id="speedOut">中</output></span>
-            <input id="speedSlider" type="range" min="1" max="3" step="1" value="2" />
-            <div class="range-labels" aria-hidden="true"><span data-t="slow">慢</span><span data-t="fast">快</span></div>
-          </label>
+      <div class="btnrow">
+        <button class="btn btn--ghost" id="hintBtn" type="button" aria-expanded="false">💡 <span data-t="hint">给我一点提示</span></button>
+        <button class="btn btn--ghost" id="resetBtn" type="button">↻ <span data-t="reset">重新实验</span></button>
+      </div>
+      <p id="hintText" class="panel__hint" hidden data-t="hintText">先灌水，关好门，开压缩机。盯着冰格温度往 0°C 掉；结冰还要再等一会儿，因为化成冰还得继续吸热。</p>
+      <p class="model-note" data-t="modelNote">教学示意：时间已加快，读数不是真实冰箱的精确值。</p>
+    </div>
+  </aside>
 
-          <div class="button-row">
-            <button class="action action--ghost" id="doorBtn" type="button" aria-pressed="false"><span aria-hidden="true">🚪</span> <span data-t="door">打开箱门</span></button>
-            <button class="action action--harvest" id="harvestBtn" type="button" disabled><span aria-hidden="true">🧊</span> <span data-t="harvest">取冰</span></button>
-          </div>
-
-          <div class="button-row">
-            <button class="secondary" id="resetBtn" type="button"><span aria-hidden="true">↺</span> <span data-t="reset">重开本关</span></button>
-            <button class="secondary" id="hintBtn" type="button"><span aria-hidden="true">💡</span> <span data-t="hint">小提示</span></button>
-          </div>
-        </section>
-
-        <div class="lesson-card" id="lessonCard" hidden>
-          <span aria-hidden="true" id="lessonIcon">❄️</span>
-          <p id="lessonText">冷媒在蒸发器里吸热汽化，模盒才会变冷。</p>
-        </div>
-
-        <div class="loop-card" id="loopCard" hidden aria-label="制冷回路">
-          <p class="loop-card__title" data-t="loopTitle">冷媒四步旅行</p>
-          <ol class="loop-steps" id="loopSteps">
-            <li data-step="comp"><b data-t="stepComp">① 压缩机</b><span data-t="stepCompD">加压升温</span></li>
-            <li data-step="cond"><b data-t="stepCond">② 冷凝器</b><span data-t="stepCondD">向房间放热</span></li>
-            <li data-step="exp"><b data-t="stepExp">③ 节流阀</b><span data-t="stepExpD">降压变冷</span></li>
-            <li data-step="evap"><b data-t="stepEvap">④ 蒸发器</b><span data-t="stepEvapD">吸走水的热</span></li>
-          </ol>
-        </div>
-
-        <div class="console__actions">
-          <button class="action action--check" id="checkBtn" type="button"><span aria-hidden="true">✓</span> <span data-t="check">检查实验</span></button>
-          <button class="action action--next" id="nextBtn" type="button" hidden><span data-t="next">下一关</span> <span aria-hidden="true">→</span></button>
-        </div>
-      </aside>
-    </section>
-  </main>
-
-  <div class="modal" id="completeModal" hidden>
-    <section class="modal__card" role="dialog" aria-modal="true" aria-labelledby="completeTitle">
-      <div class="final-ice" aria-hidden="true">🧊❄️🧊</div>
-      <p data-t="finalKicker">制冰机原理通关</p>
-      <h2 id="completeTitle" data-t="finalTitle">小小制冷工程师！</h2>
-      <p data-t="finalText">你看懂了：压缩机做功，蒸发器吸热结冰，冷凝器把热甩到房间——热被搬走了，不是消失了。</p>
-      <button class="action action--check" id="playAgainBtn" type="button" data-t="playAgain">再开一局</button>
-    </section>
-  </div>
-
-  <script src="main.js?v=cfacb992"></script>
+  <p class="foot-tip" data-t="footTip">拖空白转视角 · 滚轮缩放 · 点部件看它在干什么</p>
+  <script type="module" src="main.js?v=f84bbeb2"></script>
 </body>
 </html>

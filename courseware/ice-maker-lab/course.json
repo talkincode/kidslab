@@ -11,7 +11,7 @@
   "category": "physics",
   "levels": ["primary", "junior"],
   "grades": ["g5", "g6", "g7"],
-  "tags": ["物质三态", "分子运动", "实验"],
+  "tags": ["物质三态", "分子运动", "实验", "3D"],
   "icon": "🧊",
   "order": 80,
   "badge": "new"

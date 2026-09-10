@@ -278,7 +278,7 @@ Agent 每次完成计划项后必须同步更新：
 | `pendulum-lab` 单摆实验室 | physics | junior/senior | 已纳入初高中实验规划；补 `grades` 与重复测量 |
 | `optics-lab` 光学实验室 | physics | junior/senior | 已纳入初高中实验规划；补记录与归纳闭环 |
 | `ph-lab` 酸碱魔法水 | chemistry | junior/senior | 已纳入初高中实验规划；从 L1 观察升级到 L3 测量 |
-| `ice-maker-lab` 制冰实验室 | physics | primary/junior | 蒸汽压缩制冷/制冰机原理扩展，不计入小学 84 项规划 ID |
+| `ice-maker-lab` 制冰实验室 | physics | primary/junior | 已升级为全屏 three.js 观测实验：灌水/压缩机/开门对照，热账本 Q_h=Q_c+W；不计入小学 84 项规划 ID |
 | `cpu-lab` 电脑原理实验室 | programming | primary/junior | 计算机组成/冯·诺依曼与取指-译码-执行扩展，不计入小学 84 项规划 ID |
 
 ## 方向与意图
