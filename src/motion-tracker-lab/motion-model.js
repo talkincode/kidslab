@@ -1,8 +1,9 @@
 export const G = 9.8;
 export const DT = 0.1;
 export const TRACK_LENGTH_M = 1.2;
-export const MARK_COUNT = 6;
+export const MAX_MARKS = 8;
 export const HIT_TOLERANCE_M = 0.05;
+export const ANGLE_PRESETS = Object.freeze([10, 20, 30]);
 
 function finiteNumber(value) {
   return typeof value === 'number' && Number.isFinite(value);
@@ -13,7 +14,7 @@ function quantize(value) {
 }
 
 export function inclineAcceleration(angleDeg, g = G) {
-  if (!finiteNumber(angleDeg) || angleDeg < 0 || angleDeg > 90) return null;
+  if (!finiteNumber(angleDeg) || !finiteNumber(g) || angleDeg < 0 || angleDeg > 90) return null;
   return quantize(g * Math.sin((angleDeg * Math.PI) / 180));
 }
 
@@ -27,49 +28,162 @@ export function velocityAtTime(v0, a, t) {
   return quantize(v0 + a * t);
 }
 
-export function predictedAcceleration(angleDeg) {
-  return inclineAcceleration(angleDeg);
+function kinematicsAt(s0, v0, a, t) {
+  const s = positionAtTime(s0, v0, a, t);
+  const v = velocityAtTime(v0, a, t);
+  if (s === null || v === null) return null;
+  return { t: quantize(t), s, v };
 }
 
-export function withinRelative(actual, expected, relTol) {
-  if (![actual, expected, relTol].every(finiteNumber) || relTol < 0) return false;
-  if (expected === 0) return Math.abs(actual) <= relTol;
-  return Math.abs(actual - expected) <= relTol * Math.abs(expected);
-}
-
-export function isHit(trueS, markedS, tolerance = HIT_TOLERANCE_M) {
-  if (![trueS, markedS, tolerance].every(finiteNumber) || tolerance < 0) return false;
-  return Math.abs(trueS - markedS) <= tolerance;
-}
-
-export function generateClip({ id, angleDeg, s0, v0 }) {
-  const a = inclineAcceleration(angleDeg);
-  if (a === null || !finiteNumber(s0) || !finiteNumber(v0)) return null;
-  return Object.freeze({
-    id,
-    kind: Math.abs(a) < 1e-9 ? 'uniform' : 'accelerated',
-    angleDeg,
-    s0,
-    v0,
-    a,
-  });
-}
-
-export const CLIPS = Object.freeze({
-  uniform: generateClip({ id: 'uniform', angleDeg: 0, s0: 0.1, v0: 0.4 }),
-  accel: generateClip({ id: 'accel', angleDeg: 30, s0: 0, v0: 0 }),
-});
-
-export function generateFrames(clip, { dt = DT, count = MARK_COUNT } = {}) {
-  if (!clip || !finiteNumber(dt) || dt <= 0 || !Number.isInteger(count) || count < 2) return [];
-  const frames = [];
-  for (let i = 0; i < count; i += 1) {
-    const t = quantize(i * dt);
-    const s = positionAtTime(clip.s0, clip.v0, clip.a, t);
-    if (s === null || s > TRACK_LENGTH_M) break;
-    frames.push(Object.freeze({ index: i, t, s }));
+function timeToPosition(s0, v0, a, sTarget) {
+  const distance = sTarget - s0;
+  if (!finiteNumber(distance)) return null;
+  if (Math.abs(a) < 1e-12) {
+    if (Math.abs(v0) < 1e-12) return null;
+    const t = distance / v0;
+    return t >= 0 ? quantize(t) : null;
   }
-  return frames;
+  const disc = v0 * v0 + 2 * a * distance;
+  if (disc < 0) return null;
+  const root = Math.sqrt(disc);
+  const t1 = (-v0 + root) / a;
+  const t2 = (-v0 - root) / a;
+  const candidates = [t1, t2].filter((t) => t >= -1e-12);
+  if (candidates.length === 0) return null;
+  return quantize(Math.max(0, Math.min(...candidates)));
+}
+
+function clipForKind(kind, angleDeg) {
+  if (kind === 'uniform') {
+    return {
+      kind: 'uniform',
+      angleDeg: 0,
+      s0: 0.1,
+      v0: 0.4,
+      a: 0,
+    };
+  }
+  if (kind === 'accelerated') {
+    const angle = finiteNumber(angleDeg) ? angleDeg : 30;
+    const a = inclineAcceleration(angle);
+    if (a === null) return null;
+    return {
+      kind: 'accelerated',
+      angleDeg: angle,
+      s0: 0,
+      v0: 0,
+      a,
+    };
+  }
+  return null;
+}
+
+function applyClip(lab, clip) {
+  lab.kind = clip.kind;
+  lab.angleDeg = clip.angleDeg;
+  lab.s0 = clip.s0;
+  lab.v0 = clip.v0;
+  lab.a = clip.a;
+  lab.t = 0;
+  lab.s = clip.s0;
+  lab.v = clip.v0;
+  lab.playing = false;
+  lab.finished = false;
+  lab.marks = [];
+  lab.lastError = null;
+  return lab;
+}
+
+export function createLab({ kind = 'uniform', angleDeg = 30 } = {}) {
+  const clip = clipForKind(kind, angleDeg);
+  if (!clip) return null;
+  return applyClip({}, clip);
+}
+
+export function setKind(lab, kind) {
+  if (!lab) return { ok: false, reason: 'invalid-lab' };
+  const angle = kind === 'accelerated' ? (lab.kind === 'accelerated' ? lab.angleDeg : 30) : 0;
+  const clip = clipForKind(kind, angle);
+  if (!clip) return { ok: false, reason: 'invalid-kind' };
+  applyClip(lab, clip);
+  return { ok: true };
+}
+
+export function setAngle(lab, angleDeg) {
+  if (!lab) return { ok: false, reason: 'invalid-lab' };
+  if (lab.kind !== 'accelerated') return { ok: false, reason: 'level-track' };
+  const clip = clipForKind('accelerated', angleDeg);
+  if (!clip) return { ok: false, reason: 'invalid-angle' };
+  applyClip(lab, clip);
+  return { ok: true };
+}
+
+export function setPlaying(lab, playing) {
+  if (!lab) return { ok: false, reason: 'invalid-lab' };
+  if (typeof playing !== 'boolean') return { ok: false, reason: 'invalid-playing' };
+  lab.playing = playing && !lab.finished;
+  return { ok: true, playing: lab.playing };
+}
+
+export function stepLab(lab, dt = DT) {
+  if (!lab) return { ok: false, reason: 'invalid-lab' };
+  if (!finiteNumber(dt) || dt <= 0) return { ok: false, reason: 'invalid-dt' };
+  if (lab.finished) return { ok: false, reason: 'finished' };
+
+  const nextT = lab.t + dt;
+  const next = kinematicsAt(lab.s0, lab.v0, lab.a, nextT);
+  if (!next) return { ok: false, reason: 'invalid-state' };
+
+  if (next.s >= TRACK_LENGTH_M - 1e-12) {
+    const endT = timeToPosition(lab.s0, lab.v0, lab.a, TRACK_LENGTH_M) ?? nextT;
+    const end = kinematicsAt(lab.s0, lab.v0, lab.a, endT) || next;
+    lab.t = end.t;
+    lab.s = TRACK_LENGTH_M;
+    lab.v = end.v;
+    lab.finished = true;
+    lab.playing = false;
+    return { ok: true, finished: true };
+  }
+
+  lab.t = next.t;
+  lab.s = next.s;
+  lab.v = next.v;
+  return { ok: true, finished: false };
+}
+
+function pushMark(lab) {
+  if (lab.marks.length >= MAX_MARKS) return { ok: false, reason: 'full' };
+  if (lab.marks.some((mark) => Math.abs(mark.t - lab.t) < 1e-12)) {
+    return { ok: false, reason: 'duplicate' };
+  }
+  lab.marks.push(Object.freeze({
+    index: lab.marks.length,
+    t: lab.t,
+    s: lab.s,
+    v: lab.v,
+  }));
+  lab.lastError = null;
+  return { ok: true, mark: lab.marks.at(-1) };
+}
+
+export function markNow(lab) {
+  if (!lab) return { ok: false, reason: 'invalid-lab' };
+  return pushMark(lab);
+}
+
+export function markAt(lab, markedS) {
+  if (!lab) return { ok: false, reason: 'invalid-lab' };
+  if (!finiteNumber(markedS)) return { ok: false, reason: 'invalid-position' };
+  if (Math.abs(markedS - lab.s) > HIT_TOLERANCE_M) {
+    lab.lastError = 'miss';
+    return { ok: false, reason: 'miss' };
+  }
+  return pushMark(lab);
+}
+
+export function resetLab(lab) {
+  if (!lab) return lab;
+  return applyClip(lab, clipForKind(lab.kind, lab.angleDeg));
 }
 
 export function intervalVelocities(marks, dt = DT) {
@@ -131,85 +245,4 @@ export function classifyMotion(marks, { uniformRelTol = 0.05, accelMin = 0.3 } =
   const acceleration = accelerationFromMarks(marks);
   if (acceleration !== null && Math.abs(acceleration) >= accelMin) return 'accelerated';
   return 'unknown';
-}
-
-function clipForMission(id, options = {}) {
-  if (id === 'design') {
-    return generateClip({
-      id: 'design',
-      angleDeg: finiteNumber(options.angleDeg) ? options.angleDeg : 20,
-      s0: 0,
-      v0: 0,
-    });
-  }
-  return CLIPS[id] || null;
-}
-
-export function startMission(id, options = {}) {
-  const clip = clipForMission(id, options);
-  if (!clip) return null;
-  return {
-    missionId: id,
-    clip,
-    frames: generateFrames(clip),
-    frameIndex: 0,
-    marks: [],
-    concluded: false,
-    conclusion: null,
-    lastError: null,
-  };
-}
-
-export function markFrame(lab, markedS) {
-  if (!lab || lab.concluded) return { ok: false, reason: 'concluded' };
-  const frame = lab.frames[lab.frameIndex];
-  if (!frame) return { ok: false, reason: 'complete' };
-  if (!isHit(frame.s, markedS)) {
-    lab.lastError = 'miss';
-    return { ok: false, reason: 'miss' };
-  }
-  lab.marks.push(Object.freeze({
-    index: frame.index,
-    t: frame.t,
-    s: frame.s,
-  }));
-  lab.frameIndex += 1;
-  lab.lastError = null;
-  return { ok: true, frame };
-}
-
-export function concludeMotion(lab, kind) {
-  if (!lab || lab.marks.length < MARK_COUNT) return { ok: false, reason: 'incomplete' };
-  const actual = classifyMotion(lab.marks);
-  if (actual !== kind) {
-    lab.lastError = 'wrong-kind';
-    return { ok: false, reason: 'wrong-kind', actual };
-  }
-  lab.concluded = true;
-  lab.conclusion = kind;
-  lab.lastError = null;
-  return { ok: true, actual };
-}
-
-export function resetMission(lab, id, options = {}) {
-  const next = startMission(id, options);
-  if (!lab || !next) return lab;
-  Object.assign(lab, next);
-  return lab;
-}
-
-export function compactPanelAfter(event) {
-  switch (event) {
-    case 'marked-complete':
-      return 'data';
-    case 'advance':
-    case 'choose-angle':
-    case 'reset':
-    case 'need-marks':
-      return 'film';
-    case 'advance-design':
-      return 'lab';
-    default:
-      return null;
-  }
 }
