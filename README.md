@@ -92,11 +92,11 @@ npm run build     # src/ → courseware/(js/css 压缩 + 校验 + 生成 index.j
 npm run preview   # http://localhost:8080
 ```
 
-5. 提交推送,workflow 自动重新构建并发布。
+5. 提交前在本地跑一遍 `npm run test:e2e` 作为强制自检,再提交推送;workflow 自动重新构建并发布(不再运行 e2e)。
 
 ## 🚀 部署
 
-推送到 `main` 即触发 `.github/workflows/deploy.yml`:`npm ci` → `npm run build` → smoke 测试 → 按仓库变量重新构建发布产物 → 组装同一份 `_site/`(含 `manifest.webmanifest` 与 `sw.js`)→ 同步发布到 GitHub Pages 与 Cloudflare Pages。
+推送到 `main` 即触发 `.github/workflows/deploy.yml`:`npm ci` → `npm run test:unit` → `npm run build`(快速门禁)→ 按仓库变量重新构建发布产物 → 组装同一份 `_site/`(含 `manifest.webmanifest` 与 `sw.js`)→ 同步发布到 GitHub Pages 与 Cloudflare Pages。`npm run test:e2e`(Playwright 桌面+手机 smoke)改为提交前必须在本地跑过的强制自检项,不在 GitHub Actions 中运行。
 
 | 渠道 | 入口 | 说明 |
 |---|---|---|
