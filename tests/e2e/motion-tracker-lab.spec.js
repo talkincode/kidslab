@@ -1,11 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-async function selectMobilePanel() {
-  // Observation shell keeps the track, graphs and conclusion in one panel.
-}
-
 async function markFrames(page, count = 6) {
-  await selectMobilePanel(page, 'film');
   for (let i = 0; i < count; i += 1) {
     await page.locator('#markBtn').click();
   }
@@ -18,63 +13,49 @@ test.describe('motion tracker lab', () => {
       if (sessionStorage.getItem(initializedKey)) return;
       localStorage.setItem('kidslab.lang', 'zh');
       localStorage.setItem('kidslab.theme', 'light');
-      localStorage.setItem('kidslab.motion-tracker-lab.sound', 'off');
-      localStorage.removeItem('kidslab.progress.motion-tracker-lab');
+      localStorage.setItem('kidslab.motion-tracker-lab.music', '0');
+      localStorage.setItem('kidslab.motion-tracker-lab.sfx', '0');
       sessionStorage.setItem(initializedKey, 'true');
     });
     await page.goto('/courseware/motion-tracker-lab/');
   });
 
-  test('marks three clips, grows s-t and v-t graphs, and matches g sinθ', async ({ page }) => {
-    await selectMobilePanel(page, 'film');
-    await page.getByRole('button', { name: '速度不变' }).click();
+  test('grows s-t and v-t graphs by marking, then compares a 20° ramp', async ({ page }) => {
+    await expect(page.locator('#playBtn')).toBeEnabled();
+    await expect(page.getByRole('button', { name: '速度不变' })).toHaveCount(0);
+    await expect(page.locator('[data-law]')).toHaveCount(0);
+
     await markFrames(page);
-    await expect(page.locator('#markCount')).toHaveText('6 / 6');
+    await expect(page.locator('#markCount')).toHaveText('6 / 8');
     await expect(page.locator('#stPoints circle')).toHaveCount(6);
+    await expect(page.locator('#slopeLine')).toContainText('m/s');
+    await expect(page.locator('#observeNote')).toContainText('匀速');
 
-    await selectMobilePanel(page, 'lab');
-    await page.locator('#uniformBtn').click();
-    await expect(page.locator('#labFeedback')).toContainText('匀速');
-
-    await selectMobilePanel(page, 'film');
-    await expect(page.locator('#filmTitle')).toContainText('斜面');
-    await page.getByRole('button', { name: '速度在变' }).click();
-    await markFrames(page);
-    await selectMobilePanel(page, 'lab');
     await page.locator('#accelBtn').click();
-    await expect(page.locator('#labFeedback')).toContainText('匀加速');
-
-    await selectMobilePanel(page, 'lab');
-    await expect(page.locator('#designCard')).toBeVisible();
+    await expect(page.locator('#angleRow')).toBeVisible();
     await page.locator('[data-angle="20"]').click();
-    await selectMobilePanel(page, 'film');
-    await expect(page.locator('#filmTitle')).toContainText('坡度');
-    await page.getByRole('button', { name: '速度在变' }).click();
     await markFrames(page);
-    await selectMobilePanel(page, 'lab');
-    await page.locator('#accelBtn').click();
-    await page.locator('[data-law="sin"]').click();
-    await expect(page.locator('#labFeedback')).toContainText('g sinθ');
-    await expect(page.locator('#conclusionStatus')).toContainText('三卷录像都读完了');
-    await expect.poll(() => page.evaluate(() =>
-      JSON.parse(localStorage.getItem('kidslab.progress.motion-tracker-lab') || 'null')?.status)).toBe('completed');
+    await expect(page.locator('#stPoints circle')).toHaveCount(6);
+    await expect(page.locator('#slopeLine')).toContainText('m/s²');
+    await expect(page.locator('#observeNote')).toContainText('sinθ');
   });
 
-  test('rejects a miss and a wrong conclusion, then lets the student continue', async ({ page }) => {
-    await selectMobilePanel(page, 'film');
+  test('rejects a miss then lets the student mark and continue', async ({ page }) => {
     await page.locator('#stage').click({ position: { x: 8, y: 8 } });
     await expect(page.locator('#filmFeedback')).toContainText('没点到小车上');
-    await expect(page.locator('#markCount')).toHaveText('0 / 6');
+    await expect(page.locator('#markCount')).toHaveText('0 / 8');
 
-    await page.getByRole('button', { name: '速度不变' }).click();
-    await markFrames(page);
-    await selectMobilePanel(page, 'lab');
-    await page.locator('#accelBtn').click();
-    await expect(page.locator('#labFeedback')).toContainText('图像不像这种运动');
-    await expect(page.locator('#markCount')).toHaveText('6 / 6');
+    await page.locator('#markBtn').click();
+    await expect(page.locator('#markCount')).toHaveText('1 / 8');
+    await expect(page.locator('#stPoints circle')).toHaveCount(1);
+  });
 
-    await page.locator('#uniformBtn').click();
-    await expect(page.locator('#labFeedback')).toContainText('匀速');
+  test('playing the cart live grows the graphs without a quiz', async ({ page }) => {
+    await page.locator('#playBtn').click();
+    await expect.poll(async () => page.locator('#stPoints circle').count(), { timeout: 5000 }).toBeGreaterThan(1);
+    await expect(page.locator('#playBtn')).toHaveText('暂停');
+    await page.locator('#playBtn').click();
+    await expect(page.locator('#playBtn')).toHaveText('播放');
   });
 
   test('switches language and theme without console errors', async ({ page }) => {
@@ -85,54 +66,36 @@ test.describe('motion tracker lab', () => {
     });
 
     await page.locator('#langBtn').click();
-    await expect(page.locator('#filmTitle')).toContainText('changing speed');
+    await expect(page.locator('#filmTitle')).toContainText('speeding up');
     await expect(page.locator('#markBtn')).toHaveText('Mark this frame');
 
     await page.locator('#themeBtn').click();
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
 
     await page.locator('#langBtn').click();
-    await expect(page.locator('#filmTitle')).toContainText('速度');
+    await expect(page.locator('#filmTitle')).toContainText('匀速');
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
     expect(errors).toEqual([]);
   });
 
-  test('advances clips from the observation deck after marking and picking a ramp', async ({ page }) => {
-    await page.getByRole('button', { name: '速度不变' }).click();
-    await markFrames(page);
-    await expect(page.locator('#stPoints circle')).toHaveCount(6);
-    await page.locator('#uniformBtn').click();
-    await expect(page.locator('#filmTitle')).toContainText('斜面');
-
-    await page.getByRole('button', { name: '速度在变' }).click();
-    await markFrames(page);
-    await page.locator('#accelBtn').click();
-    await expect(page.locator('#designCard')).toBeVisible();
-    await page.locator('[data-angle="20"]').click();
-    await expect(page.locator('#filmTitle')).toContainText('坡度');
-  });
-
-  test('keeps the active lab panel inside desktop and phone viewports', async ({ page }) => {
-    await selectMobilePanel(page, 'film');
+  test('keeps the lab inside desktop and phone viewports', async ({ page }) => {
     const layout = await page.evaluate(() => ({
       width: document.documentElement.scrollWidth,
       height: document.documentElement.scrollHeight,
       viewportWidth: window.innerWidth,
       viewportHeight: window.innerHeight,
-      appBottom: document.querySelector('#app').getBoundingClientRect().bottom,
     }));
     expect(layout.width).toBeLessThanOrEqual(layout.viewportWidth + 1);
     expect(layout.height).toBeLessThanOrEqual(layout.viewportHeight + 1);
-    expect(layout.appBottom).toBeLessThanOrEqual(layout.viewportHeight + 1);
   });
 
-  test('keeps mute selected after reload', async ({ page }) => {
-    await page.evaluate(() => localStorage.setItem('kidslab.motion-tracker-lab.sound', 'on'));
+  test('keeps sfx mute selected after reload', async ({ page }) => {
+    await page.evaluate(() => localStorage.setItem('kidslab.motion-tracker-lab.sfx', '1'));
     await page.reload();
     await page.locator('#soundBtn').click();
     await expect(page.locator('#soundBtn')).toHaveAttribute('aria-pressed', 'true');
     await page.reload();
     await expect(page.locator('#soundBtn')).toHaveAttribute('aria-pressed', 'true');
-    await expect(page.locator('#soundBtn')).toHaveAttribute('aria-label', '打开声音');
+    await expect(page.locator('#soundBtn')).toHaveAttribute('aria-label', '打开音效');
   });
 });

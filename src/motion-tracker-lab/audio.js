@@ -1,6 +1,25 @@
 const MUSIC_LEVEL = 0.2;
+const MASTER_LEVEL = 0.78;
 
-export function createLabAudio({ bgmUrl, muted = false } = {}) {
+export function createLabAudio({
+  bgmUrl,
+  storageKey = 'kidslab.motion-tracker-lab',
+} = {}) {
+  const store = {
+    get(key, fallback) {
+      try {
+        const value = localStorage.getItem(`${storageKey}.${key}`);
+        if (value === null) return fallback;
+        return value === '1' || value === 'on' || value === 'true';
+      } catch {
+        return fallback;
+      }
+    },
+    set(key, value) {
+      try { localStorage.setItem(`${storageKey}.${key}`, value ? '1' : '0'); } catch { /* private mode */ }
+    },
+  };
+
   let ctx = null;
   let musicGain = null;
   let sfxGain = null;
@@ -8,7 +27,8 @@ export function createLabAudio({ bgmUrl, muted = false } = {}) {
   let bgmSource = null;
   let unlocked = false;
   let loading = null;
-  let isMuted = muted;
+  let musicOn = store.get('music', true);
+  let sfxOn = store.get('sfx', true);
 
   function ensure() {
     if (ctx) return true;
@@ -17,7 +37,7 @@ export function createLabAudio({ bgmUrl, muted = false } = {}) {
     try {
       ctx = new Ctor();
       const master = ctx.createGain();
-      master.gain.value = 0.8;
+      master.gain.value = MASTER_LEVEL;
       const compressor = ctx.createDynamicsCompressor?.();
       if (compressor) {
         compressor.threshold.value = -18;
@@ -31,7 +51,7 @@ export function createLabAudio({ bgmUrl, muted = false } = {}) {
       musicGain.gain.value = 0.0001;
       musicGain.connect(master);
       sfxGain = ctx.createGain();
-      sfxGain.gain.value = isMuted ? 0 : 0.9;
+      sfxGain.gain.value = sfxOn ? 0.9 : 0.0001;
       sfxGain.connect(master);
       return true;
     } catch {
@@ -56,8 +76,16 @@ export function createLabAudio({ bgmUrl, muted = false } = {}) {
     return loading;
   }
 
+  function ramp(node, value, seconds = 0.18) {
+    if (!ctx || !node) return;
+    const now = ctx.currentTime;
+    node.gain.cancelScheduledValues(now);
+    node.gain.setValueAtTime(Math.max(0.0001, node.gain.value), now);
+    node.gain.exponentialRampToValueAtTime(Math.max(0.0001, value), now + seconds);
+  }
+
   function startBgm() {
-    if (!ctx || !bgmBuffer || bgmSource || isMuted || !unlocked) return;
+    if (!ctx || !bgmBuffer || bgmSource || !musicOn || !unlocked) return;
     try {
       const source = ctx.createBufferSource();
       source.buffer = bgmBuffer;
@@ -65,10 +93,7 @@ export function createLabAudio({ bgmUrl, muted = false } = {}) {
       source.connect(musicGain);
       source.start();
       bgmSource = source;
-      const now = ctx.currentTime;
-      musicGain.gain.cancelScheduledValues(now);
-      musicGain.gain.setValueAtTime(0.0001, now);
-      musicGain.gain.exponentialRampToValueAtTime(MUSIC_LEVEL, now + 1.2);
+      ramp(musicGain, MUSIC_LEVEL, 1.2);
       source.onended = () => {
         if (bgmSource === source) bgmSource = null;
       };
@@ -85,22 +110,24 @@ export function createLabAudio({ bgmUrl, muted = false } = {}) {
     } catch {
       return false;
     }
-    if (isMuted) return true;
+    if (!musicOn && !sfxOn) return true;
     const ok = await loadBgm();
     if (ok) startBgm();
     return true;
   }
 
   function beep(kind = 'tap') {
-    if (isMuted || !ensure()) return;
+    if (!sfxOn || !ensure()) return;
     try {
       if (ctx.state === 'suspended') ctx.resume().catch(() => {});
       const now = ctx.currentTime;
       const settings = {
-        tap: { notes: [392], type: 'triangle', gain: 0.07, duration: 0.12 },
+        mark: { notes: [392], type: 'triangle', gain: 0.07, duration: 0.12 },
+        switch: { notes: [370], type: 'sine', gain: 0.05, duration: 0.1 },
         good: { notes: [523, 659], type: 'sine', gain: 0.08, duration: 0.22 },
         bad: { notes: [180, 140], type: 'sawtooth', gain: 0.05, duration: 0.2 },
-        win: { notes: [523, 659, 784], type: 'sine', gain: 0.09, duration: 0.42 },
+        complete: { notes: [523, 659, 784], type: 'sine', gain: 0.09, duration: 0.42 },
+        tap: { notes: [349], type: 'sine', gain: 0.05, duration: 0.1 },
       }[kind] || { notes: [370], type: 'sine', gain: 0.06, duration: 0.14 };
       settings.notes.forEach((frequency, index) => {
         const osc = ctx.createOscillator();
@@ -119,37 +146,40 @@ export function createLabAudio({ bgmUrl, muted = false } = {}) {
     }
   }
 
-  function setMuted(next) {
-    isMuted = next;
+  function setMusic(next) {
+    musicOn = Boolean(next);
+    store.set('music', musicOn);
     if (!ctx) return;
-    try {
-      if (sfxGain) sfxGain.gain.value = next ? 0 : 0.9;
-      if (musicGain) {
-        const now = ctx.currentTime;
-        musicGain.gain.cancelScheduledValues(now);
-        musicGain.gain.setValueAtTime(Math.max(0.0001, musicGain.gain.value), now);
-        musicGain.gain.exponentialRampToValueAtTime(next ? 0.0001 : MUSIC_LEVEL, now + 0.18);
-      }
-      if (next) ctx.suspend?.().catch(() => {});
-      else if (unlocked) {
+    if (musicOn) {
+      if (unlocked) {
         ctx.resume?.().catch(() => {});
-        startBgm();
+        if (!bgmBuffer) loadBgm().then((ok) => { if (ok) startBgm(); });
+        else startBgm();
       }
-    } catch {
-      // Mute must never break the lab.
+      ramp(musicGain, MUSIC_LEVEL, 0.6);
+    } else {
+      ramp(musicGain, 0.0001, 0.28);
     }
+  }
+
+  function setSfx(next) {
+    sfxOn = Boolean(next);
+    store.set('sfx', sfxOn);
+    if (sfxGain) ramp(sfxGain, sfxOn ? 0.9 : 0.0001, 0.12);
   }
 
   document.addEventListener('visibilitychange', () => {
     if (!ctx) return;
     if (document.hidden) ctx.suspend?.().catch(() => {});
-    else if (!isMuted && unlocked) ctx.resume?.().then(() => startBgm()).catch(() => {});
+    else if (unlocked && (musicOn || sfxOn)) ctx.resume?.().then(() => startBgm()).catch(() => {});
   });
 
   return {
     unlock,
     beep,
-    setMuted,
-    get muted() { return isMuted; },
+    setMusic,
+    setSfx,
+    get musicOn() { return musicOn; },
+    get sfxOn() { return sfxOn; },
   };
 }

@@ -22,6 +22,7 @@
   --scene-c: #9fbfb8;
   --veil: rgba(33, 52, 58, 0.28);
   --good: #207a56;
+  --scene-shadow: 0.28;
 }
 :root[data-theme="dark"] {
   color-scheme: dark;
@@ -38,6 +39,7 @@
   --veil: rgba(5, 10, 12, 0.55);
   --good: #5ee0a8;
   --ink-on-accent: #29140b;
+  --scene-shadow: 0.42;
 }
 html, body { height: 100%; }
 body {
@@ -48,7 +50,7 @@ body {
   background: var(--paper);
   -webkit-font-smoothing: antialiased;
 }
-#scene, #stage, #circuitScene {
+#stage {
   position: fixed;
   inset: 0;
   z-index: 1;
@@ -58,12 +60,13 @@ body {
   touch-action: none;
   cursor: grab;
 }
-#scene:active, #stage:active, #circuitScene:active { cursor: grabbing; }
+#stage:active { cursor: grabbing; }
 [hidden] { display: none !important; }
 .nogl {
-  position: fixed; inset: 0; z-index: 5;
-  display: grid; place-items: center; margin: 0; padding: 30px;
-  text-align: center; font-size: 18px; font-weight: 800; line-height: 1.6;
+  position: fixed; left: 12px; right: 12px; bottom: 18px; z-index: 5;
+  margin: 0; padding: 14px 18px;
+  text-align: center; font-size: 16px; font-weight: 800; line-height: 1.5;
+  background: var(--card); border: 2px solid var(--line-strong); border-radius: 16px;
 }
 
 .bar {
@@ -125,6 +128,19 @@ body {
 .coach b { display: block; font-size: 16px; }
 .coach p { margin: 3px 0 0; font-size: 14px; font-weight: 700; color: var(--ink-soft); line-height: 1.4; }
 
+.view-dock {
+  position: fixed; z-index: 16;
+  left: clamp(12px, 3vw, 26px); top: 168px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.view-btn {
+  min-height: 44px; min-width: 72px; padding: 8px 12px;
+  font: 800 16px/1 var(--font); color: var(--ink);
+  background: var(--card); border: 2px solid var(--line-strong); border-radius: 14px;
+  box-shadow: 2px 3px 0 var(--line-strong); cursor: pointer;
+}
+.view-btn.is-active { background: var(--accent-2); color: var(--ink-on-accent); }
+
 .panel {
   position: fixed; z-index: 20;
   top: 74px; right: clamp(12px, 2.5vw, 26px);
@@ -160,13 +176,7 @@ body {
 .table-wrap { overflow: auto; border: 1.5px solid var(--line); border-radius: 12px; }
 table { width: 100%; border-collapse: collapse; font-size: 15px; }
 th, td { padding: 8px 6px; text-align: center; border-bottom: 1px solid var(--line); }
-th { color: var(--ink-soft); font-size: 13px; }
-.observe-card {
-  padding: 12px; border-radius: 14px; background: color-mix(in srgb, var(--good) 16%, var(--card));
-  border: 2px solid var(--good);
-}
-.observe-card b, .observe-card p { margin: 0; font-size: 15px; line-height: 1.45; }
-.observe-card p { margin-top: 6px; font-weight: 700; }
+th { color: var(--ink-soft); font-size: 14px; }
 
 .foot-tip {
   position: fixed; z-index: 15; left: 50%; bottom: 18px; transform: translateX(-50%);
@@ -176,10 +186,13 @@ th { color: var(--ink-soft); font-size: 13px; }
   box-shadow: 3px 3px 0 var(--line-strong); pointer-events: none;
 }
 
+.graph-caption { margin: 4px 0 0; font-size: 14px; font-weight: 800; color: var(--ink-soft); }
 .evidence-graph { width: 100%; height: 120px; background: var(--paper); border-radius: 12px; }
 .graph-grid path { fill: none; stroke: var(--line); stroke-width: 1; }
 .graph-fit { fill: none; stroke: var(--accent); stroke-width: 2; }
 .graph-point { fill: var(--accent-2); stroke: var(--line-strong); }
+.panel__hint.is-success { color: var(--good); }
+.panel__hint.is-error { color: #c45c3e; }
 
 :where(button, a, input, select):focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
@@ -187,12 +200,13 @@ th { color: var(--ink-soft); font-size: 13px; }
   .bar { padding: 8px 10px; }
   .bar__title { font-size: 17px; }
   .bar > a.pill span { display: none; }
-  .hud { top: 58px; left: 10px; right: auto; }
+  .hud { top: 58px; left: 10px; right: auto; flex-wrap: wrap; }
   .hud__chip { min-width: 72px; padding: 6px 8px; }
   .coach { top: 118px; width: calc(100vw - 20px); min-width: 0; left: 10px; transform: none; }
+  .view-dock { top: auto; bottom: calc(52vh + 18px); left: 10px; flex-direction: row; }
   .panel {
     top: auto; right: 10px; left: 10px; bottom: 10px;
     width: auto; max-height: 52vh;
   }
-  .foot-tip { bottom: auto; top: auto; display: none; }
+  .foot-tip { display: none; }
 }

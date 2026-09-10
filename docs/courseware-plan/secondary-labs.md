@@ -64,7 +64,7 @@ P0 优先覆盖初高中实验方法主干，并验证十种不同的核心交�
 
 > 已完成：✅ `density-detective-lab`（`g8` · `physics`）。它以天平、量筒排水、手动读数、数据表和 `m-V` 图完成可重复的 L3 测量闭环；模型与交互验收见 `tests/unit/density-lab.test.mjs` 和 `tests/e2e/density-detective-lab.spec.js`。
 >
-> 已完成：✅ `motion-tracker-lab`（`g8,g10` · `physics`）。它以 0.10 s 逐帧打点、s-t / v-t 图和区间平均速度完成匀速与无摩擦斜面匀加速对照，L4 自选坡度核对 `a = g sinθ`；模型与交互验收见 `tests/unit/motion-tracker.test.mjs` 和 `tests/e2e/motion-tracker-lab.spec.js`。
+> 已完成：✅ `motion-tracker-lab`（`g8,g10` · `physics`）。它以气垫导轨上的小车做观测实验：可直播播放或 0.10 s 逐帧打点，s-t / v-t 图随点生长，对照水平匀速与无摩擦斜面匀加速，自选 10°/20°/30° 坡度核对 `a = g sinθ`；不是预测题或通关考卷。模型与交互验收见 `tests/unit/motion-tracker-lab.test.mjs` 和 `tests/e2e/motion-tracker-lab.spec.js`。
 >
 > 已完成：✅ `mass-conservation-lab`（`g9` · `chemistry`）。它用小苏打与醋的理想化产气反应比较敞口和密闭称量：前者把逸出 CO₂ 明确记为系统外质量，后者让全部物质留在天平上，以两条记录和可修正结论完成 L3 闭环；模型与交互验收见 `tests/unit/mass-conservation-lab.test.mjs` 和 `tests/e2e/mass-conservation-lab.spec.js`。
 >
