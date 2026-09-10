@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-10T13:18:30.975Z",
+  "generatedAt": "2026-09-10T13:55:00.615Z",
   "tags": {
     "3D": {
       "en": "3D",
@@ -5012,7 +5012,8 @@
       "tags": [
         "物质三态",
         "分子运动",
-        "实验"
+        "实验",
+        "3D"
       ],
       "icon": "🧊",
       "order": 80,
@@ -5034,7 +5035,11 @@
         "experiment",
         "simulation",
         "lab",
-        "模拟"
+        "模拟",
+        "3D",
+        "3d",
+        "三维",
+        "three.js"
       ],
       "path": "courseware/ice-maker-lab/index.html"
     },
