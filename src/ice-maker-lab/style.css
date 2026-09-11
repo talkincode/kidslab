@@ -42,15 +42,18 @@
   --cold: #7ee0ea;
   --ink-on-accent: #08343a;
 }
-html, body { height: 100%; }
+html, body { width: 100%; height: 100%; }
 body {
   margin: 0;
   overflow: hidden;
   font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.45;
   color: var(--ink);
   background: var(--paper);
   -webkit-font-smoothing: antialiased;
 }
+button, input, select { font: inherit; color: inherit; }
 #scene {
   position: fixed;
   inset: 0;
@@ -72,15 +75,15 @@ body {
 .bar {
   position: fixed; top: 0; left: 0; right: 0; z-index: 50;
   display: flex; align-items: center; justify-content: space-between;
-  gap: 10px; padding: 12px clamp(12px, 3vw, 26px);
+  gap: 10px; padding: 8px clamp(12px, 3vw, 18px);
   pointer-events: none;
 }
 .bar > * { pointer-events: auto; }
-.bar__title { margin: 0; font-size: clamp(18px, 2.6vw, 24px); font-weight: 800; }
+.bar__title { margin: 0; font-size: clamp(18px, 2vw, 22px); font-weight: 800; }
 .bar__actions { display: flex; gap: 8px; }
 .pill, .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-  min-height: 44px; padding: 8px 16px;
+  min-height: 44px; padding: 8px 14px;
   font: 800 16px/1 var(--font); color: var(--ink); text-decoration: none;
   background: var(--card); border: 2px solid var(--line-strong); border-radius: 99px;
   box-shadow: 3px 3px 0 var(--line-strong); cursor: pointer;
@@ -99,25 +102,25 @@ body {
 
 .hud {
   position: fixed; z-index: 15;
-  top: 74px; left: clamp(12px, 3vw, 26px);
-  display: flex; gap: 10px; pointer-events: none; flex-wrap: wrap;
-  max-width: min(560px, calc(100vw - 380px));
+  top: 64px; left: clamp(12px, 3vw, 18px);
+  display: flex; gap: 8px; pointer-events: none; flex-wrap: wrap;
+  max-width: min(520px, calc(100vw - 360px));
 }
 .hud__chip {
   display: flex; flex-direction: column; align-items: center; gap: 2px;
-  min-width: 92px; padding: 8px 14px;
+  min-width: 84px; padding: 6px 10px;
   background: var(--card); border: 2.5px solid var(--line-strong);
   border-radius: var(--radius-md); box-shadow: 3px 4px 0 var(--line-strong);
 }
 .hud__label { font-size: 14px; font-weight: 800; color: var(--ink-soft); }
-.hud__chip b { font-size: 20px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.hud__chip b { font-size: 16px; font-weight: 800; font-variant-numeric: tabular-nums; }
 
 .coach {
   position: fixed; z-index: 14;
-  top: 74px; left: 50%; transform: translateX(-50%);
-  width: min(420px, calc(100vw - 380px)); min-width: 240px;
+  top: 64px; left: 50%; transform: translateX(-50%);
+  width: min(400px, calc(100vw - 360px)); min-width: 220px;
   display: flex; align-items: center; gap: 10px;
-  padding: 10px 14px;
+  padding: 8px 12px;
   background: var(--card); border: 2.5px solid var(--line-strong);
   border-radius: 16px; box-shadow: 4px 5px 0 var(--line-strong);
   pointer-events: none;
@@ -148,8 +151,8 @@ body {
 
 .panel {
   position: fixed; z-index: 20;
-  top: 74px; right: clamp(12px, 2.5vw, 26px);
-  width: 328px; max-height: calc(100vh - 96px);
+  top: 64px; right: clamp(12px, 2.5vw, 18px);
+  width: 312px; max-height: calc(100vh - 84px);
   display: flex; flex-direction: column;
   background: var(--card);
   border: 2.5px solid var(--line-strong); border-radius: var(--radius-lg);
@@ -171,7 +174,7 @@ body {
 .seg { display: flex; gap: 8px; }
 .seg__btn {
   flex: 1; min-height: 44px; padding: 8px 6px;
-  font: 800 15px/1.2 var(--font); color: var(--ink);
+  font: 800 16px/1.2 var(--font); color: var(--ink);
   background: var(--paper); border: 2px solid var(--line-strong); border-radius: var(--radius-md);
   box-shadow: 2px 3px 0 var(--line-strong); cursor: pointer;
 }
@@ -195,7 +198,7 @@ body {
   padding: 12px; border-radius: 14px; background: color-mix(in srgb, var(--good) 16%, var(--card));
   border: 2px solid var(--good);
 }
-.observe-card b, .observe-card p { margin: 0; font-size: 15px; line-height: 1.45; }
+.observe-card b, .observe-card p { margin: 0; font-size: 16px; line-height: 1.45; }
 .observe-card p { margin-top: 6px; font-weight: 700; }
 
 .foot-tip {
@@ -210,11 +213,12 @@ body {
 
 @media (max-width: 760px) {
   .bar { padding: 8px 10px; }
-  .bar__title { font-size: 17px; }
+  .bar__title { font-size: 18px; }
   .bar > a.pill span { display: none; }
-  .hud { top: 58px; left: 10px; right: auto; max-width: calc(100vw - 20px); }
+  .hud { top: 56px; left: 10px; right: auto; max-width: calc(100vw - 20px); }
   .hud__chip { min-width: 72px; padding: 6px 8px; }
-  .coach { top: 128px; width: calc(100vw - 20px); min-width: 0; left: 10px; transform: none; }
+  .hud__chip b { font-size: 16px; }
+  .coach { top: 118px; width: calc(100vw - 20px); min-width: 0; left: 10px; transform: none; }
   .view-dock { display: none; }
   .panel {
     top: auto; right: 10px; left: 10px; bottom: 10px;
