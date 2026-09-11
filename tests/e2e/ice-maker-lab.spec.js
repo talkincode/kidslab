@@ -126,6 +126,25 @@ test.describe('ice maker lab', () => {
     expect(Math.abs(phoneLater.cssHeight - phone.cssHeight)).toBeLessThan(2);
   });
 
+  test('wheel zoom-out keeps a larger orbit radius instead of snapping back', async ({ page }) => {
+    const scene = page.locator('#scene');
+    await expect(scene).toHaveAttribute('data-orbit-radius', /4\./);
+    const before = Number(await scene.getAttribute('data-orbit-radius'));
+    expect(before).toBeGreaterThan(3);
+
+    await scene.evaluate((el) => {
+      el.dispatchEvent(new WheelEvent('wheel', { deltaY: 80, bubbles: true, cancelable: true }));
+    });
+    await expect.poll(async () => Number(await scene.getAttribute('data-orbit-radius')), { timeout: 2000 })
+      .toBeGreaterThan(before + 0.15);
+
+    const zoomed = Number(await scene.getAttribute('data-orbit-radius'));
+    await page.waitForTimeout(600);
+    const later = Number(await scene.getAttribute('data-orbit-radius'));
+    expect(Math.abs(later - zoomed)).toBeLessThan(0.05);
+    expect(later).toBeGreaterThan(before + 0.15);
+  });
+
   test('type scale matches the optics-lab hierarchy while staying above child floors', async ({ page }) => {
     const sizes = await page.evaluate(() => {
       const px = (sel) => Number.parseFloat(getComputedStyle(document.querySelector(sel)).fontSize);

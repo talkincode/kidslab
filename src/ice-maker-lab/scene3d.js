@@ -2,6 +2,14 @@ import * as THREE from 'three';
 import { RoundedBoxGeometry } from './vendor/RoundedBoxGeometry.js';
 import { RoomEnvironment } from './vendor/RoomEnvironment.js';
 import { cameraFovForAspect, planViewportResize } from './view-size.js';
+import {
+  applyOrbitDrag,
+  applyPinchZoom,
+  applyWheelZoom,
+  createOrbit,
+  setOrbitGoal,
+  tickOrbit,
+} from './camera-orbit.js';
 
 function cssHex(name, fallback) {
   const raw = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -351,15 +359,12 @@ export function createIceScene(canvas) {
   ];
 
   const views = {
-    stage: { yaw: 0.62, elevation: 0.42, radius: 4.15, target: new THREE.Vector3(0.15, 0.82, 0) },
-    loop: { yaw: 0.18, elevation: 0.28, radius: 3.15, target: new THREE.Vector3(0.05, 0.78, 0) },
-    condenser: { yaw: 1.18, elevation: 0.32, radius: 3.05, target: new THREE.Vector3(0.7, 0.9, 0) },
+    stage: { yaw: 0.62, elevation: 0.42, radius: 4.15, target: { x: 0.15, y: 0.82, z: 0 } },
+    loop: { yaw: 0.18, elevation: 0.28, radius: 3.15, target: { x: 0.05, y: 0.78, z: 0 } },
+    condenser: { yaw: 1.18, elevation: 0.32, radius: 3.05, target: { x: 0.7, y: 0.9, z: 0 } },
   };
-  let yaw = views.stage.yaw;
-  let elevation = views.stage.elevation;
-  let radius = views.stage.radius;
-  const target = views.stage.target.clone();
-  let goal = { ...views.stage, target: views.stage.target.clone() };
+  let orbit = createOrbit(views.stage);
+  canvas.dataset.orbitRadius = orbit.radius.toFixed(3);
   let state = {
     filled: false, power: false, doorOpen: false, iceFraction: 0, moldTempC: 22, loopStage: 'idle',
   };
@@ -393,8 +398,13 @@ export function createIceScene(canvas) {
   }
 
   function setView(name) {
-    const view = views[name] || views.stage;
-    goal = { yaw: view.yaw, elevation: view.elevation, radius: view.radius, target: view.target.clone() };
+    orbit = setOrbitGoal(orbit, views[name] || views.stage);
+  }
+
+  function pinchDistance(map) {
+    const pts = [...map.values()];
+    if (pts.length < 2) return 0;
+    return Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
   }
 
   function setPickHandler(handler) {
@@ -427,12 +437,22 @@ export function createIceScene(canvas) {
   });
   canvas.addEventListener('pointermove', (event) => {
     const prev = pointers.get(event.pointerId);
-    if (!prev || pointers.size !== 1) return;
+    if (!prev) return;
+    if (pointers.size === 2) {
+      const before = new Map(pointers);
+      pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      dragMoved = true;
+      orbit = applyPinchZoom(orbit, pinchDistance(before), pinchDistance(pointers));
+      return;
+    }
+    if (pointers.size !== 1) {
+      pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      return;
+    }
     const dx = event.clientX - prev.x;
     const dy = event.clientY - prev.y;
     if (Math.abs(dx) + Math.abs(dy) > 3) dragMoved = true;
-    yaw -= dx * 0.007;
-    elevation = THREE.MathUtils.clamp(elevation + dy * 0.005, 0.18, 1.15);
+    orbit = applyOrbitDrag(orbit, dx, dy);
     pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
   });
   const drop = (event) => {
@@ -464,17 +484,17 @@ export function createIceScene(canvas) {
   canvas.addEventListener('pointercancel', drop);
   canvas.addEventListener('wheel', (event) => {
     event.preventDefault();
-    radius = THREE.MathUtils.clamp(radius * Math.exp(THREE.MathUtils.clamp(event.deltaY, -80, 80) * 0.002), 2.4, 7.2);
+    orbit = applyWheelZoom(orbit, event.deltaY);
+    canvas.dataset.orbitRadius = orbit.radius.toFixed(3);
   }, { passive: false });
 
   const clock = new THREE.Clock();
   renderer.setAnimationLoop(() => {
     if (!running || document.hidden || canvas.clientWidth === 0) return;
     const dt = Math.min(clock.getDelta(), 0.05);
-    yaw += (goal.yaw - yaw) * Math.min(1, dt * 2.4);
-    elevation += (goal.elevation - elevation) * Math.min(1, dt * 2.4);
-    radius += (goal.radius - radius) * Math.min(1, dt * 2.4);
-    target.lerp(goal.target, Math.min(1, dt * 2.4));
+    orbit = tickOrbit(orbit, dt);
+    const { yaw, elevation, radius, target } = orbit;
+    canvas.dataset.orbitRadius = radius.toFixed(3);
 
     const doorAngle = state.doorOpen ? -1.12 : 0;
     door.rotation.y += (doorAngle - door.rotation.y) * Math.min(1, dt * 6);
@@ -525,7 +545,7 @@ export function createIceScene(canvas) {
       Math.sin(elevation) * radius + 0.28,
       Math.cos(yaw) * Math.cos(elevation) * radius,
     );
-    camera.lookAt(target);
+    camera.lookAt(target.x, target.y, target.z);
     renderer.render(scene, camera);
   });
 
