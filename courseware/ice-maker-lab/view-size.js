@@ -1,0 +1,1 @@
+export function planViewportResize(e,t){const r=Math.max(1,Math.round(Number(t?.width)||0)),n=Math.max(1,Math.round(Number(t?.height)||0));return e&&e.width===r&&e.height===n?{apply:!1,width:r,height:n}:{apply:!0,width:r,height:n}}export function cameraFovForAspect(e){const t=Number(e);return!Number.isFinite(t)||t<=0?34:t<.85?52:t<1.15?42:34}

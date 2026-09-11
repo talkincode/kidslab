@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from './vendor/RoundedBoxGeometry.js';
 import { RoomEnvironment } from './vendor/RoomEnvironment.js';
+import { cameraFovForAspect, planViewportResize } from './view-size.js';
 
 function cssHex(name, fallback) {
   const raw = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -83,7 +84,7 @@ export function createIceScene(canvas) {
   renderer.outputColorSpace = THREE.SRGBColorSpace;
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 80);
+  const camera = new THREE.PerspectiveCamera(cameraFovForAspect(1), 1, 0.1, 80);
   const pmrem = new THREE.PMREMGenerator(renderer);
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
   pmrem.dispose();
@@ -403,15 +404,16 @@ export function createIceScene(canvas) {
   let viewW = 0;
   let viewH = 0;
   function resize() {
-    const width = Math.max(1, window.innerWidth);
-    const height = Math.max(1, window.innerHeight);
-    if (width === viewW && height === viewH) return;
-    viewW = width;
-    viewH = height;
-    renderer.setSize(width, height, false);
-    canvas.style.width = '100%';
-    canvas.style.height = '100%';
-    camera.aspect = width / height;
+    const plan = planViewportResize(
+      { width: viewW, height: viewH },
+      { width: window.innerWidth, height: window.innerHeight },
+    );
+    if (!plan.apply) return;
+    viewW = plan.width;
+    viewH = plan.height;
+    renderer.setSize(plan.width, plan.height, false);
+    camera.aspect = plan.width / plan.height;
+    camera.fov = cameraFovForAspect(camera.aspect);
     camera.updateProjectionMatrix();
   }
 
@@ -527,9 +529,8 @@ export function createIceScene(canvas) {
     renderer.render(scene, camera);
   });
 
-  const observer = new ResizeObserver(resize);
-  observer.observe(canvas);
   addEventListener('resize', resize);
+  visualViewport?.addEventListener('resize', resize);
   applyTheme();
   resize();
   drawLcd();
