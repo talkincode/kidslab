@@ -92,6 +92,29 @@ test('shares one current state across meters, graph and fault recovery while pre
   expect(await page.locator('.information-column').evaluate((e) => [...e.querySelectorAll('*')].filter((n) => ['auto', 'scroll'].includes(getComputedStyle(n).overflowY)).length)).toBe(0);
 });
 
+test('type scale matches the optics-lab hierarchy while staying above child floors', async ({ page }) => {
+  const sizes = await page.evaluate(() => {
+    const px = (sel) => Number.parseFloat(getComputedStyle(document.querySelector(sel)).fontSize);
+    return {
+      body: px('body'),
+      title: px('.bar__title'),
+      hudLabel: px('.hud__label'),
+      hudNum: px('.hud__chip b'),
+      coach: px('#missionTitle'),
+      button: px('#recordBtn'),
+      hint: px('.panel__hint, .meter-line'),
+    };
+  });
+  expect(sizes.body).toBeGreaterThanOrEqual(16);
+  expect(sizes.title).toBeGreaterThanOrEqual(16);
+  expect(sizes.title).toBeLessThanOrEqual(22);
+  expect(sizes.hudLabel).toBeGreaterThanOrEqual(14);
+  expect(sizes.hudNum).toBe(16);
+  expect(sizes.coach).toBeGreaterThanOrEqual(16);
+  expect(sizes.button).toBeGreaterThanOrEqual(16);
+  expect(sizes.hint).toBeGreaterThanOrEqual(14);
+});
+
 test('has no wiring fault demonstrations and migrates old faulty saves to normal wiring', async ({ page }) => {
   await expect(page.locator('#faultExamples, [data-wire], #repairBtn')).toHaveCount(0);
   await page.locator('#recordBtn').click();
