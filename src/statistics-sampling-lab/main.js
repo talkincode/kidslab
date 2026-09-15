@@ -1,10 +1,12 @@
 import { createAudio } from './audio.js';
 import {
+  compareMethods,
   createLab,
   drawSample,
   parseLab,
   recordTrial,
   resetLab,
+  runBatch,
   runCensus,
   serializeLab,
   setMethod,
@@ -21,26 +23,31 @@ const I18N = {
     title: '抽样统计实验室',
     nogl: '浏览器暂时跑不了 3D 实验室，换一个新一点的浏览器再来观测吧。',
     hudMethod: '方法',
-    hudN: '人数 n',
-    hudMean: '样本均数',
-    hudSe: '标准误',
-    tip0: '先抽一份「便利样本」，看均值会不会总往一边歪',
+    hudN: 'n',
+    hudMean: 'x̄',
+    hudSe: 'SE',
+    tip0: '抽一份便利样本，读出 x̄ 落在哪',
     panelTitle: '抽样面板',
-    btnDraw: '抽这一份',
+    btnDraw: '抽取样本',
     btnRecord: '记下这次',
     btnCensus: '全市普查',
     btnReset: '重新实验',
-    feedbackIdle: '换方法再抽几份，把点点记到表里。',
+    btnBatch50: '重复 50 次',
+    btnBatch100: '重复 100 次',
+    btnCompare: '四种对照',
+    feedbackIdle: '换方法再抽，或重复 50 次看抽样分布。',
     labMethod: '抽样方法',
-    labN: '样本人数',
-    chartTitle: '样本均数图',
+    labN: '样本人数 n',
+    chartTitle: '抽样分布',
+    censusTitle: '普查参数',
+    biasTitle: 'Bias(x̄)',
     logTitle: '观测记录',
     colMethod: '方法',
     colN: 'n',
-    colMean: '均数',
-    lessonTitle: '小课堂：为什么便利样本看起来很稳？',
-    lessonText: '市中心的人通勤都差不多，所以便利样本的点挤成一团。挤得紧只说明波动小，不说明它打中全市均值。分层会从四个街区都抓人，均值才会靠近普查线。',
-    footTip: '拖空白转视角 · 右侧换抽样方法，左侧看谁被点亮',
+    colMean: 'x̄',
+    lessonTitle: '公式与四种方法',
+    lessonText: 'SE = (s/√n)·√[(N−n)/(N−1)]。Bias(x̄)=E(x̄)−μ，不是某一次的 x̄−μ。分层按区比例抽人；整群抽 1–2 栋楼做普查；便利样本挤在调查点，所以稳定偏 −18 min。',
+    footTip: '拖动旋转视角 · 换方法看谁被抽中',
     musicOn: '关闭背景音乐',
     musicOff: '打开背景音乐',
     sfxOn: '关闭音效',
@@ -50,16 +57,22 @@ const I18N = {
     stratified: '分层',
     cluster: '整群',
     convenience: '便利',
-    complete: '便利抽样挤在市中心的短通勤里；分层抽样才靠近全市 30 分钟。',
+    complete: '便利抽样的 Bias 稳定为 −18 min；分层抽样的点堆在 μ = 30 附近。',
     noSample: '还没抽样，先抽一份再记。',
     duplicate: '这一份已经记过了，再抽一份吧。',
-    outOfRange: '人数要在 8 到 80 之间，而且是 4 的倍数。',
-    notStratifiable: '分层需要人数是 4 的倍数，才能四个街区平分。',
+    outOfRange: 'n 要在 8 到 80 之间，而且是 4 的倍数。',
+    notStratifiable: '分层需要 n 是 4 的倍数，四个区才能按比例平分。',
     invalidMethod: '这种抽法这台仪器没有。',
-    tooLarge: '这个街区没有那么多人。',
-    recorded: '记下了。换一种抽法再比一比。',
-    drawn: '点亮的人进样本了。看看均数落在哪。',
-    censusTip: '普查线是 30 分钟。便利样本还在市中心附近打转吗？',
+    tooLarge: '调查点附近没有那么多人。',
+    invalidK: '只能重复 50 或 100 次。',
+    recorded: '记下了。换一种方法，或重复 50 次看分布。',
+    drawn: '样本已抽出。看 x̄ 和误差棒。',
+    batched: '抽样分布已更新，三维场景保持这一份样本。',
+    compared: '四种方法的 x̄ 已画在同一张图上。',
+    censusTip: 'μ = 30 min。现在可以读 Bias，单次 x̄−μ 只是这一次差多远。',
+    biasLine: '该方法 Bias(x̄) = {bias}（理论）。',
+    mcBiasLine: '蒙特卡洛 Bias ≈ {bias}（k 次均值）。',
+    thisDraw: '这一次 x̄ − μ = {err}。',
     dash: '—',
   },
   en: {
@@ -69,25 +82,30 @@ const I18N = {
     nogl: 'WebGL is unavailable, so the 3D lab cannot start. Try a newer browser.',
     hudMethod: 'Method',
     hudN: 'n',
-    hudMean: 'Sample mean',
-    hudSe: 'Std. error',
-    tip0: 'Draw a convenience sample and watch the mean lean the same way',
+    hudMean: 'x̄',
+    hudSe: 'SE',
+    tip0: 'Draw a convenience sample and read where x̄ lands',
     panelTitle: 'Sampling',
     btnDraw: 'Draw sample',
     btnRecord: 'Record this',
     btnCensus: 'City census',
     btnReset: 'Start over',
-    feedbackIdle: 'Switch methods, draw again, and plot the dots.',
+    btnBatch50: 'Repeat 50×',
+    btnBatch100: 'Repeat 100×',
+    btnCompare: 'Compare 4',
+    feedbackIdle: 'Switch methods, or repeat 50× to see the sampling distribution.',
     labMethod: 'Sampling method',
-    labN: 'Sample size',
-    chartTitle: 'Sample means',
+    labN: 'Sample size n',
+    chartTitle: 'Sampling distribution',
+    censusTitle: 'Census parameters',
+    biasTitle: 'Bias(x̄)',
     logTitle: 'Lab notes',
     colMethod: 'Method',
     colN: 'n',
-    colMean: 'Mean',
-    lessonTitle: 'Why does convenience look so stable?',
-    lessonText: 'Downtown commutes are alike, so convenience dots huddle. A tight cluster is low spread, not a hit on the city mean. Stratified draws from every district, so the mean moves toward the census line.',
-    footTip: 'Drag to orbit · change the method on the right, watch who lights up',
+    colMean: 'x̄',
+    lessonTitle: 'Formulas and the four methods',
+    lessonText: 'SE = (s/√n)·√[(N−n)/(N−1)]. Bias(x̄)=E(x̄)−μ, not a single x̄−μ. Stratified draws by district; cluster censuses 1–2 buildings; convenience stays at the survey point, so Bias stays −18 min.',
+    footTip: 'Drag to orbit · change the method and watch who is sampled',
     musicOn: 'Mute music',
     musicOff: 'Unmute music',
     sfxOn: 'Mute sound effects',
@@ -97,16 +115,22 @@ const I18N = {
     stratified: 'Stratified',
     cluster: 'Cluster',
     convenience: 'Convenience',
-    complete: 'Convenience hugs the short downtown commute; stratified sits near the city-wide 30 minutes.',
+    complete: 'Convenience Bias stays −18 min; stratified dots pile up near μ = 30.',
     noSample: 'Nothing sampled yet — draw a sample first.',
     duplicate: 'That draw is already in the notebook.',
     outOfRange: 'n must be between 8 and 80 and a multiple of 4.',
     notStratifiable: 'Stratified draws need n to be a multiple of 4.',
     invalidMethod: 'This bench does not have that method.',
-    tooLarge: 'That district does not have that many people.',
-    recorded: 'Saved. Switch methods and compare.',
-    drawn: 'The lit people are in the sample. Watch the mean.',
-    censusTip: 'The census line is 30 minutes. Is convenience still circling downtown?',
+    tooLarge: 'The survey point does not have that many people.',
+    invalidK: 'Batch size must be 50 or 100.',
+    recorded: 'Saved. Switch methods, or repeat 50× to see the distribution.',
+    drawn: 'Sample drawn. Read x̄ and the error bar.',
+    batched: 'Sampling distribution updated. The 3D city still shows this one draw.',
+    compared: 'All four methods are on the same plot.',
+    censusTip: 'μ = 30 min. Bias is now readable; a single x̄−μ is just this draw.',
+    biasLine: 'Bias(x̄) = {bias} (theoretical) for this method.',
+    mcBiasLine: 'Monte Carlo Bias ≈ {bias} (mean of k draws).',
+    thisDraw: 'This draw: x̄ − μ = {err}.',
     dash: '—',
   },
 };
@@ -119,6 +143,7 @@ const REASON_KEY = {
   'n-not-stratifiable': 'notStratifiable',
   'invalid-method': 'invalidMethod',
   'n-too-large': 'tooLarge',
+  'invalid-k': 'invalidK',
 };
 
 const METHOD_COLOR = {
@@ -156,6 +181,7 @@ try {
 let panelOpen = matchMedia('(min-width: 761px)').matches;
 function applyPanel() {
   panel.classList.toggle('is-collapsed', !panelOpen);
+  document.body.classList.toggle('panel-open', panelOpen);
   panelBody.hidden = !panelOpen;
   panelArrow.textContent = panelOpen ? '▾' : '▸';
   panelHandle.setAttribute('aria-expanded', String(panelOpen));
@@ -184,30 +210,99 @@ function methodLabel(method) {
   return t(method);
 }
 
-function renderChart(current) {
-  const w = 280;
-  const h = 120;
-  const pad = 18;
+function fmtSigned(value) {
+  if (value == null || !Number.isFinite(value)) return t('dash');
+  const abs = Math.abs(value).toFixed(1);
+  return `${value < 0 ? '−' : value > 0 ? '+' : ''}${abs} min`;
+}
+
+function renderErrorBar(view) {
+  const svg = $('errorBar');
+  if (view.mean == null || view.lo == null || view.hi == null) {
+    svg.setAttribute('hidden', '');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.innerHTML = '';
+    return;
+  }
+  svg.removeAttribute('hidden');
+  svg.setAttribute('aria-hidden', 'false');
   const min = 0;
   const max = 60;
-  const yOf = (value) => pad + (1 - (value - min) / (max - min)) * (h - 2 * pad);
+  const xOf = (value) => 8 + ((value - min) / (max - min)) * 104;
+  const ink = cssVar('--ink') || '#2b2440';
+  const x = xOf(view.mean);
+  const lo = xOf(view.lo);
+  const hi = xOf(view.hi);
+  const mu = view.censusMean == null ? '' : `<line x1="${xOf(view.censusMean)}" x2="${xOf(view.censusMean)}" y1="2" y2="14" stroke="${ink}" stroke-width="2" stroke-dasharray="2 2" />`;
+  svg.innerHTML = `${mu}<line x1="${lo}" x2="${hi}" y1="8" y2="8" stroke="${ink}" stroke-width="3" />`
+    + `<line x1="${lo}" x2="${lo}" y1="4" y2="12" stroke="${ink}" stroke-width="2" />`
+    + `<line x1="${hi}" x2="${hi}" y1="4" y2="12" stroke="${ink}" stroke-width="2" />`
+    + `<circle cx="${x}" cy="8" r="3.2" fill="${METHOD_COLOR[lab.method] || ink}" stroke="${ink}" stroke-width="1" />`;
+}
+
+function renderChart(current) {
+  const w = 280;
+  const h = 148;
+  const padL = 22;
+  const padR = 10;
+  const padT = 10;
+  const padB = 24;
+  const min = 0;
+  const max = 60;
+  const xOf = (value) => padL + ((value - min) / (max - min)) * (w - padL - padR);
   const ink = cssVar('--ink') || '#2b2440';
   const faint = cssVar('--ink-faint') || '#a49cb8';
-  const marks = [12, 24, 30, 36, 48].map((value) => {
-    const y = yOf(value);
-    return `<line x1="${pad}" x2="${w - pad}" y1="${y}" y2="${y}" stroke="${faint}" stroke-width="1" />`
-      + `<text x="4" y="${y + 4}" font-size="10" fill="${faint}">${value}</text>`;
+  const series = [];
+  for (const method of ['simple', 'stratified', 'cluster', 'convenience']) {
+    const means = current.distributions?.[method]?.means;
+    if (means?.length) series.push({ method, means });
+  }
+  if (!series.length && current.batch?.means?.length) {
+    series.push({ method: current.batch.method, means: current.batch.means });
+  }
+  if (!series.length && current.trials.length) {
+    const byMethod = {};
+    for (const trial of current.trials) {
+      (byMethod[trial.method] ??= []).push(trial.mean);
+    }
+    for (const [method, means] of Object.entries(byMethod)) series.push({ method, means });
+  }
+
+  const axis = [0, 12, 24, 30, 36, 48, 60].map((value) => {
+    const x = xOf(value);
+    return `<line x1="${x}" x2="${x}" y1="${padT}" y2="${h - padB}" stroke="${faint}" stroke-width="1" />`
+      + `<text x="${x}" y="${h - 8}" text-anchor="middle" font-size="10" fill="${faint}">${value}</text>`;
   }).join('');
   const census = current.census
-    ? `<line x1="${pad}" x2="${w - pad}" y1="${yOf(current.census.mean)}" y2="${yOf(current.census.mean)}" stroke="${ink}" stroke-width="2" stroke-dasharray="5 4" />`
+    ? `<line x1="${xOf(current.census.mean)}" x2="${xOf(current.census.mean)}" y1="${padT}" y2="${h - padB}" stroke="${ink}" stroke-width="2" stroke-dasharray="4 3" />`
     : '';
-  const count = Math.max(current.trials.length, 1);
-  const dots = current.trials.map((trial, index) => {
-    const x = pad + ((index + 0.5) / count) * (w - 2 * pad);
-    const color = METHOD_COLOR[trial.method] || ink;
-    return `<circle cx="${x}" cy="${yOf(trial.mean)}" r="6" fill="${color}" stroke="${ink}" stroke-width="1.5" />`;
-  }).join('');
-  $('meanChart').innerHTML = `<svg viewBox="0 0 ${w} ${h}" role="img">${marks}${census}${dots}</svg>`;
+
+  const bins = 30;
+  const binW = (w - padL - padR) / bins;
+  const counts = {};
+  let maxCount = 1;
+  for (const { method, means } of series) {
+    counts[method] = Array(bins).fill(0);
+    for (const mean of means) {
+      const index = Math.min(bins - 1, Math.max(0, Math.floor((mean - min) / (max - min) * bins)));
+      counts[method][index] += 1;
+      maxCount = Math.max(maxCount, counts[method][index]);
+    }
+  }
+  const dots = [];
+  for (const { method, means } of series) {
+    const color = METHOD_COLOR[method] || ink;
+    const stacked = Array(bins).fill(0);
+    for (const mean of means) {
+      const index = Math.min(bins - 1, Math.max(0, Math.floor((mean - min) / (max - min) * bins)));
+      stacked[index] += 1;
+      const x = padL + (index + 0.5) * binW;
+      const y = h - padB - stacked[index] * Math.min(4.2, (h - padT - padB - 4) / Math.max(8, maxCount));
+      dots.push(`<circle class="dot" data-method="${method}" cx="${x}" cy="${y}" r="2.4" fill="${color}" stroke="${ink}" stroke-width="0.6" />`);
+    }
+  }
+  $('meanChart').innerHTML = `<svg viewBox="0 0 ${w} ${h}" role="img">${axis}${census}${dots.join('')}</svg>`;
+  $('chartLegend').textContent = series.map(({ method, means }) => `${methodLabel(method)} k=${means.length}`).join(' · ');
 }
 
 function paint() {
@@ -217,7 +312,10 @@ function paint() {
   $('nPanelVal').textContent = String(lab.n);
   $('nRange').value = String(lab.n);
   $('meanVal').textContent = fmtMin(view.mean);
+  $('sVal').textContent = fmtMin(view.sd);
   $('seVal').textContent = fmtMin(view.se);
+  $('intervalVal').textContent = view.lo == null ? t('dash') : `${view.lo.toFixed(1)}–${view.hi.toFixed(1)}`;
+  renderErrorBar(view);
   for (const button of document.querySelectorAll('[data-method]')) {
     button.setAttribute('aria-pressed', String(button.dataset.method === lab.method));
   }
@@ -231,6 +329,39 @@ function paint() {
   )).join('');
   $('completeCard').hidden = lab.phase !== 'complete';
   if (lab.phase === 'complete') $('conclusionStatus').textContent = t('complete');
+
+  const censusOn = Boolean(lab.census);
+  $('censusCard').hidden = !censusOn;
+  if (censusOn) {
+    $('censusNVal').textContent = String(view.censusN);
+    $('muVal').textContent = fmtMin(view.censusMean);
+    $('sigmaVal').textContent = fmtMin(view.censusSd);
+    $('biasVal').textContent = fmtSigned(view.biasTheoretical);
+    $('biasNote').textContent = t('biasLine').replace('{bias}', fmtSigned(view.biasTheoretical));
+    if (view.biasMonteCarlo != null) {
+      $('biasNote').textContent += ` ${t('mcBiasLine').replace('{bias}', fmtSigned(view.biasMonteCarlo))}`;
+    }
+    $('deviationNote').hidden = view.deviationFromMu == null;
+    if (view.deviationFromMu != null) {
+      $('deviationNote').textContent = t('thisDraw').replace('{err}', fmtSigned(view.deviationFromMu));
+    }
+  }
+
+  const sampled = (lab.sample?.ids ?? []).map((id) => lab.population.find((person) => person.id === id)).filter(Boolean);
+  if (sampled.length) {
+    const xs = sampled.map((person) => person.x);
+    const zs = sampled.map((person) => person.z);
+    document.body.dataset.sampleSpread = String(Math.max(
+      Math.max(...xs) - Math.min(...xs),
+      Math.max(...zs) - Math.min(...zs),
+    ));
+  } else {
+    delete document.body.dataset.sampleSpread;
+  }
+  document.body.dataset.method = lab.method;
+  document.body.dataset.survey = lab.method === 'convenience' && lab.sample ? 'lit' : '';
+  $('surveyPoint').classList.toggle('is-lit', lab.method === 'convenience' && Boolean(lab.sample));
+
   renderChart(lab);
   scene?.setLab(lab);
 }
@@ -313,6 +444,28 @@ $('recordBtn').addEventListener('click', async () => {
     window.cool?.track?.('record', { method: result.lab.trials.at(-1).method, mean: result.lab.trials.at(-1).mean });
   }
   applyResult(result, { okMessage: 'recorded' });
+});
+
+function runRepeat(k, okMessage) {
+  const result = k === 'compare' ? compareMethods(lab, 50) : runBatch(lab, k);
+  if (result.ok) {
+    audio.record();
+    window.cool?.track?.('batch', { method: result.lab.method, k: result.lab.batch?.k, compare: k === 'compare' });
+  }
+  applyResult(result, { okMessage });
+}
+
+$('batch50Btn').addEventListener('click', async () => {
+  await unlockAll();
+  runRepeat(50, 'batched');
+});
+$('batch100Btn').addEventListener('click', async () => {
+  await unlockAll();
+  runRepeat(100, 'batched');
+});
+$('compareBtn').addEventListener('click', async () => {
+  await unlockAll();
+  runRepeat('compare', 'compared');
 });
 
 $('censusBtn').addEventListener('click', async () => {
