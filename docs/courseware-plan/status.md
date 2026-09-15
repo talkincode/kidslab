@@ -81,7 +81,7 @@ Agent 每次完成计划项后必须同步更新：
 | --- | ---: | ---: | ---: | --- |
 | 第一轮数学 | 4 | 3 | 1 | 函数变形记、平方根、抽样统计已完成；余动态几何 |
 | 第一轮物理 | 12 | 6 | 6 | `electric-mouse` 当前分类为 `science`，但纳入初中物理学习路径；`density-detective-lab`、`motion-tracker-lab`、`ohms-law-lab`、`projectile-motion-lab` 已完成 |
-| 第一轮化学 | 7 | 2 | 5 | `mass-conservation-lab` 已完成；`ph-lab` 仍需从观察型 L1 升级到测量型 L3 |
+| 第一轮化学 | 7 | 2 | 5 | `mass-conservation-lab` 已完成；`ph-lab` 已完成全屏 3D 观测壳，L3 稀释/中和/滴定仍待做 |
 | 第一轮生物/科学 | 3 | 2 | 1 | 暂沿用 `science` 分类；`microscope-cell-lab` 已完成 |
 | 第一轮小计 | 26 | 13 | 13 | 存量存在不等于已通过新实验合同复核 |
 | 第二轮数学 | 6 | 0 | 6 | 一次函数、二次函数、单位圆、相似测高、数列、导数 |
@@ -277,7 +277,7 @@ Agent 每次完成计划项后必须同步更新：
 | `square-root-lab` 平方根建筑师 | math | junior/senior | 已纳入初高中实验规划；按实验合同复核 |
 | `pendulum-lab` 单摆实验室 | physics | junior/senior | 已纳入初高中实验规划；补 `grades` 与重复测量 |
 | `optics-lab` 光学实验室 | physics | junior/senior | 已纳入初高中实验规划；补记录与归纳闭环 |
-| `ph-lab` 酸碱魔法水 | chemistry | junior/senior | 已纳入初高中实验规划；从 L1 观察升级到 L3 测量 |
+| `ph-lab` 酸碱魔法水 | chemistry | junior/senior | 已纳入初高中实验规划；已完成 3D 观测壳，L3 测量（稀释/中和/滴定）仍待做 |
 | `ice-maker-lab` 制冰实验室 | physics | primary/junior | 已升级为全屏 three.js 观测实验：灌水/压缩机/开门对照，热账本 Q_h=Q_c+W；不计入小学 84 项规划 ID |
 | `cpu-lab` 电脑原理实验室 | programming | primary/junior | 计算机组成/冯·诺依曼与取指-译码-执行扩展，不计入小学 84 项规划 ID |
 

@@ -1,76 +1,90 @@
 <!doctype html>
 <html lang="zh-CN" data-theme="light">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>酸碱魔法水 · KidsLab</title>
-  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg" />
-  <link rel="stylesheet" href="style.css?v=6a782c3b" />
-  <script>(()=>{"use strict";const g=window,r=g.cool||{};if(r.sdkVersion)return;try{document.documentElement.style.touchAction="manipulation"}catch{}const w="ph-lab",b=location.pathname.split("/").filter(Boolean),E=b.at(-1)||"",A=E.includes(".")?b.at(-2):E,d=w.startsWith("__")?A:w,l={get(t,n=null){try{const e=localStorage.getItem(t);return e===null?n:e}catch{return n}},set(t,n){try{return localStorage.setItem(t,n),!0}catch{return!1}},remove(t){try{return localStorage.removeItem(t),!0}catch{return!1}}},f=new Set,S=new Set(["zh","en"]),I=new Set(["light","dark"]),C=(navigator.language||"").toLowerCase().startsWith("zh")?"zh":"en";let m="light";try{m=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch{}let o=l.get("kidslab.lang",C),s=l.get("kidslab.theme",m);S.has(o)||(o=C),I.has(s)||(s=m);function p(){document.documentElement.lang=o==="zh"?"zh-CN":"en",document.documentElement.dataset.theme=s}function T(t,n){const e={kind:t,value:n};for(const c of[...f])c(e);g.dispatchEvent(new CustomEvent(`${t}change`,{detail:{[t]:n}}))}const z={get lang(){return o},get theme(){return s},setLang(t){if(!S.has(t))throw new RangeError(`Unsupported language: ${t}`);t!==o&&(o=t,l.set("kidslab.lang",t),p(),T("lang",t))},setTheme(t){if(!I.has(t))throw new RangeError(`Unsupported theme: ${t}`);t!==s&&(s=t,l.set("kidslab.theme",t),p(),T("theme",t))},toggleLang(){this.setLang(o==="zh"?"en":"zh")},toggleTheme(){this.setTheme(s==="light"?"dark":"light")},subscribe(t){if(typeof t!="function")throw new TypeError("Preference listener must be a function");return f.add(t),()=>f.delete(t)}};function D(t,n={}){if(!t||typeof t!="object")throw new TypeError("Messages must be an object");const e=n.root||document;if(!e.querySelectorAll&&!e.matches)throw new TypeError("i18n root must be a Document or Element");function c(a,...h){const u=t[o]?.[a]??t.zh?.[a]??t.en?.[a];return typeof u=="function"?u(...h):u??a}function y(a="lang"){const h=[];e.matches?.("[data-t]")&&h.push(e),e.querySelectorAll&&h.push(...e.querySelectorAll("[data-t]"));for(const u of h){const L=c(u.dataset.t);typeof L=="string"&&(u.textContent=L)}n.onChange?.({kind:a,lang:o,theme:s,t:c})}const $=z.subscribe(({kind:a})=>{a==="lang"?y("lang"):n.onChange?.({kind:a,lang:o,theme:s,t:c})});return y("init"),{t:c,render:y,destroy:$}}const i=d?`kidslab.progress.${d}`:"";function _(){if(!i)return null;try{const t=JSON.parse(l.get(i,"null"));return!t||!["played","completed"].includes(t.status)?null:t}catch{return null}}function k(t,n){if(!i)return null;const e=_()||{},c={status:e.status==="completed"?"completed":t,stage:n||e.stage||"",updatedAt:Date.now()};return l.set(i,JSON.stringify(c)),c}const P={get:_,clear(){return i?l.remove(i):!1}};r.sdkVersion=2,r.courseId=d,r.storage=l,r.preferences=z,r.bindI18n=D,r.progress=P,typeof r.track!="function"&&(r.track=()=>{}),r.stage=t=>{typeof t!="string"||!t||k("played",t.slice(0,48))},r.complete=()=>k("completed"),g.cool=r,p()})();
+  <link rel="stylesheet" href="style.css?v=21aa4bf0">
+  <script type="importmap">{ "imports": { "three": "./vendor/three.module.min.js" } }</script>
+  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<script>(()=>{"use strict";const g=window,r=g.cool||{};if(r.sdkVersion)return;try{document.documentElement.style.touchAction="manipulation"}catch{}const w="ph-lab",b=location.pathname.split("/").filter(Boolean),E=b.at(-1)||"",A=E.includes(".")?b.at(-2):E,d=w.startsWith("__")?A:w,l={get(t,n=null){try{const e=localStorage.getItem(t);return e===null?n:e}catch{return n}},set(t,n){try{return localStorage.setItem(t,n),!0}catch{return!1}},remove(t){try{return localStorage.removeItem(t),!0}catch{return!1}}},f=new Set,S=new Set(["zh","en"]),I=new Set(["light","dark"]),C=(navigator.language||"").toLowerCase().startsWith("zh")?"zh":"en";let m="light";try{m=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch{}let o=l.get("kidslab.lang",C),s=l.get("kidslab.theme",m);S.has(o)||(o=C),I.has(s)||(s=m);function p(){document.documentElement.lang=o==="zh"?"zh-CN":"en",document.documentElement.dataset.theme=s}function T(t,n){const e={kind:t,value:n};for(const c of[...f])c(e);g.dispatchEvent(new CustomEvent(`${t}change`,{detail:{[t]:n}}))}const z={get lang(){return o},get theme(){return s},setLang(t){if(!S.has(t))throw new RangeError(`Unsupported language: ${t}`);t!==o&&(o=t,l.set("kidslab.lang",t),p(),T("lang",t))},setTheme(t){if(!I.has(t))throw new RangeError(`Unsupported theme: ${t}`);t!==s&&(s=t,l.set("kidslab.theme",t),p(),T("theme",t))},toggleLang(){this.setLang(o==="zh"?"en":"zh")},toggleTheme(){this.setTheme(s==="light"?"dark":"light")},subscribe(t){if(typeof t!="function")throw new TypeError("Preference listener must be a function");return f.add(t),()=>f.delete(t)}};function D(t,n={}){if(!t||typeof t!="object")throw new TypeError("Messages must be an object");const e=n.root||document;if(!e.querySelectorAll&&!e.matches)throw new TypeError("i18n root must be a Document or Element");function c(a,...h){const u=t[o]?.[a]??t.zh?.[a]??t.en?.[a];return typeof u=="function"?u(...h):u??a}function y(a="lang"){const h=[];e.matches?.("[data-t]")&&h.push(e),e.querySelectorAll&&h.push(...e.querySelectorAll("[data-t]"));for(const u of h){const L=c(u.dataset.t);typeof L=="string"&&(u.textContent=L)}n.onChange?.({kind:a,lang:o,theme:s,t:c})}const $=z.subscribe(({kind:a})=>{a==="lang"?y("lang"):n.onChange?.({kind:a,lang:o,theme:s,t:c})});return y("init"),{t:c,render:y,destroy:$}}const i=d?`kidslab.progress.${d}`:"";function _(){if(!i)return null;try{const t=JSON.parse(l.get(i,"null"));return!t||!["played","completed"].includes(t.status)?null:t}catch{return null}}function k(t,n){if(!i)return null;const e=_()||{},c={status:e.status==="completed"?"completed":t,stage:n||e.stage||"",updatedAt:Date.now()};return l.set(i,JSON.stringify(c)),c}const P={get:_,clear(){return i?l.remove(i):!1}};r.sdkVersion=2,r.courseId=d,r.storage=l,r.preferences=z,r.bindI18n=D,r.progress=P,typeof r.track!="function"&&(r.track=()=>{}),r.stage=t=>{typeof t!="string"||!t||k("played",t.slice(0,48))},r.complete=()=>k("completed"),g.cool=r,p()})();
 </script>
 <script>(function(){try{var s=JSON.parse(sessionStorage.getItem('kidslab.starmap')||'null');if(!s||!s.open)return;var zh=(document.documentElement.lang||'zh').indexOf('zh')===0;var a=document.createElement('a');a.href='../../index.html#starmap';a.className='kidslab-starmap-back';a.title=zh?'\u8fd4\u56de\u661f\u56fe':'Back to Star Map';a.setAttribute('aria-label',a.title);a.textContent='\u2726';a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:2147483000;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;border-radius:50%;color:#7ce7ff;background:rgba(16,18,48,.82);border:1px solid rgba(124,231,255,.45);box-shadow:0 4px 14px rgba(0,0,0,.35);text-decoration:none;backdrop-filter:blur(6px)';function add(){document.body.appendChild(a)}if(document.body)add();else document.addEventListener('DOMContentLoaded',add)}catch(e){}})()</script>
 </head>
 <body>
+  <canvas id="scene" aria-label="3D 酸碱观测实验台"></canvas>
+  <p class="nogl" id="nogl" hidden data-t="nogl">浏览器暂不支持 WebGL，请用右侧读数继续观察。</p>
+
   <header class="bar">
     <a class="pill" href="../../index.html">← <span data-t="back">返回平台</span></a>
     <h1 class="bar__title">🧪 <span data-t="title">酸碱魔法水</span></h1>
     <div class="bar__actions">
+      <button class="pill pill--icon" id="soundBtn" type="button" aria-pressed="false" aria-label="关闭声音">🔊</button>
       <button class="pill pill--icon" id="themeBtn" type="button" aria-label="切换主题">🌙</button>
       <button class="pill" id="langBtn" type="button">EN</button>
     </div>
   </header>
 
-  <main class="wrap">
-    <section class="panel beaker-zone">
-      <svg id="beaker" viewBox="0 0 220 260" role="img" aria-label="beaker">
-        <defs>
-          <clipPath id="liquidClip"><path d="M58 60 L58 196 Q58 224 86 224 L134 224 Q162 224 162 196 L162 60 Z"/></clipPath>
-        </defs>
-        <g clip-path="url(#liquidClip)">
-          <rect id="liquid" x="50" y="110" width="120" height="120" fill="#8fd6a2"/>
-          <ellipse id="liquidTop" cx="110" cy="112" rx="52" ry="7" fill="#ffffff" opacity="0.35"/>
-          <circle class="bub b1" cx="90" cy="200" r="5"/>
-          <circle class="bub b2" cx="115" cy="210" r="3.6"/>
-          <circle class="bub b3" cx="135" cy="205" r="4.4"/>
-        </g>
-        <path d="M50 34 L58 44 L58 196 Q58 224 86 224 L134 224 Q162 224 162 196 L162 44 L170 34"
-              fill="none" stroke="#3d5a63" stroke-width="5" stroke-linecap="round"/>
-        <line x1="150" y1="88" x2="162" y2="88" stroke="#3d5a63" stroke-width="3"/>
-        <line x1="150" y1="132" x2="162" y2="132" stroke="#3d5a63" stroke-width="3"/>
-        <line x1="150" y1="176" x2="162" y2="176" stroke="#3d5a63" stroke-width="3"/>
-      </svg>
-      <div class="verdict">
-        <p class="verdict__ph">pH <b id="phVal">7.0</b></p>
-        <p class="verdict__tag" id="phTag">中性</p>
-        <p class="verdict__h" id="hIon">估算 [H₃O⁺] ≈ 1×10⁻⁷ mol/L</p>
-      </div>
-      <p class="scope-note" data-t="scopeNote">约 25 °C 的常见稀水溶液教学模型；样品 pH 与颜色均为示意。</p>
-      <p class="safety-note" data-t="safety">仅为虚拟模拟。现实中切勿混合漂白水与氨水、食醋、柠檬汁或其他清洁剂。</p>
-    </section>
+  <section class="hud" aria-label="pH 读数">
+    <div class="hud__chip"><span class="hud__label" data-t="hudPh">pH</span><b id="phVal">7.0</b></div>
+    <div class="hud__chip"><span class="hud__label" data-t="hudGrade">教学分级</span><b id="phTag">中性</b></div>
+    <div class="hud__chip"><span class="hud__label" data-t="hudSample">样品</span><b id="sampleName">纯水</b></div>
+  </section>
 
-    <aside class="panel side">
-      <section>
-        <h2 data-t="secSub">选择一杯样品（不会混合）</h2>
+  <div class="coach" id="coach" role="status" aria-live="polite">
+    <span class="coach__icon">◎</span>
+    <b id="coachLine">换一杯水，看看颜色怎么变</b>
+  </div>
+
+  <aside class="panel" id="panel">
+    <div class="panel__quick">
+      <button class="btn btn--big" id="dropBtn" type="button"><span data-t="drop">滴入指示剂</span></button>
+    </div>
+    <button class="panel__handle" id="panelHandle" type="button" aria-expanded="true">
+      <span data-t="panelTitle">观测台</span><i id="panelArrow">▾</i>
+    </button>
+    <div class="panel__body" id="panelBody">
+      <section class="panel__group">
+        <p class="panel__label" data-t="secSub">换一杯新样品</p>
         <div class="subs" id="subs"></div>
+        <p class="panel__hint" data-t="subHint">每次都是新的一杯，不会和上一杯混合。</p>
       </section>
 
-      <section>
-        <h2 data-t="secPh">或者直接调节 pH</h2>
+      <section class="panel__group">
+        <p class="panel__label" data-t="secPh">拧一拧 pH</p>
         <div class="ph-slider">
-          <input id="phRange" type="range" min="0" max="14" step="0.1" value="7" />
+          <input id="phRange" type="range" min="0" max="14" step="0.1" value="7" aria-valuemin="0" aria-valuemax="14">
           <div class="ph-scale" aria-hidden="true"></div>
           <div class="ph-ends"><span data-t="acid">← 酸性</span><span data-t="base">碱性 →</span></div>
         </div>
       </section>
 
-      <section>
-        <h2 data-t="secInd">换一种指示剂</h2>
+      <section class="panel__group">
+        <p class="panel__label" data-t="secInd">换一种指示剂</p>
         <div class="inds" id="inds"></div>
-        <p class="ind-note" id="indNote"></p>
       </section>
-    </aside>
-  </main>
 
-  <script src="main.js?v=a0906baf"></script>
+      <details class="fold" id="noteFold">
+        <summary data-t="foldNotes">指示剂怎么变色</summary>
+        <p class="panel__hint" id="indNote"></p>
+      </details>
+      <details class="fold" id="formulaFold">
+        <summary data-t="foldFormula">稀溶液估算</summary>
+        <p class="panel__hint" id="hIon"></p>
+        <p class="panel__hint" data-t="formulaHint">这是示意估算，不是精确活度。</p>
+      </details>
+      <details class="fold" id="scopeFold">
+        <summary data-t="foldScope">这是什么模型</summary>
+        <p class="panel__hint" data-t="scopeNote">约 25 °C 的常见稀水溶液教学模型；样品 pH 与颜色都是示意。</p>
+      </details>
+      <details class="fold" id="safetyFold">
+        <summary data-t="foldSafety">安全提示</summary>
+        <p class="safety" data-t="safety">仅为虚拟模拟。现实中切勿混合漂白水与氨水、食醋、柠檬汁或其他清洁剂。</p>
+      </details>
+    </div>
+  </aside>
+
+  <p class="foot-tip" data-t="footTip">拖空白转视角 · 滚轮缩放 · 点瓶子换样品 · 点烧杯滴指示剂</p>
+  <script type="module" src="main.js?v=07029651"></script>
 </body>
 </html>

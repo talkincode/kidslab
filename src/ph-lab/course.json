@@ -5,19 +5,20 @@
     "en": "Acid-Base Magic Water"
   },
   "description": {
-    "zh": "选择典型样品并切换指示剂，观察示意颜色与 pH 的关系；每次选择都会换成一杯新样品。",
-    "en": "Choose a typical sample and switch indicators to explore the modelled relationship between colour and pH; each choice replaces the sample."
+    "zh": "在 3D 实验台上换一杯新样品、拧 pH、滴指示剂，看烧杯里的示意颜色怎么变；每次都是新样品，不会混合。",
+    "en": "On a 3D bench, swap in a fresh sample, twist the pH, and drip an indicator to watch the beaker colour. Each choice is a new cup — nothing is mixed."
   },
   "category": "chemistry",
   "levels": [
     "junior",
     "senior"
   ],
-  "grades": [],
+  "grades": ["g8", "g9", "g10"],
   "tags": [
     "酸碱",
     "溶液",
-    "实验"
+    "实验",
+    "3D"
   ],
   "icon": "🧪",
   "order": 40
