@@ -17,6 +17,7 @@ const HEAVY_WEBGL_COURSES = new Set([
   'statistics-sampling-lab',
   'ice-maker-lab',
   'density-detective-lab',
+  'ph-lab',
 ]);
 
 async function storedValue(page, key) {
@@ -358,12 +359,25 @@ test.describe('high-risk knowledge models', () => {
     await page.addInitScript(() => localStorage.setItem('kidslab.lang', 'zh'));
     await page.goto('/courseware/ph-lab/');
 
-    await expect(page.getByText('选择一杯样品（不会混合）')).toBeVisible();
+    const canvas = page.locator('#scene');
+    await expect(canvas).toBeVisible();
+    const canvasBox = await canvas.boundingBox();
+    expect(canvasBox?.width ?? 0).toBeGreaterThan(300);
+    expect(canvasBox?.height ?? 0).toBeGreaterThan(150);
+    await expect(page.getByText('换一杯水，看看颜色怎么变')).toBeVisible();
+    await expect(page.getByText('换一杯新样品')).toBeVisible();
+
+    await page.locator('#formulaFold summary').click();
     await expect(page.locator('#hIon')).toContainText('估算 [H₃O⁺] ≈');
+    await expect(page.getByText('这是示意估算，不是精确活度。')).toBeVisible();
+
+    await page.locator('#safetyFold summary').click();
     await expect(page.getByText('仅为虚拟模拟。现实中切勿混合漂白水与氨水、食醋、柠檬汁或其他清洁剂。')).toBeVisible();
 
     await page.getByRole('button', { name: /牛奶/ }).click();
     await expect(page.locator('#phTag')).toHaveText('酸性');
+    await expect(page.locator('#sampleName')).toHaveText('牛奶');
+    await expect(page.locator('#coachLine')).toContainText('新样品');
   });
 });
 
