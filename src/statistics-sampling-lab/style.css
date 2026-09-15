@@ -93,26 +93,34 @@ button, input { font: inherit; }
 .pill--icon[aria-pressed="false"] { opacity: 0.55; filter: grayscale(0.6); }
 
 .hud {
-  position: fixed; z-index: 15;
+  position: fixed; z-index: 18;
   top: 74px; left: clamp(12px, 3vw, 26px);
-  display: flex; gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  width: min(268px, calc(100vw - 48px));
   pointer-events: none;
 }
+body.panel-open .hud { width: min(268px, calc(100vw - 380px)); }
 .hud__chip {
   display: flex; flex-direction: column; align-items: center; gap: 2px;
-  min-width: 96px; padding: 8px 14px;
+  min-width: 0; padding: 8px 10px;
   background: var(--card); border: 2.5px solid var(--line-strong);
   border-radius: var(--radius-md); box-shadow: 3px 4px 0 var(--line-strong);
 }
+.hud__chip--mean { grid-column: 1 / -1; }
 .hud__label { font-size: 14px; font-weight: 800; color: var(--ink-soft); }
 .hud__chip b { font-size: 18px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.hud__interval { font-size: 14px; font-weight: 800; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.errorbar { width: min(100%, 160px); height: 16px; display: block; }
 
 .coach {
   position: fixed; z-index: 14;
-  top: 74px; left: 50%; transform: translateX(-50%);
-  margin: 0; padding: 10px 16px; max-width: min(46vw, 420px);
-  text-align: center; font-size: 16px; font-weight: 800; line-height: 1.35;
-  background: var(--card); border: 2px solid var(--line-strong); border-radius: 99px;
+  top: auto; bottom: 62px;
+  left: clamp(12px, 3vw, 26px); transform: none;
+  margin: 0; padding: 10px 16px; max-width: min(36vw, 340px);
+  text-align: left; font-size: 16px; font-weight: 800; line-height: 1.35;
+  background: var(--card); border: 2px solid var(--line-strong); border-radius: 18px;
   box-shadow: 3px 4px 0 var(--line-strong);
   pointer-events: none;
 }
@@ -125,6 +133,7 @@ button, input { font: inherit; }
   background: var(--card);
   border: 2.5px solid var(--line-strong); border-radius: var(--radius-lg);
   box-shadow: 5px 6px 0 var(--line-strong);
+  overflow: hidden;
 }
 .panel.is-collapsed { max-height: none; }
 .panel.is-collapsed .panel__body { display: none; }
@@ -244,18 +253,29 @@ input[type="range"]::-moz-range-thumb {
 }
 .log-table th { font-size: 14px; color: var(--ink-soft); }
 .chart {
-  width: 100%; height: 120px;
+  width: 100%; height: 148px;
   background: var(--paper);
   border: 2px solid var(--line);
   border-radius: 12px;
 }
 .chart svg { display: block; width: 100%; height: 100%; }
+.legend {
+  margin: 0;
+  font-size: 14px; font-weight: 700; line-height: 1.35; color: var(--ink-soft);
+}
+.panel__stats {
+  margin: 0; display: flex; justify-content: space-between; gap: 8px;
+  font-size: 15px; font-weight: 800; font-variant-numeric: tabular-nums;
+}
+.panel__stats b { color: var(--accent); }
 
 .foot-tip {
   position: fixed; z-index: 15;
-  left: 50%; bottom: 18px; transform: translateX(-50%);
-  margin: 0; padding: 10px 18px; max-width: min(88vw, 560px);
-  text-align: center; font-size: 16px; font-weight: 800; line-height: 1.4;
+  left: clamp(12px, 3vw, 26px); bottom: 18px; transform: none;
+  margin: 0; padding: 8px 16px;
+  max-width: min(42vw, 420px);
+  text-align: left; font-size: 16px; font-weight: 800; line-height: 1.3;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   background: var(--card); border: 2px solid var(--line-strong); border-radius: 99px;
   box-shadow: 3px 3px 0 var(--line-strong);
 }
@@ -272,16 +292,17 @@ input[type="range"]::-moz-range-thumb {
   .pill--icon { min-width: 44px; min-height: 44px; padding: 6px 8px; }
 
   .hud {
-    top: 58px; left: 10px; right: 10px;
-    flex-wrap: wrap; justify-content: space-between; gap: 8px;
+    top: 58px; left: 10px; right: 10px; width: auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .hud__chip { flex: 1 1 calc(50% - 8px); min-width: 0; padding: 5px 8px; }
+  .hud__chip { padding: 5px 8px; }
+  .hud__chip--mean { grid-column: 1 / -1; }
   .hud__chip b { font-size: 16px; }
   .coach { display: none; }
 
   .panel {
     top: auto; right: 10px; left: 10px; bottom: 10px;
-    width: auto; max-height: 62vh;
+    width: auto; max-height: 46vh;
   }
-  .foot-tip { bottom: 188px; font-size: 16px; max-width: 92vw; padding: 8px 14px; }
+  .foot-tip { display: none; }
 }

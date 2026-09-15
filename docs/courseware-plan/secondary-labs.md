@@ -60,7 +60,7 @@
 
 P0 优先覆盖初高中实验方法主干，并验证十种不同的核心交互：视频追踪、排水测体积、电表接线、密闭称量、显微调焦、二维运动、磁通变化、反应曲线、滴定读数和抽样模拟。
 
-> 已完成：✅ `statistics-sampling-lab`（`g10-g12` · `math`）。它用固定四区通勤总体比较简单随机、分层、整群和便利抽样：便利样本稳定偏倚，分层 n=40 落入真值 ±2 分钟，普查线给出 L3/L4 对照；模型与交互验收见 `tests/unit/statistics-sampling-lab.test.mjs` 和 `tests/e2e/statistics-sampling-lab.spec.js`。
+> 已完成：✅ `statistics-sampling-lab`（`g10-g12` · `math`）。它用固定四区通勤总体比较简单随机、分层、整群和便利抽样：整群抽 1–2 栋住宅楼做全员普查，便利样本在调查点稳定偏倚，分层 n=40 落入真值 ±2 分钟，普查线给出 L3/L4 对照；模型与交互验收见 `tests/unit/statistics-sampling-lab.test.mjs` 和 `tests/e2e/statistics-sampling-lab.spec.js`。
 
 > 已完成：✅ `density-detective-lab`（`g8` · `physics`）。它以精细 3D 天平、量筒排水、现场读数入表和 `m-V` 图完成可重复的 L3 观测闭环，斜率自动锁定铝；不是预测题或通关考卷。模型与交互验收见 `tests/unit/density-detective-lab.test.mjs` 和 `tests/e2e/density-detective-lab.spec.js`。
 >

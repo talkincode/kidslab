@@ -25,6 +25,53 @@ test.describe('sampling statistics lab', () => {
     await expect(page.locator('#meanVal')).toHaveText('—');
   });
 
+  test('one draw shows error bars and batch plotting does not hide HUD', async ({ page }) => {
+    const errors = [];
+    page.on('pageerror', (error) => errors.push(error.message));
+    page.on('console', (message) => {
+      if (message.type() === 'error') errors.push(message.text());
+    });
+
+    await page.locator('#drawBtn').click();
+    await expect(page.locator('#meanVal')).not.toHaveText('—');
+    await expect(page.locator('#intervalVal')).not.toHaveText('—');
+    await expect(page.locator('#errorBar')).toBeVisible();
+
+    await ensurePanelOpen(page);
+    await page.locator('#batch50Btn').click();
+    await expect.poll(() => page.locator('#meanChart .dot').count()).toBeGreaterThanOrEqual(50);
+    await expect(page.locator('#nVal')).toBeVisible();
+    await expect(page.locator('#meanVal')).toBeVisible();
+
+    const expanded = await page.locator('#panelHandle').getAttribute('aria-expanded');
+    await page.locator('#panelHandle').click();
+    await expect(page.locator('#panelHandle')).toHaveAttribute(
+      'aria-expanded',
+      expanded === 'true' ? 'false' : 'true',
+    );
+    await expect(page.locator('#nVal')).toBeVisible();
+    await expect(page.locator('#seVal')).toBeVisible();
+    await page.locator('#panelHandle').click();
+    await expect(page.locator('#panelHandle')).toHaveAttribute('aria-expanded', expanded);
+    expect(errors).toEqual([]);
+  });
+
+  test('convenience clusters at the survey point and Bias appears after census', async ({ page }) => {
+    await ensurePanelOpen(page);
+    await page.locator('#methodConvenience').click();
+    await page.locator('#drawBtn').click();
+    await expect(page.locator('#surveyPoint')).toHaveClass(/is-lit/);
+    const spread = Number(await page.locator('body').getAttribute('data-sample-spread'));
+    expect(spread).toBeGreaterThan(0);
+    expect(spread).toBeLessThan(6);
+    await expect(page.locator('#censusCard')).toBeHidden();
+
+    await page.locator('#censusBtn').click();
+    await expect(page.locator('#censusCard')).toBeVisible();
+    await expect(page.locator('#biasVal')).toContainText('−18');
+    await expect(page.locator('#muVal')).toContainText('30');
+  });
+
   test('records convenience then stratified samples and completes after census', async ({ page }) => {
     await ensurePanelOpen(page);
     await page.locator('#methodConvenience').click();

@@ -2,17 +2,21 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 
 import {
+  BUILDING_SIZE,
   DISTRICT_MEANS,
   LIMITS,
   METHODS,
   POPULATION_N,
+  SURVEY_POINT,
   Z95,
   censusMean,
+  compareMethods,
   createLab,
   drawSample,
   parseLab,
   recordTrial,
   resetLab,
+  runBatch,
   runCensus,
   sampleSd,
   serializeLab,
@@ -20,6 +24,7 @@ import {
   setN,
   snapshot,
   standardError,
+  theoreticalBias,
 } from '../../src/statistics-sampling-lab/lab-model.js';
 
 const nearly = (actual, expected, eps = 1e-9) => {
@@ -84,12 +89,36 @@ test('stratified n=40 takes exactly 10 people from each district', () => {
   nearly(lab.sample.mean, 30, 4);
 });
 
-test('one-cluster samples stay inside a single district', () => {
-  const lab = mustDraw(createLab(), { method: 'cluster', n: 40 });
-  const present = Object.entries(lab.sample.districts).filter(([, count]) => count > 0);
-  assert.equal(present.length, 1);
-  assert.equal(present[0][1], 40);
-  assert.equal(lab.sample.cluster, present[0][0]);
+function assertWholeBuildings(lab, buildingCount) {
+  const buildings = lab.sample.buildings;
+  assert.ok(Array.isArray(buildings));
+  assert.equal(buildings.length, buildingCount);
+  assert.equal(new Set(buildings).size, buildingCount);
+  assert.equal(lab.sample.ids.length, buildingCount * BUILDING_SIZE);
+  assert.equal(new Set(lab.sample.ids).size, lab.sample.ids.length);
+  const residents = lab.population.filter((person) => buildings.includes(person.buildingId));
+  assert.equal(residents.length, lab.sample.ids.length);
+  assert.deepEqual(
+    [...lab.sample.ids].sort((a, b) => a - b),
+    residents.map((person) => person.id).sort((a, b) => a - b),
+  );
+  for (const buildingId of buildings) {
+    const inBuilding = lab.population.filter((person) => person.buildingId === buildingId);
+    assert.equal(inBuilding.length, BUILDING_SIZE);
+    assert.ok(inBuilding.every((person) => lab.sample.ids.includes(person.id)));
+  }
+}
+
+test('cluster n=20 is a census of 1 whole building', () => {
+  const lab = mustDraw(createLab({ seed: 42 }), { method: 'cluster', n: 20 });
+  assertWholeBuildings(lab, 1);
+});
+
+test('cluster n=40 is a census of 2 whole buildings, not a district subsample', () => {
+  const lab = mustDraw(createLab({ seed: 42 }), { method: 'cluster', n: 40 });
+  assertWholeBuildings(lab, 2);
+  const districts = Object.values(lab.sample.districts).filter((count) => count > 0);
+  assert.ok(districts.every((count) => count % BUILDING_SIZE === 0));
 });
 
 test('convenience samples only downtown, stay in [8,16], and 95% interval misses 30', () => {
@@ -234,4 +263,137 @@ test('L3 notes plus an L4 hit within 2 min complete the lab', () => {
   assert.ok(hit, 'stratified n=40 should land inside ±2 min');
   assert.equal(lab.phase, 'complete');
   assert.equal(view.complete, true);
+});
+
+test('stratified n=80 takes exactly 20 people from each district', () => {
+  const lab = mustDraw(createLab({ seed: 3 }), { method: 'stratified', n: 80 });
+  assert.deepEqual(lab.sample.districts, {
+    downtown: 20,
+    riverside: 20,
+    factory: 20,
+    hill: 20,
+  });
+});
+
+test('convenience samples only the downtown survey-point catchment', () => {
+  const lab = mustDraw(createLab({ seed: 42 }), { method: 'convenience', n: 40 });
+  assert.deepEqual(lab.sample.surveyPoint, { ...SURVEY_POINT });
+  for (const id of lab.sample.ids) {
+    const person = lab.population.find((entry) => entry.id === id);
+    assert.equal(person.district, 'downtown');
+    const dx = person.x - SURVEY_POINT.x;
+    const dz = person.z - SURVEY_POINT.z;
+    assert.ok(Math.hypot(dx, dz) <= SURVEY_POINT.radius, `person ${id} too far from survey point`);
+  }
+  const xs = lab.sample.ids.map((id) => lab.population.find((entry) => entry.id === id).x);
+  const zs = lab.sample.ids.map((id) => lab.population.find((entry) => entry.id === id).z);
+  assert.ok(Math.max(...xs) - Math.min(...xs) < 6);
+  assert.ok(Math.max(...zs) - Math.min(...zs) < 6);
+});
+
+test('census reports N, μ, σ and theoretical Bias, not a single-trial error labeled Bias', () => {
+  let lab = mustDraw(createLab({ seed: 42 }), { method: 'convenience', n: 40 });
+  const before = snapshot(lab);
+  assert.equal(before.biasTheoretical, null);
+  assert.equal(before.censusSd, null);
+  assert.equal(before.deviationFromMu, null);
+
+  lab = runCensus(lab).lab;
+  const view = snapshot(lab);
+  nearly(view.censusMean, 30);
+  assert.equal(view.censusN, 400);
+  nearly(view.censusSd ** 2, 188);
+  nearly(view.biasTheoretical, -18);
+  nearly(theoreticalBias('convenience'), -18);
+  nearly(theoreticalBias('simple'), 0);
+  nearly(theoreticalBias('stratified'), 0);
+  nearly(theoreticalBias('cluster'), 0);
+  nearly(view.deviationFromMu, lab.sample.mean - 30);
+  assert.equal(Object.hasOwn(view, 'bias'), false);
+});
+
+test('larger n yields a smaller SRS standard error with the FPC formula', () => {
+  const small = mustDraw(createLab({ seed: 11 }), { method: 'simple', n: 16 });
+  const large = mustDraw(createLab({ seed: 11 }), { method: 'simple', n: 80 });
+  nearly(
+    small.sample.se,
+    standardError(small.sample.sd, 16, 400),
+  );
+  nearly(
+    large.sample.se,
+    standardError(large.sample.sd, 80, 400),
+  );
+  assert.ok(large.sample.se < small.sample.se);
+  assert.ok(large.sample.se < 2.5);
+  assert.ok(small.sample.se > 3);
+});
+
+test('runBatch k=50 is deterministic and illegal k is refused without mutation', () => {
+  const lab = setMethod(createLab({ seed: 42, n: 40 }), 'simple').lab;
+  const frozen = serializeLab(lab);
+
+  const bad = runBatch(lab, 7);
+  assert.equal(bad.ok, false);
+  assert.equal(bad.reason, 'invalid-k');
+  assert.equal(serializeLab(bad.lab), frozen);
+
+  const a = runBatch(lab, 50);
+  const b = runBatch(lab, 50);
+  assert.equal(a.ok, true);
+  assert.equal(a.lab.batch.k, 50);
+  assert.equal(a.lab.batch.means.length, 50);
+  assert.deepEqual(a.lab.batch.means, b.lab.batch.means);
+  assert.equal(a.lab.sample, lab.sample);
+  assert.ok(a.lab.batch.means.every((mean) => Number.isFinite(mean)));
+});
+
+test('batch of 100 convenience means stays biased; SRS batch mean stays near μ', () => {
+  const convenience = runBatch(setMethod(createLab({ seed: 8, n: 40 }), 'convenience').lab, 100);
+  const simple = runBatch(createLab({ seed: 8, n: 40 }), 100);
+  assert.equal(convenience.ok, true);
+  assert.equal(simple.ok, true);
+  nearly(convenience.lab.batch.meanOfMeans, 12, 2);
+  nearly(simple.lab.batch.meanOfMeans, 30, 2);
+  assert.ok(convenience.lab.batch.means.every((mean) => mean <= 16));
+});
+
+test('cluster batch at n=40 is more spread than SRS; stratified is tighter', () => {
+  const seed = 21;
+  const n = 40;
+  const k = 100;
+  const simple = runBatch(createLab({ seed, n }), k).lab.batch.means;
+  const stratified = runBatch(setMethod(createLab({ seed, n }), 'stratified').lab, k).lab.batch.means;
+  const cluster = runBatch(setMethod(createLab({ seed, n }), 'cluster').lab, k).lab.batch.means;
+
+  const variance = (values) => {
+    const mean = values.reduce((sum, value) => sum + value, 0) / values.length;
+    return values.reduce((sum, value) => sum + (value - mean) ** 2, 0) / (values.length - 1);
+  };
+
+  assert.ok(variance(cluster) > variance(simple), 'cluster should spread more than SRS');
+  assert.ok(variance(stratified) < variance(simple), 'stratified should be tighter than SRS');
+  nearly(simple.reduce((sum, value) => sum + value, 0) / simple.length, 30, 2);
+  nearly(stratified.reduce((sum, value) => sum + value, 0) / stratified.length, 30, 1.2);
+});
+
+test('compareMethods stores four sampling distributions at the same n', () => {
+  const result = compareMethods(createLab({ seed: 5, n: 40 }), 50);
+  assert.equal(result.ok, true);
+  for (const method of METHODS) {
+    assert.equal(result.lab.distributions[method].means.length, 50);
+    assert.equal(result.lab.distributions[method].n, 40);
+    assert.equal(result.lab.distributions[method].k, 50);
+  }
+  const again = compareMethods(createLab({ seed: 5, n: 40 }), 50);
+  assert.deepEqual(result.lab.distributions.simple.means, again.lab.distributions.simple.means);
+});
+
+test('after census, batch Monte Carlo bias is shown separately from this-draw error', () => {
+  let lab = setMethod(createLab({ seed: 4, n: 40 }), 'convenience').lab;
+  lab = runBatch(lab, 50).lab;
+  lab = runCensus(lab).lab;
+  const view = snapshot(lab);
+  nearly(view.biasTheoretical, -18);
+  assert.ok(Math.abs(view.biasMonteCarlo + 18) < 3);
+  assert.notEqual(view.biasMonteCarlo, view.deviationFromMu);
 });

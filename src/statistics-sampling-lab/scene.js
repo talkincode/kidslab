@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from './vendor/RoundedBoxGeometry.js';
 import { RoomEnvironment } from './vendor/RoomEnvironment.js';
+import { SURVEY_POINT } from './lab-model.js';
 
 const DISTRICT_LAYOUT = {
   downtown: { ox: 3.15, oz: 3.15, wall: 0x6ec9d6, roof: 0xd7f4fb, accent: 0xffd166 },
@@ -10,7 +11,14 @@ const DISTRICT_LAYOUT = {
 };
 
 const DISTRICT_ORDER = ['downtown', 'riverside', 'factory', 'hill'];
-const VISUAL_PER_DISTRICT = 16;
+const BUILDING_SPOTS = [
+  [-1.7, -1.55],
+  [1.65, -1.5],
+  [-1.6, 1.55],
+  [1.62, 1.58],
+  [0.05, 0.08],
+];
+const VISUAL_PER_BUILDING = 4;
 
 function canvasTexture(draw, width = 512, height = 512) {
   const canvas = Object.assign(document.createElement('canvas'), { width, height });
@@ -209,15 +217,18 @@ export function createLabScene({ canvas, cssVar, onFirstInteract }) {
   bezel.position.set(0, 1.18, 0.18);
   kiosk.add(bezel);
 
-  function addBuilding(group, x, z, w, d, h, wallColor, roofColor, brickWall = false) {
+  const buildings = [];
+
+  function addBuilding(group, x, z, w, d, h, wallColor, roofColor, brickWall = false, buildingId = 0) {
+    const wallMat = new THREE.MeshStandardMaterial({
+      color: wallColor,
+      map: brickWall ? brick : null,
+      roughness: brickWall ? 0.82 : 0.42,
+      metalness: brickWall ? 0.04 : 0.18,
+    });
     const wall = new THREE.Mesh(
       new RoundedBoxGeometry(w, h, d, 2, 0.05),
-      new THREE.MeshStandardMaterial({
-        color: wallColor,
-        map: brickWall ? brick : null,
-        roughness: brickWall ? 0.82 : 0.42,
-        metalness: brickWall ? 0.04 : 0.18,
-      }),
+      wallMat,
     );
     wall.position.set(x, h / 2, z);
     wall.castShadow = true;
@@ -230,9 +241,10 @@ export function createLabScene({ canvas, cssVar, onFirstInteract }) {
     roof.position.set(x, h + 0.04, z);
     roof.castShadow = true;
     group.add(roof);
+    buildings.push({ id: buildingId, wall, wallMat, baseColor: wallColor });
   }
 
-  function addPerson(district, visualIndex, x, z) {
+  function addPerson(district, building, slot, x, z) {
     const group = new THREE.Group();
     group.position.set(x, 0, z);
     const body = new THREE.Mesh(
@@ -262,7 +274,7 @@ export function createLabScene({ canvas, cssVar, onFirstInteract }) {
     marker.position.y = 0.64;
     group.add(marker);
     scene.add(group);
-    people.push({ district, visualIndex, group, body, marker, baseY: 0 });
+    people.push({ district, building, slot, group, body, marker, baseY: 0 });
   }
 
   DISTRICT_ORDER.forEach((id) => {
@@ -275,9 +287,10 @@ export function createLabScene({ canvas, cssVar, onFirstInteract }) {
     pad.receiveShadow = true;
     scene.add(pad);
 
-    const heights = id === 'downtown' ? [1.6, 2.4, 1.9, 2.8] : id === 'factory' ? [1.1, 0.9, 1.35, 1.0] : [1.15, 1.35, 1.05, 1.45];
-    const spots = [[-1.7, -1.55], [1.65, -1.5], [-1.6, 1.55], [1.62, 1.58]];
-    spots.forEach(([dx, dz], index) => {
+    const heights = id === 'downtown'
+      ? [1.6, 2.4, 1.9, 2.8, 2.1]
+      : id === 'factory' ? [1.1, 0.9, 1.35, 1.0, 1.2] : [1.15, 1.35, 1.05, 1.45, 1.25];
+    BUILDING_SPOTS.forEach(([dx, dz], index) => {
       addBuilding(
         scene,
         spec.ox + dx,
@@ -288,22 +301,53 @@ export function createLabScene({ canvas, cssVar, onFirstInteract }) {
         spec.wall,
         spec.roof,
         id === 'factory',
+        DISTRICT_ORDER.indexOf(id) * 5 + index,
       );
     });
 
-    let visual = 0;
-    for (let row = 0; row < 4; row += 1) {
-      for (let col = 0; col < 4; col += 1) {
+    BUILDING_SPOTS.forEach(([dx, dz], building) => {
+      for (let slot = 0; slot < VISUAL_PER_BUILDING; slot += 1) {
+        const angle = slot * 1.6;
         addPerson(
           id,
-          visual,
-          spec.ox + (col - 1.5) * 0.42,
-          spec.oz + (row - 1.5) * 0.42,
+          building,
+          slot,
+          spec.ox + dx + Math.cos(angle) * 0.55,
+          spec.oz + dz + Math.sin(angle) * 0.55,
         );
-        visual += 1;
       }
-    }
+    });
   });
+
+  const survey = new THREE.Group();
+  survey.position.set(SURVEY_POINT.x, 0, SURVEY_POINT.z);
+  scene.add(survey);
+  const surveyPole = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.05, 0.06, 1.35, 12),
+    new THREE.MeshStandardMaterial({ color: 0xc9a24a, metalness: 0.65, roughness: 0.28 }),
+  );
+  surveyPole.position.y = 0.68;
+  surveyPole.castShadow = true;
+  survey.add(surveyPole);
+  const surveySign = new THREE.Mesh(
+    new RoundedBoxGeometry(0.7, 0.38, 0.08, 2, 0.03),
+    new THREE.MeshStandardMaterial({ color: 0xff5d8f, metalness: 0.12, roughness: 0.4 }),
+  );
+  surveySign.position.set(0, 1.28, 0);
+  survey.add(surveySign);
+  const surveyRing = new THREE.Mesh(
+    new THREE.TorusGeometry(0.72, 0.045, 10, 28),
+    new THREE.MeshStandardMaterial({
+      color: 0xffd166,
+      emissive: 0xffb347,
+      emissiveIntensity: 0.2,
+      metalness: 0.2,
+      roughness: 0.35,
+    }),
+  );
+  surveyRing.rotation.x = Math.PI / 2;
+  surveyRing.position.y = 0.05;
+  survey.add(surveyRing);
 
   const target = new THREE.Vector3(0, 1.15, 0);
   let yaw = 0.72;
@@ -342,16 +386,26 @@ export function createLabScene({ canvas, cssVar, onFirstInteract }) {
   function setLab(lab) {
     if (!lab) return;
     const sampled = new Set(lab.sample?.ids ?? []);
+    const selectedBuildings = new Set(lab.sample?.buildings ?? []);
     lcdState.mean = lab.sample?.mean ?? null;
     lcdState.census = lab.census?.mean ?? null;
     lcdState.method = lab.method;
     paintLcd();
+    surveyRing.material.emissiveIntensity = lab.method === 'convenience' ? 1.4 : 0.2;
+    surveySign.material.emissive = new THREE.Color(lab.method === 'convenience' ? 0xff5d8f : 0x000000);
+    surveySign.material.emissiveIntensity = lab.method === 'convenience' ? 0.45 : 0;
+    for (const building of buildings) {
+      const on = selectedBuildings.has(building.id);
+      building.wallMat.emissive = new THREE.Color(on ? 0xffd166 : 0x000000);
+      building.wallMat.emissiveIntensity = on ? 0.42 : 0;
+    }
     for (const person of people) {
       const districtIndex = DISTRICT_ORDER.indexOf(person.district);
+      const base = districtIndex * 100 + person.building * 20 + person.slot;
       let lit = false;
       if (sampled.size) {
-        for (let i = person.visualIndex; i < 100; i += VISUAL_PER_DISTRICT) {
-          if (sampled.has(districtIndex * 100 + i)) {
+        for (let step = 0; step < 5; step += 1) {
+          if (sampled.has(base + step * VISUAL_PER_BUILDING)) {
             lit = true;
             break;
           }
