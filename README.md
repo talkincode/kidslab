@@ -22,7 +22,7 @@
 - **纯静态网站** — 无后端、无框架运行时,GitHub Pages 与 Cloudflare Pages 双渠道托管
 - **PWA 全屏壳** — 可"添加到主屏幕",平板/手机以全屏应用形态运行,无浏览器界面干扰
 - **课件离线可玩** — Service Worker 渐进缓存:主站壳预缓存,玩过的课件自动进缓存(cache-on-visit),断网可重玩;主站卡片显示「可离线」角标
-- **左右分栏主界面** — 学段选择(小学 / 初中 / 高中)+ 年级过滤 + 学科分类(数学 / 物理 / 化学 / 编程 / 科学 / 逻辑,小学自动隐藏物理化学)
+- **左右分栏主界面** — 学段选择(小学 / 初中 / 高中)+ 年级过滤 + 学科分类(数学 / 物理 / 化学 / 编程 / 科学 / 逻辑,小学自动隐藏物理化学)。初高中入口保持开放：小学是游戏叙事，初高中是观测实验台，不标「建设中」
 - **课件完全独立** — 每个课件一个目录,自带 HTML/CSS/JS,互不依赖
 - **中英双语** — 主站与全部课件共享语言偏好(`localStorage: kidslab.lang`)
 - **深浅主题 + 4 种强调色** — 跟随系统,可手动切换
@@ -248,6 +248,7 @@ gh secret set CLOUDFLARE_ACCOUNT_ID
 
 ## 🧭 计划状态与验收
 
+- 学段战略已选定 **方案 B（差异化）**：记录在 [`docs/courseware-plan/README.md`](docs/courseware-plan/README.md)；初中物理产品语言与试点路径见 [`docs/courseware-plan/junior-physics.md`](docs/courseware-plan/junior-physics.md)。
 - 小学课件计划的已完成/未实现状态集中维护在 [`docs/courseware-plan/status.md`](docs/courseware-plan/status.md)。
 - 每次完成规划课件后,必须同步更新状态清单、必要的学科规划文档和本 README 的内置课件列表;Agent 规约见 [`AGENTS.md`](AGENTS.md)。
 - 当前最低自动校验是 `npm run build`;更完整的交互验收缺口记录在状态清单的验收矩阵中。

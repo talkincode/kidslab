@@ -13,7 +13,7 @@
     "junior",
     "senior"
   ],
-  "grades": [],
+  "grades": ["g8", "g11"],
   "tags": [
     "单摆",
     "重力",

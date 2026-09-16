@@ -6,6 +6,39 @@
 > 本目录是规划清单，不是教案 —— 每个条目描述「一个值得做出来的游戏」，实现时以 `AGENTS.md` 的工程约定为准。
 > 已完成、未实现和待对齐状态统一维护在 [`status.md`](./status.md)；每次完成规划课件后必须同步更新。
 
+## 🧭 学段战略决策（2026-09-16）
+
+**选定方案 B：差异化产品语言，而不是把初高中入口藏起来。**
+
+对应 GitHub Issue [#2](https://github.com/talkincode/kidslab/issues/2)。当时的担心是「小学货架完整、初高中近乎空承诺」。核查当前清单后，这个前提已经不成立：
+
+| 口径 | 数量 |
+|---|---:|
+| `levels` 含小学 | 91 |
+| `levels` 含初中 | 33 |
+| `levels` 含高中 | 17 |
+| 初高中实验规划已上线 | 16 / 46 |
+
+决策输入：本机 `npm run report` 因缺少 Cloudflare Analytics 凭据未能读到 junior/senior 访问量与复玩率，记为 **无埋点数据**。定性判断改看货架与形态：现有初高中课件已经是「拧旋钮、读仪器」的观测实验台，不是披萨店/动物园叙事。若选 A 隐藏入口，等于把已经能玩的实验室藏起来，伤害大于「货架还在建设」。
+
+因此：
+
+- **小学**：继续用游戏叙事。主站问候是「嗨，小小探索家！」；分类不露出物理/化学。
+- **初中 / 高中**：独立产品语言——工具/仿真、调参数看变化、文案去低龄化、知识点对齐课标。主站问候换成实验室口吻，入口保持可点，不标「建设中」。
+- **先立学科规划再扩**：初中物理试点合同见 [`junior-physics.md`](./junior-physics.md)；全学段实验清单仍以 [`secondary-labs.md`](./secondary-labs.md) 与 [`secondary-labs-wave2.md`](./secondary-labs-wave2.md) 为准。
+
+不选 A 的原因：空货架已经不是事实；隐藏入口会误杀 `pendulum-lab`、`function-grapher`、`ph-lab` 以及后续 13 个实验课的曝光。
+
+### 存量三课归属
+
+这三课不再是规划孤儿。它们是方案 B 的第一批形态样本，也是后续初高中课的参照。
+
+| 课件 | 学科 / 学段 | 规划归属 | 产品角色 |
+|---|---|---|---|
+| `function-grapher` 函数变形记 | 数学 · `g8-g11` · junior/senior | [`secondary-labs.md`](./secondary-labs.md) 存量数学 | 参数与图像联动的函数实验室；第二轮一次/二次函数课是它的专题加深，不替换它 |
+| `pendulum-lab` 单摆实验室 | 物理 · `g8,g11` · junior/senior | [`junior-physics.md`](./junior-physics.md) 试点 + [`secondary-labs.md`](./secondary-labs.md) 存量物理 | 初中物理产品语言样本：抓摆球、调参、读周期 |
+| `ph-lab` 酸碱魔法水 | 化学 · `g8-g10` · junior/senior | [`secondary-labs.md`](./secondary-labs.md) 存量化学 | 化学观测台样本；3D 壳已完成，L3 稀释/中和/滴定仍按原规划升级 |
+
 ## 📂 清单目录
 
 | 文件 | 学科 | 规划数量 | 分类值 (`category`) |
@@ -18,6 +51,7 @@
 | [secondary-labs.md](./secondary-labs.md) | 初高中实验型课件 · 第一轮 | 26（6 个存量纳入 + 20 个新增） | `math` / `physics` / `chemistry` / `science` |
 | [secondary-labs-wave2.md](./secondary-labs-wave2.md) | 初高中实验型课件 · 第二轮 | 20（全部新增，补数学/生物/近代物理/结构化学缺口） | `math` / `physics` / `chemistry` / `science` |
 | [primary-math-inquiry.md](./primary-math-inquiry.md) | 小学数学探究深度合同 | 26 个 `g3-g6` 课件的评级基线与改造批次 | `math` |
+| [junior-physics.md](./junior-physics.md) | 初中物理产品语言与试点路径 | 方案 B 学科试点（含存量单摆） | `physics` |
 
 共规划 **79** 个课件，加上已上线的 5 个小学课件（🍕 分数披萨店、🐢 海龟画室、🪐 太阳系漫游、🗼 汉诺塔挑战、🧩 数独动物园），小学学段合计 84 个。
 
