@@ -42,19 +42,31 @@ test.describe('sampling statistics lab', () => {
       await expect(label).toBeVisible();
       await expect(label).toContainText(mean);
       await expect(label).toContainText('min');
+      await expect(label).toContainText('通勤');
     }
+    await expect(page.locator('[data-district="downtown"]')).toContainText('近郊');
+    await expect(page.locator('[data-district="downtown"]')).toContainText('浅蓝');
+    await expect(page.locator('[data-district="factory"]')).toContainText('远郊');
+    await expect(page.locator('[data-district="factory"]')).toContainText('红砖');
 
     await expect(page.locator('#welcome')).toBeVisible();
     await expect(page.locator('#welcomeText')).toContainText('通勤调查局');
+    await expect(page.locator('#welcomeText')).toContainText('请点击');
+    await expect(page.locator('#welcomeText')).toContainText('抽取样本');
+    await expect(page.locator('#welcomeText')).toContainText('调查结果');
     await expect(page.locator('#welcomeText')).not.toContainText('80');
     await expect(page.locator('#coach')).toBeHidden();
+    await expect(page.locator('#drawBtn')).toBeVisible();
 
     await page.locator('#langBtn').click();
     await expect(page.locator('#estimandName')).toContainText('Mean commute time');
     await expect(page.locator('#estimandUnit')).toContainText('min');
-    await expect(page.locator('[data-district="downtown"]')).toContainText('Downtown');
+    await expect(page.locator('[data-district="downtown"]')).toContainText('Near-city');
+    await expect(page.locator('[data-district="downtown"]')).toContainText('cyan');
+    await expect(page.locator('[data-district="factory"]')).toContainText('Far-suburb');
     await expect(page.locator('[data-district="factory"]')).toContainText('brick');
     await expect(page.locator('#welcomeText')).toContainText('commute');
+    await expect(page.locator('#welcomeText')).toContainText('Draw sample');
     await page.locator('#langBtn').click();
 
     await page.locator('#welcomeSkip').click();

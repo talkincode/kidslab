@@ -139,7 +139,7 @@ body.panel-open .hud { width: min(280px, calc(100vw - 380px)); }
   color: var(--ink); background: var(--card);
   border: 2.5px solid var(--line-strong); border-radius: 12px;
   box-shadow: 2px 3px 0 var(--line-strong);
-  white-space: nowrap;
+  white-space: normal;
   transform: translate(-50%, -120%);
   visibility: hidden;
 }
