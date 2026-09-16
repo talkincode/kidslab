@@ -81,7 +81,7 @@ function brickMap() {
   });
 }
 
-export function createLabScene({ canvas, cssVar, onFirstInteract }) {
+export function createLabScene({ canvas, cssVar, onFirstInteract, onDistricts }) {
   let renderer;
   try {
     renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
@@ -168,7 +168,8 @@ export function createLabScene({ canvas, cssVar, onFirstInteract }) {
 
   const brick = brickMap();
   const people = [];
-  const lcdState = { mean: null, census: null, method: 'simple' };
+  const lcdState = { mean: null, census: null, method: 'simple', lang: 'zh' };
+  const districtAnchors = [];
 
   const lcdCanvas = Object.assign(document.createElement('canvas'), { width: 512, height: 256 });
   const lcdTex = new THREE.CanvasTexture(lcdCanvas);
@@ -180,16 +181,19 @@ export function createLabScene({ canvas, cssVar, onFirstInteract }) {
     ctx.fillRect(0, 0, 512, 256);
     ctx.fillStyle = '#143028';
     ctx.fillRect(18, 18, 476, 220);
+    const zh = lcdState.lang !== 'en';
     ctx.fillStyle = '#7dffb3';
-    ctx.font = 'bold 36px ui-rounded, sans-serif';
-    ctx.fillText('SAMPLE MEAN', 36, 78);
+    ctx.font = 'bold 32px ui-rounded, sans-serif';
+    ctx.fillText(zh ? '平均通勤用时' : 'MEAN COMMUTE', 36, 72);
     ctx.font = 'bold 92px ui-monospaced, ui-rounded, sans-serif';
     ctx.fillText(lcdState.mean == null ? '----' : `${lcdState.mean.toFixed(1)}`, 36, 168);
     ctx.font = 'bold 32px ui-rounded, sans-serif';
     ctx.fillText('min', 320, 168);
-    ctx.font = 'bold 28px ui-rounded, sans-serif';
+    ctx.font = 'bold 26px ui-rounded, sans-serif';
     ctx.fillStyle = '#9be7c2';
-    const census = lcdState.census == null ? 'CENSUS --' : `CENSUS ${lcdState.census.toFixed(1)}`;
+    const census = lcdState.census == null
+      ? (zh ? '普查 --' : 'CENSUS --')
+      : (zh ? `普查 ${lcdState.census.toFixed(1)}` : `CENSUS ${lcdState.census.toFixed(1)}`);
     ctx.fillText(census, 36, 214);
     lcdTex.needsUpdate = true;
   }
@@ -286,6 +290,23 @@ export function createLabScene({ canvas, cssVar, onFirstInteract }) {
     pad.position.set(spec.ox, 0.03, spec.oz);
     pad.receiveShadow = true;
     scene.add(pad);
+    const edgeX = spec.ox + Math.sign(spec.ox) * 2.42;
+    const edgeZ = spec.oz + Math.sign(spec.oz) * 2.42;
+    districtAnchors.push({ id, world: new THREE.Vector3(spec.ox, 2.35, spec.oz) });
+    const pole = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.045, 0.055, 1.15, 10),
+      new THREE.MeshStandardMaterial({ color: 0xc9a24a, metalness: 0.58, roughness: 0.28 }),
+    );
+    pole.position.set(edgeX, 0.58, edgeZ);
+    pole.castShadow = true;
+    scene.add(pole);
+    const plaque = new THREE.Mesh(
+      new RoundedBoxGeometry(0.9, 0.44, 0.08, 2, 0.04),
+      new THREE.MeshStandardMaterial({ color: spec.accent, roughness: 0.38, metalness: 0.12 }),
+    );
+    plaque.position.set(edgeX, 1.26, edgeZ);
+    plaque.castShadow = true;
+    scene.add(plaque);
 
     const heights = id === 'downtown'
       ? [1.6, 2.4, 1.9, 2.8, 2.1]
@@ -356,6 +377,20 @@ export function createLabScene({ canvas, cssVar, onFirstInteract }) {
   const orbit = { dragging: false, px: 0, py: 0, pointerId: null };
   let lastW = 0;
   let lastH = 0;
+
+  const ndc = new THREE.Vector3();
+  function emitDistricts() {
+    if (!onDistricts) return;
+    onDistricts(districtAnchors.map(({ id, world }) => {
+      ndc.copy(world).project(camera);
+      return {
+        id,
+        x: (ndc.x * 0.5 + 0.5) * innerWidth,
+        y: (-ndc.y * 0.5 + 0.5) * innerHeight,
+        behind: ndc.z > 1 || ndc.z < -1,
+      };
+    }));
+  }
 
   function placeCamera() {
     const cp = Math.cos(pitch);
@@ -456,12 +491,17 @@ export function createLabScene({ canvas, cssVar, onFirstInteract }) {
     raf = requestAnimationFrame(loop);
     if (!reduced) kiosk.position.y = Math.sin(now * 0.0016) * 0.02;
     placeCamera();
+    emitDistricts();
     renderer.render(scene, camera);
   }
   raf = requestAnimationFrame(loop);
 
   return {
     setLab,
+    setLang(lang) {
+      lcdState.lang = lang === 'en' ? 'en' : 'zh';
+      paintLcd();
+    },
     applyTheme: applyThemeBg,
     resize,
     dispose() {
