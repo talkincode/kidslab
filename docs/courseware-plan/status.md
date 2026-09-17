@@ -1,6 +1,6 @@
 # KidsLab 计划状态清单
 
-最后核验：2026-09-10
+最后核验：2026-09-16
 
 事实来源：`src/*/course.json`、`docs/courseware-plan/*.md`、`README.md`、`AGENTS.md`。本文件负责回答“哪些已完成、哪些未实现、后续 Agent 完成计划后要更新哪里”。
 
@@ -33,6 +33,7 @@ KidsLab 应该是一组孩子打开就想玩的交互课件，而不是题库或
 - 静态构建发布：`scripts/build.mjs` 校验 `course.json`、压缩资源、生成 `courseware/index.json`；GitHub Pages workflow 在 `main` 推送后构建发布。
 - 课件源码库：当前 `src/` 下有 106 个课件目录，其中小学规划内按 ID 直接完成 84 个，初高中两轮规划内已上线 16 个。
 - 小学课件规划：`docs/courseware-plan/` 覆盖数学、编程、逻辑、科学 84 个小学目标课件。
+- 学段战略（方案 B）：初高中入口保持可见，产品语言与小学游戏叙事分开；决策记录在 [`README.md`](./README.md)，初中物理试点路径见 [`junior-physics.md`](./junior-physics.md)。
 - 课件模板：`docs/courseware-template/` 提供双语、主题、静态独立课件起点。
 - 交互音效：当前游戏课件含语义交互音效与静音控制（含新建 `cpu-lab` 与 `mini-pyramid`）；`huarong-dao` 与 `venn-port` 使用 ScoreKit 循环配乐和通关短曲；存量改进优先级见 `docs/courseware-audio-audit.md`。
 - 行为分析：`docs/analytics.md`、`scripts/track.js`、`cloudflare/analytics/` 提供可选埋点链路。
@@ -273,11 +274,11 @@ Agent 每次完成计划项后必须同步更新：
 | `magic-cube` 魔方小达人 | logic | primary/junior/senior | 作为逻辑扩展课件，若纳入规划需补条目 |
 | `pyramid-cube` 金属金字塔魔方 | logic | primary/junior/senior | 魔方小达人姊妹篇：三阶 Pyraminx，金属材质，三档难度，一步提示与还原演示 |
 | `huarong-dao` 华容道 · 木关智局 | logic | primary/junior/senior | 作为空间规划与滑块算法扩展课件；含经典阵、十二步练习与求解演示 |
-| `function-grapher` 函数变形记 | math | junior/senior | 已纳入初高中实验规划；补 `grades` 并按实验合同复核 |
+| `function-grapher` 函数变形记 | math | junior/senior · `g8-g11` | 已归属 [`secondary-labs.md`](./secondary-labs.md) 存量数学；`grades` 已补。第二轮一次/二次函数是专题加深，不替换它 |
 | `square-root-lab` 平方根建筑师 | math | junior/senior | 已纳入初高中实验规划；按实验合同复核 |
-| `pendulum-lab` 单摆实验室 | physics | junior/senior | 已纳入初高中实验规划；补 `grades` 与重复测量 |
-| `optics-lab` 光学实验室 | physics | junior/senior | 已纳入初高中实验规划；补记录与归纳闭环 |
-| `ph-lab` 酸碱魔法水 | chemistry | junior/senior | 已纳入初高中实验规划；已完成 3D 观测壳，L3 测量（稀释/中和/滴定）仍待做 |
+| `pendulum-lab` 单摆实验室 | physics | junior/senior · `g8,g11` | 已归属 [`junior-physics.md`](./junior-physics.md) 试点第 1 课 + 第一轮存量；`grades` 已补。升级债：重复测量与拟合 |
+| `optics-lab` 光学实验室 | physics | junior/senior | 已纳入初高中实验规划与初中物理路径；补记录与归纳闭环 |
+| `ph-lab` 酸碱魔法水 | chemistry | junior/senior · `g8-g10` | 已归属 [`secondary-labs.md`](./secondary-labs.md) 存量化学；3D 观测壳已完成，L3 稀释/中和/滴定仍待做 |
 | `ice-maker-lab` 制冰实验室 | physics | primary/junior | 已升级为全屏 three.js 观测实验：灌水/压缩机/开门对照，热账本 Q_h=Q_c+W；不计入小学 84 项规划 ID |
 | `cpu-lab` 电脑原理实验室 | programming | primary/junior | 计算机组成/冯·诺依曼与取指-译码-执行扩展，不计入小学 84 项规划 ID |
 
@@ -287,7 +288,7 @@ Agent 每次完成计划项后必须同步更新：
 - `plant-xray` 已按规划玩法单独上线；`plant-lab` 保留为规划外养成实验，不再用它顶替透视园条目。
 - 为主站过滤、课件核心交互和构建发布补充可重复验收证据；当前主要依赖 `npm run build` 与人工走查。
 - 按 `docs/courseware-audio-audit.md` 的 P0 → P1 → P2 顺序补齐交互音效；先消除高频堆叠音源，再统一静音控制，最后分批覆盖无音频课件。
-- 初高中扩展按 `secondary-labs.md` 与 `secondary-labs-wave2.md` 独立维护，不混入小学 84 项状态。优先完成第一轮剩余 P0；若要先补主站数学/生物空洞，可将第二轮 P0 的一次函数、二次函数、单位圆、光合、孟德尔与第一轮 P0 交错。第二轮 P1 的光电效应、DNA、导数不要插队。实现前同步扩充 taxonomy 与模型单测。
+- 初高中扩展按方案 B：产品语言与小学分开，入口不隐藏。清单仍按 `secondary-labs.md` 与 `secondary-labs-wave2.md` 独立维护，不混入小学 84 项状态。初中物理试点顺序见 `junior-physics.md`。优先完成第一轮剩余 P0；若要先补主站数学/生物空洞，可将第二轮 P0 的一次函数、二次函数、单位圆、光合、孟德尔与第一轮 P0 交错。第二轮 P1 的光电效应、DNA、导数不要插队。实现前同步扩充 taxonomy 与模型单测。
 
 ## 完成的样子
 
@@ -315,7 +316,7 @@ Agent 每次完成计划项后必须同步更新：
 
 | 一级功能 | 风险级别 | Happy Path E2E | 失败路径 | 权限角色覆盖 | 失败恢复/回滚 | 证据（测试路径/用例） |
 | --- | --- | --- | --- | --- | --- | --- |
-| 主站浏览与筛选 | 中 | 缺口 | 缺口 | 不适用：纯静态无角色 | 不适用：只读 UI | `assets/js/app.js`；需补 E2E 覆盖学段/年级/分类/搜索 |
+| 主站浏览与筛选 | 中 | 部分：学段切换 + 搜索/分类 | 缺口：非法筛选组合 | 不适用：纯静态无角色 | 不适用：只读 UI | `tests/e2e/smoke.spec.js`（搜索/分类）；`tests/e2e/stage-strategy.spec.js`（小学问候、初高中实验室问候、三课仍在货架、不标建设中） |
 | 课件构建与 manifest 生成 | 中 | 部分：`npm run build` | 部分：`scripts/build.mjs` 校验非法 `course.json` | 不适用：本地构建无角色 | 部分：构建失败不应写入错误 manifest，需补回归验证 | `scripts/build.mjs`、`.github/workflows/deploy.yml` |
 | PWA 壳与课件离线缓存 | 高 | 已覆盖：manifest 合法性 + SW 激活预缓存 + cache-on-visit 角标 | 已覆盖：杀死服务器后离线回放已玩课件与主站壳 | 不适用：纯静态无角色 | 已覆盖：断网时 SW 缓存兜底，联网 network-first 自动恢复最新内容 | `tests/e2e/pwa.spec.js` |
 | 电工鼠开放电路实验室 | 高 | 已覆盖：桌面与触屏完成端口接线、合闸点亮、实时电流读数和触屏放置 | 已覆盖：制造短路并显示故障 | 不适用：纯静态无角色 | 已覆盖：撤销短路恢复通路；保存后清空并加载恢复作品 | `tests/e2e/electric-mouse.spec.js`；`tests/unit/electric-lab.test.mjs` |

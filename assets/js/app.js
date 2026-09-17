@@ -97,7 +97,11 @@
       secGrade: '年级',
       secCats: '分类',
       searchPh: '搜索课件：分数、单摆、编程……',
-      heroTitle: '嗨，小小探索家！',
+      heroTitle: {
+        primary: '嗨，小小探索家！',
+        junior: '来实验室，拧旋钮看变化',
+        senior: '调参数，让规律自己长出来',
+      },
       tipTheme: '切换深浅主题',
       tipStarmap: '知识星图 · 换个方式探索',
       tipLang: 'Switch to English',
@@ -137,7 +141,11 @@
       secGrade: 'Grade',
       secCats: 'Subjects',
       searchPh: 'Search: fractions, pendulum, coding…',
-      heroTitle: 'Hey, little explorer!',
+      heroTitle: {
+        primary: 'Hey, little explorer!',
+        junior: 'Open a lab. Twist a knob.',
+        senior: 'Tune the dials. Watch the law appear.',
+      },
       tipTheme: 'Toggle light / dark theme',
       tipStarmap: 'Knowledge star map · explore differently',
       tipLang: '切换到中文',
@@ -214,7 +222,8 @@
     document.querySelectorAll('[data-i18n-title]').forEach((n) => { n.title = t()[n.dataset.i18nTitle] ?? n.title; });
     document.querySelectorAll('[data-i18n-placeholder]').forEach((n) => { n.placeholder = t()[n.dataset.i18nPlaceholder] ?? ''; });
     $('#langBtn').textContent = t().langBtn;
-    el.heroTitle.innerHTML = `${t().heroTitle}<span class="hero__wave">👋</span>`;
+    const hero = t().heroTitle[state.level] || t().heroTitle.primary;
+    el.heroTitle.innerHTML = `${hero}<span class="hero__wave">👋</span>`;
   }
 
   function persist() {
@@ -240,6 +249,7 @@
       const b = document.createElement('button');
       b.type = 'button';
       b.role = 'radio';
+      b.dataset.level = lv;
       b.textContent = t().levels[lv];
       b.setAttribute('aria-checked', String(state.level === lv));
       b.addEventListener('click', () => {
