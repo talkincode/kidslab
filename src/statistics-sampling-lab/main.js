@@ -1,5 +1,7 @@
 import { createAudio } from './audio.js';
 import {
+  DISTRICT_IDS,
+  DISTRICT_MEANS,
   compareMethods,
   createLab,
   drawSample,
@@ -16,6 +18,13 @@ import {
 import { createLabScene } from './scene.js';
 
 const STORE_KEY = 'kidslab.statistics-sampling-lab';
+const WELCOME_KEY = `${STORE_KEY}.welcome`;
+const DISTRICT_I18N = Object.freeze({
+  downtown: 'districtDowntown',
+  riverside: 'districtRiverside',
+  factory: 'districtFactory',
+  hill: 'districtHill',
+});
 const I18N = {
   zh: {
     doc: '📊 抽样统计实验室 · KidsLab',
@@ -24,8 +33,19 @@ const I18N = {
     nogl: '浏览器暂时跑不了 3D 实验室，换一个新一点的浏览器再来观测吧。',
     hudMethod: '方法',
     hudN: 'n',
-    hudMean: 'x̄',
+    hudMean: '样本均数 x̄ · 通勤用时',
     hudSe: 'SE',
+    taskKicker: '这次在估',
+    estimand: '平均通勤用时',
+    estimandUnit: '单位：min',
+    censusMuLabel: 'μ 通勤用时',
+    censusSigmaLabel: 'σ 通勤用时',
+    districtDowntown: '近郊浅蓝区：通勤 {mean} min',
+    districtRiverside: '河岸区：通勤 {mean} min',
+    districtFactory: '远郊红砖区：通勤 {mean} min',
+    districtHill: '山坡绿顶区：通勤 {mean} min',
+    welcome: '欢迎来到通勤调查局，请点击「抽取样本」选出居民，看看你的调查结果准不准。',
+    welcomeSkip: '知道了',
     tip0: '抽一份便利样本，读出 x̄ 落在哪',
     panelTitle: '抽样面板',
     btnDraw: '抽取样本',
@@ -39,7 +59,7 @@ const I18N = {
     labMethod: '抽样方法',
     labN: '样本人数 n',
     chartTitle: '抽样分布',
-    censusTitle: '普查参数',
+    censusTitle: '普查 · 平均通勤用时',
     biasTitle: 'Bias(x̄)',
     logTitle: '观测记录',
     colMethod: '方法',
@@ -82,8 +102,19 @@ const I18N = {
     nogl: 'WebGL is unavailable, so the 3D lab cannot start. Try a newer browser.',
     hudMethod: 'Method',
     hudN: 'n',
-    hudMean: 'x̄',
+    hudMean: 'Sample mean x̄ · commute time',
     hudSe: 'SE',
+    taskKicker: 'Estimating',
+    estimand: 'Mean commute time',
+    estimandUnit: 'unit: min',
+    censusMuLabel: 'μ commute time',
+    censusSigmaLabel: 'σ commute time',
+    districtDowntown: 'Near-city cyan: commute {mean} min',
+    districtRiverside: 'Riverside: commute {mean} min',
+    districtFactory: 'Far-suburb red brick: commute {mean} min',
+    districtHill: 'Hillside green roof: commute {mean} min',
+    welcome: 'Welcome to the commute survey. Click Draw sample to pick residents and see if your result is close.',
+    welcomeSkip: 'Got it',
     tip0: 'Draw a convenience sample and read where x̄ lands',
     panelTitle: 'Sampling',
     btnDraw: 'Draw sample',
@@ -97,7 +128,7 @@ const I18N = {
     labMethod: 'Sampling method',
     labN: 'Sample size n',
     chartTitle: 'Sampling distribution',
-    censusTitle: 'Census parameters',
+    censusTitle: 'Census · mean commute time',
     biasTitle: 'Bias(x̄)',
     logTitle: 'Lab notes',
     colMethod: 'Method',
@@ -199,6 +230,54 @@ $('lessonBtn').addEventListener('click', () => {
 
 function persist() {
   try { localStorage.setItem(STORE_KEY, serializeLab(lab)); } catch { /* private mode */ }
+}
+
+function welcomeDismissed() {
+  try { return sessionStorage.getItem(WELCOME_KEY) === '1'; } catch { return false; }
+}
+
+function setWelcome(open) {
+  $('welcome').hidden = !open;
+  document.body.classList.toggle('welcome-on', open);
+}
+
+function dismissWelcome() {
+  try { sessionStorage.setItem(WELCOME_KEY, '1'); } catch { /* private mode */ }
+  setWelcome(false);
+}
+
+function syncWelcome() {
+  setWelcome(!welcomeDismissed() && !lab.sample);
+}
+
+function paintDistrictCopy() {
+  for (const id of DISTRICT_IDS) {
+    const node = document.querySelector(`[data-district="${id}"]`);
+    if (!node) continue;
+    node.textContent = t(DISTRICT_I18N[id]).replace('{mean}', String(DISTRICT_MEANS[id]));
+  }
+}
+
+function placeDistrictLabels(points) {
+  const panelRect = $('panel').getBoundingClientRect();
+  const hudRect = $('hud').getBoundingClientRect();
+  const mobile = innerWidth <= 760;
+  const minX = 18;
+  const maxX = mobile ? innerWidth - 18 : Math.max(minX + 40, panelRect.left - 12);
+  const minY = Math.max(18, hudRect.bottom + 6);
+  const maxY = mobile ? Math.max(minY + 20, panelRect.top - 8) : innerHeight - 20;
+  for (const point of points) {
+    const node = document.querySelector(`[data-district="${point.id}"]`);
+    if (!node) continue;
+    if (point.behind) {
+      node.classList.remove('is-on');
+      continue;
+    }
+    const x = Math.min(maxX, Math.max(minX, point.x));
+    const y = Math.min(maxY, Math.max(minY, point.y));
+    node.style.transform = `translate3d(${Math.round(x)}px, ${Math.round(y)}px, 0) translate(-50%, -30%)`;
+    node.classList.add('is-on');
+  }
 }
 
 function fmtMin(value) {
@@ -363,7 +442,9 @@ function paint() {
   $('surveyPoint').classList.toggle('is-lit', lab.method === 'convenience' && Boolean(lab.sample));
 
   renderChart(lab);
+  paintDistrictCopy();
   scene?.setLab(lab);
+  scene?.setLang?.(document.documentElement.lang.startsWith('zh') ? 'zh' : 'en');
 }
 
 function renderChrome() {
@@ -426,11 +507,18 @@ $('nRange').addEventListener('input', async () => {
   applyResult(setN(lab, Number($('nRange').value)));
 });
 
+$('welcomeSkip').addEventListener('click', async () => {
+  await unlockAll();
+  audio.click();
+  dismissWelcome();
+});
+
 $('drawBtn').addEventListener('click', async () => {
   await unlockAll();
   const result = drawSample(lab);
   if (result.ok) {
     audio.sample();
+    dismissWelcome();
     window.cool?.track?.('draw', { method: result.lab.method, n: result.lab.n, mean: result.lab.sample.mean });
   }
   applyResult(result, { okMessage: 'drawn' });
@@ -510,6 +598,7 @@ try {
     canvas: $('scene'),
     cssVar,
     onFirstInteract: unlockAll,
+    onDistricts: placeDistrictLabels,
   });
 } catch {
   scene = null;
@@ -530,4 +619,5 @@ window.cool.bindI18n(I18N, {
     renderChrome();
   },
 });
+syncWelcome();
 renderChrome();

@@ -28,7 +28,7 @@
     { "imports": { "three": "./vendor/three.module.min.js" } }
   </script>
 </head>
-<body>
+<body class="welcome-on">
   <canvas id="scene" aria-label="3D sampling city"></canvas>
   <p class="nogl" id="nogl" hidden data-t="nogl">浏览器暂时跑不了 3D 实验室，换一个新一点的浏览器再来观测吧。</p>
   <span id="surveyPoint" hidden></span>
@@ -44,17 +44,34 @@
     </div>
   </header>
 
-  <section class="hud" aria-label="live instruments">
+  <section class="hud" id="hud" aria-label="live instruments">
+    <div class="hud__task">
+      <span class="hud__kicker" data-t="taskKicker">这次在估</span>
+      <strong id="estimandName" data-t="estimand">平均通勤用时</strong>
+      <span id="estimandUnit" class="hud__unit" data-t="estimandUnit">单位：min</span>
+    </div>
     <div class="hud__chip"><span class="hud__label">n</span><b id="nVal">40</b></div>
+    <div class="hud__chip"><span class="hud__label">s</span><b id="sVal">—</b></div>
     <div class="hud__chip hud__chip--mean">
-      <span class="hud__label">x̄ ± 1.96 SE</span>
+      <span class="hud__label" id="hudMeanLabel" data-t="hudMean">样本均数 x̄ · 通勤用时</span>
       <b id="meanVal">—</b>
       <span class="hud__interval" id="intervalVal">—</span>
       <svg id="errorBar" class="errorbar" viewBox="0 0 120 16" hidden aria-hidden="true"></svg>
     </div>
-    <div class="hud__chip"><span class="hud__label">s</span><b id="sVal">—</b></div>
     <div class="hud__chip"><span class="hud__label">SE</span><b id="seVal">—</b></div>
   </section>
+
+  <div class="district-labels" id="districtLabels" aria-hidden="false">
+    <p class="district-label" data-district="downtown">近郊浅蓝区：通勤 12 min</p>
+    <p class="district-label" data-district="riverside">河岸区：通勤 24 min</p>
+    <p class="district-label" data-district="factory">远郊红砖区：通勤 36 min</p>
+    <p class="district-label" data-district="hill">山坡绿顶区：通勤 48 min</p>
+  </div>
+
+  <div class="welcome" id="welcome" role="note">
+    <p id="welcomeText" data-t="welcome">欢迎来到通勤调查局，请点击「抽取样本」选出居民，看看你的调查结果准不准。</p>
+    <button class="btn btn--ghost btn--sm" id="welcomeSkip" type="button" data-t="welcomeSkip">知道了</button>
+  </div>
 
   <p class="coach" id="coach" data-t="tip0">抽一份便利样本，读出 x̄ 落在哪</p>
 
@@ -100,11 +117,11 @@
         <p class="legend" id="chartLegend"></p>
       </section>
       <section class="panel__group" id="censusCard" hidden>
-        <p class="panel__label" data-t="censusTitle">普查参数</p>
+        <p class="panel__label" id="censusTitle" data-t="censusTitle">普查 · 平均通勤用时</p>
         <p class="panel__stats">
           <span>N <b id="censusNVal">400</b></span>
-          <span>μ <b id="muVal">—</b></span>
-          <span>σ <b id="sigmaVal">—</b></span>
+          <span><span id="censusMuLabel" data-t="censusMuLabel">μ 通勤用时</span> <b id="muVal">—</b></span>
+          <span><span id="censusSigmaLabel" data-t="censusSigmaLabel">σ 通勤用时</span> <b id="sigmaVal">—</b></span>
         </p>
         <p class="panel__note"><span data-t="biasTitle">Bias(x̄)</span> <b id="biasVal">—</b></p>
         <p class="panel__note" id="biasNote"></p>
